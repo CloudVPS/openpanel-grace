@@ -1,0 +1,104 @@
+#include <grace/application.h>
+#include <grace/filesystem.h>
+#include <grace/system.h>
+#include <grace/timestamp.h>
+
+class timestamptestApp : public application
+{
+public:
+		 	 timestamptestApp (void) :
+				application ("grace.testsuite.timestamp")
+			 {
+			 }
+			~timestamptestApp (void)
+			 {
+			 }
+
+	int		 main (void);
+};
+
+APPOBJECT(timestamptestApp);
+
+#define FAIL(foo) { ferr.printf (foo "\n"); return 1; }
+
+int timestamptestApp::main (void)
+{
+	timestamp tsa, tsb, tsresult;
+
+	tsa = kernel.time.now();		//	set timestamp from a current: time_t
+	// sleep(1);	
+	tsb = kernel.time.unow();		//  set a timestamp from a current: timeval
+	// tsb-=tsa;
+
+	fout.printf ("A: %s\n", tsa.format("%s").cval());
+	fout.printf ("B: %s\n", tsb.format("%s").cval());
+	fout.printf ("A: usecs: %U #\n", tsa.getusec());
+	fout.printf ("B: usecs: %U #\n", tsb.getusec());
+	
+	// test sub
+	tsresult = tsb - tsa;
+	::printf ("Operator - : result : %llu \n", tsresult.getusec());
+	if(tsresult.getusec() == 0){
+		fout.printf ("Failed operator -\n");
+		return 1;
+	}
+	
+	// Test comparisons
+	if ((tsa == tsa) && (tsa != tsb)) {
+		fout.printf ("Comparison == \tok\n");
+		fout.printf ("Comparison != \tok\n");
+	} else {
+		fout.printf ("Comparison == \tFAILED!\n");
+		fout.printf ("Comparison != \tFAILED!\n");
+		return 1;
+	}
+	
+	// Test comparisons
+	if (tsa < tsb) {
+		fout.printf ("Comparison < \tok\n");
+	} else {
+		fout.printf ("Comparison < \tFAILED!\n");
+		return 1;
+	}
+
+	// Test comparisons
+	if (tsa <= tsb) {
+		fout.printf ("Comparison <= \tok\n");
+	} else {
+		fout.printf ("Comparison <= \tFAILED!\n");
+		return 1;
+	}
+	
+	// Test comparisons
+	if (! (tsa >= tsb)) {
+		fout.printf ("Comparison >= \tok\n");
+	} else {
+		fout.printf ("Comparison >= \tFAILED!\n");
+		return 1;
+	}
+
+	// Test comparisons
+	if (! (tsa > tsb)) {
+		fout.printf ("Comparison > \tok\n");
+	} else {
+		fout.printf ("Comparison > \tFAILED!\n");
+		return 1;
+	}
+
+
+	// test sleepuntil function
+	time_t testt = kernel.time.now();
+	testt += 12; // Add 12 seconds for testing
+	timestamp destTime(testt);
+	
+	fout.printf("%S\n", destTime.ctime().cval());
+
+	fout.printf ("*** Sleeping approx 12 seconds ****\n");
+	kernel.time.sleepuntil (destTime);
+	fout.printf ("*** Ending sleepuntil()        ****\n*\n");
+	fout.printf ("* If this was not close to 12 seconds, your\n");
+	fout.printf ("* library sucks! \n*\n\n");
+	
+	return 0;
+}
+

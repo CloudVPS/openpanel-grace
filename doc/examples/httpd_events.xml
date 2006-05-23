@@ -1,0 +1,37 @@
+<!-- An access event -->
+<event class="access">
+  <string id="method">GET</string>
+  <string id="httpver">1.1</string>
+  <string id="uri">/index.html</string>
+  <string id="file">/web/site1/index.html</string>
+  <string id="ip">10.42.69.5</string>
+  <string id="user"/>
+  <string id="referrer">http:site1/test.html</string>
+  <string id="useragent">Wget/1.8.2</string>
+  <integer id="status">200</integer>
+  <integer id="bytes">194</integer>
+ </event>
+
+<!-- an error event -->
+<event class="error">
+  <string id="ip">10.42.69.5</string>
+  <string id="text">Client tried to authenticate as user root</string>
+</event>
+
+<!-- a thread-related info event -->
+<event class="info">
+  <!-- the counterpart is threadstopped -->
+  <string id="type">threadstarted</string>
+  <string id="thread">httpdworker/10827</string>
+</event>
+
+<!-- a connection-related info event -->
+<event class="info">
+  <!-- the counterpart is connectionclosed -->
+  <string id="type">connectionaccepted</string>
+  <string id="thread">httpdworker/10827</string>
+  <!-- connectionclosed messages don't have this part -->
+  <integer id="load">3</integer>
+  <string id="ip">10.42.69.5</string>
+</event>
+

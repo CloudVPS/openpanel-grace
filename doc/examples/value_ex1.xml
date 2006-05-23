@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf=8"?>
+<phoneBook>
+  <dict id="john" type="friend">
+    <string id="firstName">John</string>
+    <string id="lastName">Smith</string>
+    <string id="phoneNumber">212-555-1234</string>
+    <integer id="userId">15</integer>
+  </dict>
+  <dict id="pete" type="coworker">
+    <string id="firstName">Peter</string>
+    <string id="lastName">O'Connor</string>
+    <string id="phoneNumber">212-555-4321</string>
+    <integer id="userId">43</integer>
+  </dict>
+</phoneBook>

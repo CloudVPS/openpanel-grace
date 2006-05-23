@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nl.madscience.lib.grace.doc.class name="httpdobject" type="abstract">
+
+  <!-- RELATIONS ------------------------------------------------------->
+
+  <relations>
+    <relation type="base">
+      <related>application</related>
+    </relation>
+    <relation type="sub"/>
+    <relation type="parent"/>
+    <relation type="child">
+      <related>logthread</related>
+    </relation>
+    <relation type="also"/>
+  </relations>
+  
+  <!-- DESCRIPTIONS --------------------------------------------------->
+
+  <synopsis>
+    An abstract class for a system service/daemon application.
+  </synopsis>
+  
+  <description>
+    The daemon class builds on the application class and adds features
+    that are convenient for creating system services. This includes
+    configurable logging (to a file or to the syslog service), checking
+    and writing of a pid-file and forking into the background.
+  </description>
+  
+  <!-- CONSTRUCTORS ------------------------------------------------------>
+
+  <constructors>
+    <constructor arglist="appid" api="subclass">
+      <arguments>
+        <argument id="appid" type="const char *">The unique application id</argument>
+      </arguments>
+      <synopsis>
+        Parent constructor
+      </synopsis>
+      <description>
+        This constructor does not do much besides initializing a couple
+        of data structures and calling the application constructor with
+        the provided application id.
+      </description>
+    </constructor>
+  </constructors>
+  
+  <!-- VARIABLES ------------------------------------------------------->
+
+  <variables/>
+  
+  <!-- PROPERTIES ------------------------------------------------------>
+
+  <properties/>
+  
+  <!-- METHODS ---------------------------------------------------------->
+
+  <methods>
+  
+    <method name="main" arglist="" api="subclass">
+      <arguments/>
+      <synopsis>Virtual main method</synopsis>
+      <description>
+        Oveload this method to implement your CGI application
+      </description>
+    </method>
+    
+    <method name="checkpid" arglist="" api="public">
+      <arguments/>
+      <returnvalue type="bool" name="shouldrun">
+        If set to false, another copy is already running.
+      </returnvalue>
+      <synopsis>Check the pid-file for other running copies</synopsis>
+      <description>
+        Normally, this method is called inside the daemonize() round.
+        If, for some reason, you need to do work in your main loop
+        before you call daemonize() you can use this method to make
+        sure all that work is not in vain.
+      </description>
+    </method>
+    
+    <method name="writepid" arglist="" api="public">
+      <arguments/>
+      <synopsis>Write current pid to the pid-file</synopsis>
+      <description>
+        This method is normally called from daemonize(). Only use
+        this if you do not intend to call that method. It gets
+        the current pid through kernel.proc.self() and writes
+        it to a pidfile in the path "run:org.acme.appname.pid".
+      </description>
+    </method>
+    
+    <method name="daemonize" arglist="" api="public">
+      <arguments/>
+      <synopsis>Spawn into the background</synopsis>
+      <description>
+        Checks the pid-file and exits if the daemon already runs.
+        If not, writes the new pid-file and, if setforeground()
+        was not called before, spawns into the background.
+      </description>
+    </method>
+    
+    <method name="log" arglist="priority,module,format,...">
+      <arguments>
+        <argument id="priority" type="log::priority">Priority level</argument>
+        <argument id="module" type="const string &">Name of the application module</argument>
+        <argument id="format" type="const char *">Printf formatting</argument>
+        <argument id="..." type="optarg">Optional arguments</argument>
+      </arguments>
+      <synopsis>Send information to the log thread</synopsis>
+      <description>
+        The daemon class has an on-demand thread that handles the
+        transport of log information to configured backends. The thread
+        is started when this method is invoked for the first time.
+        Log backends are either configured explicitly through the
+        addlogtarget() method or inside the resources.xml file.
+        <p>
+        The possible priorities are:<ul>
+          <li> log::debug
+          <li> log::info
+          <li> log::warning
+          <li> log::error
+          <li> log::critical
+          <li> log::alert
+          <li> log::emergency
+          <li> log::application
+        </ul>
+        <p>
+        There can be one or more logtargets defined, each with a mask
+        defining which priorities they are interested in.
+      </description>
+    </method>
+    
+    <method name="addlogtarget" arglist="type,target,priorities,maxsz" api="public">
+      <arguments>
+        <argument id="type" type="log::logtype">The type of logging</argument>
+        <argument id="target" type="const string &">The target path or subsystem</argument>
+        <argument id="priorities" type="unsigned char">The priority mask</argument>
+        <argument id="maxsz" type="unsigned int">Maximum size of a logfile</argument>
+      </arguments>
+      <synopsis>Add a logging target</synopsis>
+      <description>
+        Manually set up a logging target. The type can be on of
+        log::file and log::syslog. In case of a file target, the target
+        string should contain the path of the log file. For syslog, this
+        parameter is ignored. The priorities mask defaults to all but can
+        be set to a bitwise or of the exact levels you would want to
+        include. In case of a file target, files will be opened in
+        append mode. If the size exceeds maxsz, the file will be rotated
+        to a set of 4 backlogs and a new file will be created.
+      </description>
+    </method>
+    
+    <method name="setforeground" arglist="" api="public">
+      <arguments/>
+      <synopsis>Set up for running in the foreground</synopsis>
+      <description>
+        In some cases it can be desirable to keep a daemon in the
+        foreground on the user's request (for example when running
+        a debugging session). Call this method prior to calling
+        daemonize() to realize this.
+      </description>
+    </method>
+  </methods>
+</nl.madscience.lib.grace.doc.class>

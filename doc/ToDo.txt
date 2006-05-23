@@ -1,0 +1,39 @@
+Pending issues for GRACE:
+
+  class value:
+  - Smarten up array handling/allocation [status: BEFORE 1.0]
+  - Add support for a 'version' type (2b uint vector) [BEFORE 1.0]
+  - Add support for a 'vector' type (usvector,svector,ivector,uvector,vector)
+  - Add support for a 'color' type [BEFORE 1.0]
+  - Make the ipaddress handling more useful [BEFORE 1.0]
+  - Make the timestamp handling more useful [BEFORE 1.0]
+
+  class statstring:
+  - Migrate to a 64-bit key [MAYBE NOT]
+  - Somehow cache the way we resolve constants, making it less necessary
+    to do expensive lookups in loops. [IF TIME ALLOWS]
+    
+  class container: [status: RETHINK]
+  - A class to contain MIME-data with headers
+
+  class object: [status: DUBIOUS]
+  - Create a new base class 'object'
+  - Make room to the left of the object's allocation pointer to keep track
+    of metadata, initially the object's size and type.
+
+  class tcpsocket: [status: BEFORE 1.0]
+  - Add support for timeouts
+
+  class query: [status: BEFORE 1.0]
+  - A new class that defines complex matching criteria
+
+  class dbconnection (UDBC): [status: BEFORE 1.0]
+  - Add support for the query class 
+  - Consider integrating table definitions with xmlschema
+  
+  class directory: [status: UNSURE]
+  - A new class abstracting access to any structural outside-of-program
+    data stores
+  - Optionally overlay several data stores in the same way the filesystem
+    class does with files
+  

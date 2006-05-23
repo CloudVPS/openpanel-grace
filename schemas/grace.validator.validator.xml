@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grace.validator>
+
+  <datarule id="root">
+    <match.child>
+      <and>
+        <match.class>datarule</match.class>
+        <match.rule>datarule</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="datarule">
+    <match.child>
+      <and>
+        <match.class>match.child</match.class>
+        <match.rule>datarule</match.rule>
+      </and>
+      <and>
+        <match.class>match.mandatory</match.class>
+        <match.rule>match.mandatory</match.rule>
+      </and>
+      <and>
+        <match.class>match.attribute</match.class>
+        <match.rule>match.attribute</match.rule>
+      </and>
+      <and>
+        <match.class>match.data</match.class>
+        <match.rule>match.data</match.rule>
+      </and>
+      <and>
+        <or>
+          <match.class>match.id</match.class>
+          <match.class>match.rule</match.class>
+          <match.class>match.class</match.class>
+        </or>
+        <match.rule>alnum</match.rule>
+      </and>
+      <and>
+        <match.class>match.type</match.class>
+        <match.rule>match.type</match.rule>
+      </and>
+      <and>
+        <match.class>and</match.class>
+        <match.rule>datarule</match.rule>
+      </and>
+      <and>
+        <match.class>or</match.class>
+        <match.rule>datarule</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="alnum">
+    <match.data errorcode="1" errortext="alphanumeric failure">
+      <regexp>[a-zA-Z0-9.]+</regexp>
+    </match.data>
+  </datarule>
+  
+  <datarule id="match.type">
+    <match.data>
+      <text>dict</text>
+      <text>string</text>
+      <text>integer</text>
+      <text>char</text>
+      <text>uchar</text>
+      <text>short</text>
+      <text>ushort</text>
+      <text>bool</text>
+      <text>bool.true</text>
+      <text>bool.false</text>
+      <text>long</text>
+      <text>unsigned</text>
+      <text>ulong</text>
+      <text>ipaddr</text>
+      <text>date</text>
+      <text>datetime</text>
+      <text>container</text>
+      <text>array</text>
+      <text>ipaddress</text>
+      <text>float</text>
+      <text>void</text>
+      <text>union</text>
+      <text>currency</text>
+    </match.data>
+  </datarule>
+  
+  <datarule id="match.attribute">
+    <match.child>
+      <and>
+        <or>
+          <match.class>and</match.class>
+          <match.class>or</match.class>
+        </or>
+        <match.rule>match.attribute</match.rule>
+       </and>
+       <match.class>match.id</match.class>
+       <match.class>match.type</match.class>
+       <match.class>match.rule</match.class>
+       <and>
+         <match.class>match.data</match.class>
+         <match.rule>match.data</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="match.mandatory">
+    <match.child>
+      <and>
+        <match.class>optional</match.class>
+        <match.rule>optional</match.rule>
+      </and>
+      <and>
+        <or>
+          <match.class>and</match.class>
+          <match.class>or</match.class>
+        </or>
+        <match.rule>match.mandatory</match.rule>
+      </and>
+      <and>
+        <match.class>mandatory</match.class>
+        <match.rule>mandatory</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="optional">
+    <match.attribute>
+      <and>
+        <match.id>type</match.id>
+        <match.data>
+          <text>attribute</text>
+          <text>child</text>
+        </match.data>
+      </and>
+      <match.id>key</match.id>
+      <match.id>errorcode</match.id>
+      <match.id>errortext</match.id>
+    </match.attribute>
+    <match.child>
+      <and>
+        <match.class>mandatory</match.class>
+        <match.rule>mandatory</match.rule>
+      </and>
+      <and>
+        <match.class>optional</match.class>
+        <match.rule>optional</match.rule>
+      </and>
+      <and>
+        <match.class>or</match.class>
+        <match.rule>optional</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="mandatory">
+    <match.attribute>
+      <and>
+        <match.id>type</match.id>
+        <match.data>
+          <text>attribute</text>
+          <text>child</text>
+        </match.data>
+      </and>
+      <match.id>key</match.id>
+      <match.id>errorcode</match.id>
+      <match.id>errortext</match.id>
+    </match.attribute>
+  </datarule>
+  
+  <datarule id="match.data">
+    <match.child>
+      <match.class>text</match.class>
+      <match.class>gt</match.class>
+      <match.class>lt</match.class>
+      <match.class>minsize</match.class>
+      <match.class>maxsize</match.class>
+      <match.class>regexp</match.class>
+    </match.child>
+  </datarule>
+
+</grace.validator>

@@ -1,0 +1,16 @@
+OBJ	= main.o
+
+all: %TESTNAME%.exe
+	mkapp %TESTNAME%
+
+%TESTNAME%.exe: $(OBJ)
+	$(CXX) -o %TESTNAME%.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+
+clean:
+	rm -f *.o *.exe
+	rm -rf %TESTNAME%.app
+	rm -f %TESTNAME%
+
+SUFFIXES: .cpp .o
+.cpp.o:
+	$(CXX) -I"../../include" -g -c $<

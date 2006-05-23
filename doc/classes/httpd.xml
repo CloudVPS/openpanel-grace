@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nl.madscience.lib.grace.doc.class name="httpd" type="implementation">
+
+  <!-- RELATIONS ------------------------------------------------------->
+  
+  <relations>
+    <relation type="base">
+      <related>thread</related>
+    </relation>
+    <relation type="child">
+      <related>httpdobject</related>
+      <related>httpdeventhandler</related>
+      <related>httpdworker</related>
+    </relation>
+    <relation type="also">
+      <related>httpdfileshare</related>
+      <related>httpdfiletypehandler</related>
+      <related>httpdscriptparser</related>
+      <related>httpdbasicauth</related>
+      <related>httpdrewrite</related>
+      <related>httpdvhost</related>
+    </relation>
+  </relations>
+
+  <!-- DESCRIPTIONS --------------------------------------------------->
+
+  <synopsis>
+     Implements a thread that listens on a tcp port for HTTP connections.
+  </synopsis>
+
+  <description>
+     The httpd class performs most basic functions needed to be a HTTP/1.1
+     compliant service. If a httpd object is created with no further actions,
+     the class implements a service that will return a stock 404 reply for
+     every POST and GET request that gets thrown at it. To get more useful
+     results, you can link in objects that are derived from the httpdobject
+     class.
+  </description>
+
+  <!-- CONSTRUCTORS ------------------------------------------------------>
+
+  <constructors>
+    <constructor arglist="listenport,minthreads,maxthreads" api="public">
+      <arguments>
+        <argument id="listenport" type="int">The TCP port the class will listen on</argument>
+        <argument id="minthreads" type="int">The minimum number of worker threads to keep open</argument>
+        <argument id="maxthreads" type="int">The maximum number of worker threads at any given time</argument>
+      </arguments>
+      <synopsis>Creates a httpd instance with no handlers</synopsis>
+      <description>
+        The httpd constructor class takes three obvious arguments. The tcp
+        listener will be started, but the threads will not become active until
+        you call the httpd::start() method on this object. The minthreads and
+        maxthreads values can still be changed at runtime using their
+        property methods.
+      </description>
+    </constructor>
+  </constructors>
+
+  <!-- DESTRUCTORS ------------------------------------------------------>
+
+  <destructors>
+    <destructor api="public">
+      <arguments/>
+      <synopsis>Cleans up the object</synopsis>
+      <description>
+         Stops all threads, deallocates memory and deletes all child
+         objects.
+      </description>
+    </destructor>
+  </destructors>
+  
+  <!-- VARIABLES ------------------------------------------------------->
+  
+  <variables>
+  
+    <variable name="load" type="lock<int>" api="grace">
+      <synopsis>The current load</synopsis>
+      <description>
+        Indicates the number of worker threads that is currently serving
+        a connection. Used internally to determine whether to spawn a new
+        thread or skim off the number of workers if times are not busy.
+        Please use the httpd::getload() method if you are interested
+        in reading out this number.
+      </description>
+    </variable>
+    
+    <variable name="defaultdocuments" type="value" api="private">
+      <synopsis>The collection of default documents</synopsis>
+      <description>
+        Contains the list of default error documents as they were provided
+        through the setdefaultdocument method.
+      </description>
+    </variable>
+    
+    <variable name="listener" type="tcplistener" api="private">
+      <synopsis>The tcplistener</synopsis>
+      <description>
+        The tcplistener object used to accept new HTTP connections.
+        Instantiated during the construction of the httpd object.
+      </description>
+  </variables>
+  
+  <!-- PROPERTIES ------------------------------------------------------>
+  
+  <properties>
+  
+    <property name="minthreads" type="int" api="public">
+      <synopsis>Read or write the minimum number of worker threads</synopsis>
+      <description>
+        Use this method to change the thread configuration at runtime. The
+        main housekeeping thread will use this value to regulate the number
+        of running threads when the server is idle.
+      </description>
+    </property>
+    
+    <property name="maxthreads" type="int" api="public">
+      <synopsis>Read or write the maximum number of worker threads</synopsis>
+      <description>
+        Use this method to change the maximum number of threads allowed
+        to be used by the system. The main housekeeping thread will spawn
+        new threads if the load increases, but never past this maximum
+        value.
+      </description>
+    </property>
+    
+    <property name="maxpostsize" type="int" api="public">
+      <synopsis>Read or write the maximum size of a HTTP POST body</synopsis>
+      <description>
+        This value determines the maximum size the body of a post request
+        may be. Allowing arbitrary sizes would open up the service to a
+        denial-of-service vulnerability. The default size is 32KB, enough
+        for any regular forms. If you want to allow file uploads, you may
+        have to raise this limit.
+      </description>
+    </property>
+    
+    <property name="systempath" type="string" api="public">
+      <synopsis>The location for default files</synopsis>
+      <description>
+        This disk path is where default error documents are stored, if you
+        use those.
+      </description>
+    </property>
+  </properties>
+  
+  <!-- METHODS ---------------------------------------------------------->
+  
+  <methods>
+  
+    <method name="setdefaltdocument" arglist="status,filename" api="public">
+      <arguments>
+        <argument id="status" type="int">The status value</argument>
+        <argument id="filename" type="const string &">The path to the default document, absolute or relative to the systempath</argument>
+      </arguments>
+      <returnvalue type="void"/>
+      <synopsis>Sets the default document to be shown for a provided HTTP status</synopsis>
+      <description>
+        If you want to show a default document for HTTP error statuses like
+        404, 403 and 500, use this method. 
+      </description>
+    </method>
+    
+    <method name="run" arglist="" api="grace">
+      <arguments/>
+      <returnvalue type="void"/>
+      <synopsis>The housekeeping thread</synopsis>
+      <description>
+        This method is part of the implementation of the thread class. It
+        implements the background housekeeping task that will keep track
+        of the system load and spawned worker threads.
+      </description>
+    </method>
+    
+    <method name="addobject" arglist="object" api="public">
+      <arguments>
+        <argument id="object" type="httpdobject *">The object to link</argument>
+      </arguments>
+      <returnvalue type="void"/>
+      <synopsis>Adds a new httpdobject to the handling chain</synopsis>
+      <description>
+        The httpd object keeps a chain of httpdobject instances (which is
+        the base class of most of the distinct pieces of functionality
+        driving the actual httpd process). Each such instance can handle
+        a connection and will return a status. If this status is 0, the
+        next object will be used, otherwise the chain ends there. Normally
+        this would be called from the constructor of a httpdobject sub-
+        class.
+      </description>
+    </method>
+    
+    <method name="addeventhandler" arglist="handler" api="public">
+      <arguments>
+        <argument id="handler" type="httpdeventhandler *">The handler object to link</argument>
+      </arguments>
+      <returnvalue type="void">
+      <synopsis>Add a new eventhandler to the chain</synopsis>
+      <description>
+        A httpdeventhandler subclass implements a way to process and log
+        events originating from a worker thread. There are currently three
+        classes of events that could be handled: HTTPD_ACCESS events keep
+        track of data transfers suitable for a httpd access log. Events
+        of the HTTPD_ERROR type deal with internal errors and authentication
+        errors. Finally, the HTTPD_INFO class of events help keeping track of
+        connection and thread statistics. This method is normally called
+        from the constructor method of a httpdeventhandler class.
+      </description>
+    </method>
+    
+    <method name="handle" arglist="uri,postbody,inhdr,method,httpver,sock,keepalive" api="grace">
+      <arguments>
+        <argument id="uri" type="string &">The HTTP URI</argument>
+        <argument id="postbody" type="string &">The HTTP POST body</argument>
+        <argument id="inhdr" type="value &">The received HTTP headers</argument>
+        <argument id="method" type="const string &">The HTTP method used</argument>
+        <argument id="httpver" type="const string &">The HTTP protocol version used</argument>
+        <argument id="sock" type="tcpsocket &">The socket for the connection</argument>
+        <argument id="keepalive" type="bool">Whether to prefer/allow keepalive</argument>
+      </arguments>
+      <returnvalue type="void"/>
+      <synopsis>Handles the object chain for a specific connection</synopsis>
+      <description>
+        Control to this method is normally passed from within the httpdworker
+        class once it has figured out the basics. Runs through the object
+        chain to get the request handled.
+      </description>
+    </method>
+    
+    <method name="eventhandle" arglist="evdata" api="grace">
+      <arguments>
+        <argument id="evdata" type="value &">The event data</argument>
+      </arguments>
+      <returnvalue type="void"/>
+      <synopsis>Handles object chain for a specific event</synopsis>
+      <description>
+        Goes through the eventhandler chain for the provided event.
+        Can be called from any of the implementing httpdobject subclasses
+        to indicate an event taking place.
+        <p>
+        There are three types of events, distinguished by the class attribute
+        of the root of the value passed:
+        <p>
+        <ul>
+          <li> access (events for an access log)
+          <li> error (events for an error log)
+          <li> info (internal events)
+        </ul>
+        <p>
+        An acess event will look like this:<br>
+        <br>
+        &lt;event class="access"&gt;<br>
+        &nbsp; &lt;string id="method"&gt;GET&lt;/string&gt;<br>
+        &nbsp; &lt;string id="httpver"&gt;1.1&lt;/string&gt;<br>
+        &nbsp; &lt;string id="uri"&gt;/index.html&lt;/string&gt;<br>
+        &nbsp; &lt;string id="file"&gt;/web/site1/index.html&lt;/string&gt;<br>
+        &nbsp; &lt;string id="ip"&gt;10.42.69.5&lt;/string&gt;<br>
+        &nbsp; &lt;string id="user"/&gt;<br>
+        &nbsp; &lt;string id="referrer"&gt;http://site1/test.html&lt;/string&gt;<br>
+        &nbsp; &lt;string id="useragent"&gt;Wget/1.8.2&lt;/string&gt;<br>
+        &nbsp; &lt;integer id="status"&gt;200&lt;/integer&gt;<br>
+        &nbsp; &lt;integer id="bytes"&gt;194&lt;/integer&gt;<br>
+        &lt;/event&gt;<br>
+        <p>
+        An error event will follow this much simpler pattern:<br>
+        <br>
+        &lt;event class="error"&gt;<br>
+        &nbsp; &lt;string id="ip"&gt;10.42.69.5&lt;/string&gt;<br>
+        &nbsp; &lt;string id="text"&gt;Unknown method 'HELO'&lt;/string&gt;<br>
+        &lt;/event&gt;<br>
+        <p>
+        The info class dinstinguished four types of information using the
+        child string named 'type': threadstarted, threadstopped,
+        connectionaccepted, connectionclosed. The first two look like this:<br>
+        <br>
+        &lt;event class="info"&gt;<br>
+        &nbsp; &lt;string id="type"&gt;threadstarted&lt;/string&gt;<br>
+        &nbsp; &lt;string id="thread"&gt;httpdworker/10827&lt;/string&gt;<br>
+        &lt;/event&gt;<br>
+        <p>
+		Types from the second group look like this:<br>
+		<br>
+        &lt;event class="info"&gt;<br>
+        &nbsp; &lt;string id="type"&gt;connectionaccepted&lt;/string&gt;<br>
+        &nbsp; &lt;string id="thread"&gt;httpdworker/10827&lt;/string&gt;<br>
+		&nbsp; &lt;integer id="load"&gt;3&lt;/integer&gt;<br>
+		&nbsp; &lt;string id="ip"&gt;>10.42.69.5&lt;/string&gt;<br>
+		&lt;/event&gt;<br>
+		
+      </description>
+    </method>
+    
+  </methods>
+</nl.madscience.lib.grace.doc.class>

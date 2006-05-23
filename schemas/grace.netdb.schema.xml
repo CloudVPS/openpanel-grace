@@ -1,0 +1,32 @@
+<xml.schema>
+
+  <xml.class name="grace.netdb.host">
+    <xml.type>dict</xml.type>
+    <xml.code>ndbH</xml.code>
+    <xml.proplist>
+      <xml.member class="host.name" id="name"/>
+      <xml.member class="host.address" id="address"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="host.name">
+    <xml.type>array</xml.type>
+    <xml.code>ndHN</xml.code>
+    <xml.proplist>
+      <xml.member class="hostname"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="hostname"><xml.type>string</xml.type><xml.code>ndHn</xml.code></xml.class>
+  
+  <xml.class name="host.address">
+    <xml.type>array</xml.type>
+    <xml.code>ndAD</xml.code>
+    <xml.proplist>
+      <xml.member class="address"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="address"><xml.type>ipaddress</xml.type><xml.code>ndAd</xml.code></xml.class>
+  
+</xml.schema>

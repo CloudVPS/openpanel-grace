@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xml.schema>
+  <xml.class name="grace.validator">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="datarule"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="datarule">
+    <xml.type>array</xml.type>
+    <xml.attributes>
+      <xml.attribute label="id" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="match.mandatory"/>
+      <xml.member class="and"/>
+      <xml.member class="or"/>
+      <xml.member class="match.child"/>
+      <xml.member class="match.id"/>
+      <xml.member class="match.class"/>
+      <xml.member class="match.type"/>
+      <xml.member class="match.data"/>
+      <xml.member class="match.attribute"/>
+      <xml.member class="match.hasindex"/>
+      <xml.member class="match.rule"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="match.mandatory">
+    <xml.type>array</xml.type>
+    <xml.proplist>
+      <xml.member class="optional"/>
+      <xml.member class="mandatory"/>
+      <xml.member class="or"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="optional">
+    <xml.type>array</xml.type>
+    <xml.attributes>
+      <xml.attribute label="type" mandatory="true">
+        <xml.type>string</xml.type>
+      </xml.attribute>
+      <xml.attribute label="key" mandatory="true">
+        <xml.type>string</xml.type>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="mandatory"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="mandatory">
+    <xml.type>void</xml.type>
+    <xml.attributes>
+      <xml.attribute label="type" mandatory="true">
+        <xml.type>string</xml.type>
+      </xml.attribute>
+      <xml.attribute label="key" mandatory="true">
+        <xml.type>string</xml.type>
+      </xml.attribute>
+      <xml.attribute label="errorcode"><xml.type>integer</xml.type></xml.attribute>
+      <xml.attribute label="errortext"><xml.type>string</xml.type></xml.attribute>
+    </xml.attributes>
+  </xml.class>
+  
+  <xml.class name="and">
+    <xml.type>array</xml.type>
+    <xml.proplist>
+      <xml.member class="and"/>
+      <xml.member class="or"/>
+      <xml.member class="match.child"/>
+      <xml.member class="match.id"/>
+      <xml.member class="match.class"/>
+      <xml.member class="match.type"/>
+      <xml.member class="match.data"/>
+      <xml.member class="match.attribute"/>
+      <xml.member class="match.hasindex"/>
+      <xml.member class="match.rule"/>
+    </xml.proplist>
+  </xml.class>
+
+  <xml.class name="or">
+    <xml.type>array</xml.type>
+    <xml.proplist>
+      <xml.member class="and"/>
+      <xml.member class="or"/>
+      <xml.member class="match.child"/>
+      <xml.member class="match.id"/>
+      <xml.member class="match.class"/>
+      <xml.member class="match.type"/>
+      <xml.member class="match.data"/>
+      <xml.member class="match.attribute"/>
+      <xml.member class="match.hasindex"/>
+    </xml.proplist>
+  </xml.class>
+
+  <xml.class name="match.child">
+    <xml.type>array</xml.type>
+    <xml.attributes>
+      <xml.attribute label="errorcode"><xml.type>integer</xml.type></xml.attribute>
+      <xml.attribute label="errortext"><xml.type>string</xml.type></xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="and"/>
+      <xml.member class="or"/>
+      <xml.member class="match.child"/>
+      <xml.member class="match.id"/>
+      <xml.member class="match.class"/>
+      <xml.member class="match.type"/>
+      <xml.member class="match.data"/>
+      <xml.member class="match.attribute"/>
+      <xml.member class="match.hasindex"/>
+      <xml.member class="match.rule"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="match.attribute">
+    <xml.type>array</xml.type>
+    <xml.attributes>
+      <xml.attribute label="errorcode"><xml.type>integer</xml.type></xml.attribute>
+      <xml.attribute label="errortext"><xml.type>string</xml.type></xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="and"/>
+      <xml.member class="or"/>
+      <xml.member class="match.id"/>
+      <xml.member class="match.class"/>
+      <xml.member class="match.type"/>
+      <xml.member class="match.data"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="match.id">
+    <xml.type>string</xml.type>
+  </xml.class>
+  
+  <xml.class name="match.class">
+    <xml.type>string</xml.type>
+  </xml.class>
+  
+  <xml.class name="match.type">
+    <xml.type>string</xml.type>
+  </xml.class>
+  
+  <xml.class name="match.data">
+    <xml.type>array</xml.type>
+    <xml.proplist>
+      <xml.member class="text"/>
+      <xml.member class="regexp"/>
+      <xml.member class="lt"/>
+      <xml.member class="gt"/>
+      <xml.member class="minsize"/>
+      <xml.member class="maxsize"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="text"><xml.type>string</xml.type></xml.class>
+  <xml.class name="regexp"><xml.type>string</xml.type></xml.class>
+  <xml.class name="lt"><xml.type>integer</xml.type></xml.class>
+  <xml.class name="gt"><xml.type>integer</xml.type></xml.class>
+  <xml.class name="minsize"><xml.type>integer</xml.type></xml.class>
+  <xml.class name="maxsize"><xml.type>integer</xml.type></xml.class>
+  
+  <xml.class name="match.hasindex"><xml.type>void</xml.type></xml.class>
+  <xml.class name="match.rule"><xml.type>string</xml.type></xml.class>
+  
+</xml.schema>

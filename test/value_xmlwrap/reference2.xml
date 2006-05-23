@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UeberXML>
+	<retailPrice source="catalog">
+		<currency name="EUR" amount="10.25"/>
+	</retailPrice>
+	<wholesalePrice source="vendor">
+		<currency name="USD" amount="7.45"/>
+	</wholesalePrice>
+	<remoteDescription href="http://vendor.com/arts/1857243"/>
+	<productTag>cool</productTag>
+	<productTag>fresh</productTag>
+	<productTag>hip</productTag>
+</UeberXML>

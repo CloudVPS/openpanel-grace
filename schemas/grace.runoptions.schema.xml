@@ -1,0 +1,48 @@
+<xml.schema>
+
+  <xml.class name="grace.runoptions">
+    <xml.type>dict</xml.type>
+    <xml.code>OPTV</xml.code>
+    <xml.proplist>
+      <xml.member class="grace.option"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="grace.option">
+    <xml.type>dict</xml.type>
+    <xml.code>OPTN</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>OPTX</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="grace.long" id="long"/>
+      <xml.member class="grace.argc" id="argc"/>
+      <xml.member class="grace.default" id="default"/>
+      <xml.member class="grace.help" id="help"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="grace.long">
+    <xml.type>string</xml.type>
+    <xml.code>OLNG</xml.code>
+  </xml.class>
+  
+  <xml.class name="grace.argc">
+    <xml.type>integer</xml.type>
+    <xml.code>OARC</xml.code>
+  </xml.class>
+  
+  <xml.class name="grace.default">
+    <xml.type>string</xml.type>
+    <xml.code>ODFL</xml.code>
+  </xml.class>
+  
+  <xml.class name="grace.help">
+    <xml.type>string</xml.type>
+    <xml.code>OHLP</xml.code>
+  </xml.class>
+  
+</xml.schema>

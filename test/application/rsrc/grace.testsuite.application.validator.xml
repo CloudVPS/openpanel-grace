@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grace.validator>
+  <datarule id="root">
+    <match.child>
+      <and>
+        <match.id>ownerDetails</match.id><match.rule>ownerDetails</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="ownerDetails">
+    <match.child>
+      <and>
+        <match.id>name</match.id>
+        <match.data>
+          <regexp>[[:alpha:]]+( [[:alpha:]]+)*</regexp>
+        </match.data>
+      </and>
+      <and>
+        <match.id>email</match.id>
+        <match.data>
+          <regexp>.*@.*</regexp>
+        </match.data>
+      </and>
+    </match.child>
+  </datarule>
+</grace.validator>

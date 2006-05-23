@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UeberXML>
+	<string id="retailPrice" source="catalog" name="EUR">10.25</string>
+	<string id="wholesalePrice" source="vendor" name="USD">7.45</string>
+	<string id="description" href="http://vendor.com/arts/1857243"/>
+	<array id="tags">
+		<string>cool</string>
+		<string>fresh</string>
+		<string>hip</string>
+	</array>
+</UeberXML>

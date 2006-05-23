@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xml.schema>
+  <xml.class name="grace.testsuite.value_ini.conf">
+    <xml.type>dict</xml.type>
+  </xml.class>
+  <xml.class name="valueini">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="globalTestValue" id="globalTestValue"/>
+      <xml.member class="settings" id="settings"/>
+      <xml.member class="options" id="options"/>
+    </xml.proplist>
+  </xml.class>
+  <xml.class name="globalTestValue"><xml.type>integer</xml.type></xml.class>
+  <xml.class name="settings">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="localSettingsValue" id="localSettingsValue"/>
+      <xml.member class="subSettings" id="sub"/>
+    </xml.proplist>
+  </xml.class>
+  <xml.class name="localSettingsValue"><xml.type>string</xml.type></xml.class>
+  <xml.class name="subSettings">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="localSubValue" id="localSubValue"/>
+      <xml.member class="localSettingsValue" id="localSettingsValue"/>
+    </xml.proplist>
+  </xml.class>
+  <xml.class name="localSubValue"><xml.type>string</xml.type></xml.class>
+  <xml.class name="options">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="optionValue" id="optionValue"/>
+    </xml.proplist>
+  </xml.class>
+  <xml.class name="optionValue"><xml.type>integer</xml.type></xml.class>
+</xml.schema>

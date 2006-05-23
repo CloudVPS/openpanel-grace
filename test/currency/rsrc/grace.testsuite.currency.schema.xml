@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xml.schema>
+  <xml.schema.options>
+    <xml.option.rootclass>duepayment</xml.option.rootclass>
+  </xml.schema.options>
+  
+  <xml.class name="duepayment">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="baseAmount" id="base"/>
+      <xml.member class="vatAmount" id="vat"/>
+      <xml.member class="netAmount" id="net"/>
+      <xml.member class="monthlyPayment" id="monthly"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="baseAmount"><xml.type>currency</xml.type></xml.class>
+  <xml.class name="vatAmount"><xml.type>currency</xml.type></xml.class>
+  <xml.class name="netAmount"><xml.type>currency</xml.type></xml.class>
+  <xml.class name="monthlyPayment"><xml.type>currency</xml.type></xml.class>
+
+</xml.schema>

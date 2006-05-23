@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xml.schema>
+  <xml.class name="UeberXML">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="phoneNumber" id="phoneNumber"/>
+      <xml.member class="postCode" id="postCode"/>
+      <xml.member class="birthDate" id="birthDate"/>
+      <xml.member class="accessLevel" id="accessLevel"/>
+      <xml.member class="options" id="options"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="phoneNumber">
+    <xml.type>string</xml.type>
+  </xml.class>
+  
+  <xml.class name="postCode">
+    <xml.type>string</xml.type>
+  </xml.class>
+  
+  <xml.class name="birthDate">
+    <xml.type>string</xml.type>
+  </xml.class>
+  
+  <xml.class name="accessLevel">
+    <xml.type>integer</xml.type>
+  </xml.class>
+  
+  <xml.class name="options">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="flag"/>
+      <xml.member class="homepage" id="homepage"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="flag"><xml.type>string</xml.type></xml.class>
+  <xml.class name="homepage"><xml.type>string</xml.type></xml.class>
+  
+</xml.schema>

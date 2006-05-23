@@ -1,0 +1,5 @@
+cxx
+ranlib
+shared
+libdl
+libmysqlclient

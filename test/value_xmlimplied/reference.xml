@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<myXML>
+	<String key="someString">Hello, world.</String>
+	<Integer key="someInteger">42</Integer>
+	<Collection key="someCollection">
+		<String key="someString">Gobble</String>
+		<Collection key="subCollection">
+			<Integer key="someInteger">23</Integer>
+		</Collection>
+	</Collection>
+</myXML>

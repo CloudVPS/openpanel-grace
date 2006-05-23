@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xml.schema>
+  <xml.schema.options>
+    <xml.option.rootclass>MyXML</xml.option.rootclass>
+  </xml.schema.options>
+  
+  <xml.class name="MyXML">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="Image" id="image"/>
+      <xml.member class="Description" id="description"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="Image">
+    <xml.type>string</xml.type>
+    <xml.encoding>base64</xml.encoding>
+  </xml.class>
+  
+  <xml.class name="Description">
+    <xml.type>string</xml.type>
+  </xml.class>
+</xml.schema>

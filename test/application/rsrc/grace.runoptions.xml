@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<grace.runoptions>
+  <grace.option id="-a"><grace.long>--alpha</grace.long></grace.option>
+  <grace.option id="-b"><grace.long>--bravo</grace.long></grace.option>
+  <grace.option id="-c"><grace.long>--charlie</grace.long></grace.option>
+  <grace.option id="--alpha">
+    <grace.argc>1</grace.argc>
+    <grace.default>male</grace.default>
+  </grace.option>
+  <grace.option id="--bravo"><grace.argc>0</grace.argc></grace.option>
+  <grace.option id="--charlie"><grace.argc>1</grace.argc></grace.option>
+</grace.runoptions>

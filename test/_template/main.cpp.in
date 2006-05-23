@@ -1,0 +1,28 @@
+#include <grace/application.h>
+#include <grace/filesystem.h>
+
+class %TESTNAME%testApp : public application
+{
+public:
+		 	 %TESTNAME%testApp (void) :
+				application ("grace.testsuite.%TESTNAME%")
+			 {
+			 }
+			~%TESTNAME%testApp (void)
+			 {
+			 }
+
+	int		 main (void);
+};
+
+APPOBJECT(%TESTNAME%testApp);
+
+#define FAIL(foo) { ferr.printf (foo "\n"); return 1; }
+
+int %TESTNAME%testApp::main (void)
+{
+	FAIL("test not implemented");
+	
+	return 0;
+}
+

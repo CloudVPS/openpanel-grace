@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist>
+	<dict>
+		<key>applicationName</key>
+		<string>TeachWord</string>
+		<key>applicationCreatorCode</key>
+		<string>TWRd</string>
+		<key>supportedFiletypes</key>
+		<dict>
+			<key>text/plain</key>
+			<dict>
+				<key>view</key>
+				<true/>
+				<key>edit</key>
+				<true/>
+				<key>save</key>
+				<true/>
+			</dict>
+			<key>text/x-teachword</key>
+			<dict>
+				<key>view</key>
+				<true/>
+				<key>edit</key>
+				<true/>
+				<key>save</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+</plist>

@@ -1,0 +1,40 @@
+#!/bin/sh
+root="n"
+if [ "$UID" = "0" ]; then
+  root="y"
+fi
+if [ -z "$UID" ]; then
+  iam=`whoami`
+  if [ "$iam" = "root" ]; then
+    root="y"
+  fi
+fi
+if [ "$root" = "y" ]; then
+  path_bin=/usr/bin
+  path_lib=/usr/lib
+  path_include=/usr/include
+else
+  path_bin=$HOME/.bin
+  path_lib=$HOME/.lib
+  path_include=$HOME/.include
+fi
+
+if [ ! -d $path_bin ]; then
+  mkdir $path_bin
+fi
+
+if [ ! -d $path_lib ]; then
+  mkdir $path_lib
+fi
+
+if [ ! -d $path_include ]; then
+  mkdir $path_include
+fi
+
+if [ ! -d $path_include/udbc ]; then
+  mkdir $path_include/udbc
+fi
+
+cp ../../lib/libudbc.a $path_lib/
+cp ../../include/udbc/*.h $path_include/udbc/
+cp ../../lib/udbc_mysql.* $path_lib/

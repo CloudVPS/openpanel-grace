@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nl.madscience.test.cxml>
+	<test.dictionary>
+		<test.node id="one">een</test.node>
+		<test.node id="two">twee</test.node>
+		<test.node id="three">drie</test.node>
+		<test.node id="four">vier</test.node>
+	</test.dictionary>
+	<test.array>
+		<test.arraynode>quick</test.arraynode>
+		<test.arraynode>brown</test.arraynode>
+		<test.arraynode>fox</test.arraynode>
+	</test.array>
+	<test.integer>143</test.integer>
+	<test.string>wibble</test.string>
+</nl.madscience.test.cxml>

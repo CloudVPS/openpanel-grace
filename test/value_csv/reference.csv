@@ -1,0 +1,6 @@
+"id","firstname","middlename","lastname","email","uid","gid"
+"pi","Pim","van","Riezen","pi@madscience.nl",500,500
+"guest","System","","Guest","guest@madscience.nl",499,499
+"john","John","""the wrecker""","Smith","jsmith@madscience.nl",1024,1024
+"barry","Barry","S","White","bwhite@madscience.nl",1025,1025
+"todd","Todd","","McIntosh","tmac@madscience.nl",1026,1026

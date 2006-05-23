@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dict>
+	<currency id="base">137.14</currency>
+	<currency id="vat">25.37</currency>
+	<currency id="net">162.51</currency>
+	<currency id="monthly">13.54</currency>
+</dict>

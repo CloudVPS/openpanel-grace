@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<void>
+	<string id="test">foo</string>
+	<dict id="adictionary">
+		<integer id="ultimateanswer">42</integer>
+		<string id="ultimatequestion">why</string>
+	</dict>
+	<array id="anarray">
+		<string>quick</string>
+		<string>brown</string>
+		<string>fox</string>
+	</array>
+	<string id="foo">bar</string>
+</void>

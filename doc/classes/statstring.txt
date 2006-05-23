@@ -1,0 +1,87 @@
+The statstring class                              GRACE Library Documentation
+
+1.INTRODUCTION
+
+In many places throughout the GRACE library, strings are used as index keys
+to children of value objects. The value class uses a quick hash of a string
+as a search key within its list of children, which are internally organized
+as a tree of objects sorted by their hash key. Although this search is
+pretty optimized, the hash needs to be calculated every time a string is
+passed as an index. Also, when a string key is used as a record name, the
+same string could be allocated in memory dozens of times, which is a waste
+of space.
+
+
+2.IMPLEMENTATION DETAILS
+
+The statstring class represents an immutable string and its hash value.
+The actual string data of two identical statstring objects will only be
+allocated once. Newly created entries in this global hash database also
+get a serial-number, making it unnecessary to do a full string compare
+when comparing two statstrings with the same hash key, even if there
+is a possible key-collision.
+
+The stringrefdb class is responsible for keeping track of all statstring
+references. Statstring instances reserves space in this 'database' for
+character sequences they associate themselves with.
+
+
+3.BEHAVIOR
+
+A statstring mostly operates as a regular string object, except that it
+can only store immutable string data, which can only be replaced by other
+immutable string data. A fully associated statstring has three elements:
+A 32-bit key, a 32-bit id and a regular string object. When two objects
+are compared, these three are compared in consecution. The id is the
+global index in the stringrefdb database. 
+
+When casting a statstring to a boolean, an unassigned instance will cast
+as false, assigned instances will cast as true.
+
+The stringrefdb uses reference counting to determine if a string should
+be kept around after it is unassigned. If you repeatedly use a specific
+sequence in isolation, assign it to a statstring which you do not de-
+reference to speed up operations.
+
+
+4.BUGS AND PITFALLS
+
+The checksumming algorithm used to compare strings is case-insensitive
+but the final check on character sequences is not. In its current
+incarnation, therefor, collection classes that use a statstring as an
+indexing key are case-sensitive. This needs work.
+
+
+5.OPERATORS AND CASTS
+
+  - assignment operators
+  
+      (statstring &) ((statstring) = (unsigned int))
+      (statstring &) ((statstring) = (const statstring &)
+      (statstring &) ((statstring) = (const char *)
+      (statstring &) ((statstring) = (const string &)
+      (statstring &) ((statstring) = (string *)
+  
+  - equality checks
+  
+      (bool) ((statstring) == != (const statstring &)
+      (bool) ((statstring) == != (const string &)
+      (bool) ((statstring) == != (const string *)
+
+  - typecasts
+  
+      (const string &) = (statstring)
+      (bool)           = (statstring)
+
+  - copy constructors
+  
+      statstring (const char *)
+      statstring (const char *, unsigned int)
+      statstring (const string &)
+      statstring (string &)
+      statstring (const statstring &)
+      
+
+6.SEE ALSO
+  - string
+  - value

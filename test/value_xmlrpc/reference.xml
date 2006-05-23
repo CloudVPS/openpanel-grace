@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+	<string id="methodName">listfoobars</string>
+	<dict id="params">
+		<integer id="ultimateanswer">42</integer>
+		<string id="ultimatequestionsearchpath">/</string>
+		<dict id="permissions">
+			<dict id="user">
+				<bool id="read">true</bool>
+				<bool id="write">true</bool>
+				<bool id="execute">true</bool>
+			</dict>
+			<dict id="group">
+				<bool id="read">true</bool>
+				<bool id="write">false</bool>
+				<bool id="execute">true</bool>
+			</dict>
+			<dict id="others">
+				<bool id="read">false</bool>
+				<bool id="write">false</bool>
+				<bool id="execute">false</bool>
+			</dict>
+		</dict>
+		<array id="testarray">
+			<string>one</string>
+			<string>two</string>
+			<string>three</string>
+		</array>
+	</dict>
+</methodCall>

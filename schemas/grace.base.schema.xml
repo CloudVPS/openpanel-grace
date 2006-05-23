@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF8"?>
+
+<xml.schema>
+
+  <xml.class name="void">
+    <xml.type>dict</xml.type>
+    <xml.code>VOID</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>VOIx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="unsigned"/>
+      <xml.member class="integer"/>
+      <xml.member class="string"/>
+      <xml.member class="bool"/>
+      <xml.member class="date"/>
+      <xml.member class="ipaddr"/>
+      <xml.member class="array"/>
+      <xml.member class="dict"/>
+      <xml.member class="long"/>
+      <xml.member class="ulong"/>
+      <xml.member class="short"/>
+      <xml.member class="ushort"/>
+      <xml.member class="char"/>
+      <xml.member class="uchar"/>
+      <xml.member class="void"/>
+      <xml.member class="float"/>
+      <xml.member class="currency"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="dict">
+    <xml.type>dict</xml.type>
+    <xml.code>DICT</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>DICx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="unsigned"/>
+      <xml.member class="integer"/>
+      <xml.member class="string"/>
+      <xml.member class="bool"/>
+      <xml.member class="date"/>
+      <xml.member class="ipaddr"/>
+      <xml.member class="array"/>
+      <xml.member class="dict"/>
+      <xml.member class="long"/>
+      <xml.member class="ulong"/>
+      <xml.member class="short"/>
+      <xml.member class="ushort"/>
+      <xml.member class="char"/>
+      <xml.member class="uchar"/>
+      <xml.member class="void"/>
+      <xml.member class="float"/>
+      <xml.member class="currency"/>
+    </xml.proplist>
+  </xml.class>
+
+  <xml.class name="array">
+    <xml.type>dict</xml.type>
+    <xml.code>ARRY</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>ARRx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="unsigned"/>
+      <xml.member class="integer"/>
+      <xml.member class="string"/>
+      <xml.member class="bool"/>
+      <xml.member class="date"/>
+      <xml.member class="ipaddr"/>
+      <xml.member class="array"/>
+      <xml.member class="dict"/>
+      <xml.member class="long"/>
+      <xml.member class="ulong"/>
+      <xml.member class="short"/>
+      <xml.member class="ushort"/>
+      <xml.member class="char"/>
+      <xml.member class="uchar"/>
+      <xml.member class="void"/>
+      <xml.member class="float"/>
+      <xml.member class="currency"/>
+    </xml.proplist>
+  </xml.class>
+
+  <xml.class name="unsigned">
+    <xml.type>unsigned</xml.type>
+    <xml.code>UINT</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>UINx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="integer">
+    <xml.type>integer</xml.type>
+    <xml.code>INTE</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>UINx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="string">
+    <xml.type>string</xml.type>
+    <xml.code>STRN</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>STRx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="bool">
+    <xml.type>bool</xml.type>
+    <xml.code>BOOL</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>BOOx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="date">
+    <xml.type>date</xml.type>
+    <xml.code>DATE</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>DATx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="ipaddr">
+    <xml.type>ipaddr</xml.type>
+    <xml.code>IPAD</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>IPAx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="long">
+    <xml.type>long</xml.type>
+    <xml.code>LONG</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>LONx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="ulong">
+    <xml.type>ulong</xml.type>
+    <xml.code>ULON</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>ULOx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="short">
+    <xml.type>short</xml.type>
+    <xml.code>SHRT</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>SHRx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="ushort">
+    <xml.type>ushort</xml.type>
+    <xml.code>USHR</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>USHx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="char">
+    <xml.type>char</xml.type>
+    <xml.code>CHAR</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>CHAx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="uchar">
+    <xml.type>integer</xml.type>
+    <xml.code>UCHR</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>UCHx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="float">
+    <xml.type>float</xml.type>
+    <xml.code>FLOT</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>FLOx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+  
+  <xml.class name="currency">
+    <xml.type>currency</xml.type>
+    <xml.code>CRCY</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>CRCx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+</xml.schema>

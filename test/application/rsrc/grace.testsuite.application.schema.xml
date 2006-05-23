@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xml.schema>
+  <xml.class name="grace.testsuite.application">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="ownerDetails" id="ownerDetails"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="ownerDetails">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="name" id="name"/>
+      <xml.member class="email" id="email"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="name"><xml.type>string</xml.type></xml.class>
+  <xml.class name="email"><xml.type>string</xml.type></xml.class>
+</xml.schema>

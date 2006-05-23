@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nl.madscience.lib.grace.doc.class name="httpdobject" type="abstract">
+
+  <!-- RELATIONS ------------------------------------------------------->
+
+  <relations>
+    <relation type="base"/>
+    <relation type="sub">
+      <related>httpdfileshare</related>
+      <related>httpdbasicauth</related>
+      <related>httpdrewrite</related>
+      <related>httpdvhost</related>
+    </relation>
+    <relation type="parent">
+      <related>httpd</related>
+    </relation>
+    <relation type="also"/>
+  </relations>
+  
+  <!-- DESCRIPTIONS --------------------------------------------------->
+
+  <synopsis>
+    Abstract class defining a processing stage in a HTTP service.
+  </synopsis>
+  
+  <description>
+    Classes derived from httpdobject implement a specific action in
+    the processing chain of a httpd instance. A request passes
+    through the objects in this chain until one of the members
+    indicates that no more handling is necessary. Through the details
+    provided to the virtual run methods a httpdobject can do various
+    things.
+    <p>
+    The meta-data belonging to a specific request can be
+    mangled in various forms. For example, the httpdfileshare
+    class implements basic serving of "flat files" through httpd. The
+    files are served from a static location. The httpdvhost class,
+    if inserted in the chain before httpdfileshare, will mangle the
+    "uri" part of the request's metadata depending on the value of
+    the client-provided Host header.
+    <p>
+    This chaining of small parts
+    of functionality allows you to keep your implementation as small
+    as possible for your specific situation. An XML web service may have
+    little need for the ability to send flat files, for example.
+  </description>
+  
+  <!-- CONSTRUCTORS ------------------------------------------------------>
+  
+  <constructors>
+    <constructor arglist="parent,urimatch" api="subclass">
+      <arguments>
+        <argument id="parent" type="httpd &">The parent httpd instance</argument>
+        <argument id="urimatch" type="const string &">A match criterium written as a glob-style wildcard</argument>
+      </arguments>
+      <synopsis>Creates a httpdobject instance for the provided httpd object</synopsis>
+      <description>
+        A derived class can use this constructor to link its instance into
+        a httpd object easily. Only for URIs that conform to the provided
+        match criterium will get passed to the object.
+      </description>
+    </constructor>
+  </constructors>
+  
+  <!-- DESTRUCTORS ------------------------------------------------------>
+
+  <destructors>
+    <destructor api="public">
+      <arguments/>
+      <synopsis>Cleans up the object</synopsis>
+      <description>
+         TBD
+      </description>
+    </destructor>
+  </destructors>
+  
+  <!-- VARIABLES ------------------------------------------------------->
+
+  <variables>
+  
+    <variable name="next" type="httpdobject *" api="private">
+      <synopsis>Next object in the chain (used by httpd)</synopsis>
+      <description>
+        The httpd class uses a linked list to define the object chain. This
+        pointer is used to point to the next element in the list.
+        The implication here is that a single httpdobject instance will
+        always belong to a single httpd instance.
+      </description>
+    </variable>
+    
+    <variable name="urimatch" type="string" api="private">
+      <synopsis>The match criterium</synopsis>
+      <description>
+        A glob-style wildcard that defines the class of URIs an object
+        is interested in. You can use this to lock down an instance only
+        to a specific path or filetype extension.
+      </description>
+    </variable>
+    
+    <variable name="parent" type="httpd *" api="private">
+      <synopsis>Link to the parent httpd object</synopsis>
+      <description>
+        A link to the parent object. This can be useful in cases where
+        a httpdobject implementation needs access to the parent
+        httpd object to get to information only that object can know
+        about.
+      </description>
+    </variable>
+    
+  </variables>
+  
+  <!-- PROPERTIES ------------------------------------------------------>
+
+  <properties/>
+  
+  <!-- METHODS ---------------------------------------------------------->
+
+  <methods>
+  
+    <method name="run" arglist="path,postbody,inhdr,out,outhdr,env,sock" api="subclass">
+      <arguments>
+        <argument id="path" type="string &">The currently resolved path to the provided URI</argument>
+        <argument id="postbody" type="string &">The HTTP POST body data</argument>
+        <argument id="inhdr" type="value &">The client provided header data</argument>
+        <argument id="out" type="string &">The output body</argument>
+        <argument id="outhdr" type="value &">Requested output headers</argument>
+        <argument id="env" type="value &">Meta variables</argument>
+        <argument id="sock" type="tcpsocket &">The connection's socket</argument>
+      </arguments>
+      <returnvalue type="int" name="httpstatus">
+        The HTTP status code. If 0, processing should continue. If negative,
+        all return data (headers and body) has already been sent to the
+        socket. If positive, the body and header data has been put into
+        the out and outhdr objects.
+      </returnvalue>
+      <synopsis>Virtual method defining a connection handler</synopsis>
+      <description>
+        Overload this method in your derived class to get useful functionality.
+        Generally this means either doing somethin niffty with the provided
+        headers to mangle the path or set values inside env.
+      </description>
+    </method>
+  
+  </methods>
+</nl.madscience.lib.grace.doc.class>
+

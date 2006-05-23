@@ -1,0 +1,71 @@
+#!/bin/sh
+
+TEST=`echo -n`
+if [ -z "$TEST" ]; then
+  ECHON="echo -n"
+  NHL=""
+else
+  ECHON="echo"
+  NHL="\c"
+fi
+
+if [ -z "$1" ]; then
+  echo "Usage: $0 path/to/application.app"
+  exit 1
+fi
+
+APPATH="$1"
+
+if [ ! -d "$APPATH" ]; then
+  APPATH="$APPATH.app"
+  if [ ! -d "$APPATH" ]; then
+    echo "$APPATH: not found"
+    exit 1
+  fi
+fi
+
+if [ ! -f "$APPATH/.meta" ]; then
+  echo "$APPATH: no metadata found (did you use mkapp?)"
+  exit 1
+fi
+
+appid=`cat "$APPATH/.meta" | grep "metro.appid" | sed -e "s/.*<metro.appid>//;s/<\/metro.appid>.*//"`
+
+if [ -z "$UID" ]; then
+  UID=`id | cut -f1 -d" " | cut -f2 -d= | cut -f1 -d"("`
+fi
+
+if [ "$UID" = "0" ]; then
+  if [ -d $MKCONFROOT/Library/Preferences ]; then
+    CONFPATH=$MKCONFROOT/Library/Preferences
+  else
+    if [ ! -d $MKCONFROOT/etc/conf ]; then
+      mkdir $MKCONFROOT/etc/conf
+    fi
+    CONFPATH=$MKCONFROOT/etc/conf
+  fi
+else
+  if [ -d "$HOME/Library/Preferences" ]; then
+    CONFPATH="$HOME/Library/Preferences"
+  else
+    if [ ! -d "$HOME/.conf" ]; then
+      mkdir "$HOME/.conf"
+    fi
+    CONFPATH="$HOME/.conf"
+  fi
+fi
+
+if [ ! -d "$CONFPATH/$appid" ]; then
+  mkdir "$CONFPATH/$appid"
+fi
+
+cd "$APPATH/Contents/Configuration Defaults"
+for file in *; do
+  $ECHON "$file: $NHL"
+  if [ ! -f "$CONFPATH/$appid/$file" ]; then
+    cp -f "$file" "$CONFPATH/$appid/$file" >/dev/null 2>&1
+    echo "installed"
+  else
+    echo "already installed"
+  fi
+done

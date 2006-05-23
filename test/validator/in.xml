@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UeberXML>
+  <phoneNumber>+31612345678</phoneNumber>
+  <postCode>1011AB</postCode>
+  <birthDate>1972-05-11</birthDate>
+  <accessLevel>1</accessLevel>
+  <options>
+    <flag>test</flag>
+  </options>
+</UeberXML>

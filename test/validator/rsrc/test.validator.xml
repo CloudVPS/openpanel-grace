@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grace.validator>
+
+  <datarule id="root">
+
+	<!-- mandatory elements/attributes enumeration -->  
+    <match.mandatory>
+    
+      <!-- the phoneNumber is optional, but if it's there there should
+           also be a postCode element -->
+      <optional type="child" key="phoneNumber">
+        <mandatory type="child" key="postCode" errorcode="1" errortext="missing postcode"/>
+      </optional>
+      
+      <!-- birthDate and accessLevel are always mandatory -->
+      <mandatory type="child" key="birthDate" errorcode="1" errortext="missing birthdate"/>
+      <mandatory type="child" key="accessLevel" errorcode="1" errortext="missing accesslevel"/>
+    </match.mandatory>
+    
+    <!-- ruleset to be applied to every child node -->
+    <match.child>
+	  <and>
+		<match.id>phoneNumber</match.id>
+		<match.rule>phone</match.rule>
+	  </and>
+	  <and>
+		<match.id>postCode</match.id>
+		<match.rule>postcode</match.rule>
+	  </and>
+	  <and>
+	    <match.id>birthDate</match.id>
+	    <match.rule>birthdate</match.rule>
+	  </and>
+	  <and>
+	    <match.id>accessLevel</match.id>
+	    <match.rule>accesslevel</match.rule>
+	  </and>
+	  <and>
+	    <match.id>options</match.id>
+	    <match.rule>options</match.rule>
+	  </and>
+    </match.child>
+  </datarule>
+  
+  <!-- validation for a phone number, with the following rules:
+       1) Looks either like +(country)(branch)(local) or
+          0(branch)(local)
+       2) Minimum length of 8 characters.
+       3) Maximum length of 12 characters. -->
+  <datarule id="phone">
+    <match.data errorcode="100" errortext="Phone number syntax error">
+      <regexp>\+[[:digit:]]{1,12}</regexp>
+      <regexp>0[[:digit:]]{1,10}</regexp>
+    </match.data>
+    <match.data errorcode="101" errortext="Phone number too short">
+      <minsize>8</minsize>
+    </match.data>
+    <match.data errorcode="102" errortext="Phone number too long">
+      <maxsize>13</maxsize>
+    </match.data>
+  </datarule>
+  
+  <datarule id="postcode">
+    <match.data errorcode="103" errortext="Postcode syntax error">
+      <regexp>[[:digit:]]{4}[[:alpha:]]{2}</regexp>
+    </match.data>
+  </datarule>
+  
+  <datarule id="birthdate">
+    <match.data errorcode="104" errortext="Date syntax">
+      <regexp>[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}</regexp>
+    </match.data>
+  </datarule>
+  
+  <datarule id="accesslevel">
+    <match.data errorcode="105" errortext="Access level out of bounds">
+      <lt>5</lt>
+    </match.data>
+    <match.data errorcode="106" errortext="Access level out of bounds">
+      <gt>0</gt>
+    </match.data>
+  </datarule>
+  
+  <datarule id="options">
+    <match.child>
+      <and>
+        <match.class>flag</match.class>
+        <match.rule>flag</match.rule>
+      </and>
+      <and>
+        <match.id>homepage</match.id>
+        <match.rule>homepage</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="homepage">
+    <match.data errorcode="107" errortext="Invalid homepage data">
+      <regexp>http://.*</regexp>
+    </match.data>
+  </datarule>
+  
+  <datarule id="flag">
+    <match.data errorcode="108" errortext="Invalid flag data">
+      <regexp>[[:alnum:]]+</regexp>
+    </match.data>
+  </datarule>
+  
+</grace.validator>

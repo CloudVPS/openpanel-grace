@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IHateXML>
+	<dict id="reallycoolpeople">
+		<string id="hatetype">loathing</string>
+		<string id="hater">me</string>
+	</dict>
+	<dict id="ansaphones">
+		<string id="hatetype">disdain</string>
+		<string id="hater">everyone</string>
+		<string id="intensity">severe</string>
+	</dict>
+</IHateXML>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nl.madscience.lib.grace.doc.class name="httpdobject" type="abstract">
+
+  <!-- RELATIONS ------------------------------------------------------->
+
+  <relations>
+    <relation type="base">
+      <related>application</related>
+    </relation>
+    <relation type="sub"/>
+    <relation type="parent"/>
+    <relation type="child"/>
+    <relation type="also">
+      <related>httpd</related>
+    </relation>
+  </relations>
+  
+  <!-- DESCRIPTIONS --------------------------------------------------->
+
+  <synopsis>
+    An application model for a CGI.
+  </synopsis>
+  
+  <description>
+    Deriving your application from this class will help you with
+    preprocessing all forms of data input coming out of the webserver
+    into a CGI. The post variables will be dumped into the application's
+    env[] object.
+  </description>
+  
+  <!-- CONSTRUCTORS ------------------------------------------------------>
+
+  <constructors>
+    <constructor arglist="appid" api="subclass">
+      <arguments>
+        <argument id="appid" type="const char *">The unique application id</argument>
+      </arguments>
+      <synopsis>
+        Parent constructor
+      </synopsis>
+      <description>
+        Apart from invoking the constructor for the application base class,
+        this constructor will handle the CGI environment. Both POST and
+        GET requests are supported, although not both methods at the same
+        time. A post variable 'foo' will be stored in env["foo"] unless
+        if there already is such a value. In that case either a new
+        array called ["foo.array"] is created (with the value of the
+        original env["foo"] heading the list followed by the posted
+        variable) or the posted variable is added to an existing
+        array called ["foo.array"].
+        <p>
+        So-called upload forms are also supported, although there is
+        an effective POST limit which is currently statically configured
+        for the library in the defaults.h header.
+      </description>
+    </constructor>
+  </constructors>
+
+  <!-- VARIABLES ------------------------------------------------------->
+
+  <variables>
+  
+    <variable name="headers" type="value" api="private">
+      <synopsis>Output headers</synopsis>
+      <description>
+        The cgi class uses a buffered output model, if you so choose.
+        Use this value object to store any specific headers you would
+        like to add.
+      </description>
+    </variable>
+    
+    <variable name="buffer" type="string" api="private">
+      <synopsis>Output buffer</synopsis>
+      <description>
+        Use this to buffer your output. You can send text using the
+        printf() method or whatever catches your fancy. Use the
+        sendpage() method to send the output to its merry way.
+        The advantage of using a buffer is that you can replace
+        the entire page in case of an error somewhere during the
+        flow of the program.
+      </description>
+    </variable>
+  
+  </variables>
+  <!-- PROPERTIES ------------------------------------------------------>
+
+  <properties/>
+  
+  <!-- METHODS ---------------------------------------------------------->
+
+  <methods>
+  
+    <method name="main" arglist="" api="subclass">
+      <arguments/>
+      <synopsis>Virtual main method</synopsis>
+      <description>
+        Oveload this method to implement your CGI application
+      </description>
+    </method>
+    
+    <method name="sendpage" arglist="" api="private">
+      <arguments/>
+      <synopsis>Send buffered page to the output</synopsis>
+      <description>
+        This method sends the headers and data to the output
+        channel, after calculating the Content-length.
+      </description>
+    </method>
+  </methods>
+<nl.madscience.lib.grace.doc.class/>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grace.rsrc>
+  <string id="application-id">org.example.svc.mydaemon</string>
+  <section id="log">
+    <logtarget>
+      <string id="type">syslog</string>
+      <string id="target">myAppname</string>
+      <dict id="priorities">
+        <string>emergency</string>
+        <string>alert</string>
+        <string>critical</string>
+        <string>error</string>
+      </dict>
+    </logtarget>
+    <logtarget>
+      <string id="type">file</string>
+      <string id="target">/var/log/myAppname.log</string>
+    </logtarget>
+  </section>
+</grace.rsrc>

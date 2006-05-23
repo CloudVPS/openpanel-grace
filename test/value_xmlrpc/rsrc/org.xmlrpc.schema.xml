@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xml.schema>
+  <xml.schema.options>
+    <xml.option.rootclass>methodCall</xml.option.rootclass>
+  </xml.schema.options>
+
+  <xml.class name="methodCall">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="methodName" id="methodName" mandatory="true"/>
+      <xml.member class="params" id="params"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="methodName">
+    <xml.type>string</xml.type>
+  </xml.class>
+  
+  <xml.class name="params">
+    <xml.type>container</xml.type>
+    <xml.container>
+      <xml.container.wrapclass>param</xml.container.wrapclass>
+      <xml.container.valueclass>value</xml.container.valueclass>
+      <xml.container.idclass>name</xml.container.idclass>
+      <xml.container.types>
+        <xml.container.type id="integer">i4</xml.container.type>
+        <xml.container.type id="bool">boolean</xml.container.type>
+        <xml.container.type id="dict">struct</xml.container.type>
+        <xml.container.type id="array">array</xml.container.type>
+        <xml.container.type id="float">real</xml.container.type>
+        <xml.container.type id="string">string</xml.container.type>
+      </xml.container.types>
+    </xml.container>
+  </xml.class>
+  
+  <xml.class name="struct" contained="true">
+    <xml.type>container</xml.type>
+    <xml.container>
+      <xml.container.wrapclass>member</xml.container.wrapclass>
+      <xml.container.valueclass>value</xml.container.valueclass>
+      <xml.container.idclass>name</xml.container.idclass>
+      <xml.container.types>
+        <xml.container.type id="integer">i4</xml.container.type>
+        <xml.container.type id="bool">boolean</xml.container.type>
+        <xml.container.type id="dict">struct</xml.container.type>
+        <xml.container.type id="array">array</xml.container.type>
+        <xml.container.type id="float">real</xml.container.type>
+        <xml.container.type id="string">string</xml.container.type>
+      </xml.container.types>
+    </xml.container>
+  </xml.class>
+  
+  <xml.class name="array" contained="true">
+    <xml.type>container</xml.type>
+    <xml.container>
+      <xml.container.envelope>data</xml.container.envelope>
+      <xml.container.valueclass>value</xml.container.valueclass>
+      <xml.container.wrapclass/>
+      <xml.container.idclass/>
+      <xml.container.types>
+        <xml.container.type id="integer">i4</xml.container.type>
+        <xml.container.type id="bool">boolean</xml.container.type>
+        <xml.container.type id="dict">struct</xml.container.type>
+        <xml.container.type id="array">array</xml.container.type>
+        <xml.container.type id="float">real</xml.container.type>
+        <xml.container.type id="string">string</xml.container.type>
+       </xml.container.types>
+    </xml.container>
+  </xml.class>
+     
+  
+  <xml.class name="integer" contained="true">
+    <xml.type>integer</xml.type>
+  </xml.class>
+  <xml.class name="i4" contained="true">
+    <xml.type>integer</xml.type>
+  </xml.class>
+  <xml.class name="boolean" contained="true">
+    <xml.type>bool</xml.type>
+  </xml.class>
+  <xml.class name="real" contained="true">
+    <xml.type>float</xml.type>
+  </xml.class>
+  <xml.class name="string" contained="true">
+    <xml.type>string</xml.type>
+  </xml.class>
+</xml.schema>

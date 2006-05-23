@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF8"?>
+
+<xml.schema>
+  <xml.schema.options>
+    <xml.option.rootclass>nl.madscience.test.cxml</xml.option.rootclass>
+  </xml.schema.options>
+  <xml.class name="nl.madscience.test.cxml">
+    <xml.type>dict</xml.type>
+    <xml.code>Ctst</xml.code>
+    <xml.proplist>
+      <xml.member class="test.dictionary" id="dictionary"/>
+      <xml.member class="test.array" id="array"/>
+      <xml.member class="test.string" id="string"/>
+      <xml.member class="test.integer" id="integer"/>
+    </xml.proplist>
+  </xml.class>
+  <xml.class name="test.dictionary">
+    <xml.type>dict</xml.type>
+    <xml.code>Tdic</xml.code>
+    <xml.proplist>
+      <xml.member class="test.node"/>
+    </xml.proplist>
+  </xml.class>
+  <xml.class name="test.node">
+    <xml.type>string</xml.type>
+    <xml.code>Tnod</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>TnIX</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+  <xml.class name="test.array">
+    <xml.type>array</xml.type>
+    <xml.code>Tarr</xml.code>
+    <xml.proplist>
+      <xml.member class="test.arraynode"/>
+    </xml.proplist>
+  </xml.class>
+  <xml.class name="test.arraynode">
+    <xml.type>string</xml.type>
+    <xml.code>ArNO</xml.code>
+  </xml.class>
+  <xml.class name="test.string">
+    <xml.type>string</xml.type>
+    <xml.code>TeST</xml.code>
+  </xml.class>
+  <xml.class name="test.integer">
+    <xml.type>integer</xml.type>
+    <xml.code>TeIN</xml.code>
+  </xml.class>
+</xml.schema>

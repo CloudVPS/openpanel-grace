@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dict>
+	<string id="ip">127.0.0.1</string>
+	<string id="from">pi@madscience.nl</string>
+	<array id="rcpt">
+		<string>test@test.test</string>
+	</array>
+</dict>

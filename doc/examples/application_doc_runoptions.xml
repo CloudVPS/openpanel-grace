@@ -1,0 +1,17 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <grace.runoptions>
+   <grace.option id="-h">
+     <grace.long>--help</grace.long>
+   </grace.option>
+   <grace.option id="-d">
+     <grace.long>--debug</grace.long>
+   </grace.option>
+   <grace.option id="--help">
+     <grace.argc>0</grace.argc>
+     <grace.help>Show help information</grace.help>
+   </grace.option>
+   <grace.option id="--debug">
+     <grace.argc>1</grace.argc>
+     <grace.default>0</grace.default>
+   </grace.option>
+ </grace.runoptions>

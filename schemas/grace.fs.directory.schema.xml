@@ -1,0 +1,51 @@
+<xml.schema>
+
+  <xml.class name="grace.fs.directory">
+    <xml.type>dict</xml.type>
+    <xml.code>fsDI</xml.code>
+    <xml.proplist>
+      <xml.member class="fs.object"/>
+    </xml.proplist>
+  </xml.class>
+
+  <xml.class name="fs.object">
+    <xml.type>dict</xml.type>
+    <xml.code>fsOB</xml.code>
+    <xml.attributes>
+      <xml.attribute label="name" isindex="true" mandatory="true">
+        <xml.type>string</xml.type>
+        <xml.code>fsNM</xml.code>
+      </xml.attribute>
+    </xml.attributes> 
+    <xml.proplist>
+      <xml.member class="fs.path" id="path" mandatory="true"/>
+      <xml.member class="fs.inode" id="inode"/>
+      <xml.member class="fs.nlink" id="nlink"/>
+      <xml.member class="fs.type" id="type"/>
+      <xml.member class="fs.link" id="link"/>
+      <xml.member class="fs.mode" id="mode"/>
+      <xml.member class="sys.uid" id="fuid"/>
+      <xml.member class="sys.gid" id="fgid"/>
+      <xml.member class="fs.size" id="size"/>
+      <xml.member class="fs.atime" id="atime"/>
+      <xml.member class="fs.mtime" id="mtime"/>
+      <xml.member class="fs.ctime" id="ctime"/>
+      <xml.member class="fs.mimetype" id="mime"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="fs.path"><xml.type>string</xml.type><xml.code>fsPA</xml.code></xml.class>
+  <xml.class name="fs.inode"><xml.type>ulong</xml.type><xml.code>fsIN</xml.code></xml.class>
+  <xml.class name="fs.nlink"><xml.type>integer</xml.type><xml.code>fsNL</xml.code></xml.class>
+  <xml.class name="fs.type"><xml.type>integer</xml.type><xml.code>fsTY</xml.code></xml.class>
+  <xml.class name="fs.link"><xml.type>string</xml.type><xml.code>fsLI</xml.code></xml.class>
+  <xml.class name="fs.mode"><xml.type>unsigned</xml.type><xml.code>fsMO</xml.code></xml.class>
+  <xml.class name="sys.uid"><xml.type>unsigned</xml.type><xml.code>fsUI</xml.code></xml.class>
+  <xml.class name="sys.gid"><xml.type>unsigned</xml.type><xml.code>fsGI</xml.code></xml.class>
+  <xml.class name="fs.size"><xml.type>unsigned</xml.type><xml.code>fsSZ</xml.code></xml.class>
+  <xml.class name="fs.atime"><xml.type>unsigned</xml.type><xml.code>fsAT</xml.code></xml.class>
+  <xml.class name="fs.mtime"><xml.type>unsigned</xml.type><xml.code>fsMT</xml.code></xml.class>
+  <xml.class name="fs.ctime"><xml.type>unsigned</xml.type><xml.code>fsCT</xml.code></xml.class>
+  <xml.class name="fs.mimetype"><xml.type>string</xml.type><xml.code>fsMI</xml.code></xml.class>
+      
+</xml.schema>

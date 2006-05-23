@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<IHateXML>
+  <PrimaryHate hatelabel="reallycoolpeople">
+    <HateType>loathing</HateType>
+    <string id="hater">me</string>
+  </PrimaryHate>
+  <SecondaryHate hatelabel="ansaphones">
+    <HateType>disdain</HateType>
+    <string id="hater">everyone</string>
+    <string id="intensity">severe</string>
+  </Secondaryhate>
+</IHateXML>

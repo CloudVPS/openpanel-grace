@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<valueini>
+	<globalTestValue>42</globalTestValue>
+	<settings>
+		<localSettingsValue>test</localSettingsValue>
+		<subSettings>
+			<localSubValue>one two three</localSubValue>
+			<localSettingsValue>four five six</localSettingsValue>
+		</subSettings>
+	</settings>
+	<options>
+		<optionValue>31337</optionValue>
+	</options>
+</valueini>

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grace.validator>
+
+  <datarule id="root">
+    <match.child>
+      <and>
+        <match.id>.options</match.id>
+        <match.rule>xml.schema.options</match.rule>
+      </and>
+      <and>
+        <match.class>xml.class</match.class>
+        <match.rule>xml.class</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="xml.schema.options">
+	<match.child>
+	  <and>
+		<match.id>namespaces</match.id>
+		<match.rule>xml.option.namespaces</match.rule>
+	  </and>
+	  <and>
+		<match.id>doctype</match.id>
+		<match.rule>xml.option.doctype</match.rule>
+	  </and>
+	</match.child>
+  </datarule>
+  
+  <datarule id="xml.option.namespaces">
+    <match.child>
+      <and>
+        <match.class>xml.namespace</match.class>
+        <match.rule>xml.namespace</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="xml.option.doctype">
+    <match.mandatory>
+      <mandatory type="attribute" key="name" errorcode="0001" errortext="xml.option.doctype with no name attribute"/>
+      <mandatory type="attribute" key="status" errorcode="0002" errortext="xml.option.doctype with no status attribute"/>
+    </match.mandatory>
+    <match.attribute>
+      <match.id>name</match.id>
+      <and>
+        <match.id>status</match.id>
+        <match.data errorcode="0003" errortext="xml.option.doctype status attribute invalid">
+          <text>PUBLIC</text>
+          <text>PRIVATE</text>
+        </match.data>
+      </and>
+      <match.id>dtd</match.id>
+    </match.attribute>
+  </datarule>
+  
+  <datarule id="xml.namespace">
+    <match.mandatory>
+      <mandatory type="attribute" key="action" errorcode="0004" errortext="No action defined in xml.namespace"/>
+    </match.mandatory>
+    <match.child>
+      <and>
+        <match.class>xml.namespace.type</match.class>
+        <match.rule>xml.namespace.type</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="xml.namespace.type">
+    <match.mandatory>
+      <mandatory type="attribute" key="alias" errorcode="0005" errortext="Missing alias attribute for xml.namespace.type"/>
+    </match.mandatory>
+  </datarule>
+  
+  <datarule id="xml.class">
+    <match.attribute errorcode="0006" errortext="Undefined xml.class attribute">
+      <match.id>contained</match.id>
+      <match.id>wrap</match.id>
+      <match.id>attribvalue</match.id>
+      <match.id>array</match.id>
+      <match.id>union</match.id>
+    </match.attribute>
+    <match.child>
+      <and>
+        <match.id>xml.type</match.id>
+        <match.rule>xml.type</match.rule>
+      </and>
+      <match.id>xml.code</match.id>
+      <match.id>xml.encoding</match.id>
+      <match.id>xml.validate</match.id>
+      <and>
+        <match.id>xml.attributes</match.id>
+        <match.rule>xml.attributes</match.rule>
+      </and>
+      <and>
+        <match.id>xml.container</match.id>
+        <match.rule>xml.container</match.rule>
+      </and>
+      <and>
+        <match.id>xml.proplist</match.id>
+        <match.rule>xml.proplist</match.rule>
+      </and>
+      <and>
+        <match.id>xml.union</match.id>
+        <match.rule>xml.union</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="xml.type">
+    <match.data errorcode="0007" errortext="Undefined xml.type value">
+      <text>dict</text>
+      <text>string</text>
+      <text>integer</text>
+      <text>char</text>
+      <text>uchar</text>
+      <text>short</text>
+      <text>ushort</text>
+      <text>bool</text>
+      <text>bool.true</text>
+      <text>bool.false</text>
+      <text>long</text>
+      <text>unsigned</text>
+      <text>ulong</text>
+      <text>ipaddr</text>
+      <text>date</text>
+      <text>datetime</text>
+      <text>container</text>
+      <text>array</text>
+      <text>ipaddress</text>
+      <text>float</text>
+      <text>void</text>
+      <text>union</text>
+    </match.data>
+  </datarule>
+  
+  <datarule id="xml.attributes">
+    <match.child>
+      <and>
+        <match.class>xml.attribute</match.class>
+        <match.rule>xml.attribute</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="xml.attribute">
+    <match.attribute errorcode="0010" errortext="Unexpected attribute">
+      <match.id>mandatory</match.id>
+      <match.id>isindex</match.id>
+    </match.attribute>
+    <match.child errorcode="0011" errortext="Unexpdected xml.attribute child">
+      <and>
+        <match.id>xml.type</match.id>
+        <match.rule>xml.type</match.rule>
+      </and>
+      <match.id>xml.code</match.id>
+      <match.id>xml.validate</match.id>
+    </match.child>
+  </datarule>
+  
+  <datarule id="xml.proplist">
+    <match.attribute>
+      <match.id>strict</match.id>
+    </match.attribute>
+    <match.child>
+      <and>
+        <match.class>xml.member</match.class>
+        <match.rule>xml.member</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="xml.member">
+    <match.attribute>
+      <match.id>id</match.id>
+      <match.id>mandatory</match.id>
+    </match.attribute>
+  </datarule>
+  
+  <datarule id="xml.container">
+    <match.child>
+      <match.id>xml.container.envelope</match.id>
+      <match.id>xml.container.valueclass</match.id>
+      <match.id>xml.container.wrapclass</match.id>
+      <match.id>xml.container.idclass</match.id>
+      <and>
+        <match.id>xml.container.types</match.id>
+        <match.rule>xml.container.types</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="xml.container.types">
+    <match.child>
+      <and>
+        <match.class>xml.container.type</match.class>
+        <or>
+		  <match.id>dict</match.id>
+		  <match.id>string</match.id>
+		  <match.id>integer</match.id>
+		  <match.id>char</match.id>
+		  <match.id>uchar</match.id>
+		  <match.id>short</match.id>
+		  <match.id>ushort</match.id>
+		  <match.id>bool</match.id>
+		  <match.id>bool.true</match.id>
+		  <match.id>bool.false</match.id>
+		  <match.id>long</match.id>
+		  <match.id>unsigned</match.id>
+		  <match.id>ulong</match.id>
+		  <match.id>ipaddr</match.id>
+		  <match.id>date</match.id>
+		  <match.id>datetime</match.id>
+		  <match.id>container</match.id>
+		  <match.id>array</match.id>
+		  <match.id>ipaddress</match.id>
+		  <match.id>float</match.id>
+		  <match.id>void</match.id>
+		  <match.id>union</match.id>
+		</or>
+	  </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="xml.union">
+    <match.child>
+      <and>
+        <match.class>xml.union.match</match.class>
+        <match.rule>xml.union.match</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="xml.union.match">
+    <match.mandatory>
+      <mandatory type="attribute" key="type" errorcode="0009" errortext="xml.union.match missing type attribute"/>
+    </match.mandatory>
+    <match.attribute>
+      <match.id>type</match.id>
+      <match.id>label</match.id>
+    </match.attribute>
+  </datarule>
+  
+</grace.validator>

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF8"?>
+
+<!-- CXML schema for iTunes 4.x DAAP protocol                     
+     Compiled by Pim van Riezen (pi@madscience.nl)
+     With thanks to Chris Boot and the daap.sf.net project
+         
+     1=char 3=short 5=int 7=long 9=str 10=dat 11=vers 12=cont     -->
+
+<xml.schema>
+
+  <xml.class name="dmap.serverinforesponse">
+    <xml.type>dict</xml.type>
+    <xml.code>????</xml.code>
+    <xml.proplist>
+      <xml.member class="dmap.status" id="status" mandatory="true"/>
+	  <xml.member class="dmap.statusstring" id="statusstring"/>
+      <xml.member class="dmap.protocolversion" id="dmapversion" mandatory="true"/>
+      <xml.member class="daap.protocolversion" id="daapversion" mandatory="true"/>
+      <xml.member class="dmap.itemname" id="name" mandatory="true"/>
+      <xml.member class="dmap.loginrequired" id="loginrequired" mandatory="true"/>
+      <xml.member class="dmap.supportsautologout" id="supportsautologout" mandatory="true"/>
+      <xml.member class="dmap.supportsupdate" id="supportsupdate" mandatory="true"/>
+      <xml.member class="dmap.supportspersistentids" id="supportspersistentids" mandatory="true"/>
+      <xml.member class="dmap.supportsextensions" id="supportsextensions" mandatory="true"/>
+      <xml.member class="dmap.supportsbrowse" id="supportsbrose" mandatory="true"/>
+      <xml.member class="dmap.supportsquery" id="supportsquery" mandatory="true"/>
+      <xml.member class="dmap.supportsindex" id="supportsindex" mandatory="true"/>
+      <xml.member class="dmap.supportsresolve" id="supportsresolve" mandatory="true"/>
+      <xml.member class="dmap.databasecount" id="databasescount" mandatory="true"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="dmap.loginresponse">
+    <xml.type>dict</xml.type>
+    <xml.code>mlog</xml.code>
+    <xml.proplist>
+      <xml.member class="dmap.status" id="status" mandatory="true"/>
+	  <xml.member class="dmap.statusstring" id="statusstring"/>
+      <xml.member class="dmap.sessionid" id="sessionid" mandatory="true"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="dmap.updateresponse">
+    <xml.type>dict</xml.type>
+    <xml.code>mupd</xml.code>
+    <xml.proplist>
+      <xml.member class="dmap.status" id="status" mandatory="true"/>
+	  <xml.member class="dmap.statusstring" id="statusstring"/>
+      <xml.member class="dmap.serverrevision" id="serverrevision" mandatory="true"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="daap.serverdatabases">
+    <xml.type>dict</xml.type>
+    <xml.code>avdb</xml.code>
+	<xml.proplist>
+	  <xml.member class="dmap.status" id="status" mandatory="true"/>
+	  <xml.member class="dmap.statusstring" id="statusstring"/>
+	  <xml.member class="dmap.updatetype" id="updatetype" mandatory="true"/>
+	  <xml.member class="dmap.specifiedtotalcount" id="specifiedtotalcount" mandatory="true"/>
+	  <xml.member class="dmap.returnedcount" id="returnedcount" mandatory="true"/>
+	  <xml.member class="dmap.listing" id="listing" mandatory="true"/>
+	</xml.proplist>    
+  </xml.class>
+  
+  <xml.class name="dmap.listing">
+    <xml.type>dict</xml.type>
+    <xml.code>mlcl</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" mandatory="true" isindex="true">
+        <xml.type>integer</xml.type>
+        <xml.code>miid</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="dmap.persistentid" id="persistentid"/>
+      <xml.member class="dmap.itemname" id="name"/>
+      <xml.member class="dmap.itemcount" id="count"/>
+      <xml.member class="dmap.containercount" id="containercount"/>
+      <xml.member class="dmap.listingitem"/>
+    </xml.proplist>
+  </xml.class>
+
+  <xml.class name="dmap.listingitem">
+    <xml.type>dict</xml.type>
+    <xml.code>mlit</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" mandatory="true" isindex="true">
+        <xml.type>integer</xml.type>
+        <xml.code>miid</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="dmap.itemkind" id="itemkind" mandatory="true"/>
+      <xml.member class="dmap.itemname" id="name" mandatory="true"/>
+      <xml.member class="dmap.persistentid" id="persistentid"/>
+      <xml.member class="dmap.containeritemid" id="containerid"/>
+      <xml.member class="dmap.itemcount" id="count"/>
+      <xml.member class="daap.songalbum" id="songalbum"/>
+      <xml.member class="daap.songartist" id="songartist"/>
+      <xml.member class="daap.songbeatsperminute" id="beatsperminute"/>
+      <xml.member class="daap.songbitrate" id="bitrate"/>
+      <xml.member class="daap.songcomment" id="comment"/>
+      <xml.member class="daap.songcompilation" id="compilation"/>
+      <xml.member class="daap.songcomposer" id="composer"/>
+      <xml.member class="daap.songdateadded" id="dateadded"/>
+      <xml.member class="daap.songdatemodified" id="datemodified"/>
+      <xml.member class="daap.songdisccount" id="disccount"/>
+      <xml.member class="daap.songdiscnumber" id="discnumber"/>
+      <xml.member class="daap.songdatakind" id="datakind"/>
+      <xml.member class="daap.songformat" id="format"/>
+      <xml.member class="daap.songeqpresest" id="eqpreset"/>
+      <xml.member class="daap.songgenre" id="genre"/>
+      <xml.member class="daap.songdescription" id="description"/>
+      <xml.member class="daap.songdisabled" id="disabled"/>
+      <xml.member class="daap.songrelativevolume" id="relativevolume"/>
+      <xml.member class="daap.songstarttime" id="starttime"/>
+      <xml.member class="daap.songstoptime" id="stoptime"/>
+      <xml.member class="daap.songtime" id="time"/>
+      <xml.member class="daap.songtrackcount" id="trackcount"/>
+      <xml.member class="daap.songtracknumber" id="tracknumber"/>
+      <xml.member class="daap.songuserrating" id="userrating"/>
+      <xml.member class="daap.songyear" id="year"/>
+      <xml.member class="daap.songdataurl" id="url"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="daap.databaseplaylists">
+    <xml.type>dict</xml.type>
+    <xml.code>    </xml.code>
+    <xml.proplist>
+      <xml.member class="dmap.status" id="status" mandatory="true"/>
+      <xml.member class="dmap.statusstring" id="statusstring"/>
+      <xml.member class="dmap.updatetype" id="updatetype" mandatory="true"/>
+      <xml.member class="dmap.specifiedtotalcount" id="specifiedtotalcount" mandatory="true"/>
+      <xml.member class="dmap.returnedcount" id="returnedcount" mandatory="true"/>
+      <xml.member class="dmap.listing" id="listing" mandatory="true"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="daap.playlistsongs">
+    <xml.type>dict</xml.type>
+    <xml.code>    </xml.code>
+    <xml.proplist>
+      <xml.member class="dmap.status" id="status" mandatory="true"/>
+      <xml.member class="dmap.statusstring" id="statusstring"/>
+      <xml.member class="dmap.updatetype" id="updatetype"/>
+      <xml.member class="dmap.specifiedtotalcount" id="specifiedtotalcount" mandatory="true"/>
+      <xml.member class="dmap.returnedcount" id="returnedcount" mandatory="true"/>
+      <xml.member class="dmap.listing" id="listing" mandatory="true"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="dmap.status">
+    <xml.type>integer</xml.type>
+    <xml.code>mstt</xml.code>
+  </xml.class>
+  
+  <xml.class name="dmap.statusstring">
+    <xml.type>string</xml.type>
+    <xml.code>msts</xml.code>
+  </xml.class>
+  
+  <xml.class name="daap.protocolversion">
+    <xml.type>version</xml.type>
+    <xml.code>apro</xml.code>
+  </xml.class>
+  
+  <xml.class name="dmap.protocolversion">
+    <xml.type>version</xml.type>
+    <xml.code>mpro</xml.code>
+  </xml.class>
+  
+  <xml.class name="dmap.itemname">
+    <xml.type>string</xml.type>
+    <xml.code>minm</xml.code>
+  </xml.class>
+    
+  <xml.class name="dmap.loginrequired">
+    <xml.type>char</xml.type>
+    <xml.code>mslr</xml.code>
+  </xml.class>
+    
+  <xml.class name="dmap.supportsautologout">
+    <xml.type>char</xml.type>
+    <xml.code>msal</xml.code>
+  </xml.class>
+
+  <xml.class name="dmap.supportsupdate">
+    <xml.type>char</xml.type>
+    <xml.code>msup</xml.code>
+  </xml.class>
+    
+  <xml.class name="dmap.supportspersistentids">
+    <xml.type>char</xml.type>
+    <xml.code>mspi</xml.code>
+  </xml.class>
+    
+  <xml.class name="dmap.supportsextensions">
+    <xml.type>char</xml.type>
+    <xml.code>msex</xml.code>
+  </xml.class>
+    
+  <xml.class name="dmap.supportsbrowse">
+    <xml.type>char</xml.type>
+    <xml.code>msbr</xml.code>
+  </xml.class>
+    
+  <xml.class name="dmap.supportsquery">
+    <xml.type>char</xml.type>
+    <xml.code>msqy</xml.code>
+  </xml.class>
+  
+  <xml.class name="dmap.supportsindex">
+    <xml.type>char</xml.type>
+    <xml.code>msix</xml.code>
+  </xml.class>
+
+  <xml.class name="dmap.supportsresolve">
+    <xml.type>char</xml.type>
+    <xml.code>msrs</xml.code>
+  </xml.class>
+    
+  <xml.class name="dmap.databasescount">
+    <xml.type>integer</xml.type>
+    <xml.code>msdc</xml.code>
+  </xml.class>
+    
+  <xml.class name="dmap.sessionid">
+    <xml.type>integer</xml.type>
+    <xml.code>mlid</xml.code>
+  </xml.class>
+  
+  <xml.class name="dmap.serverrevision">
+    <xml.type>integer></xml.type>
+    <xml.code>musr</xml.code>
+  </xml.class>
+  
+  <xml.class name="dmap.updatetype">
+    <xml.type>char</xml.type>
+    <xml.code>muty</xml.code>
+  </xml.class>
+  
+  <xml.class name="dmap.specifiedtotalcount">
+    <xml.type>integer</xml.type>
+    <xml.code>mtco</xml.code>
+  </xml.class>
+
+  <xml.class name="dmap.returnedcount">
+    <xml.type>integer</xml.type>
+    <xml.code>mrco</xml.code>
+  </xml.class>
+    
+  <xml.class name="dmap.persistentid">
+    <xml.type>long</xml.type>
+    <xml.code>mspi</xml.code>
+  </xml.class>
+    
+  <xml.class name="dmap.itemcount">
+    <xml.type>integer</xml.type>
+    <xml.code>mimc</xml.code>
+  </xml.class>
+
+  <xml.class name="dmap.containercount">
+    <xml.type>integer</xml.type>
+    <xml.code>mctc</xml.code>
+  </xml.class>
+    
+  <xml.class name="dmap.itemkind">
+    <xml.type>char</xml.type>
+    <xml.code>mikd</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songalbum">
+    <xml.type>string</xml.type>
+    <xml.code>asal</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songartist">
+    <xml.type>string</xml.type>
+    <xml.code>asar</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songbeatsperminute">
+    <xml.type>short</xml.type>
+    <xml.code>asbt</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songbitrate">
+    <xml.type>short</xml.type>
+    <xml.code>asbr</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songcomment">
+    <xml.type>string</xml.type>
+    <xml.code>ascm</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songcompilation">
+    <xml.type>bool</xml.type>
+    <xml.code>asco</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songcomposer">
+    <xml.type>string</xml.type>
+    <xml.code>ascp</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songdateadded">
+    <xml.type>date</xml.type>
+    <xml.code>asda</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songdatemodified">
+    <xml.type>date</xml.type>
+    <xml.code>asdm</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songdisccount">
+    <xml.type>short</xml.type>
+    <xml.code>asdc</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songdiscnumber">
+    <xml.type>short</xml.type>
+    <xml.code>asdn</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songdisabled">
+    <xml.type>bool</xml.type>
+    <xml.code>asdb</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songeqpreset">
+    <xml.type>string</xml.type>
+    <xml.code>aseq</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songformat">
+    <xml.type>string</xml.type>
+    <xml.code>asfm</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songdescription">
+    <xml.type>string</xml.type>
+    <xml.code>asdt</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songrelativevolume">
+    <xml.type>char</xml.type>
+    <xml.code>asrv</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songsamplerate">
+    <xml.type>integer</xml.type>
+    <xml.code>assr</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songsize">
+    <xml.type>integer</xml.type>
+    <xml.code>assz</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songstarttime">
+    <xml.type>integer</xml.type>
+    <xml.code>asst</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songstoptime">
+    <xml.type>integer</xml.type>
+    <xml.code>assp</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songtime">
+    <xml.type>integer</xml.type>
+    <xml.code>astm</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songtracknumber">
+    <xml.type>short</xml.type>
+    <xml.code>astn</xml.code>
+  </xml.class>
+  
+  <xml.class name="daap.songtrackcount">
+    <xml.type>short</xml.type>
+    <xml.code>astc</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songuserrating">
+    <xml.type>char</xml.type>
+    <xml.code>asur</xml.code>
+  </xml.class>
+  
+  <xml.class name="daap.songyear">
+    <xml.type>short</xml.type>
+    <xml.code>asyr</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songdatakind">
+    <xml.type>char</xml.type>
+    <xml.code>asdk</xml.code>
+  </xml.class>
+    
+  <xml.class name="daap.songdataurl">
+    <xml.type>string</xml.type>
+    <xml.code>asul</xml.code>
+  </xml.class>
+
+</xml.schema>

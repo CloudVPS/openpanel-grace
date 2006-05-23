@@ -1,0 +1,644 @@
+#!/bin/sh
+DOMAIN=application
+if [ ! -z "$1" ]; then
+  if [ "$1" = "-d" ]; then
+    DOMAIN=daemon
+    shift
+  fi
+fi
+
+if [ ! -z "$1" ]; then
+  APPNAME="$1"
+  if [ ! -z "$2" ]; then
+    APPDOMAIN="$2"
+  fi
+fi
+
+if [ -z "$APPNAME" ]; then
+  echo -n "Application name: "
+  read APPNAME
+fi
+
+APPCNAME=`echo "$APPNAME" | sed -e "s/ //g" | tr A-Z a-z`
+
+if [ -z "$APPDOMAIN" ]; then
+  echo -n "Domain [nl.madscience.unregistred.apps]: "
+  read APPDOMAIN
+  if [ -z "$APPDOMAIN" ]; then
+    APPDOMAIN=nl.madscience.unregistred.apps
+  fi
+fi
+
+DIRNAME="$APPDOMAIN.$APPCNAME"
+mkdir "$DIRNAME"
+echo "$APPDOMAIN.$APPCNAME" > "$DIRNAME"/.appid
+echo "$APPNAME" > "$DIRNAME/.appname"
+mkdir "$DIRNAME/$APPNAME.app"
+mkdir "$DIRNAME/rsrc"
+
+if [ "$DOMAIN" = "application" ]; then
+
+cat > "$DIRNAME/$APPCNAME.h" << __END__
+#ifndef _${APPCNAME}_H
+#define _${APPCNAME}_H 1
+#include <grace/application.h>
+
+//  -------------------------------------------------------------------------
+/// Main application class.
+//  -------------------------------------------------------------------------
+class ${APPCNAME}App : public application
+{
+public:
+		 	 ${APPCNAME}App (void) :
+				application ("$APPDOMAIN.$APPCNAME")
+			 {
+			 }
+			~${APPCNAME}App (void)
+			 {
+			 }
+
+	int		 main (void);
+};
+
+#endif
+__END__
+
+cat > "$DIRNAME/main.cpp" << __END__
+#include "${APPCNAME}.h"
+
+APPOBJECT(${APPCNAME}App);
+
+//  =========================================================================
+/// Main method.
+//  =========================================================================
+int ${APPCNAME}App::main (void)
+{
+	return 0;
+}
+
+__END__
+
+else
+
+cat > "$DIRNAME/$APPCNAME.h" << __END__
+#ifndef _${APPCNAME}_H
+#define _${APPCNAME}_H 1
+#include <grace/daemon.h>
+#include <grace/configdb.h>
+
+//  -------------------------------------------------------------------------
+/// Implementation template for application config.
+//  -------------------------------------------------------------------------
+typedef configdb<class ${APPCNAME}App> appconfig;
+
+//  -------------------------------------------------------------------------
+/// Main daemon class.
+//  -------------------------------------------------------------------------
+class ${APPCNAME}App : public daemon
+{
+public:
+		 				 ${APPCNAME}App (void);
+		 				~${APPCNAME}App (void);
+		 	
+	int					 main (void);
+	
+protected:
+	bool				 confLog (config::action act, keypath &path,
+								  const value &nval, const value &oval);
+
+	appconfig			 conf;
+};
+
+#endif
+__END__
+
+cat > "$DIRNAME/main.cpp" << __END__
+#include "${APPCNAME}.h"
+
+APPOBJECT(${APPCNAME}App);
+
+//  =========================================================================
+/// Constructor.
+/// Calls daemon constructor, initializes the configdb.
+//  =========================================================================
+${APPCNAME}App::${APPCNAME}App (void)
+	: daemon ("${APPDOMAIN}.${APPCNAME}"),
+	  conf (this)
+{
+}
+
+//  =========================================================================
+/// Destructor.
+//  =========================================================================
+${APPCNAME}App::~${APPCNAME}App (void)
+{
+}
+
+//  =========================================================================
+/// Main method.
+//  =========================================================================
+int ${APPCNAME}App::main (void)
+{
+	string conferr; ///< Error return from configuration class.
+	
+	// Add watcher value for event log. System will daemonize after
+	// configuration was validated.
+	conf.addwatcher ("system/eventlog", &${APPCNAME}App::confLog);
+	
+	// Load will fail if watchers did not valiate.
+	if (! conf.load ("$APPDOMAIN.$APPCNAME", conferr))
+	{
+		ferr.printf ("%% Error loading configuration: %s\n", conferr.str());
+		return 1;
+	}
+	
+	log (log::info, "main", "Started");
+	sleep (1);
+	
+	stoplog();
+	return 0;
+}
+
+//  =========================================================================
+/// Configuration watcher for the event log.
+//  =========================================================================
+bool ${APPCNAME}App::confLog (config::action act, keypath &kp,
+							  const value &nval, const value &oval)
+{
+	string tstr;
+	
+	switch (act)
+	{
+		case config::isvalid:
+			// Check if the path for the event log exists.
+			tstr = strutil::makepath (nval.sval());
+			if (! tstr.strlen()) return true;
+			if (! fs.exists (tstr))
+			{
+				ferr.printf ("%% Event log path %s does not exist",
+							 tstr.str());
+				return false;
+			}
+			return true;
+			
+		case config::create:
+			// Set the event log target and daemonize.
+			fout.printf ("%% Event log: %s\n\n", nval.cval());
+			addlogtarget (log::file, nval.sval(), 0xff, 1024*1024);
+			daemonize();
+			return true;
+	}
+	
+	return false;
+}
+
+__END__
+
+cat > "$DIRNAME/rsrc/$APPDOMAIN.$APPCNAME.conf.xml" << __END__
+<?xml version="1.0" encoding="utf-8"?>
+<$APPDOMAIN.$APPCNAME.conf>
+  <system>
+    <eventlog>event.log</eventlog>
+  </system>
+</$APPDOMAIN.$APPCNAME.conf>
+__END__
+
+cat > "$DIRNAME/rsrc/$APPDOMAIN.$APPCNAME.schema.xml" << __END__
+<?xml version="1.0" encoding="utf-8"?>
+<xml.schema>
+  <xml.class name="$APPDOMAIN.$APPCNAME.conf">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="system" id="system"/>
+    </xml.proplist>
+  </xml.class>
+  <xml.class name="system">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="eventlog" id="eventlog"/>
+    </xml.proplist>
+  </xml.class>
+  <xml.class name="eventlog">
+    <xml.type>string</xml.type>
+  </xml.class>
+</xml.schema>
+__END__
+
+cat > "$DIRNAME/rsrc/$APPDOMAIN.$APPCNAME.validator.xml" << __END__
+<?xml version="1.0" encoding="utf-8"?>
+<grace.validator>
+  <datarule id="root">
+    <match.mandatory>
+      <mandatory type="child" key="system"/>
+    </match.mandatory>
+    <match.child>
+      <and>
+        <match.id>system</match.id>
+        <match.rule>system</match.rule>
+      </and>
+    </match.child>
+  </datarule>
+  
+  <datarule id="system">
+    <match.mandatory>
+      <mandatory type="child" key="eventlog"/>
+    </match.mandatory>
+    <match.child>
+      <match.id>eventlog</match.id>
+    </match.child>
+  </datarule>
+
+</grace.validator>
+__END__
+fi
+
+cat > "$DIRNAME/rsrc/grace.runoptions.xml" << __END__
+<?xml version="1.0" encoding="utf-8"?>
+<grace.runoptions>
+  <grace.option id="-h">
+    <grace.long>--help</grace.long>
+  </grace.option>
+  <grace.option id="--help">
+    <grace.argc>0</grace.argc>
+  </grace.option>
+</grace.runoptions>
+__END__
+cat > "$DIRNAME/Makefile" << __END__
+include makeinclude
+
+OBJ	= main.o
+
+all: ${APPNAME}.exe
+	mkapp ${APPNAME}
+
+${APPNAME}.exe: \$(OBJ)
+	\$(LD) \$(LDFLAGS) -o ${APPNAME}.exe \$(OBJ) \$(LIBS)
+
+clean:
+	rm -f *.o *.exe
+	rm -rf ${APPNAME}.app
+	rm -f ${APPNAME}
+
+SUFFIXES: .cpp .o
+.cpp.o:
+	\$(CXX) \$(CXXFLAGS) \$(INCLUDES) -c \$<
+__END__
+cat > "$DIRNAME/configure" << __END_CONFIGURE__
+#!/bin/sh
+# ===========================================================================
+# Configure script generated by tina
+# ===========================================================================
+
+# ---------------------------------------------------------------------------
+# Solaris' /bin/sh uses a braindead builtin echo, circumvent
+# ---------------------------------------------------------------------------
+
+TEST=`echo -n ""`
+if [ -z "\$TEST" ]; then
+  ECHON="echo -n"
+  NNL=""
+else
+  ECHON="/usr/bin/echo"
+  NNL="\c"
+fi
+
+# ---------------------------------------------------------------------------
+# Figure out if there's a Vendorware C++ compiler on board
+# ---------------------------------------------------------------------------
+
+\$ECHON "looking for c++ compiler: \$NNL"
+CXX=`which CC 2>/dev/null`
+
+if [ -f "\$CXX" ]; then
+  actually_gcc=`\$CXX -v 2>&1 | grep gcc | sed -e "s/^gcc/Y/"`
+
+  cat >conftest.cpp <<_eof_
+#include <stdio.h>
+int main(int argc, char *argv[]) {
+  printf ("hello, nurse\n");
+}
+_eof_
+
+  \$CXX -o conftest.bin conftest.cpp >/dev/null 2>&1 || actually_gcc="YES"
+  rm -f conftest.cpp conftest.bin >/dev/null 2>&1
+  if [ ! -z "\$actually_gcc" ]; then
+    CXX=""
+  fi
+fi
+
+if [ -f "\$CXX" ]; then
+  echo "\$CXX"
+  CXXFLAGS="-n32 -O"
+  SHARED="-shared"
+  LD="\$CXX"
+  LDFLAGS=""
+else
+  CXX=`which g++`
+  if [ -f "\$CXX" ]; then
+    echo "\$CXX"
+    CXXFLAGS=\${CXXFLAGS}
+    SHARED="-shared -fPIC"
+    LD="\$CXX"
+    LDFLAGS=""
+  else
+    echo "fail"
+    CXX=""
+    exit 1;
+  fi
+fi
+
+COMPILER=\${CXX}
+COMPILERFLAGS=\${CXXFLAGS}
+# ---------------------------------------------------------------------------
+# Figure out path to GRACE include
+# ---------------------------------------------------------------------------
+
+\$ECHON "looking for GRACE include: \$NNL"
+for loc in /usr/local/include /usr/X11R6/include /usr/include \$HOME/include ../../include \$HOME/.include; do
+  if [ -f "\$loc/grace/str.h" ]; then
+    GRACEINC="\$loc"
+  fi
+done
+if [ -z "\$GRACEINC" ]; then
+  echo "failed"
+  exit 1
+fi
+echo "\$GRACEINC"
+
+# ---------------------------------------------------------------------------
+# Figure out path to GRACE static library
+# ---------------------------------------------------------------------------
+
+\$ECHON "looking for GRACE library: \$NNL"
+for loc in /usr/lib32 /usr/lib /usr/local/lib /usr/freeware/lib \$HOME/lib \$HOME/.lib ../../lib; do
+  if [ -f "\$loc/libgrace.a" ]; then
+    LIBGRACE="\$loc/libgrace.a"
+  fi
+done
+if [ -z "\$LIBGRACE" ]; then
+  echo "failed"
+  exit 1
+fi
+echo "\$LIBGRACE"
+
+# ---------------------------------------------------------------------------
+# Check for libpthread functionality
+# ---------------------------------------------------------------------------
+
+cat >conftest.cpp <<EOF
+#include <pthread.h>
+#include <stdio.h>
+
+int main (int argc, char *argv[])
+{
+	pthread_attr_t attr;
+	pthread_mutexattr_t mattr;
+	
+	pthread_attr_init (&attr);
+	pthread_mutexattr_init (&mattr);
+	return 1;
+}
+EOF
+
+\$ECHON "checking for pthread support: \$NNL"
+if \$COMPILER \$COMPILERFLAGS -o conftest conftest.cpp >>configure.log 2>&1; then
+  LIBPTHREAD=""
+  echo "yes"
+else
+  if \$COMPILER \$COMPILERFLAGS -o conftest conftest.cpp -lpthread >>configure.log 2>&1; then
+    LIBPTHREAD="-lpthread"
+	echo "-lpthread"
+  elif \$COMPILER \$COMPILERFLAGS -o conftest conftest.cpp -lc_r >>configure.log 2>&1; then
+    LIBPTHREAD="-lc_r"
+    echo "-lc_r"
+  else
+    echo "no"
+    echo "*** This application needs a working pthreads implementation."
+    exit
+  fi
+fi
+
+\$ECHON "checking for ctime_r: \$NNL"
+cat > conftest.cpp << EOF
+#include <time.h>
+int main (int argc, char *argv[])
+{
+	char buf[256];
+	char *result;
+	time_t ti;
+	result = ctime_r (&ti, buf);
+	return 0;
+}
+EOF
+if \$COMPILER \$COMPILERFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
+  echo "time.h"
+else
+  cat > conftest.cpp << EOF
+#define _POSIX_C_SOURCE 199506L
+#define _POSIX_PTHREAD_SEMANTICS 1
+#define _XOPEN_SOURCE 1
+#define __EXTENSIONS__ 1
+#include <pthread.h>
+#include <time.h>
+int main (int argc, char *argv[])
+{
+	char buf[256];
+	char *result;
+	time_t ti;
+	result = ctime_r (&ti, buf);
+	return 0;
+}
+EOF
+  if \$COMPILER \$COMPILERFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
+    echo "time.h with solaris twist"
+    CTIME_R_INCLUDE="#include <pthread.h>"
+    CTIME_R_PTHREAD_DEFINE="#define _POSIX_PTHREAD_SEMANTICS 1"
+    CTIME_R_XOPEN_DEFINE="#define _XOPEN_SOURCE 1"
+    CTIME_R_XPG_DEFINE="#define __EXTENSIONS__ 1"
+    CTIME_R_DEFINE="#define _POSIX_C_SOURCE 199506L"
+  else
+    echo "screwed"
+    exit 1
+  fi
+fi
+
+\$ECHON "checking for pthread_rwlock_t: \$NNL"
+cat > conftest.cpp << EOF
+#include <pthread.h>
+int main (int argc, char *argv[])
+{
+	pthread_rwlock_t *rwlock;
+	pthread_rwlock_trywrlock (rwlock);
+	return 0;
+}
+EOF
+if \$COMPILER \$COMPILERFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
+  echo "yes"
+  PTHREAD_HAVE_RWLOCK="#define PTHREAD_HAVE_RWLOCK 1"
+  \$ECHON "checking for pthread_rwlock_timedwrlock: \$NNL"
+  cat > conftest.cpp << EOF
+#include <pthread.h>
+#include <time.h>
+int main (int argc, char *argv[])
+{
+	pthread_rwlock_t *rwlock;
+	struct timespec ts;
+	pthread_rwlock_timedwrlock (rwlock, &ts);
+	return 0;
+}
+EOF
+  if \$COMPILER \$COMPILERFLAGS -o conftest.o -c conftest.cpp >> configure.log 2>&1; then
+    echo "yes"
+    PTHREAD_HAVE_TIMEDLOCK="#define PTHREAD_HAVE_TIMEDLOCK 1"
+  else
+    echo "no"
+    PTHREAD_HAVE_TIMEDLOCK=""
+  fi
+else
+  echo "no"
+  PTHREAD_HAVE_RWLOCK=""
+  PTHREAD_HAVE_TIMEDLOCK=""
+fi
+
+
+rm -f conftest conftest.o conftest.cpp
+# ---------------------------------------------------------------------------
+# Figure out whether we neet libsocket
+# ---------------------------------------------------------------------------
+
+cat >conftest.cpp <<EOF
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int main (int argc, char *argv[])
+{
+    int test = socket(PF_INET, SOCK_STREAM, 0);
+    return 1;
+}
+EOF
+
+\$ECHON "checking whether socket needs -lsocket: \$NNL"
+if \$COMPILER \$COMPILERFLAGS -o conftest conftest.cpp >>configure.log 2>&1; then
+  LIBSOCKET=""
+  echo "no"
+else
+  LIBSOCKET="-lsocket"
+  echo "yes"
+fi
+
+rm -f conftest.cpp conftest
+
+# ---------------------------------------------------------------------------
+# Figure out whether we need libnsl
+# ---------------------------------------------------------------------------
+
+cat >conftest.cpp <<EOF
+#include <netdb.h>
+
+int main (int argc, char *argv[])
+{
+	struct hostent *h = gethostbyname("localhost");
+    return 1;
+}
+EOF
+
+\$ECHON "checking whether gethostbyname needs -lnsl: \$NNL"
+if \$COMPILER \$COMPILERFLAGS -o conftest conftest.cpp >>configure.log 2>&1; then
+  LIBNSL=""
+  echo "no"
+else
+  LIBNSL="-lnsl"
+  echo "yes"
+fi
+
+rm -f conftest.cpp conftest
+
+# ---------------------------------------------------------------------------
+# Figure out whether socklen_t is defined
+# ---------------------------------------------------------------------------
+
+cat >conftest.cpp <<EOF
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+int main(int argc, char *argv[])
+{
+	socklen_t len = (socklen_t) 4;
+	return 1;
+}
+EOF
+
+\$ECHON "checking whether socklen_t needs to be defined: \$NNL"
+if \$COMPILER \$COMPILERFLAGS -o conftest conftest.cpp >> configure.log 2>&1; then
+  SOCKLEN_TYPEDEF=""
+  echo "no"
+else
+  SOCKLEN_TYPEDEF="typedef int socklen_t;"
+  echo "yes"
+fi
+
+rm -f conftest conftest.cpp
+
+
+# ---------------------------------------------------------------------------
+# Create the makeinclude file
+# ---------------------------------------------------------------------------
+
+\$ECHON "creating makeinclude: \$NNL"
+
+DATE=\`date\`
+
+cat >makeinclude <<EOF
+# Makeinclude generated by configure: \$DATE
+
+COMPILER = \$COMPILER
+COMPILERFLAGS = \$COMPILERFLAGS
+CXX = \$CXX
+CXXFLAGS = \$CXXFLAGS
+INCLUDES = -I\$GRACEINC
+LD = \$LD
+LDFLAGS = \$LDFLAGS
+LGRACE = \$LIBGRACE
+LIBS = \$LIBGRACE \$LIBPTHREAD \$LIBSOCKET \$LIBNSL
+LPTHREAD = \$LIBPTHREAD
+LSOCKET = \$LIBSOCKET \$LIBNSL
+SHARED = \$SHARED
+EOF
+
+echo "done"
+# ---------------------------------------------------------------------------
+# Create the platform.h file
+# ---------------------------------------------------------------------------
+
+\$ECHON "creating platform.h: \$NNL"
+
+cat >platform.h <<EOF
+#ifndef _PLATFORM_H
+#define _PLATFORM_H
+\$CTIME_R_DEFINE
+\$CTIME_R_PTHREAD_DEFINE
+\$CTIME_R_XOPEN_DEFINE
+\$CTIME_R_XPG_DEFINE
+\$CTIME_R_INCLUDE
+\$PTHREAD_HAVE_RWLOCK
+\$PTHREAD_HAVE_TIMEDLOCK
+\$SOCKLEN_TYPEDEF
+#endif
+EOF
+
+echo "done"
+if [ -f configure.log ]; then rm -f configure.log; fi
+
+__END_CONFIGURE__
+
+chmod 755 "$DIRNAME/configure"
+cat > "$DIRNAME/configure.in" << __EOF__
+cxx
+grace
+pthread
+libsocket
+__EOF__
+
+echo "Project <$APPDOMAIN.$APPCNAME> created"

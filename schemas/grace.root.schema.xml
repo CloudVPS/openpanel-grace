@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF8"?>
+
+<!-- GRACE SCHEMA (xml.schema)
+     Copyright (C) 2004 Pim van Riezen, Madscience Labs
+     Freely distributable
+
+     The xml.schema schema coded with the xml.schema schema 
+
+     This schema acts as a reference, since without a schema there would     
+     be no way of parsing it. The schema is coded directly into xmlschema.cpp
+     and defined globally as (xmlschema) XMLRootSchema.
+-->
+
+<xml.schema>
+
+  <xml.class name="xml.schema">
+    <xml.type>dict</xml.type>
+    <xml.code>XSch</xml.code>
+    <xml.proplist>
+      <xml.member class="xml.schema.options" id=".options"/>
+      <xml.member class="xml.class"/>
+    </xml.proplist>
+  </xml.class>
+
+  <xml.class name="xml.schema.options">
+    <xml.type>dict</xml.type>
+    <xml.code>XOpt</xml.code>
+    <xml.proplist>
+      <xml.member class="xml.option.rootclass" id="rootclass"/>
+      <xml.member class="xml.option.namespaces" id="namespaces"/>
+      <xml.member class="xml.option.doctype" id="doctype"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="xml.option.rootclass">
+    <xml.type>string</xml.type>
+    <xml.code>XOrc</xml.code>
+  </xml.class>
+  
+  <xml.class name="xml.option.namespaces">
+    <xml.type>dict</xml.type>
+    <xml.code>XOns</xml.code>
+    <xml.proplist>
+      <xml.member class="xml.namespace"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="xml.option.doctype">
+    <xml.type>string</xml.type>
+    <xml.code>XOdt</xml.code>
+    <xml.attributes>
+      <xml.attribute label="name" mandatory="true">
+        <xml.code>XODn</xml.code>
+        <xml.type>string</xml.type>
+      </xml.attribute>
+      <xml.attribute label="status" mandatory="true">
+        <xml.code>XODs</xml.code>
+        <xml.type>string</xml.type>
+      </xml.attribute>
+      <xml.attribute label="dtd" mandatory="true">
+        <xml.code>XODd</xml.code>
+        <xml.type>string</xml.type>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+  
+  <xml.class name="xml.namespace">
+    <xml.type>dict</xml.type>
+    <xml.code>XMns</xml.code>
+    <xml.attributes>
+      <xml.attribute label="uri" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>NSur</xml.code>
+      </xml.attribute>
+      <xml.attribute label="action" mandatory="true">
+        <xml.type>string</xml.type>
+        <xml.code>NSax</xml.code>
+      </xml.attribute>
+      <xml.attribute label="prefix">
+        <xml.type>string</xml.type>
+        <xml.code>NSpx</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="xml.namespace.type"/>
+    </xml.proplist>
+  </xml.class>
+
+  <xml.class name="xml.namespace.type">
+    <xml.type>dict</xml.type>
+    <xml.code>XnsT</xml.code>
+    <xml.attributes>
+      <xml.attribute label="class" isindex="true" mandatory="true">
+        <xml.type>string</xml.type><xml.code>nsTC</xml.code>
+      </xml.attribute>
+      <xml.attribute label="alias">
+        <xml.type>string</xml.type><xml.code>nsTA</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+
+  <xml.class name="xml.class">
+    <xml.type>dict</xml.type>
+    <xml.code>XCla</xml.code>
+    <xml.attributes>
+      <xml.attribute label="name" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>XCna</xml.code>
+        <xml.validate>
+          <xml.regexp>[[:alpha:]]?*(\.[[:alpha:]]?*)*</xml.regexp>
+        </xml.validate>
+      </xml.attribute>
+      <xml.attribute label="contained">
+        <xml.type>bool</xml.type>
+      </xml.attribute>
+      <xml.attribute label="wrap">
+        <xml.type>bool</xml.type>
+      </xml.attribute>
+      <xml.attribute label="attribvalue">
+        <xml.type>string</xml.type>
+      </xml.attribute>
+      <xml.attribute label="array">
+        <xml.type>bool</xml.type>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="xml.type" id="xml.type" mandatory="true"/>
+      <xml.member class="xml.code" id="xml.code" mandatory="true"/>
+      <xml.member class="xml.encoding" id="xml.encoding" mandatory="true"/>
+      <xml.member class="xml.validate" id="xml.validate"/>
+      <xml.member class="xml.attributes" id="xml.attributes"/>
+      <xml.member class="xml.container" id="xml.container"/>
+      <xml.member class="xml.proplist" id="xml.proplist"/>
+      <xml.member class="xml.union" id="xml.union"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="xml.type">
+    <xml.type>string</xml.type>
+    <xml.code>XTyp</xml.code>
+    <xml.validate>
+      <xml.string>dict</xml.string>
+      <xml.string>string</xml.string>
+      <xml.string>integer</xml.string>
+      <xml.string>bool</xml.string>
+      <xml.string>bool.true</xml.string>
+      <xml.string>bool.false</xml.string>
+      <xml.string>char</xml.string>
+      <xml.string>short</xml.string>
+      <xml.string>long</xml.string>
+      <xml.string>unsigned</xml.string>
+      <xml.string>uchar</xml.string>
+      <xml.string>ushort</xml.string>
+      <xml.string>ulong</xml.string>
+      <xml.string>ipaddr</xml.string>
+      <xml.string>date</xml.string>
+      <xml.string>container</xml.string>
+      <xml.string>currency</xml.string>
+    </xml.validate>
+  </xml.class>
+  
+  <xml.class name="xml.code">
+    <xml.type>string</xml.type>
+    <xml.code>XCod</xml.code>
+    <xml.validate>
+      <xml.regexp>[[:alphanum:]]???</xml.regexp>
+    </xml.validate>
+  </xml.class>
+  
+  <xml.class name="xml.encoding">
+    <xml.type>string</xml.type>
+    <xml.code>XEnc</xml.code>
+    <xml.validate>
+      <xml.string>base64</xml.string>
+      <xml.string>xml</xml.string>
+    </xml.validate>
+  </xml.class>
+  
+  <xml.class name="xml.validate">
+    <xml.type>dict</xml.type>
+    <xml.code>XVal</xml.code>
+    <xml.attributes>
+      <xml.attribute label="strict">
+        <xml.type>bool</xml.type>
+        <xml.code>XVst</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="xml.string"/>
+      <xml.member class="xml.regexp"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="xml.string">
+    <xml.type>string</xml.type>
+    <xml.code>Xstr</xml.code>
+  </xml.class>
+  
+  <xml.class name="xml.regexp">
+    <xml.type>string</xml.type>
+    <xml.code>Xrex</xml.code>
+  </xml.class>
+  
+  <xml.class name="xml.attributes">
+    <xml.type>dict</xml.type>
+    <xml.code>XAtl</xml.code>
+    <xml.proplist>
+      <xml.member class="xml.attribute"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="xml.attribute">
+    <xml.type>dict</xml.type>
+    <xml.code>XAtr</xml.code>
+    <xml.attributes>
+      <xml.attribute label="label" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>XAlb</xml.code>
+      </xml.attribute>
+      <xml.attribute label="mandatory">
+        <xml.type>bool</xml.type>
+        <xml.code>XAmd</xml.code>
+      </xml.attribute>
+      <xml.attribute label="isindex">
+        <xml.type>bool</xml.type>
+        <xml.code>XAii</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="xml.type" id="xml.type" mandatory="true"/>
+      <xml.member class="xml.code" id="xml.code" mandatory="true"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="xml.proplist">
+    <xml.type>dict</xml.type>
+    <xml.code>XPls</xml.code>
+    <xml.attributes>
+      <xml.attribute label="strict">
+        <xml.type>bool</xml.type>
+        <xml.code>XPst</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="xml.member"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="xml.member">
+    <xml.type>dict</xml.type>
+    <xml.code>XMem</xml.code>
+    <xml.attributes>
+      <xml.attribute label="class" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>XMcl</xml.code>
+      </xml.attribute>
+      <xml.attribute label="id">
+        <xml.type>string</xml.type>
+        <xml.code>XMid</xml.code>
+      </xml.attribute>
+      <xml.attribute label="mandatory">
+        <xml.type>bool</xml.type>
+        <xml.code>XMma</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+  
+  <xml.class name="xml.container">
+    <xml.type>dict</xml.type>
+    <xml.code>XCon</xml.code>
+    <xml.proplist>
+      <xml.member class="xml.container.envelope" id="xml.container.envelope"/>
+      <xml.member class="xml.container.valueclass" id="xml.container.valueclass"/>
+      <xml.member class="xml.container.wrapclass" id="xml.container.wrapclass"/>
+      <xml.member class="xml.container.idclass" id="xml.container.idclass"/>
+      <xml.member class="xml.container.types" id="xml.container.types"/>
+    </xml.proplist>
+  </xml.class>
+
+  <xml.class name="xml.container.envelope">
+    <xml.type>string</xml.type>
+    <xml.code>XCev</xml.code>
+  </xml.class>
+  
+  <xml.class name="xml.container.valueclass">
+    <xml.type>string</xml.type>
+    <xml.code>XCvc</xml.code>
+  </xml.class>
+  
+  <xml.class name="xml.container.wrapclass">
+    <xml.type>string</xml.type>
+    <xml.code>XCwc</xml.code>
+  </xml.class>
+  
+  <xml.class name="xml.container.idclass">
+    <xml.type>string</xml.type>
+    <xml.code>XCic</xml.code>
+  </xml.class>
+  
+  <xml.class name="xml.container.types">
+    <xml.type>dict</xml.type>
+    <xml.code>XCcT</xml.code>
+    <xml.proplist>
+      <xml.member class="xml.container.type"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="xml.container.type">
+    <xml.type>string</xml.type>
+    <xml.code>XCct</xml.code>
+    <xml.attributes>
+      <xml.attribute label="id" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>XctI</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+  
+  <xml.class name="xml.union">
+    <xml.type>dict</xml.type>
+    <xml.code>XAun</xml.code>
+    <xml.proplist>
+      <xml.member class="xml.union.match"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="xml.union.match">
+    <xml.type>string</xml.type>
+    <xml.code>XAum</xml.code>
+    <xml.attributes>
+      <xml.attribute label="class" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+        <xml.code>XUcl</xml.code>
+      </xml.attribute>
+      <xml.attribute label="type" mandatory="true">
+        <xml.type>string</xml.type>
+        <xml.code>XUtp</xml.code>
+      </xml.attribute>
+      <xml.attribute label="label">
+        <xml.type>string</xml.type>
+        <xml.code>XUlb</xml.code>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+  
+</xml.schema>

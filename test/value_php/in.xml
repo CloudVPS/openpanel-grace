@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dict>
+  <string id="applicationName">TeachWord</string>
+  <string id="applicationCreatorCode" format="AAPL"><![CDATA[TWRd<hoeba<<&;otuwert]]></string>
+  <dict id="supportedFiletypes">
+    <dict id="text/plain">
+      <bool id="view">true</bool>
+      <bool id="edit">true</bool>
+      <bool id="save">true</bool>
+    </dict>
+    <dict id="text/x-teachword">
+      <bool id="view">true</bool>
+      <bool id="edit">true</bool>
+      <bool id="save">true</bool>
+    </dict>
+  </dict>
+</dict>

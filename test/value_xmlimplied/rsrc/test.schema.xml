@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xml.schema>
+  <xml.schema.options>
+    <xml.option.rootclass>myXML</xml.option.rootclass>
+  </xml.schema.options>
+  
+  <xml.class name="myXML">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="String"/>
+      <xml.member class="Collection"/>
+      <xml.member class="Integer"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="String">
+    <xml.type>string</xml.type>
+    <xml.attributes>
+      <xml.attribute label="key" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+      </xml.atrribute>
+    </xml.attributes>
+  </xml.class>
+  
+  <xml.class name="Collection">
+    <xml.type>dict</xml.type>
+    <xml.attributes>
+      <xml.attribute label="key" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+      </xml.atrribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="String"/>
+      <xml.member class="Collection"/>
+      <xml.member class="Integer"/>
+    </xml.proplist>
+  </xml.class>
+
+  <xml.class name="Integer">
+    <xml.type>integer</xml.type>
+    <xml.attributes>
+      <xml.attribute label="key" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+      </xml.atrribute>
+    </xml.attributes>
+  </xml.class>
+</xml.schema>

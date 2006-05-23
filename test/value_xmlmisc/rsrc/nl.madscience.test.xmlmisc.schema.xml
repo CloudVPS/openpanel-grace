@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xml.schema>
+  <xml.schema.options>
+    <xml.option.rootclass>IHateXML</xml.option.rootclass>
+  </xml.schema.options>
+  
+  <xml.class name="IHateXML">
+    <xml.type>dict</xml.type>
+    <xml.proplist>
+      <xml.member class="PrimaryHate"/>
+      <xml.member class="SecondaryHate"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="PrimaryHate">
+    <xml.type>dict</xml.type>
+    <xml.attributes>
+      <xml.attribute label="hatelabel" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="HateType" id="hatetype"/>
+      <xml.member class="string"/>
+    </xml.proplist>
+  </xml.class>
+
+  <xml.class name="SecondaryHate">
+    <xml.type>dict</xml.type>
+    <xml.attributes>
+      <xml.attribute label="hatelabel" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+      </xml.attribute>
+    </xml.attributes>
+    <xml.proplist>
+      <xml.member class="HateType" id="hatetype"/>
+      <xml.member class="string"/>
+    </xml.proplist>
+  </xml.class>
+  
+  <xml.class name="HateType"><xml.type>string</xml.type></xml.class>
+  
+  <xml.class name="string">
+    <xml.type>string</xml.type>
+    <xml.attributes>
+      <xml.attribute label="id" mandatory="true" isindex="true">
+        <xml.type>string</xml.type>
+      </xml.attribute>
+    </xml.attributes>
+  </xml.class>
+  
+</xml.schema>

@@ -1,0 +1,518 @@
+0.8.13     In production                              <pi@madscience.nl>
+
+           * Allow xml schemas to define the tag type of an xml
+             node as implied by the object's datatype.
+
+           * <danny@illogic.nl> Overhauled class timestamp, phase 1.
+             Added test scenarios.
+
+           * Cleaned up value_ascii (formatting code was bug-ridden).
+
+           * Added the smtpd class and friends for implementing an SMTP
+             daemon with flexible delivery handling.
+
+           * Fixed proper handling of <grace.help/> and <grace.default/>
+             for runoptions.
+
+           * Default runoption handler for --help.
+
+           * Added new class currency, representing fixed point arithmetic
+             with 3 decimals accuracy.
+             
+           * Added a currency internal type to the value class.
+
+           * Fixed export of floating point numbers.
+
+           * Added timeofday class for microsecond measurements and
+             higher precision 'wait until' functionality. Submitted by
+             <danny@illogic.nl>.
+             
+           * Exceptions now map to a 32 bits hash of the exception name,
+             making it possible to resolve them in a global handler.
+             
+           * Improved handling of PHP serialized arrays.
+
+           * Fixed handling of SSL cipher exchange for connections that
+             act non-blocking.
+             
+           * Fixed buffer allocation strategy for SSL initialization.
+           
+           * Fixed handling of timeout conditions in SSL context.
+           
+           * Fixed handling of timeout conditions in HTTP/1.1 chunked-
+             encoding transfers.
+
+           * Added string::chomp().
+
+           * Added string::replace().
+
+           * Added <xml.option.rootclass/> specification to the xml.schema
+             language.
+
+           * Added smtpsocket class for sending email through SMTP.
+
+           * The file class now recognizes an optional iocodec member
+             object that can be linked to handle transparent coding
+             of the data stream.
+
+           * Integrated the MatrixSSL library as part of the optional
+             grace-ssl component, which offers the sslclientcodec,
+             sslsocket and httpssocket classes (server classes will follow,
+             as well as proper certificate checking).
+
+           * The mkproject utility now creates better project templates
+             for application or daemon based programs.
+
+           * The daemon::log() function emits to stdout when the
+             application has not yet been daemonized.
+             
+           * The new configdb template class makes it easier to handle
+             configuration and live configuration changes. By binding
+             methods of your application class to different paths of
+             your configuration file, you can easily translate a
+             configuration layout to an object hierarchy and keep track
+             of changes.
+             
+           * Integrated new sval utility for validating xml.schema and
+             grace.validator. 
+
+0.8.12     Fri Sep  2 2005                            <pi@madscience.nl>
+
+           * XML schema support for union objects.
+           
+           * XML schema support for wrapping/unwrapping chained
+             object hierarchies into a single object.
+             
+           * XML schema support for implicit arrays according to
+             object class.
+             
+           * The httpd class would not return a content-length for
+             a reply body with zero length.
+             
+           * Added more operators to string/statstring/value to deal
+             with const/non-const.
+             
+           * Added class validator for handling data-validation.
+           
+           * Added schema specifics for the <grace.validator> objects.
+           
+           * Fixed strutil::pad() to not crop data if the string is longer
+             than the padding size. That stunt interfered with the
+             possiblity of jumping up and down in a binary stream
+             through the string::binputfoo() methods.
+             
+           * Added support for encoding value objects to serialized
+             PHP arrays (with or without attributes) through
+             string::phpserialize() and string::phpdeserialize().
+             
+           * The "home:", "var:", "log:" and "run:" aliases were
+             screwed up on initialization. Now they're not, so the
+             checkpid()/writepid() stuff in daemon actually works:).
+             
+           * If a null character (or no second argument) is passed
+             to strutil::splitquoted, the split will be on the basis
+             of any whitespace character. This was necessary to make
+             strutil::xmlreadtag() understand tags where attributes
+             only have tabs inbetween.
+
+0.8.11     Mon Jul 18 2005                            <pi@madscience.nl>
+
+           * GCC4.0 compatibility fixes.
+           
+           * Added str::cutatlast, cutafter, cutafterlast.
+           
+           * Added str::copyuntil, copyuntillast, copyafter, copyafterlast.
+
+           * Added doxygen documentation to all classes.             
+           
+           * Added file::writeln.
+           
+           * Added class serverpage, a httpdobject that pre-parses
+             HTTP POST variables.
+             
+           * XML schemas can now defina a doctype inside the options
+             section.
+             
+           * The cmdtoken_root class is now natively called scriptparser.
+
+0.8.10     Sat May 15 2005                            <pi@madscience.nl>
+
+           * Bugfix: tcpsocket::connect() was using a thread-unsafe
+             method for resolving the hostname.
+             
+           * Bugfix: the reference counting of the stringref database tracked
+             for statstring objects was not entirely threadsafe, this screwed
+             up during garbage collection.
+             
+           * Datablocks allocated for a string now contain a thread-specific
+             reference. In situations where a string was copied to several
+             threads, an issue could rise where the stringref got decreased
+             in ways that are not 100% threadsafe.
+             
+           * The value class now uses a somewhat less intensive power-of-two
+             allocation scheme for arrays. This saves on reallocations.
+           
+           * New class ringbuffer implements a fixed-size ringbuffer for
+             character data.
+           
+           * File i/o now takes place through a ringbuffer instead of
+             a string object. Especially in situations where lots of
+             bandwidth passes a file or tcpsocket this operation is now
+             much speedier.
+             
+           * Added a readuntil() method to the file class, allowing for
+             convenient streaming of file/socket data up to a provided
+             marker.
+             
+           * Bugfix: value::rmval() had some issues under duress.
+           
+           * Bugfix: string::pad() didn't work properly
+           
+           * A string object can now be initialized with a defined initial
+             allocation size.
+             
+           * A checksum64() function is added, this is a fairly quick hash
+             from a string to a unique 64 bit integer. It has a very low
+             tested collision rate against message-ids.
+             
+           * A non-blocking version of file::read() was added as well as a
+             file::waitforline() method that allows for a timed wait for
+             a terminated line (<LF> or <CRLF>).
+             
+           * Line reading methods of the file class now have a maximum
+             length parameter.
+             
+           * A tcpsocket yields to false if it is not initialized.
+           
+           * Added tcplistener::tryaccept() method for a timed wait on
+             a new connection.
+
+0.8.9      Mon Feb 14 2005                            <pi@madscience.nl>
+
+           * Applications now actually work if they are in your $PATH
+             and you invoke them without an explicit path. The startup
+             code only checked the apps: alias but never the tools: alias
+             which is where the old $PATH is hiding.
+
+           * Added a ::tryaccept method to tcplistener which allows for
+             a timeout.
+
+           * The httpd class now has a ::shutdown method that gracefully
+             exits all threads after handling any outstanding connections.
+
+           * New default aliases var:, state:, log: and run: implement the
+             /var hierarchy. All these can be overruled with $PATH_VAR &c.
+
+           * The daemon class now creates a proper pid-file on daemonize()
+             and will not start if an earlier copy is already running.
+
+           * All logfiles (coming out of daemon and httpdlogger) allow for
+             automatic logrotation.
+
+           * Created a new grace/defaults.h to collect all those more or
+             less arbitrary integer defaults for things like buffer
+             sizes.
+
+           * Created a test/ subtree with some unit tests.
+
+0.8.8      Sun Oct 31 2004                            <pi@madscience.nl>
+
+           * Resurrected the dictionary template class into working
+             condition.
+
+           * Added an array template class.
+
+           * Added a more convenient name 'scriptparser' for the
+             cmdtoken_root class. There is also a grace/scriptparser.h
+             header file.
+
+           * The httpd class can now incorporate the scriptparser class
+             for handling documents with a provided extension.
+
+           * A httpdfiletypehandler base class allows for specific handling
+             of certain filetype extensions.
+
+           * The http class can now deal with chunked encoding.
+
+           * Added string::cutatlast methods
+
+           * Fixed some compilation issues with SGI MIPSPro compilers
+
+0.8.7      Mon Sep  6 2004                            <pi@madscience.nl>
+
+           * Added a timestamp class that can assist in bridging
+             various date formats.
+
+           * The stringrefdb was a mess. It now retains values for a
+             while, only if the grand total of abandoned nodes amounts
+             to more than 32K will the reaper be invoked. I'm not a
+             big fan of garbage collection, but key data tends to get
+             reused a lot and immediately flushing nodes puts an
+             unreasonable strain on the treelock.
+
+           * The XML schema language now supports the concept of
+             containers that can adequately morph seriously weird
+             tag-wrapping concepts like apple's plist and xmlrpc
+             easy.
+
+           * The XML schema now has a concept for nodes that indicate
+             a boolean that is set to either true or false, as used
+             for plist bool types (you have to wonder why they chose
+             to be compact and elegant _just_ for this _one_ type).
+
+           * For reasons stated above, value::*plist is now
+             depcrecated and is now just an attempt to load the file
+             "schema:com.apple.plist.schema.xml" as a schema followed
+             by a load/save/from/toxml with that schema.
+
+           * Specific string classes in an XML schema can now contain
+             base64-encoded data.
+              
+           * Path volumes now support entries that can have a low
+             priority but are skipped by the right-to-left considerations
+             of transw(). This allows for the "conf:" volume to point
+             to 'app:Contents/Configuration Defaults' as a source of
+             last resort without defaulting to that directory when
+             writing changed preferences to disk.
+             
+           * Implemented upstream changes in tina in the configure
+             script to help out compilation on more platforms.
+
+           * The lock::trylockw() and lock::trylockr() methods now
+             have an optional timeout argument in seconds.
+
+           * Added httpd.cpp/httpd.h implementing a multithreaded
+             daemon that can easily be embedded into other programs
+             that wish to interface with the outside world with a 
+             http daemon. By creating a chain of classes, the exact
+             functionality needed can be added.
+
+           * Added support for sendfile() to class tcpsocket. On
+             platforms that do not support this system call (currently
+             meaning every OS but linux) this will trigger a normal
+             read()/write() cycle.
+
+           * Added a filesystem::size (filename) method.
+
+           * Value attributes are now themselves value objects when
+             asked for through operator(). Thus ends the era of
+             braindead string conversions on attributes within a class
+             that itself can deal perfectly well with other data types.
+
+           * Fixed a metric buttload of errors dealing with statstring
+             objects that contained a null-value.
+             
+           * Individual threads were already spawned with their flags
+             set to ignore SIGPIPE. This signal is now deferred globally.
+             The 
+
+0.8.6      Sat Aug 28 2004                            <pi@madscience.nl>
+
+           * Fixed memory leaks in xmlschema.
+
+           * Fixed memory leaks in visitor.
+
+           * Fixed memory leaks in httpsocket.
+
+           * Fixed bugs in string.
+
+           * Fixed up leaky nature of regexpression.
+
+0.8.5      Sat Aug 21 2004                            <pi@madscience.nl>
+
+           * Got the loading of configuration files through conf: right
+             for a change.
+           
+           * Fixed configure scripts for proper rpm builds.
+
+           * Added a mkconf util that will install the default configuration
+             in the proper place.
+
+           * Fixed compiling issues with FreeBSD and NetBSD.
+
+           * Added peer_name and peer_host to tcpsocket.
+
+           * Added more robustness to httpsocket.
+
+0.8.4      Sun Aug  1 2004                            <pi@madscience.nl>
+
+           * Added support for Unix Domain sockets to tcpsocket.
+
+           * Added passing of credentials/filedescriptors to tcpsocket.
+
+           * Fixed proper implementation of grace.runoptions in the
+             application class.
+
+           * Added a 'daemon' application class for service application
+             models. Includes a background log thread that can relay
+             events to a file or unix syslog.
+
+           * Fixed thread implementation and event passing between
+             thread objects.
+
+           * Added a default file 'resources.xml' to be loaded into
+             the application::rsrc value object. The daemon class
+             uses this to determine log dispatching. Ideally, the
+             definition of commandline arguments should move to this
+             file as well. Currently the file operates without a
+             schema.
+
+0.8.3      Tue May 11 2004                            <pi@madscience.nl>
+
+           * Added methods for parsing windows-style INI files in various
+             iterations of this "standard".
+
+           * Cleaned up some inlining to reduce library size with 300K.
+
+           * Added mkproject/mkapp tools for creating project directories
+             and application bundles.
+
+           * Split up some files to ease up compilation.
+
+0.8.2      Thu May 06 2004                            <pi@madscience.nl>
+
+           * XML schema files now have a section that can define
+             namespaces by their URI and actions to perform when
+             encountering tag types or attribute names that have
+             a namespace prefix corresponding to an xmlns-definition
+             with that URI.
+
+           * The value class can now destinguish child nodes with a key
+             from those without much easier; Unkeyed items are always
+             inserted in front of keyed items. A value::arraysize()
+             method returns the count of unkeyed items. Given an
+             arraysize() as of 4 for value foo, it is a given that
+             foo[0]...foo[3] are unkeyed children.
+
+           * Merged the dictionary template class, to be used for keeping
+             a container of keyed objects of any class.
+
+           * Fixed XML parser to not break when encountering an XML
+             string like <foo></foo>.
+
+0.8.1      Mon Mar 29 2004                            <pi@madscience.nl>
+
+		   * New methods in value to import and export CSV-format files
+			 into/from two-dimensional arrays (optionally with named
+			 keys). This is not entirely perfect yet with regard to
+			 native encoding of special characters.
+		
+		   * Cleaned up some mess that stops cygwin's gcc from yelling
+			 at me. Implemented an atoll replacement for the same purpose.
+		
+0.8.0      Fri Jan  9 2004                            <pi@madscience.nl>
+
+		   * Extra value-types: bool, unsigned, long, ulong, short,
+								ushort, char, uchar, date
+			   
+		   * Visitor template class defines a way to browse tree data
+			 objects without resorting to manual pointer-chasing.
+		   
+		   * Support for "tdict"-style text schemas has been replaced
+			 with the "xml.schema" schema-definition syntax
+			   
+		   * Support for recursion in volume paths, ie:
+			   PATH_SCHEMAS=app\:schemas:etc\:schemas
+			   
+		   * Can now interact with DAAP-style binary XML streams, with
+			 definitions within the XML schemas
+			   
+		   * Default scheme to start a GRACE application on a Unix
+			 system now uses a bundle directory combined with a
+			 softlink, ie:
+			 
+			 MyApplication -> MyApplication.app/exec
+			 MyApplication.app/
+			   .:<mime> system/application-bundle
+			   exec -> code/linux.i386/exec
+			   icon/
+				 64.png
+			   schemas/
+				 nl.madscience.schemas.myapp.defaults.xml
+			   defaults/
+				 nl.madscience.defaults.myapp.xml
+			 
+			 This makes it relatively easy to define schemas that
+			 determine the layout of the data when it is serialized
+			 to XML or CXML.
+		   
+		   * myValue[-1] now returns the last child in the array
+		   
+0.7.2	   Fri Oct 24 2003                            <pi@madscience.nl>
+
+           * Split up the value class implementation over several files.
+
+           * The XML functionality of the value class has been greatly
+             enhanced, including automatic translation between keys and
+             tag types on load and save.
+
+           * Metadata moved to dotfiles.
+
+           * Implement "app:" volume pointing to the directory that
+             contains application resources.
+
+0.7.1      Fri Sep 12 2003                            <pi@madscience.nl>
+
+           * Added a valueindex class as a means of indexing a value
+             array by an arbitrary attribute or child value.
+             
+           * The application class now picks up all environment variables.
+
+0.7.0	   Sat Aug 30 2003                            <pi@madscience.nl>
+
+           * The value class can now read and write XML files using
+             an extended version of the Apple plist DTD.
+
+           * UDBC has been changed to return an array of records instead
+             of a record of arrays. Record keys are now statstring
+             objects, making this possible without memory waste.
+
+           * The main() loop is now defined in the library. This means
+             today's message is: Derive the application class or die.
+
+           * Added fs::load() and fs::save() for reading data directly
+             to a string object.
+
+0.6.4      Sun Jun 29 2003                            <pi@madscience.nl>
+
+           * Created a new class statstring, intended for referencing
+             large number of constant strings containing a high number of
+             duplicates.
+             
+           * The value class now uses statstring for its label, making it
+             practical to use an array of values-acting-as-structs as a
+             return type without wasting space on $ARRAYSIZE times the
+             allocation overhead of the label names.
+
+0.6.3      Tue Jun 10 2003                            <pi@madscience.nl>
+		   
+           * Added db.insert_id() method and backend handling to save on
+             stupid-looking select last_insertid() queries.
+	     
+           * Added pathvolume parsing for locating database driver module.
+
+0.6.2	   Fri Feb 28 2003                            <pi@madscience.nl>
+
+           * Added extra parsing of cmdtoken templates with support
+             for function calls through pseudo-tags.
+           * Fixed minor bug
+
+0.6.1      Wed Feb 26 2003                            <pi@madscience.nl>
+           
+           * Added cmdtoken handlers as a replacement for the existing
+             cgitemplate class, added benefit is loop-control and
+             conditionals from within the parsed template. Makes it
+             easier to generate row-output for queries, since the
+             template can now better control its own dataflow.
+           
+           * Added kernel.time.now() to system.h
+           
+0.6.0      Sun Feb 23 2003                            <pi@madscience.nl>
+
+           * Added loads of infrastructure to fs, including
+             fs.ls() with preliminary support for both extension-
+             based mimetypes and inherent mimetypes through
+             generated softlinks.
+           
+           * Path Volumes with overlays now work correctly for all
+             file operations.

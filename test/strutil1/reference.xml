@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dict>
+	<string id="test">This is a serious test</string>
+	<string id="test2">With a lot of &lt;great&gt;nice&lt;/great&gt; stuff</string>
+	<string id="ultimateanswer">42</string>
+</dict>

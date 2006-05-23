@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dict>
+	<dict id="pi">
+		<string id="firstname">Pim</string>
+		<string id="middlename">van</string>
+		<string id="lastname">Riezen</string>
+		<string id="email">pi@madscience.nl</string>
+		<integer id="uid">500</integer>
+		<integer id="gid">500</integer>
+	</dict>
+	<dict id="guest">
+		<string id="firstname">System</string>
+		<string id="middlename"/>
+		<string id="lastname">Guest</string>
+		<string id="email">guest@madscience.nl</string>
+		<integer id="uid">499</integer>
+		<integer id="gid">499</integer>
+	</dict>
+	<dict id="john">
+		<string id="firstname">John</string>
+		<string id="middlename">"the wrecker"</string>
+		<string id="lastname">Smith</string>
+		<string id="email">jsmith@madscience.nl</string>
+		<integer id="uid">1024</integer>
+		<integer id="gid">1024</integer>
+	</dict>
+	<dict id="barry">
+		<string id="firstname">Barry</string>
+		<string id="middlename">S</string>
+		<string id="lastname">White</string>
+		<string id="email">bwhite@madscience.nl</string>
+		<integer id="uid">1025</integer>
+		<integer id="gid">1025</integer>
+	</dict>
+	<dict id="todd">
+		<string id="firstname">Todd</string>
+		<string id="middlename"/>
+		<string id="lastname">McIntosh</string>
+		<string id="email">tmac@madscience.nl</string>
+		<integer id="uid">1026</integer>
+		<integer id="gid">1026</integer>
+	</dict>
+</dict>

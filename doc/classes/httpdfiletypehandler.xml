@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nl.madscience.lilb.grace.doc.class name="httpdfiletypehandler" type="abstract">
+
+  <!-- RELATIONS ------------------------------------------------------->
+
+  <relations>
+    <relation type="base"/>
+    <relation type="sub">
+      <related>httpdscriptparser</related>
+    </relation>
+    <relation type="parent">
+      <related>httpdfileshare</related>
+    </relation>
+    <relation type="also">
+      <related>httpd</related>
+    </relation>
+  </relations>
+  <!-- DESCRIPTIONS --------------------------------------------------->
+
+  <synopsis>
+    Abstract class defining a handler that can be linked to a httpd
+    object to handle all requests for objects with a given file
+    extension.
+  </synopsis>
+  
+  <description>
+    Derive from this class if all objects of a certain type require
+    special processing. You can use this to implement script parsing
+    or other such hilarious feats. Override the virtual run method
+    in your subclass.
+  </description>
+  
+  <!-- CONSTRUCTORS ------------------------------------------------------>
+
+  <constructors>
+    <constructor arglist="parent,filetype">
+      <arguments>
+        <argument id="parent" type="httpdfileshare &">The parent fileshare object</argument>
+        <argument id="filetype" type="const string &">The file extension</argument>
+      </arguments>
+      <synopsis>Instantiates a httpdfiletypehandler object</synopsis>
+      <description>
+        Adds the object to the parent httpdfileshare object for the given
+        file extension.
+      </description>
+    </constructor>
+  </constructors>
+  
+  <!-- DESTRUCTORS ------------------------------------------------------>
+
+  <destructors>
+    <destructor api="public">
+      <arguments/>
+      <synopsis>Cleans up the object</synopsis>
+      <description>
+         TBD
+      </description>
+    </destructor>
+  </destructors>
+  
+  <!-- VARIABLES ------------------------------------------------------->
+
+  <variables>
+
+    <variable name="parent" type="httpdfileshare *" api="private">
+      <synopsis>Link to the parent httpdfileshare object</synopsis>
+      <description>
+        A link to the parent object.
+      </description>
+    </variable>
+  
+  </variables>
+  <!-- PROPERTIES ------------------------------------------------------>
+
+  <properties/>
+  
+  <!-- METHODS ---------------------------------------------------------->
+
+  <methods>
+  
+    <method name="run" arglist="path,postbody,inhdr,out,outhdr,env,sock" api="subclass">
+      <arguments>
+        <argument id="path" type="string &">The currently resolved path to the provided URI</argument>
+        <argument id="postbody" type="string &">The HTTP POST body data</argument>
+        <argument id="inhdr" type="value &">The client provided header data</argument>
+        <argument id="out" type="string &">The output body</argument>
+        <argument id="outhdr" type="value &">Requested output headers</argument>
+        <argument id="env" type="value &">Meta variables</argument>
+        <argument id="sock" type="tcpsocket &">The connection's socket</argument>
+      </arguments>
+      <returnvalue type="int" name="httpstatus">
+        The HTTP status code. If 0, processing should continue. If negative,
+        all return data (headers and body) has already been sent to the
+        socket. If positive, the body and header data has been put into
+        the out and outhdr objects.
+      </returnvalue>
+      <synopsis>Virtual method defining a filetype handler handler</synopsis>
+      <description>
+        Overload this method in your derived class to get useful functionality.
+        Generally this means generating output data.
+      </description>
+    </method>
+
+  </methods>
+</nl.madscience.lib.grace.doc.class>

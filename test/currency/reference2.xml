@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<duepayment>
+	<baseAmount>137.14</baseAmount>
+	<vatAmount>25.37</vatAmount>
+	<netAmount>162.51</netAmount>
+	<monthlyPayment>13.54</monthlyPayment>
+</duepayment>

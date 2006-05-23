@@ -1,0 +1,11 @@
+test = "foo"
+adictionary {
+  ultimateanswer = 42
+  ultimatequestion = "why"
+}
+anarray {
+  += "quick"
+  += "brown"
+  += "fox"
+}
+foo = "bar"
