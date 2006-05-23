@@ -2,3 +2,8 @@ syntax: glob
 
 .DS_Store
 CVS
+*.o
+*.a
+*.so
+makeinclude
+platform.h
