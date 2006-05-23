@@ -1,5 +1,4 @@
 syntax: glob
-
 .DS_Store
 CVS
 *.o
@@ -7,3 +6,6 @@ CVS
 *.so
 makeinclude
 platform.h
+
+syntax: regexp
+^include/matrixssl/
