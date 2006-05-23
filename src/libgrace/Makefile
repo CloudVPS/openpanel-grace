@@ -52,6 +52,7 @@ OBJ			= 	application.o \
 AR = ar cr
 
 all: ../../include/grace/platform.h $(OBJ)
+	mkdir -p ../lib
 	$(AR) ../../lib/libgrace.a $(OBJ)
 	$(RANLIB) ../../lib/libgrace.a
 
