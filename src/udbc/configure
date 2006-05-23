@@ -139,7 +139,7 @@ rm -f conftest.cpp conftest
 # ---------------------------------------------------------------------------
 
 $ECHON "looking for mysql include: $NNL"
-for loc in /usr/lib/mysql /usr/lib/mysql/include /usr/include/mysql /usr/local/include/mysql /usr/local/mysql/include /opt/mysql /opt/mysql/include /opt/inclujde/mysql /usr/freeware/mysql /usr/freeware/include /opt/local/include/mysql/; do
+for loc in /usr/lib/mysql /usr/lib/mysql/include /usr/include/mysql /usr/local/include/mysql /usr/local/mysql/include /opt/mysql /opt/mysql/include /opt/include/mysql /usr/freeware/mysql /usr/freeware/include /opt/local/include/mysql/; do
   if [ -f "$loc/mysql.h" ]; then
     MYSQLINC="$loc"
   fi
