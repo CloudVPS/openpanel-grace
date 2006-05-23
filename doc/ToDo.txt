@@ -37,3 +37,8 @@ Pending issues for GRACE:
   - Optionally overlay several data stores in the same way the filesystem
     class does with files
   
+  configure-files have been handedited after tina generation:
+  - update tina with our changes
+  - re-generate configure-files
+  - possibly remove configure-files from repository as they are
+    generated

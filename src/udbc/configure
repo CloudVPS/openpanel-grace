@@ -42,7 +42,7 @@ fi
 
 if [ -f "$CXX" ]; then
   echo "$CXX"
-  CXXFLAGS="-n32 -O2"
+  CXXFLAGS="-n32 -O"
   SHARED="-shared"
   LD="$CXX"
   LDFLAGS=""
@@ -50,7 +50,7 @@ else
   CXX=`which g++`
   if [ -f "$CXX" ]; then
     echo "$CXX"
-    CXXFLAGS=-O2
+    CXXFLAGS=${CXXFLAGS}
     SHARED="-shared -fPIC"
     LD="$CXX"
     LDFLAGS=""
@@ -61,7 +61,8 @@ else
   fi
 fi
 
-
+COMPILER=${CXX}
+COMPILERFLAGS=${CXXFLAGS}
 # ---------------------------------------------------------------------------
 # Figure out if there's a Vendorware C++ compiler on board
 # ---------------------------------------------------------------------------
@@ -138,7 +139,7 @@ rm -f conftest.cpp conftest
 # ---------------------------------------------------------------------------
 
 $ECHON "looking for mysql include: $NNL"
-for loc in /usr/lib/mysql /usr/lib/mysql/include /usr/include/mysql /usr/local/include/mysql /usr/local/mysql/include /opt/mysql /opt/mysql/include /opt/inclujde/mysql /usr/freeware/mysql /usr/freeware/include /sw/include/mysql; do
+for loc in /usr/lib/mysql /usr/lib/mysql/include /usr/include/mysql /usr/local/include/mysql /usr/local/mysql/include /opt/mysql /opt/mysql/include /opt/inclujde/mysql /usr/freeware/mysql /usr/freeware/include /opt/local/include/mysql/; do
   if [ -f "$loc/mysql.h" ]; then
     MYSQLINC="$loc"
   fi
@@ -150,16 +151,16 @@ fi
 echo "$MYSQLINC"
 
 # ---------------------------------------------------------------------------
-# Figure out path to mysql static library
+# Figure out path to mysql (dynamic or static) library
 # ---------------------------------------------------------------------------
 
 $ECHON "looking for mysql library: $NNL"
-for loc in /usr/lib /usr/local/lib /usr/lib/mysql /usr/local/lib/mysql /opt/mysql /usr/local/mysql/lib /usr/mysql/lib /opt/mysql/lib /usr/freeware/lib /usr/freeware/mysql/lib /usr/freeware/lib/mysql /usr/freeware/lib32 /usr/freeware/lib32/mysql /sw/lib; do
-  if [ -f "$loc/libmysqlclient.a" ]; then
-    LIBMYSQL="$loc/libmysqlclient.a"
+for loc in /usr/lib /usr/local/lib /usr/lib/mysql /usr/local/lib/mysql /opt/mysql /usr/local/mysql/lib /usr/mysql/lib /opt/mysql/lib /usr/freeware/lib /usr/freeware/mysql/lib /usr/freeware/lib/mysql /usr/freeware/lib32 /usr/freeware/lib32/mysql /opt/local/lib/mysql/; do
+  if [ -f "$loc/libmysqlclient.so" -o -f "$loc/libmysqlclient.dylib" ]; then
+    LIBMYSQL="-L$loc -lmysqlclient"
   else
-    if [ -f "$loc/$libmysqlclient.so" ]; then
-      LIBMYSQL="-L$loc -lmysqlclient"
+    if [ -f "$loc/libmysqlclient.a" ]; then
+      LIBMYSQL="$loc/libmysqlclient.a"
     fi
   fi
 done
@@ -190,14 +191,14 @@ int main (int argc, char *argv[])
 EOF
 
 $ECHON "checking for pthread support: $NNL"
-if $CXX $CXXFLAGS -o conftest conftest.cpp >>configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest conftest.cpp >>configure.log 2>&1; then
   LIBPTHREAD=""
   echo "yes"
 else
-  if $CXX $CXXFLAGS -o conftest conftest.cpp -lpthread >>configure.log 2>&1; then
+  if $COMPILER $COMPILERFLAGS -o conftest conftest.cpp -lpthread >>configure.log 2>&1; then
     LIBPTHREAD="-lpthread"
 	echo "-lpthread"
-  elif $CXX $CXXFLAGS -o conftest conftest.cpp -lc_r >>configure.log 2>&1; then
+  elif $COMPILER $COMPILERFLAGS -o conftest conftest.cpp -lc_r >>configure.log 2>&1; then
     LIBPTHREAD="-lc_r"
     echo "-lc_r"
   else
@@ -219,7 +220,7 @@ int main (int argc, char *argv[])
 	return 0;
 }
 EOF
-if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
   echo "time.h"
 else
   cat > conftest.cpp << EOF
@@ -238,7 +239,7 @@ int main (int argc, char *argv[])
 	return 0;
 }
 EOF
-  if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
+  if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
     echo "time.h with solaris twist"
     CTIME_R_INCLUDE="#include <pthread.h>"
     CTIME_R_PTHREAD_DEFINE="#define _POSIX_PTHREAD_SEMANTICS 1"
@@ -250,6 +251,45 @@ EOF
     exit 1
   fi
 fi
+
+$ECHON "checking for pthread_rwlock_t: $NNL"
+cat > conftest.cpp << EOF
+#include <pthread.h>
+int main (int argc, char *argv[])
+{
+	pthread_rwlock_t *rwlock;
+	pthread_rwlock_trywrlock (rwlock);
+	return 0;
+}
+EOF
+if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
+  echo "yes"
+  PTHREAD_HAVE_RWLOCK="#define PTHREAD_HAVE_RWLOCK 1"
+  $ECHON "checking for pthread_rwlock_timedwrlock: $NNL"
+  cat > conftest.cpp << EOF
+#include <pthread.h>
+#include <time.h>
+int main (int argc, char *argv[])
+{
+	pthread_rwlock_t *rwlock;
+	struct timespec ts;
+	pthread_rwlock_timedwrlock (rwlock, &ts);
+	return 0;
+}
+EOF
+  if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.cpp >> configure.log 2>&1; then
+    echo "yes"
+    PTHREAD_HAVE_TIMEDLOCK="#define PTHREAD_HAVE_TIMEDLOCK 1"
+  else
+    echo "no"
+    PTHREAD_HAVE_TIMEDLOCK=""
+  fi
+else
+  echo "no"
+  PTHREAD_HAVE_RWLOCK=""
+  PTHREAD_HAVE_TIMEDLOCK=""
+fi
+
 
 rm -f conftest conftest.o conftest.cpp
 # ---------------------------------------------------------------------------
@@ -263,6 +303,8 @@ DATE=`date`
 cat >makeinclude <<EOF
 # Makeinclude generated by configure: $DATE
 
+COMPILER = $COMPILER
+COMPILERFLAGS = $COMPILERFLAGS
 CXX = $CXX
 CXXFLAGS = $CXXFLAGS
 INCLUDES = -I$MYSQLINC
@@ -292,7 +334,8 @@ $CTIME_R_PTHREAD_DEFINE
 $CTIME_R_XOPEN_DEFINE
 $CTIME_R_XPG_DEFINE
 $CTIME_R_INCLUDE
-#endif
+$PTHREAD_HAVE_RWLOCK
+$PTHREAD_HAVE_TIMEDLOCK#endif
 EOF
 
 echo "done"
