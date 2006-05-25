@@ -15,6 +15,40 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <assert.h>
+
+#define GR_DOUBLE_INDEX(ix) (((unsigned char *)&emagic)[7-(ix)])
+
+namespace grace
+{
+	static const double emagic = 7.949928895127363e-275;
+	double htond (double native)
+	{
+		double result;
+		
+		assert(sizeof(double) == 8);
+		
+		for (int i=0; i<8; i++)
+		{
+			((unsigned char *)&result)[GR_DOUBLE_INDEX(i)] =
+				((unsigned char *)&native)[i];
+		}
+		return result;
+	}
+	double ntohd (double net)
+	{
+		double result;
+		
+		assert(sizeof(double) == 8);
+		
+		for (int i=0; i<8; ++i)
+		{
+			((unsigned char *)&result)[i] =
+				((unsigned char *)&net)[GR_DOUBLE_INDEX(i)];
+		}
+		return result;
+	}
+}
 
 // Handy macro to round up a size for allocating a buffer to multiples of
 // 16 for numbers <256 or multiples of 256 in other cases.
@@ -1667,6 +1701,30 @@ size_t string::bingetvint (size_t offset, unsigned int &val)
 			return offset+4;
 	}
 	return 0;
+}
+
+size_t string::binputieee (size_t offset, double dat)
+{
+	double net;
+	if ((offset+8)>size) pad (offset+8, 0);
+	net = grace::htond (dat);
+	for (int i=0; i<8; ++i)
+	{
+		data->v[offset+i] = ((char *)&net)[i];
+	}
+	return offset+8;
+}
+
+size_t string::bingetieee (size_t offset, double &dat)
+{
+	double net;
+	if ((offset+8)>size) return 0;
+	for (int i=0; i<8; ++i)
+	{
+		((char *)&net)[i] = data->v[offset+i];
+	}
+	dat = grace::ntohd (net);
+	return offset+8;
 }
 
 size_t string::binputvstr (size_t offset, const string &str)

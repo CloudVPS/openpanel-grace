@@ -455,6 +455,12 @@ public:
 					 /// Read a SHOX variable string.
 	size_t			 bingetvstr (size_t atoffset, string &into);
 	
+					 /// Write an 8 byte network order IEEE754 double.
+	size_t			 binputieee (size_t offset, double val);
+	
+					 /// Read an 8 byte network order IEEE754 double.
+	size_t			 bingetieee (size_t offset, double &into);
+	
 	// --------------------------------------------------------------------
 	// Escape character handling
 	// --------------------------------------------------------------------
