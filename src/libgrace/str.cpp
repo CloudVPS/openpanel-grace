@@ -1503,6 +1503,11 @@ size_t string::binput64 (size_t offset, long long val)
 	return crsr;
 }
 
+size_t string::binput64u (size_t offset, unsigned long long val)
+{
+	return binput64 (offset, (long long) val);
+}
+
 // ========================================================================
 // METHOD ::binput16u
 // ========================================================================
@@ -1627,6 +1632,74 @@ size_t string::binputstr (size_t offset, const char *opcode,
 	crsr += value.strlen();
 	if (crsr > size) size = crsr;
 	return crsr;
+}
+
+size_t string::binget8 (size_t offset, char &into)
+{
+	if ((offset+1)>size) return 0;
+	into = data->v[offset];
+	return offset+1;
+}
+
+size_t string::binget8u (size_t offset, unsigned char &into)
+{
+	if ((offset+1)>size) return 0;
+	into = data->v[offset];
+	return offset+1;
+}
+
+size_t string::binget16 (size_t offset, short &into)
+{
+	if ((offset+2) > size) return 0;
+	into = (data->v[offset] << 8) | data->v[offset+1];
+	return offset+2;
+}
+
+size_t string::binget16u (size_t offset, unsigned short &into)
+{
+	if ((offset+2) > size) return 0;
+	into = (data->v[offset] << 8) | data->v[offset+1];
+	return offset+2;
+}
+
+size_t string::binget32 (size_t offset, int &into)
+{
+	if ((offset+4) > size) return 0;
+	into = (data->v[offset] << 24) | (data->v[offset+1] << 16) |
+		   (data->v[offset+2] << 8) | (data->v[offset+3]);
+	return offset+4;
+}
+
+size_t string::binget32u (size_t offset, unsigned int &into)
+{
+	if ((offset+4) > size) return 0;
+	into = (data->v[offset] << 24) | (data->v[offset+1] << 16) |
+		   (data->v[offset+2] << 8) | (data->v[offset+3]);
+	return offset+4;
+}
+
+size_t string::binget64 (size_t offset, long long &into)
+{
+	if (offset+8 > size) return 0;
+	into = ((long long)data->v[offset] << 56) | ((long long)data->v[offset+1] << 48) |
+		   ((long long)data->v[offset+2] << 40) | ((long long)data->v[offset+3] << 32) |
+		   ((long long)data->v[offset+4] << 24) | ((long long)data->v[offset+5] << 16) |
+		   ((long long)data->v[offset+6] << 8) | ((long long)data->v[offset+7]);
+	return offset+8;
+}
+
+size_t string::binget64u (size_t offset, unsigned long long &into)
+{
+	if (offset+8 > size) return 0;
+	into = ((unsigned long long)data->v[offset] << 56) |
+		   ((unsigned long long)data->v[offset+1] << 48) |
+		   ((unsigned long long)data->v[offset+2] << 40) | 
+		   ((unsigned long long)data->v[offset+3] << 32) |
+		   ((unsigned long long)data->v[offset+4] << 24) | 
+		   ((unsigned long long)data->v[offset+5] << 16) |
+		   ((unsigned long long)data->v[offset+6] << 8) |
+		   ((unsigned long long)data->v[offset+7]);
+	return offset+8;
 }
 
 size_t string::binputvint (size_t offset, unsigned int val)

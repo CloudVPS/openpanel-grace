@@ -397,6 +397,8 @@ public:
 	
 					 /// Add binary data.
 	size_t			 binput64  (size_t offset, long long val);
+	size_t			 binput64u (size_t offset, unsigned long long val);
+	
 					 /// Add binary data.
 	size_t			 binput32u (size_t offset, unsigned int val);
 					 /// Add binary data.
@@ -411,6 +413,16 @@ public:
 	size_t			 binput8u  (size_t offset, unsigned char val);
 					 /// Add binary data.
 	size_t			 binput8   (size_t offset, char);
+	
+	size_t			 binget8   (size_t offset, char &);
+	size_t			 binget8u  (size_t offset, unsigned char &);
+	size_t			 binget16  (size_t offset, short &);
+	size_t			 binget16u (size_t offset, unsigned short &);
+	size_t			 binget32  (size_t offset, int &);
+	size_t			 binget32u (size_t offset, unsigned int &);
+	size_t			 binget64  (size_t offset, long long &);
+	size_t			 binget64u (size_t offset, unsigned long long &);
+	
 					 /// Add a CXML opcode.
 	size_t			 binputopc (size_t offset, const char *opcode);
 					 /// Add a CXML long long.
