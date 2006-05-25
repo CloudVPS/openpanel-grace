@@ -1718,7 +1718,7 @@ void value::assign (currency *c)
 	if (_type == t_unset) _type = t_currency;
 }
 
-static bool value::isbuiltin (const statstring &type)
+bool value::isbuiltin (const statstring &type)
 {
 	static value tplist;
 	if (! tplist.count())
