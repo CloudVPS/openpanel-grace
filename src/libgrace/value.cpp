@@ -1718,3 +1718,31 @@ void value::assign (currency *c)
 	if (_type == t_unset) _type = t_currency;
 }
 
+static bool value::isbuiltin (const statstring &type)
+{
+	static value tplist;
+	if (! tplist.count())
+	{
+		tplist[t_char] = true;
+		tplist[t_uchar] = true;
+		tplist[t_short] = true;
+		tplist[t_ushort] = true;
+		tplist[t_int] = true;
+		tplist[t_unsigned] = true;
+		tplist[t_bool] = true;
+		tplist[t_bool_true] = true;
+		tplist[t_bool_false] = true;
+		tplist[t_double] = true;
+		tplist[t_string] = true;
+		tplist[t_ipaddr] = true;
+		tplist[t_unset] = true;
+		tplist[t_long] = true;
+		tplist[t_ulong] = true;
+		tplist[t_array] = true;
+		tplist[t_dict] = true;
+		tplist[t_date] = true;
+		tplist[t_currency] = true;
+	}
+	
+	return tplist.exists (type);
+}

@@ -145,6 +145,8 @@ public:
 						compact = true,
 						nocompact = false
 					 };
+
+	static bool		 isbuiltin (const statstring &type);
 	
 	const value		&operator[] (int i) const;
 	value			&operator[] (int i);
