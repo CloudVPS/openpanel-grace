@@ -1595,6 +1595,112 @@ size_t string::binputstr (size_t offset, const char *opcode,
 	return crsr;
 }
 
+size_t string::binputvint (size_t offset, unsigned int val)
+{
+	size_t vintsz;
+	
+	if (val < 0x40) vintsz = 1;
+	else if (val < 0x4000) vintsz = 2;
+	else if (val < 0x400000) vintsz = 3;
+	else if (val < 0x40000000) vintsz = 4;
+	else return 0;
+	
+	size_t crsr = offset+vintsz;
+	if (crsr > size) pad (crsr, 0);
+	
+	switch (vintsz)
+	{
+		case 1:
+			data->v[offset] = val & 0x3f;
+			break;
+		
+		case 2:
+			data->v[offset  ] = 0x40 | (val >> 8);
+			data->v[offset+1] = val & 0xff;
+			break;
+		
+		case 3:
+			data->v[offset  ] = 0x80 | (val >> 16);
+			data->v[offset+1] = (val & 0xff00) >> 8;
+			data->v[offset+2] = val & 0xff;
+			break;
+		
+		case 4:
+			data->v[offset  ] = 0x80 | (val >> 24);
+			data->v[offset+1] = (val & 0xff0000) >> 16;
+			data->v[offset+2] = (val & 0x00ff00) >> 8;
+			data->v[offset+3] = val & 0xff;
+			break;
+	}
+
+	if (crsr > size) size = crsr;
+	return crsr;
+}
+
+size_t string::bingetvint (size_t offset, unsigned int &val)
+{
+	if (offset > size) return 0;
+	
+	val = 0;
+	
+	switch (data->v[offset] & 0xc0)
+	{
+		case 0x00:
+			val = data->v[offset];
+			return offset+1;
+			
+		case 0x40:
+			val = ((data->v[offset] & 0x3f) << 8) | (data->v[offset+1]);
+			return offset+2;
+		
+		case 0x80:
+			val = ((data->v[offset] & 0x3f) << 16) |
+				  ((data->v[offset+1] << 8)) |
+				  ( data->v[offset+2]);
+			return offset+3;
+		
+		case 0xc0:
+			val = ((data->v[offset] & 0x3f) << 24) |
+				  ((data->v[offset+1]) << 16) |
+				  ((data->v[offset+2]) << 8) |
+				  ( data->v[offset+3]);
+			return offset+4;
+	}
+	return 0;
+}
+
+size_t string::binputvstr (size_t offset, const string &str)
+{
+	size_t cr;
+	unsigned int slen = str.strlen();
+	
+	cr = binputvint (offset, slen);
+	if (! cr) return 0;
+	
+	if ((cr+slen)>size) pad (cr+slen, 0);
+	
+	::memcpy (data->v+cr, str.str(), slen);
+	cr += slen;
+	return cr;
+}
+
+size_t string::bingetvstr (size_t offset, string &into)
+{
+	size_t crsr;
+	unsigned int strsz;
+	
+	if (offset > size) return 0;
+	
+	crsr = bingetvint (offset, strsz);
+	if (! crsr) return 0;
+	
+	if ((crsr + strsz) > size) return 0;
+	
+	into.strcpy (data->v, strsz);
+	crsr += strsz;
+	return crsr;
+}
+
 // ========================================================================
 // METHOD ::encode64
 // -----------------

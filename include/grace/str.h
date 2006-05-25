@@ -428,6 +428,32 @@ public:
 					 /// Add a CXML byte.
 	size_t			 binputnum8 (size_t offset, const char *opcode,
 								 unsigned int value);
+					
+					 /// Add a SHOX variable int.
+					 /// The shox output format uses variable length
+					 /// integers to represent internal counters and
+					 /// ids. The general idea is to not use more
+					 /// bytes than strictly necessary. The integer
+					 /// is always encoded in little-endian order, with
+					 /// the highest two bits indicating the length of
+					 /// the integer, yielding a maximum of 30 available
+					 /// bits. If the two upper bits are set to '00' the
+					 /// value is sized 1 byte with 6 bits left. If
+					 /// they are set to '01' the size grows to 2 bytes
+					 /// for 14 bits of storage, &c.
+	size_t			 binputvint (size_t offset, unsigned int val);
+	
+					 /// Read a SHOX variable int at offset.
+	size_t			 bingetvint (size_t atoffset, unsigned int &into);
+	
+					 /// Write a SHOX variable string. A shox string
+					 /// is a shox vint followed by string data. For
+					 /// string sizes up to 63 bytes this is the same
+					 /// as a pascal string. 
+	size_t			 binputvstr (size_t offset, const string &str);
+	
+					 /// Read a SHOX variable string.
+	size_t			 bingetvstr (size_t atoffset, string &into);
 	
 	// --------------------------------------------------------------------
 	// Escape character handling
