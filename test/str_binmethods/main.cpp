@@ -23,24 +23,31 @@ int str_binmethodstestApp::main (void)
 {
 	size_t offs = 0;
 	string out;
-	
-	offs = out.binputvstr (offs, "Hello, world\n");
-	fout.printf ("%S\n", out.str());
-	
-	out.crop();
-	offs = 0;
-	offs = out.binputvstr (offs, "This is a longer string that exceeds "
-								 "the 63 byte boundary where a vstring "
-								 "and a pascal string become different "
-								 "entities.");
-	fout.printf ("%S\n", out.str());
-	
 	string res;
+	
+	const char *shorttext = "Hello, world\n";
+	const char *midtext = "This is a longer string that exceeds "
+						  "the 63 byte boundary where a vstring "
+						  "and a pascal string become different "
+						  "entities.";
+	
+	offs = out.binputvstr (offs, shorttext);
+	
+	res.crop();
 	offs = 0;
 	offs = out.bingetvstr (offs, res);
 	if (! offs) FAIL("failure for bingetvstr");
+	if (res != shorttext) FAIL("compare vstr(1)");
 	
-	fout.writeln (res);
+	out.crop();
+	offs = 0;
+	offs = out.binputvstr (offs, midtext);
+	
+	res.crop();
+	offs = 0;
+	offs = out.bingetvstr (offs, res);
+	if (! offs) FAIL("failure for bingetvstr");
+	if (res != midtext) FAIL("compare vstr(2)");
 	
 	return 0;
 }
