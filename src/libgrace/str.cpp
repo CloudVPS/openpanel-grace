@@ -1396,7 +1396,7 @@ void string::crop (int sz)
 	
 		if (sz<0)
 		{
-			memcpy (data, data + _sz, size - _sz);
+			memcpy (data->v, data->v + _sz, size - _sz);
 		}
 		size = _sz;
 		data->v[size] = '\0';

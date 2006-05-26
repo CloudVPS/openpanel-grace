@@ -14,7 +14,7 @@ unsigned int stringdict::get (const statstring &id)
 	unsigned int cnt;
 	if (bystring.exists (id)) return bystring[id];
 	byid.add (new statstring (id));
-	cnt = byid.count();
+	cnt = byid.count() -1;
 	bystring[id] = cnt;
 	return cnt;
 }

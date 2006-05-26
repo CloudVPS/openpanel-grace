@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<void>
+	<integer id="test">42</integer>
+	<array id="list">
+		<string>foo</string>
+		<string>bar</string>
+		<string>baz</string>
+	</array>
+	<bool id="abool">true</bool>
+	<float id="afloat">1.337000</float>
+</void>
