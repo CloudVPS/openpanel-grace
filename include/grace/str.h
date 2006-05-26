@@ -414,14 +414,14 @@ public:
 					 /// Add binary data.
 	size_t			 binput8   (size_t offset, char);
 	
-	size_t			 binget8   (size_t offset, char &);
-	size_t			 binget8u  (size_t offset, unsigned char &);
-	size_t			 binget16  (size_t offset, short &);
-	size_t			 binget16u (size_t offset, unsigned short &);
-	size_t			 binget32  (size_t offset, int &);
-	size_t			 binget32u (size_t offset, unsigned int &);
-	size_t			 binget64  (size_t offset, long long &);
-	size_t			 binget64u (size_t offset, unsigned long long &);
+	size_t			 binget8   (size_t offset, char &) const;
+	size_t			 binget8u  (size_t offset, unsigned char &) const;
+	size_t			 binget16  (size_t offset, short &) const;
+	size_t			 binget16u (size_t offset, unsigned short &) const;
+	size_t			 binget32  (size_t offset, int &) const;
+	size_t			 binget32u (size_t offset, unsigned int &) const;
+	size_t			 binget64  (size_t offset, long long &) const;
+	size_t			 binget64u (size_t offset, unsigned long long &) const;
 	
 					 /// Add a CXML opcode.
 	size_t			 binputopc (size_t offset, const char *opcode);
@@ -456,7 +456,7 @@ public:
 	size_t			 binputvint (size_t offset, unsigned int val);
 	
 					 /// Read a SHOX variable int at offset.
-	size_t			 bingetvint (size_t atoffset, unsigned int &into);
+	size_t			 bingetvint (size_t atoffset, unsigned int &into) const;
 	
 					 /// Write a SHOX variable string. A shox string
 					 /// is a shox vint followed by string data. For
@@ -465,13 +465,13 @@ public:
 	size_t			 binputvstr (size_t offset, const string &str);
 	
 					 /// Read a SHOX variable string.
-	size_t			 bingetvstr (size_t atoffset, string &into);
+	size_t			 bingetvstr (size_t atoffset, string &into) const;
 	
 					 /// Write an 8 byte network order IEEE754 double.
 	size_t			 binputieee (size_t offset, double val);
 	
 					 /// Read an 8 byte network order IEEE754 double.
-	size_t			 bingetieee (size_t offset, double &into);
+	size_t			 bingetieee (size_t offset, double &into) const;
 	
 	// --------------------------------------------------------------------
 	// Escape character handling

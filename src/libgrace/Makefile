@@ -43,6 +43,7 @@ OBJ			= 	application.o \
 				value_xml.o \
 				value_csv.o \
 				value_cxml.o \
+				value_shox.o \
 				xmlschema_root.o \
 				xmlschema_base.o \
 				xmlschema_misc.o \

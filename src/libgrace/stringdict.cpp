@@ -1,3 +1,4 @@
+#include <grace/dictionary.h>
 #include <grace/stringdict.h>
 
 stringdict::stringdict (void)
@@ -11,9 +12,9 @@ stringdict::~stringdict (void)
 unsigned int stringdict::get (const statstring &id)
 {
 	unsigned int cnt;
-	if (bystring.exists (id)) return bystring[id].uval();
+	if (bystring.exists (id)) return bystring[id];
 	byid.add (new statstring (id));
-	cnt = bystring.count();
+	cnt = byid.count();
 	bystring[id] = cnt;
 	return cnt;
 }

@@ -249,4 +249,23 @@ dictionaryEntry 	*demand (unsigned int key, bool alloc=true)
 					 }
 };
 
+#include <grace/array.h>
+
+/// Keeps a collection of text strings, with each unique string getting
+/// a unique serial number. Used for keeping compact serialization.
+class stringdict
+{
+public:
+								 stringdict (void);
+								~stringdict (void);
+				
+	unsigned int				 get (const statstring &);
+	const statstring			&get (unsigned int);
+	unsigned int				 count (void);
+
+protected:
+	dictionary<unsigned int>	 bystring;
+	array<statstring>			 byid;
+};
+
 #endif

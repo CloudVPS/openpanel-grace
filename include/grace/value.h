@@ -6,6 +6,8 @@
 #include <grace/file.h>
 #include <grace/visitor.h>
 #include <grace/currency.h>
+#include <grace/dictionary.h>
+#include <grace/stringdict.h>
 
 #include <grace/checksum.h>
 #include <stdlib.h>
@@ -1108,6 +1110,21 @@ public:
 					 /// \param fn File name to load.
 	void			 loadplist (const string &fn);
 
+					 /// Load from the SHOX object format.
+					 /// \param fname Filename to load.
+	void			 loadshox (const string &fname);
+	
+					 /// Save to the SHOX object format.
+					 /// \param fname Filename to save.
+	void			 saveshox (const string &fname) const;
+	
+					 /// Convert from SHOX string data.
+					 /// \param shox The shox-encoded data.
+	void			 fromshox (const string &shox);
+	
+					 /// Convert to SHOX string data.
+	string			*toshox (void) const;
+	
 					 /// Returns true if a child key exists.
 	bool			 exists (const char *) const;
 
@@ -1238,6 +1255,9 @@ protected:
 					 	s = c;
 					 	return compressbuiltin (sz, a, b, s, d);
 					 };
+	
+	void			 readshox (class stringdict &, size_t &, const string &);
+	void			 printshox (string &, stringdict &) const;
 		
 	dtenum			 _type; ///< The registered type/class.
 	string			 s; ///< The string value.
