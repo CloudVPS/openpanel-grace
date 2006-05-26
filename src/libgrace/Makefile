@@ -24,6 +24,7 @@ OBJ			= 	application.o \
 				smtpd.o \
 				socketpool.o \
 				statstring.o \
+				stringdict.o \
 				str.o \
 				strutil.o \
 				system.o \
