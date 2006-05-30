@@ -7,6 +7,8 @@
 #include <grace/statstring.h>
 #include <grace/thread.h>
 
+statstring nil;
+
 // ========================================================================
 // FUNCTION dumpstringref
 // ----------------------
