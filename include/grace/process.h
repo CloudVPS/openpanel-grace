@@ -207,6 +207,13 @@ public:
 					 	_argv = strutil::splitquoted (mcommand, ' ');
 					 }
 					 
+					 systemprocess (const value &args,
+					 				bool withStdErr = false)
+					 	: process (args[0].sval(), withStdErr)
+					 {
+					 	_argv = args;
+					 }	
+					 
 	virtual			~systemprocess (void)
 					 {
 					 }
