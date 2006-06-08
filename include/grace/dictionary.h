@@ -226,7 +226,7 @@ dictionaryEntry 	*demand (unsigned int key, bool alloc=true)
 						dictionaryEntry *crsr = _array[0];
 						while (crsr)
 						{
-							if (crsr->id.key() == key) return crsr;
+							if (crsr->id.key() == key) return true;
 							if (crsr->id.key() < key)
 							{
 								if (crsr->higher) crsr = crsr->higher;
@@ -246,6 +246,7 @@ dictionaryEntry 	*demand (unsigned int key, bool alloc=true)
 								}
 							}
 						}
+						return false;
 					 }
 };
 
