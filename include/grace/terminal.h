@@ -249,6 +249,7 @@ public:
 	{
 		setprompt (prompt);
 		on ();
+		clear ();
 		draw ();
 		
 		bool done = false;
