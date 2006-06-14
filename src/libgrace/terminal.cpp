@@ -115,6 +115,7 @@ void termbuffer::setprompt (const string &p)
 		advance();
 	}
 	
+	historycrsr = history.count();
 	rdpos = -1;
 }
 
@@ -211,6 +212,12 @@ void termbuffer::crhome (void)
 	}
 }
 
+void termbuffer::tohistory (void)
+{
+	history.newval() = buffer + prompt.strlen();
+	historycrsr = history.count() - 1;
+}
+
 void termbuffer::crup (void)
 {
 	if (historycrsr == history.count())
@@ -220,15 +227,12 @@ void termbuffer::crup (void)
 			history.newval() = (char *) (buffer + prompt.strlen());
 		}
 	}
-	else
+	if (! historycrsr) // top of history, beep.
 	{
-		if (! historycrsr) // top of history, beep.
-		{
-			tputc (7);
-			return;
-		}
-		historycrsr--;
+		tputc (7);
+		return;
 	}
+	historycrsr--;
 	
 	set (history[historycrsr].sval());
 }

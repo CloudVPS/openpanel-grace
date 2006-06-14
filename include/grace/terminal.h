@@ -337,6 +337,7 @@ public:
 		
 		termbuf.tprintf ("\n");
 		off();
+		tohistory();
 		
 		return termbuf.getline();
 	}
