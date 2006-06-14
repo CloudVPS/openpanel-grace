@@ -28,6 +28,7 @@ OBJ			= 	application.o \
 				str.o \
 				strutil.o \
 				system.o \
+				terminal.o \
 				tcpsocket.o \
 				thread.o \
 				timeofday.o \
