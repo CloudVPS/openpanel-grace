@@ -87,8 +87,12 @@ struct logtarget
 ///
 /// If you want to define your logging somewhere other than the
 /// resources.xml file, you should manually add the target(s)
-/// using daemon::addlogtarget() before you send the first
-/// message through daemon::log().
+/// using daemon::addlogtarget() before daemonize() is called.
+///
+/// Log messages sent before the system is daemonized are sent to
+/// the stderr stream and queued up for later logging. The reasoning
+/// behind this is that it's not possible to start threads before
+/// the fork() calls that relate to daemonization have been executed.
 class daemon : public application
 {
 friend class logthread;
