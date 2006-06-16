@@ -31,7 +31,6 @@ termbuffer::termbuffer (file &in, file &out, int _size, int _wsize)
 	
 	// Initialize all other cursors.
 	crsr = ocrsr = wcrsr = owcrsr = 0;
-	smaxpos = 0;
 	historycrsr = 0;
 	
 	// Default prompt.
@@ -116,7 +115,6 @@ void termbuffer::setprompt (const string &p)
 	}
 	
 	historycrsr = history.count();
-	rdpos = -1;
 }
 
 void termbuffer::backspace (void)
@@ -132,14 +130,12 @@ void termbuffer::backspace (void)
 		buffer[crsr-1] = 0;
 		len--;
 		crsr--;
-		rdpos = crsr;
 	}
 	else // No, shift everything.
 	{
 		memmove (buffer + crsr-1, buffer+crsr, len-crsr);
 		len--;
 		crsr--;
-		rdpos = crsr-1;
 		buffer[len] = 0;
 	}
 	
@@ -148,7 +144,6 @@ void termbuffer::backspace (void)
 	{
 		wcrsr = crsr - (wsize-6);
 		if (wcrsr<0) wcrsr = 0;
-		rdpos = wcrsr;
 	}
 }
 
@@ -157,13 +152,10 @@ void termbuffer::crleft (void)
 	if (crsr > prompt.strlen()) crsr--;
 	else return;
 	
-	rdpos = -1; // FIXME, shouldn't this just be crsr?
-	
 	if (crsr < wcrsr)
 	{
 		wcrsr = crsr - (wsize - 6);
 		if (wcrsr<0) wcrsr = 0;
-		rdpos = wcrsr;
 	}
 }
 
@@ -179,7 +171,6 @@ void termbuffer::crright (void)
 		return;
 	}
 	
-	rdpos = -1;
 	advance();
 }
 
@@ -190,7 +181,6 @@ void termbuffer::crend (void)
 	if (wcrsr<0)
 	{
 		wcrsr = 0;
-		rdpos = -1;
 		return;
 	}
 
@@ -202,13 +192,11 @@ void termbuffer::crhome (void)
 	if (crsr >= prompt.strlen())
 	{
 		crsr = prompt.strlen();
-		rdpos = 0;
 	}
 	
 	if (wcrsr)
 	{
 		wcrsr = 0;
-		rdpos = 0;
 	}
 }
 
@@ -263,14 +251,12 @@ void termbuffer::insert (char c)
 	{
 		buffer[len++] = c;
 		buffer[len] = 0;
-		rdpos = crsr;
 		crsr++;
 	}
 	else
 	{
 		memmove (buffer+crsr+1, buffer+crsr, len-crsr);
 		len++;
-		rdpos = crsr;
 		buffer[crsr++] = c;
 	}
 	
@@ -282,7 +268,7 @@ void termbuffer::advance (void)
 	char *ptr;
 	if (crsr < wcrsr)
 	{
-		wcrsr = rdpos = crsr;
+		wcrsr = crsr;
 		return;
 	}
 	if ( (crsr - wcrsr) > (wsize-2) )
@@ -298,7 +284,6 @@ void termbuffer::advance (void)
 		{
 			wcrsr += 16;
 		}
-		rdpos = wcrsr;
 	}
 }
 
@@ -307,7 +292,6 @@ void termbuffer::set (const string &to)
 	memset (curview, 0, len);
 	crsr = prompt.strlen();
 	len = prompt.strlen();
-	rdpos = prompt.strlen();
 	buffer[prompt.strlen()] = 0;
 	strcat (buffer, to.str());
 	len += to.strlen();

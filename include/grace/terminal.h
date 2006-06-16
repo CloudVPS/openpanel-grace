@@ -20,7 +20,10 @@
 #define KEYCODE_RETURN 10
 
 /// A class implementing a VT100-compatible terminal suitable for
-/// command line interaction models. 
+/// command line interaction models. The class models an input line that
+/// automatically scrolls if the cursor reaches the end and the user
+/// still has text to enter. The input line is prefixed by a configurable
+/// prompt indicator.
 class termbuffer
 {
 public:
@@ -80,10 +83,16 @@ public:
 					 /// Add current buffer to history.
 	void			 tohistory (void);
 
-					 /// Read a key from the terminal.
+					 /// Read a key from the terminal. This process
+					 /// may be interrupted by console output sent
+					 /// by other threads through the termbuffer::sendconsole
+					 /// method if the user has not pressed a key for longer
+					 /// than 2 seconds.
 	int				 getkey (void);
 	
-					 /// Update the terminal display.
+					 /// Update the terminal display. Will selectively
+					 /// update the visible characters on the screen that
+					 /// have changed since the last time.
 	void			 draw (void);
 	
 					 /// Print formatted text to the terminal display.
@@ -99,6 +108,7 @@ public:
 					 /// Clear the terminal buffer.
 	void			 clear (void);
 	
+					 /// Get the current contents of the input buffer.
 	string			*getline (void)
 					 {
 					 	return new string (buffer + prompt.strlen());
@@ -113,12 +123,25 @@ public:
 					 	eventlock.unlock();
 					 }
 					 
+					 /// Report the current cursor position.
 	int				 crsrpos (void) { return crsr - prompt.strlen(); }
+	
+					 /// Report the current input buffer length.
 	int				 length (void) { return len - prompt.strlen(); }
+	
+					 /// Set the cursorposition.
 	int				 setcrsr (int i)
 					 {
 					 	crsr = prompt.strlen() + i;
 					 	if (crsr>len) crsr = len;
+					 	if (crsr<0) crsr = 0;
+					 }
+					 
+					 /// Force the buffer to be completely redrawn
+					 /// on the next draw() cycle.
+	void			 redraw (void)
+					 {
+					 	for (int i=0; i<wsize; ++i) curview[i] = 0;
 					 }
 	
 protected:
@@ -130,28 +153,39 @@ protected:
 	int				 ocrsr; //< Old cursor position.
 	int				 wcrsr; //< Current offset of the viewport.
 	int				 owcrsr; //< Old offset of the viewport.
-	int				 rdpos; //< The offset for redrawing.
-	int				 smaxpos;
-	char 			*buffer;
-	char			*curview;
-	string			 prompt;
+	char 			*buffer; //< The input buffer.
+	char			*curview; //< The screen buffer.
+	string			 prompt; //< The prompt string.
 	
-	value			 events;
-	lock<int>		 eventlock;
+	value			 events; //< Queue of console events.
+	lock<int>		 eventlock; ///< Lock on the event queue.
 	
-	value			 history;
-	int				 historycrsr;
+	value			 history; //< Command history.
+	int				 historycrsr; //< Current position in command history.
 
-	struct termios 	 oldterm;
-	struct termios	 newterm;
+	struct termios 	 oldterm; //< Stored termios settings.
+	struct termios	 newterm; //< Active termios settings.
 
 					 /// Automatically advance viewport cursor to updated
 					 /// situation.
 	void			 advance (void);
+	
+					 /// Move the cursor from one position to the other
+					 /// in a somewhat efficient way using vt100 escapes.
+					 /// Used by draw.
 	void			 setpos (int, int);
 };
 
-/// offering a command line interface. Implemented as a 
+/// A command line interface template built on top of the termbuffer
+/// class. It implements a 'readline' call, that offers standard emacs
+/// keybindings for controlling the cursor, with the following keys
+/// handled by default:
+/// - ^A beginning-of-line
+/// - ^E end-of-line
+/// - ^U erase line
+/// - left and right cursor keys for cursor movement
+/// - up and down cursor keys for history navigation
+/// 
 template <class ctlclass> class terminal
 {
 public:
@@ -201,17 +235,40 @@ public:
 		}
 	}
 	
+	/// Set the command prompt string.
 	void setprompt (const string &s) { termbuf.setprompt (s); }
+	
+	/// Turn the terminal emulation on.
 	void on (void) { termbuf.on(); }
+	
+	/// Turn the terminal emulation off.
 	void off (void) { termbuf.off(); }
+	
+	/// Insert a single character to the buffer.
 	void insert (char c) { termbuf.insert(c); }
+	
+	/// Insert a backspace into the buffer.
 	void backspace (void) { termbuf.backspace(); }
+	
+	/// Move cursor to the left.
 	void crleft (void) { termbuf.crleft(); }
+	
+	/// Move cursor to the right.
 	void crright (void) { termbuf.crright(); }
+	
+	/// Move cursor to home position.
 	void crhome (void) { termbuf.crhome(); }
+	
+	/// Move cursor to end position.
 	void crend (void) { termbuf.crend(); }
+	
+	/// Move up in history.
 	void crup (void) { termbuf.crup(); }
+	
+	/// Move down in history.
 	void crdown (void) { termbuf.crdown(); }
+	
+	/// Explicitly set the contents.
 	void set (const string &s) { termbuf.set(s); }
 	void tohistory (void) { termbuf.tohistory(); }
 	void draw (void) { termbuf.draw(); }
