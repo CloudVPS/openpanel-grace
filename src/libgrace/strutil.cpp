@@ -1040,14 +1040,14 @@ string *strutil::uuid (void)
 	unsigned int rndg = rand();
 	
 	rndc = 0x4000 | (rndc & 0x0fff);
+	// rnde = ... ;TODO: Set the two most significant bits (bits 6 and 7) of the clock_seq_hi_and_reserved to zero and one, respectively. RFC4122 4.4
 	
 	rnda ^= kernel.time.now();
 	rndb ^= kernel.proc.self();
 	rndg ^= ::getuid();
 	
-	(*res).printf ("%08x-%04x-%04x-%04x-%04x%08x", rnda, rndb & 0xffff,
+	(*res).printf ("%08x-%04x-%04x-%04x-%04x%08x", rnda, rndb,
 				   rndc, rnde, rndf, rndg);
 	
-	res->ctoupper ();
 	return res;
 }
