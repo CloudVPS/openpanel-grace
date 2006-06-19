@@ -23,6 +23,7 @@ termbuffer::termbuffer (file &in, file &out, int _size, int _wsize)
 	fin = in;
 	fout = out;
 	struct winsize sz;
+	len = 0;
 	
 	size = _size;
 	

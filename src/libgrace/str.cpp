@@ -339,6 +339,8 @@ void string::printf_va (const char *_fmtx, va_list *ap)
 	unsigned char sprintf_out[256]; // Temporary storage to build a string 
 	unsigned char *copy_p; // Iterator
 	fmt = (unsigned char *) _fmtx;
+	int sz;
+	string copy_s;
 	
 	while (*fmt)
 	{
@@ -465,8 +467,37 @@ void string::printf_va (const char *_fmtx, va_list *ap)
 						goto CONTINUE;
 					
 					case 's':
+						sz = atoi ((const char *)copy+1);
 						copy_p = (unsigned char *) va_arg(*ap, char *);
 						if (!copy_p) copy_p = (unsigned char *) "(null)";
+						if (sz != 0)
+						{
+							int asz = sz;
+							if (asz < 0) asz = -sz;
+							
+							copy_s = (const char *) copy_p;
+							
+							if (copy_s.strlen() < asz)
+							{
+								string spc;
+								spc = "                                                                                               ";
+								spc.crop (asz - copy_s.strlen());
+								if (sz < 0)
+								{
+									copy_s = spc;
+									copy_s += (const char *) copy_p;
+								}
+								else
+								{
+									copy_s += spc;
+								}
+							}
+							else
+								copy_s.crop (sz);
+								
+							strcat (copy_s);
+							copy_p = (unsigned char *) "";
+						}
 DUP:
 						strcat ((char *) copy_p);
 						goto CONTINUE;
