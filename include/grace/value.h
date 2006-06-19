@@ -150,8 +150,13 @@ public:
 
 	static bool		 isbuiltin (const statstring &type);
 	
+	/// Access by array index.
 	const value		&operator[] (int i) const;
+
+	/// Access by array index.
 	value			&operator[] (int i);
+
+	/// Access by string key.
 	inline const value	&operator[] (const char *str) const
 	{
 		value *v;
@@ -159,6 +164,8 @@ public:
 		if (!v) return *this;
 		return *v;
 	}
+
+	/// Access by string key.
 	inline value	&operator[] (const char *str)
 	{
 		if (_type == t_unset)
@@ -167,6 +174,8 @@ public:
 		value *v = findchild (str);
 		return *v;
 	}
+
+	/// Access by string key.
 	inline const value	&operator[] (const string &str) const
 	{
 		value *v;
@@ -174,6 +183,8 @@ public:
 		if (!v) return *this;
 		return *v;
 	}
+
+	/// Access by string key.
 	inline value	&operator[] (const string &str)
 	{
 		if (_type == t_unset)
@@ -183,6 +194,7 @@ public:
 		return *v;
 	}
 	
+	/// Access by string key.
 	inline const value	&operator[] (const statstring &str) const
 	{
 		value *v;
@@ -191,6 +203,8 @@ public:
 		if (!v) return *this;
 		return *v;
 	}
+
+	/// Access by string key.
 	inline value	&operator[] (const statstring &str)
 	{
 		if (_type == t_unset)
@@ -201,6 +215,7 @@ public:
 		return *v;
 	}
 	
+	/// Access by value key (int or string).
 	inline value	&operator[] (const value &va)
 	{
 		value *v;
@@ -221,6 +236,7 @@ public:
 		return *v;
 	}
 
+	/// Access by value key (int or string).
 	inline value	&operator[] (const value &va) const
 	{
 		value *v;
@@ -1013,7 +1029,7 @@ public:
 							  const string &key="");
 
 					 /// Convert from CSV format.
-					 /// \param csvdata String containing the CSV data as text.
+					 /// \param csvData String containing the CSV data as text.
 					 /// \param withHeaders True if the file has a header row.
 					 /// \param key Label of the index row (empty for index on first row).
 	bool			 fromcsv (const string &csvData, bool withHeaders=true,
@@ -1021,7 +1037,7 @@ public:
 
 					 /// Deserialize PHP data.
 					 /// \param phpdata A serialized PHP array.
-	void			 phpdeserialize (const string &);
+	void			 phpdeserialize (const string &phpdata);
 	
 					 /// Serialize PHP data.
 					 /// Discards attribute data, really prefers everything
@@ -1041,11 +1057,12 @@ public:
 					 /// \param fn File name to save.
 					 /// \param compact Set to value::compact or value::nocompact.
 					 /// \param schema XML schema to apply.
-	void			 savexml (const char *, bool, class xmlschema &) const;
+	void			 savexml (const char *fn, bool compact,
+							  class xmlschema &schema) const;
 	
 					 /// Convert to string containing XML data.
 					 /// \param compact Set to value::compact or value::nocompact.
-					 /// \param schema XML schema to apply, NULL for none.
+					 /// \param s XML schema to apply, NULL for none.
 	string			*toxml (bool compact=false, class xmlschema *s=NULL) const;
 
 					 /// Convert to string containing XML data.
@@ -1061,7 +1078,7 @@ public:
 					 /// Convert from string with XML data.
 					 /// \param d The XML text data.
 					 /// \param s The schema to use for parsing.
-	void			 fromxml (const string &, class xmlschema &);
+	void			 fromxml (const string &d, class xmlschema &s);
 	
 					 /// Load from an XML file.
 					 /// \param path The file name.
@@ -1166,7 +1183,7 @@ public:
 					 }
 					 
 					 /// Remove attribute for a key.
-					 /// \string id The key to remove.
+					 /// \param id The key to remove.
 	inline void		 rmattrib (const statstring &id)
 					 {
 					 	if (attrib)

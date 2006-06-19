@@ -21,14 +21,14 @@ public:
 					closed = eof = false;
 				}
 
-	statstring	type;
-	string		data;
-	value		properties;
-	bool		closed;
-	bool		eof;
-	bool		haschildren;
-	bool		hasdata;
-	int			crsr;
+	statstring	type; //< Tag type.
+	string		data; //< Data contents.
+	value		properties; //< Tag properties.
+	bool		closed; //< True if there was a closing tag.
+	bool		eof; //< True if end-of-file reached.
+	bool		haschildren; //< True if object has children.
+	bool		hasdata; //< True if object has data.
+	int			crsr; //< Cursor position.
 };
 
 /// String utility class.
