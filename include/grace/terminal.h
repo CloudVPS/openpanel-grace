@@ -180,11 +180,12 @@ protected:
 /// class. It implements a 'readline' call, that offers standard emacs
 /// keybindings for controlling the cursor, with the following keys
 /// handled by default:
-/// - ^A beginning-of-line
-/// - ^E end-of-line
-/// - ^U erase line
-/// - left and right cursor keys for cursor movement
-/// - up and down cursor keys for history navigation
+/// - ^A beginning-of-line.
+/// - ^E end-of-line.
+/// - ^U erase line.
+/// - left and right cursor keys for cursor movement.
+/// - up and down cursor keys for history navigation.
+///
 /// This is implemented as a template class to allow callbacks to be
 /// performed against non-static methods of your class of choice.
 template <class ctlclass> class terminal
