@@ -24,5 +24,5 @@ diff out3.xml reference.xml >/dev/null 2>&1 || {
   echo "failed (DIFF)"
   exit 1
 }
-rm -f test.log out.xml out2.xml
+rm -f test.log out.xml out2.xml out3.xml
 echo "passed"

@@ -32,6 +32,8 @@ with other programs.
   - HTTP socket: \link httpsocket httpsocket \endlink
   - HTTPS socket: \link httpssocket httpssocket \endlink
   - HTTP daemon: \link httpd httpd \endlink
+  - VT100 terminal buffer: \link termbuffer termbuffer \endlink
+  - VT100 command line interface: \link terminal terminal \endlink
 
 \subsection intro_classes_tasks Task Management
   - Forked background task: \link process process \endlink

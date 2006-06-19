@@ -4,6 +4,8 @@ CVS
 *.o
 *.a
 *.so
+*.exe
+*.app
 makeinclude
 platform.h
 

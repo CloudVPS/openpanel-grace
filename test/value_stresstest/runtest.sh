@@ -10,5 +10,5 @@ echo "--- start run" >> test.log
   echo "failed (RUN)"
   exit 1
 }
-rm -f test.log
+rm -f test.log stringrefs.dat
 echo "passed"

@@ -4,7 +4,7 @@ all: http.exe
 	mkapp http
 
 http.exe: $(OBJ)
-	$(CXX) -o http.exe $(OBJ) "$(HOME)/.lib/libgrace.a" -lpthread
+	$(CXX) -o http.exe $(OBJ) "../../lib/libgrace.a" -lpthread
 
 clean:
 	rm -f *.o *.exe
@@ -13,4 +13,4 @@ clean:
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -g -I"$(HOME)/.include" -g -c $<
+	$(CXX) -g -I"../../include" -g -c $<
