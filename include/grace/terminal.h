@@ -354,7 +354,7 @@ public:
 				}
 			}
 			
-			draw();
+			termbuf.draw();
 		}
 		
 		termbuf.tprintf ("\n");
