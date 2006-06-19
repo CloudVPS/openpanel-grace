@@ -185,10 +185,12 @@ protected:
 /// - ^U erase line
 /// - left and right cursor keys for cursor movement
 /// - up and down cursor keys for history navigation
-/// 
+/// This is implemented as a template class to allow callbacks to be
+/// performed against non-static methods of your class of choice.
 template <class ctlclass> class terminal
 {
 public:
+	/// A callback method.
 	typedef int (ctlclass::*kmethod)(int, termbuffer &);
 
 	class keyresponse
@@ -235,50 +237,14 @@ public:
 		}
 	}
 	
-	/// Set the command prompt string.
-	void setprompt (const string &s) { termbuf.setprompt (s); }
-	
-	/// Turn the terminal emulation on.
-	void on (void) { termbuf.on(); }
-	
-	/// Turn the terminal emulation off.
-	void off (void) { termbuf.off(); }
-	
-	/// Insert a single character to the buffer.
-	void insert (char c) { termbuf.insert(c); }
-	
-	/// Insert a backspace into the buffer.
-	void backspace (void) { termbuf.backspace(); }
-	
-	/// Move cursor to the left.
-	void crleft (void) { termbuf.crleft(); }
-	
-	/// Move cursor to the right.
-	void crright (void) { termbuf.crright(); }
-	
-	/// Move cursor to home position.
-	void crhome (void) { termbuf.crhome(); }
-	
-	/// Move cursor to end position.
-	void crend (void) { termbuf.crend(); }
-	
-	/// Move up in history.
-	void crup (void) { termbuf.crup(); }
-	
-	/// Move down in history.
-	void crdown (void) { termbuf.crdown(); }
-	
-	/// Explicitly set the contents.
+	/// Explicitly set the input buffer.
 	void set (const string &s) { termbuf.set(s); }
-	void tohistory (void) { termbuf.tohistory(); }
-	void draw (void) { termbuf.draw(); }
-	void clear (void) { termbuf.clear(); }
-	void insert (const string &str)
-	{
-		for (int i=0; i<str.strlen(); ++i) insert (str[i]);
-	}
-	
-	int getkey (void) { return termbuf.getkey(); }
+
+	/// Send text to the console from another thread. Console messages
+	/// are only shown if the keyboard has been idle for at least a
+	/// second.
+	/// \param s The message to send.
+	void sendconsole (const string &s) { termbuf.sendconsole(s); }
 	
 	/// Regsiter a new keyresponse.
 	/// \param key The key code.
@@ -304,10 +270,10 @@ public:
 	/// \param prompt The input prompt.
 	string *readline (const string &prompt)
 	{
-		setprompt (prompt);
-		on ();
-		clear ();
-		draw ();
+		termbuf.setprompt (prompt);
+		termbuf.on ();
+		termbuf.clear ();
+		termbuf.draw ();
 		
 		bool done = false;
 		int ki, kib, kic;
@@ -315,7 +281,7 @@ public:
 		
 		while (! done)
 		{
-			ki = getkey();
+			ki = termbuf.getkey();
 			handled = false;
 			
 			keyresponse *r = first;
@@ -338,43 +304,41 @@ public:
 				switch (ki)
 				{
 					case KEYCODE_HOME:
-						crhome();
+						termbuf.crhome();
 						break;
 					
 					case KEYCODE_END:
-						crend();
+						termbuf.crend();
 						break;
 					
 					case KEYCODE_DELETE:
 					case KEYCODE_BACKSPACE:
-						backspace();
+						termbuf.backspace();
 						break;
 						
 					case KEYCODE_CLEAR:
-						clear();
+						termbuf.clear();
 						break;
 						
 					case KEYCODE_ESCAPE:
-						kib = getkey();
+						kib = termbuf.getkey();
 						if (kib != '[')
 						{
-							insert ('^');
-							insert ('[');
-							insert (kib);
+							termbuf.insert ("^[");
+							termbuf.insert (kib);
 						}
 						else
 						{
-							kic = getkey();
-							if (kic == 'C') crright();
-							else if (kic == 'D') crleft();
-							else if (kic == 'A') crup();
-							else if (kic == 'B') crdown();
+							kic = termbuf.getkey();
+							if (kic == 'C') termbuf.crright();
+							else if (kic == 'D') termbuf.crleft();
+							else if (kic == 'A') termbuf.crup();
+							else if (kic == 'B') termbuf.crdown();
 							else
 							{
-								insert ('^');
-								insert ('[');
-								insert (kib);
-								insert (kic);
+								termbuf.insert ("^[");
+								termbuf.insert (kib);
+								termbuf.insert (kic);
 							}
 						}
 						break;
@@ -384,7 +348,7 @@ public:
 						break;
 					
 					default:
-						insert (ki);
+						termbuf.insert (ki);
 						break;
 				}
 			}
@@ -393,8 +357,8 @@ public:
 		}
 		
 		termbuf.tprintf ("\n");
-		off();
-		tohistory();
+		termbuf.off();
+		termbuf.tohistory();
 		
 		return termbuf.getline();
 	}
