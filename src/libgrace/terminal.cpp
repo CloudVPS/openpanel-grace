@@ -1,3 +1,12 @@
+// ========================================================================
+// terminal.cpp: VT100 terminal handling
+//
+// (C) Copyright 2006 Pim van Riezen <pi@madscience.nl>
+//                    Madscience Labs, Rotterdam 
+// ========================================================================
+
+//      012345678 TAB-O-METER should measure 4
+//      ^	^
 #include <grace/terminal.h>
 
 #define VT100_CRRIGHT "\033[C"
@@ -6,6 +15,9 @@
 #define VT100_MOVETO(xx) "\033[%iG", (xx)+1
 #define XTERM_SETVT100 "\033 F"
 
+// ==========================================================================
+// CONSTRUCTOR
+// ==========================================================================
 termbuffer::termbuffer (file &in, file &out, int _size, int _wsize)
 {
 	fin = in;
@@ -37,12 +49,18 @@ termbuffer::termbuffer (file &in, file &out, int _size, int _wsize)
 	setprompt ("$ ");
 }
 
+// ==========================================================================
+// DESTRUCTOR
+// ==========================================================================
 termbuffer::~termbuffer (void)
 {
 	free (buffer);
 	free (curview);
 }
 
+// ==========================================================================
+// METHOD termbuffer::on
+// ==========================================================================
 void termbuffer::on (void)
 {
 	int i;
@@ -76,11 +94,17 @@ void termbuffer::on (void)
 	}
 }
 
+// ==========================================================================
+// METHOD termbuffer::off
+// ==========================================================================
 void termbuffer::off (void)
 {
 	tcsetattr (fin.filno, TCSAFLUSH, &oldterm);
 }
 
+// ==========================================================================
+// METHOD termbuffer::setprompt
+// ==========================================================================
 void termbuffer::setprompt (const string &p)
 {
 	// If it doesn't fit, don't try it.
@@ -117,6 +141,9 @@ void termbuffer::setprompt (const string &p)
 	historycrsr = history.count();
 }
 
+// ==========================================================================
+// METHOD termbuffer::backspace
+// ==========================================================================
 void termbuffer::backspace (void)
 {
 	char *ptr;
@@ -147,6 +174,9 @@ void termbuffer::backspace (void)
 	}
 }
 
+// ==========================================================================
+// METHOD termbuffer::crleft
+// ==========================================================================
 void termbuffer::crleft (void)
 {
 	if (crsr > prompt.strlen()) crsr--;
@@ -159,6 +189,9 @@ void termbuffer::crleft (void)
 	}
 }
 
+// ==========================================================================
+// METHOD termbuffer::crright
+// ==========================================================================
 void termbuffer::crright (void)
 {
 	if (crsr < len)
@@ -174,6 +207,9 @@ void termbuffer::crright (void)
 	advance();
 }
 
+// ==========================================================================
+// METHOD termbuffer::crend
+// ==========================================================================
 void termbuffer::crend (void)
 {
 	crsr = len;
@@ -187,6 +223,9 @@ void termbuffer::crend (void)
 	advance();
 }
 
+// ==========================================================================
+// METHOD termbuffer::crhome
+// ==========================================================================
 void termbuffer::crhome (void)
 {
 	if (crsr >= prompt.strlen())
@@ -200,12 +239,18 @@ void termbuffer::crhome (void)
 	}
 }
 
+// ==========================================================================
+// METHOD termbuffer::tohistory
+// ==========================================================================
 void termbuffer::tohistory (void)
 {
 	history.newval() = buffer + prompt.strlen();
 	historycrsr = history.count() - 1;
 }
 
+// ==========================================================================
+// METHOD termbuffer::crup
+// ==========================================================================
 void termbuffer::crup (void)
 {
 	if (historycrsr == history.count())
@@ -225,6 +270,9 @@ void termbuffer::crup (void)
 	set (history[historycrsr].sval());
 }
 
+// ==========================================================================
+// METHOD termbuffer::crdown
+// ==========================================================================
 void termbuffer::crdown (void)
 {
 	if (historycrsr >= history.count())
@@ -237,6 +285,9 @@ void termbuffer::crdown (void)
 	set (history[historycrsr].sval());
 }
 
+// ==========================================================================
+// METHOD termbuffer::insert
+// ==========================================================================
 void termbuffer::insert (char c)
 {
 	char *ptr;
@@ -263,6 +314,9 @@ void termbuffer::insert (char c)
 	advance();
 }
 
+// ==========================================================================
+// METHOD termbuffer::advance
+// ==========================================================================
 void termbuffer::advance (void)
 {
 	char *ptr;
@@ -287,6 +341,9 @@ void termbuffer::advance (void)
 	}
 }
 
+// ==========================================================================
+// METHOD termbuffer::set
+// ==========================================================================
 void termbuffer::set (const string &to)
 {
 	memset (curview, 0, len);
@@ -298,11 +355,17 @@ void termbuffer::set (const string &to)
 	crend();
 }
 
+// ==========================================================================
+// METHOD termbuffer::clear
+// ==========================================================================
 void termbuffer::clear (void)
 {
 	set ("");
 }
 
+// ==========================================================================
+// METHOD termbuffer::setpos
+// ==========================================================================
 void termbuffer::setpos (int cpos, int npos)
 {
 	switch (npos - cpos)
@@ -313,6 +376,9 @@ void termbuffer::setpos (int cpos, int npos)
 	}
 }
 
+// ==========================================================================
+// METHOD termbuffer::draw
+// ==========================================================================
 void termbuffer::draw (void)
 {
 	int xc;
@@ -346,6 +412,9 @@ void termbuffer::draw (void)
 	owcrsr = wcrsr;
 }
 
+// ==========================================================================
+// METHOD termbuffer::tprintf
+// ==========================================================================
 void termbuffer::tprintf (const char *fmt, ...)
 {
 	va_list ap;
@@ -358,11 +427,17 @@ void termbuffer::tprintf (const char *fmt, ...)
 	write (fout.filno, data.str(), data.strlen());
 }
 
+// ==========================================================================
+// METHOD termbuffer::tputc
+// ==========================================================================
 void termbuffer::tputc (char c)
 {
 	write (fout.filno, &c, sizeof (char));	
 }
 
+// ==========================================================================
+// METHOD termbuffer::getkey
+// ==========================================================================
 int termbuffer::getkey (void)
 {
 	string res;
