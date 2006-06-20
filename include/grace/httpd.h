@@ -625,6 +625,28 @@ protected:
 class httpd : public thread
 {
 public:
+					 /// Constructor, create httpd object
+					 //  using a Unix Domain Socket for 
+					 /// communication
+					 /// \param DomainSocket (filename)
+					 /// \param inmint Minimum number of threads
+					 /// \param inmaxt Maximum number of threads
+					 httpd (const string &DomainSocket,
+					 		int inmint=2, int inmaxt=4)
+					 	: thread (), listener (DomainSocket)
+					 {
+					 	if (inmaxt < inmint) inmaxt = inmint;
+					 	_maxpostsize = DEFAULT_LIM_HTTPD_POSTSIZE;
+					 	minthr = inmint;
+					 	maxthr = inmaxt;
+					 	eventmask = 0;
+					 	load.o = 0;
+					 	first = NULL;
+					 	firsthandler = NULL;
+					 	_shutdown = false;
+					 }
+					 
+
 					 /// Constructor.
 					 /// \param listenport The tcp port to listen to
 					 /// \param inmint Minimum number of threads.
