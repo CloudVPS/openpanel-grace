@@ -165,8 +165,8 @@ public:
 						 /// Add a primitive type.
 						 /// \param bt The registered type.
 						 /// \param it The intrinsic type.
-						 /// \param code CXML code for the class.
-						 /// \param xcode CXML code for the index attribute.
+						 /// \param cd CXML code for the class.
+						 /// \param icd CXML code for the index attribute.
 	void				 addbaseclass (const statstring &bt, const char *it,
 									   const char *cd, const char *icd);
 	
@@ -271,11 +271,21 @@ public:
 						 /// an object's type or id.
 	bool				 iscontainerclass (const statstring &);
 
+						 /// Returns true if the class is a union class.
 	bool				 isunion (const statstring &);
+	
+						 /// Resolve union object to id.
 	const statstring	&resolveunion (const value *, const statstring &);
+	
+						 /// Resolve union name to base type.
 	void				 resolveunionbase (statstring &);
 	
+						 /// Return true if the provided class has
+						 /// attributes.
 	bool				 containerhasattributes (const statstring &);
+	
+						 /// Return true if the provided class has
+						 /// a specific attribute.
 	bool				 containerhasattribute (const statstring &,
 												const statstring &);
 	
@@ -284,15 +294,31 @@ public:
 						 /// data should be stored inside an
 						 /// attribute.
 	bool				 hasvalueattribute (const statstring &);
+	
+						 /// Return the attribute name for a
+						 /// type that encodes its value as such.
 	const string		&resolvevalueattribute (const statstring &);
 	
+						 /// Whether elements of this type should
+						 /// be automatically put inside their own array,
 	bool				 isimplicitarray (const statstring &);
 	
+						 /// Resolve container envelope class.
 	const string		&resolvecontainerenvelope (const statstring &);
+	
+						 /// Resolve container wrapper class.
 	const string		&resolvecontainerwrapclass (const statstring &);
+	
+						 /// Resolve container id class.
 	const string		&resolvecontaineridclass (const statstring &);
+	
+						 /// Resolve container value class.
 	const string 		&resolvecontainervalueclass (const statstring &);
+	
+						 /// Resolve container bool class.
 	string				*resolvecontainerboolclass (const statstring &, bool);
+	
+						 /// Resolve container type class.
 	string				*resolvecontainertypeclass (const statstring &,
 													unsigned char);
 	string				*resolvecontainerarrayclass (const statstring &);
@@ -322,9 +348,9 @@ public:
 	const char			*resolvecodeid (const statstring &);
 	const char			*resolvecodeattrib (const statstring &, const statstring &);
 
-	value				 schema;	
+	value				 schema; //< Loaded schema data.
 protected:
-	value				 codecache;
+	value				 codecache; //< Cache dictionary of CXML codes.
 };
 
 extern xmlschema XMLRootSchema;

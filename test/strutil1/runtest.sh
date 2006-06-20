@@ -24,5 +24,5 @@ diff wrapped.txt reference.txt >> test.log 2>&1 || {
   echo "failed (DIFF)"
   exit 1
 }
-rm -f test.log out.dat out.xml
+rm -f test.log out.dat out.xml wrapped.txt
 echo "passed"

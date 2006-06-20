@@ -12,16 +12,25 @@ template<class kind>
 class visitor
 {
 public:
+						 /// Constructor.
 						 visitor (void);
+						 
+						 /// Constructor.
+						 /// \param v The object to inspect.
 						 visitor (kind &v)
 						 {
 				 			_root = current = &v;
 				 			idx = NULL;
 						 }
+						 
+						 /// Constructor.
+						 /// \param v The object to inspect.
 						 visitor (kind *v)
 						 {
 						 	_root = current = v;
 						 }
+						 
+						 /// Destructor.
 						~visitor (void)
 						 {
 						 	root();
@@ -115,6 +124,7 @@ public:
 						 
 						 /// Returns true if a key exists as a child
 						 /// for the object at the cursor position.
+						 /// \param id The key.
 	inline bool			 exists (const statstring &id)
 						 {
 						 	return current->exists (id);
@@ -133,11 +143,11 @@ public:
 						 }
 				 
 protected:
-	kind		*_root;
-	kind		*current;
-	int			*idx;
-	stack<int>	 sti;
-	stack<kind> stk;
+	kind		*_root; //< The root object.
+	kind		*current; //< The cursor.
+	int			*idx; //< Array index of cursor.
+	stack<int>	 sti; //< Index stack.
+	stack<kind> stk; //< Object stack.
 };
 
 #endif

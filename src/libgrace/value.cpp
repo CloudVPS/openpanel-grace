@@ -1350,8 +1350,6 @@ value &value::operator[] (int i)
 	if (_type == t_unset)
 		_type = t_array;
 
-	if (! arraysz) return *this;
-
 	if ((i<0) && ((arraysz+i) >=0)) return *(array[arraysz+i]);
 	value *v = getposition ((unsigned int) i);
 	if (!v) return *this;
@@ -1413,7 +1411,7 @@ value *value::getposition (unsigned int idx)
 		}
 		for (;arraysz<idx;++arraysz)
 		{
-			array[arraysz] = NULL;
+			array[arraysz] = new value;
 		}
 		array[arraysz++] = new value;
 	}

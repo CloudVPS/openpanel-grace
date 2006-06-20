@@ -324,7 +324,14 @@ public:
 						 valueauth (const value &db);
 						~valueauth (void);
 						
+						 /// Validate username/password.
+						 /// \param name The username.
+						 /// \param pass The password.
 	bool				 authenticate (const string &name, const string &pass);
+	
+						 /// Get user data.
+						 /// \param user The username.
+						 /// \return The user object.
 	value				*getuser (const string &);
 	
 protected:
