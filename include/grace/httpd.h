@@ -697,6 +697,14 @@ public:
 					 	listener.listento (port);
 					 }
 					 
+					 /// Sey Unix listen socket
+					 /// Only usefull if you used the constructor
+					 /// without arguments
+	void			 listento (const string &unixsock)
+					 {
+					 	listener.listento (unixsock);
+					 }
+					 
 					~httpd (void);
 
 					 /// Start the server process. Threads are not
