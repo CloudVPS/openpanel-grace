@@ -135,7 +135,7 @@ void daemon::writepid (void)
 	path.printf ("run:%s.pid", creator.str());
 	try
 	{
-		tpath = fs.transr (path);
+		tpath = fs.transw (path);
 		if (! tpath.strlen())
 		{
 			ferr.printf ("%% Could not write pid-file\n");

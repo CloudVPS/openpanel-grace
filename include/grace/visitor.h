@@ -150,4 +150,11 @@ protected:
 	stack<kind> stk; //< Object stack.
 };
 
+#define foreach(iterator,object) \
+    for (struct __foreachstr { bool first; visitor<typeof(object)> v; } __foreachctx = { true, object }; \
+    __foreachctx.first && __foreachctx.v.first() || __foreachctx.v.next(); \
+    __foreachctx.first = false) \
+        for (bool __flipme=true; __flipme;) \
+            for (const typeof(object) &iterator = __foreachctx.v.obj(); __flipme; __flipme = false)
+    
 #endif
