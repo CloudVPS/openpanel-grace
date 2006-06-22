@@ -151,10 +151,10 @@ protected:
 };
 
 #define foreach(iterator,object) \
-    for (struct __foreachstr { bool first; visitor<typeof(object)> v; } __foreachctx = { true, object }; \
-    __foreachctx.first && __foreachctx.v.first() || __foreachctx.v.next(); \
-    __foreachctx.first = false) \
+    for (struct __foreachstr { bool __forfirst; visitor<typeof(object)> __foreachv; } __foreachctx = { true, object }; \
+    __foreachctx.__forfirst && __foreachctx.__foreachv.first() || __foreachctx.__foreachv.next(); \
+    __foreachctx.__forfirst = false) \
         for (bool __flipme=true; __flipme;) \
-            for (const typeof(object) &iterator = __foreachctx.v.obj(); __flipme; __flipme = false)
+            for (const typeof(object) &iterator = __foreachctx.__foreachv.obj(); __flipme; __flipme = false)
     
 #endif
