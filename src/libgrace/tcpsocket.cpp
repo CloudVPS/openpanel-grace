@@ -298,6 +298,7 @@ bool tcpsocket::uconnect (const string &path)
 		return false;
 	}
 	
+	feof = false;
 	peer_addr = 0;
 	peer_name = path;
 	peer_port = 0;
@@ -320,6 +321,7 @@ bool tcpsocket::uconnect (const string &path)
 			return false;
 		}
 	}
+	
 	return true;
 }
 
