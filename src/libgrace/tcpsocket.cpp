@@ -12,6 +12,7 @@
 #include <grace/value.h>
 #include <grace/system.h>
 #include <grace/defaults.h>
+#include <grace/filesystem.h>
 #include "platform.h"
 
 #include <sys/types.h>
@@ -271,6 +272,7 @@ bool tcpsocket::uconnect (const string &path)
 {
 	struct sockaddr_un	 remote;
 	int					 pram = 1;
+	string 				 realpath;
 	
 	filno = socket (PF_UNIX, SOCK_STREAM, 0);
 	if (filno<0)
@@ -279,8 +281,11 @@ bool tcpsocket::uconnect (const string &path)
 		err = "Could not create a socket";
 		throw (EX_SOCK_CREATE);
 	}
+	
+	realpath = fs.transr (path);
+	
 	remote.sun_family = AF_UNIX;
-	::strncpy (remote.sun_path, path.str(), 107);
+	::strncpy (remote.sun_path, realpath.str(), 107);
 	remote.sun_path[107] = 0;
 	
 	buffer.flush ();
@@ -608,6 +613,9 @@ void tcplistener::listento (const string &path)
 		listening = false;
 	}
 	
+	string realpath;
+	realpath = fs.transw (path);
+	
 	tcpdomain = false;
 	unixdomainpath = path;
 	
@@ -616,7 +624,7 @@ void tcplistener::listento (const string &path)
 	
 	bzero ((char *) &remote, sizeof (remote));
 	remote.sun_family = AF_UNIX;
-	strncpy (remote.sun_path, path.str(), 107);
+	strncpy (remote.sun_path, realpath.str(), 107);
 	remote.sun_path[107] = 0;
 	
 	sock.o = socket (AF_UNIX, SOCK_STREAM, 0);
