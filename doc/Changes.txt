@@ -1,5 +1,7 @@
 0.8.13     In production                              <pi@madscience.nl>
 
+           * Added nifty foreach macro to visitor.h.
+
            * Allow xml schemas to define the tag type of an xml
              node as implied by the object's datatype.
 

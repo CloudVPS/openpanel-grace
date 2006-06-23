@@ -604,6 +604,33 @@ void httpdworker::run (void)
 						bodyData = s.read (sz);
 					}
 				}
+				else if (cmd.strcasecmp ("get") == 0)
+				{
+					if (httpHeaders.exists ("Content-length"))
+					{
+						if (httpHeaders["Content-length"].ival() > 0)
+						{
+							s.printf ("HTTP/1.1 400 BAD REQUEST\r\n");
+							s.printf ("Content-type: text/html\r\n\r\n");
+							s.printf ("<html><h1>GET request with POST body");
+							s.printf (" not allowed</h1></html>\n");
+							keepalive = false;
+							
+							if (parent->eventmask & HTTPD_ERROR)
+							{
+								value ev;
+								string ertxt;
+								ertxt.printf ("GET request with body data");
+								
+								ev("class") = "error";
+								ev["ip"] = s.peer_name;
+								ev["text"] = ertxt;
+								parent->eventhandle (ev);
+							}
+							break;
+						}
+					}
+				}
 				
 				// Get the URI part. Compensate for http/0.9's lack of
 				// well-formedness.
