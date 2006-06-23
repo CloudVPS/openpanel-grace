@@ -114,6 +114,7 @@ bool naturalLabelSort (value *, value *, const string &);
 class value
 {
 friend class visitor<value>;
+friend class visitor<const value>;
 friend class validator;
 public:
 					 /// Constructor.
@@ -1309,12 +1310,12 @@ protected:
 					 /// Access method for the visitor protocol.
 	value			*getposition (unsigned int) const;
 						 /// Access method for the visitor protocol.
-	value			*visitchild (const statstring &id)
+	value			*visitchild (const statstring &id) const
 					 {
 					 	return havechild (id.key(), id.str());
 					 }
 					 /// Access method for the visitor protocol.
-	value			*visitchild (int index)
+	value			*visitchild (int index) const
 					 {
 					 	unsigned int pindex = (index<0) ? -index : index;
 					 	if (!arraysz) return NULL;
