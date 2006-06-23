@@ -70,4 +70,4 @@ clean:
 
 .SUFFIXES: .cpp .o
 .cpp.o: 
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -I../../include -c $<
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -I../../include -c -g $<
