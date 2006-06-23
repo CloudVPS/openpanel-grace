@@ -320,10 +320,9 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 				s.printf ("HTTP/1.1 %i %s\r\n", res, httpstatusstr (res));
 				outhdr["Content-length"] = outbody.strlen();
 				
-				for (int hi=0; hi<outhdr.count(); ++hi)
+				foreach (hdr, outhdr)
 				{
-					s.printf ("%s: %s\r\n", outhdr[hi].name(),
-											outhdr[hi].cval());
+					s.printf ("%s: %s\r\n", hdr.name(), hdr.cval());
 				}
 				s.printf ("\r\n");
 				s.puts (outbody);
@@ -1300,9 +1299,9 @@ value *pwfileauth::getuser (const string &u)
 	if (userdb.exists (u))
 	{
 		// FIXME: thread bullshit this should not be necessary
-		for (int i=0; i<userdb[u].count(); ++i)
+		foreach (e, userdb[u])
 		{
-			(*res)[userdb[u][i].name()] = userdb[u][i].cval();
+			(*res)[e.name()] = e.cval();
 		}
 	}
 	lck.unlock ();

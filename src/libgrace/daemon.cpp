@@ -228,31 +228,31 @@ void daemon::log (log::priority prio, const string &modulename,
 	
 	if (! _logtargets)
 	{
-		for (int tg=0; tg<rsrc["log"].count(); ++tg)
+		foreach (logdef, rsrc["log"])
 		{
 			log::logtype ltype;
 			log::priority prio = (log::priority) 0;
 			string target;
 			
-			target = rsrc["log"][tg]["target"];
+			target = logdef["target"];
 			
-			if (rsrc["log"][tg]["type"] == "syslog")
+			if (logdef["type"] == "syslog")
 				ltype = log::syslog;
 			else
 				ltype = log::file;
 			
 			unsigned int maxsz = 0;
-			if (rsrc["log"][tg].exists ("maxsize"))
+			if (logdef.exists ("maxsize"))
 			{
-				maxsz = rsrc["log"][tg]["maxsize"];
+				maxsz = logdef["maxsize"];
 			}
 			
 			// create a bitmask of all the desired priorities to be
 			// handled by this logtarget.
-					
-			for (int pr=0; pr<rsrc["log"][tg]["priorities"].count(); ++pr)
+			
+			foreach (reqprio, logdef["priorities"])
 			{
-				int myprio = ((*prioNames)[rsrc["log"][tg]["priorities"][pr].sval()].ival());
+				int myprio = ((*prioNames)[reqprio.sval()].ival());
 				myprio |= (int) prio;
 				prio = ((log::priority) myprio);
 			}
@@ -272,9 +272,9 @@ void daemon::log (log::priority prio, const string &modulename,
 	
 	if (dq)
 	{
-		for (int ii=0; ii<backlog.count(); ++ii)
+		foreach (ev, backlog)
 		{
-			_log->sendevent (backlog[ii]);
+			_log->sendevent (ev);
 		}
 		backlog.clear();
 		dq = false;

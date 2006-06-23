@@ -279,33 +279,33 @@ void application::init (int Argc, char *Argv[])
 				{
 					value shortcuts;
 					
-					for (int i=0; i<opt.count(); ++i)
+					foreach (option,opt)
 					{
 						string name;
-						name = opt[i].name();
+						name = option.name();
 						if (name[1] != '-')
 						{
-							shortcuts[opt[i]["long"].sval()] = name;
+							shortcuts[option["long"].sval()] = name;
 						}
 						else
 						{
 							ferr.printf ("%s %s ", shortcuts[name].cval(),
 														name.str());
 							
-							if ((opt[name]["argc"] == 0) ||
-								(!opt[name]["default"].sval().strlen()))
+							if ((option["argc"] == 0) ||
+								(! option["default"].sval().strlen()))
 							{
 								//ferr.printf ("");
 							}
 							else
 							{
 								ferr.printf
-									("[%s]", opt[name]["default"].cval());
+									("[%s]", option["default"].cval());
 							}
-							if (opt[name]["help"].sval().strlen())
+							if (option["help"].sval().strlen())
 							{
 								ferr.printf
-									(": %s", opt[name]["help"].cval());
+									(": %s", option["help"].cval());
 							}
 							ferr.printf ("\n");
 						}
@@ -322,13 +322,12 @@ void application::init (int Argc, char *Argv[])
 	}
 	
 	// Fill in default values where none have been provided
-	
-	for (int l=0; l<opt.count(); ++l)
+	foreach (o, opt)
 	{
-		if ( (opt[l].exists ("default")) &&
-		     (! argv.exists (opt[l].name())) )
+		if ( (o.exists ("default")) &&
+		     (! argv.exists (o.name())) )
 		{
-			argv[opt[l].name()] = opt[l]["default"].sval();
+			argv[o.name()] = o["default"].sval();
 		}
 	}
 }

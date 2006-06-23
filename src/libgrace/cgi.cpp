@@ -48,11 +48,11 @@ cgi::cgi (const char *appname) : application (appname)
 		string pval;
 
 		pairs = strutil::split (buf, '&');
-		for (int p=0; p<pairs.count(); ++p)
+		foreach (namevalue, pairs)
 		{
 			string vnam;
 			
-			pair = strutil::split (pairs[p], '=');
+			pair = strutil::split (namevalue, '=');
 			vnam = pair[0];
 			
 			// FIXME this could be fucked by case matching
@@ -180,11 +180,11 @@ cgi::cgi (const char *appname) : application (appname)
 				parts = strutil::split (buf, bsep);
 				parts.newval() = bsep;
 				
-				for (int i=0; i<parts.count(); ++i)
+				foreach (part,parts)
 				{
 					value prt;
 					
-					prt = strutil::parsemime (parts[i].sval());
+					prt = strutil::parsemime (part.sval());
 					if (prt["Content-Disposition"] == "form-data")
 					{
 						string name;
@@ -257,10 +257,10 @@ cgi::cgi (const char *appname) : application (appname)
 				string pval;
 				
 				pairs = strutil::split (buf, '&');
-				for (int p=0; p<pairs.count(); ++p)
+				foreach (namevalue, pairs)
 				{
 					string vnam;
-					pair = strutil::split (pairs[p], '=');
+					pair = strutil::split (namevalue, '=');
 					vnam = pair[0];
 					
 					// FIXME same problem with case
@@ -353,9 +353,9 @@ void cgi::addschema (const statstring &name, const string &filename)
 void cgi::sendpage (void)
 {
 	headers["Content-length"] = (int) buffer.strlen();
-	for (int i=0; i<headers.count(); ++i)
+	foreach (header, headers)
 	{
-		fout.printf ("%s: %s\r\n", headers[i].name(), headers[i].cval());
+		fout.printf ("%s: %s\r\n", header.name(), header.cval());
 	}
 	fout.printf ("\r\n");
 	fout.puts (buffer);
@@ -442,17 +442,17 @@ string *cgitemplate::parse (const string &section, value &env)
 	value split;
 	split = strutil::split (tmpl[section], '$');
 
-	split.save ("split.db");
+	int j = 0;
 
-	for (int j=0; j<split.count(); ++j)
+	foreach (e, split)
 	{
 		if (j & 1)
 		{
-			(*res) += env[split[j].cval()];
+			(*res) += env[e.cval()];
 		}
 		else
 		{
-			(*res) += split[j];
+			(*res) += e.sval();
 		}
 	}
 	
@@ -540,9 +540,9 @@ rpccgi::rpccgi (const char *appname) : application (appname)
 void rpccgi::sendpage (void)
 {
 	headers["Content-length"] = (int) buffer.strlen();
-	for (int i=0; i<headers.count(); ++i)
+	foreach (header, headers)
 	{
-		fout.printf ("%s: %s\r\n", headers[i].name(), headers[i].cval());
+		fout.printf ("%s: %s\r\n", header.name(), header.cval());
 	}
 	fout.printf ("\r\n");
 	fout.puts (buffer);

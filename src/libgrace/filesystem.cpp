@@ -88,11 +88,10 @@ filesystem::filesystem (void)
 	if (! pathvol.exists ("library"))
 	{
 		string hlib;
-		for (int j=0; j<pathvol["homes"].count(); ++j)
+		foreach (home, pathvol["homes"])
 		{
 			hlib.crop(0);
-			hlib.printf ("%s/Shared/Library",
-							pathvol["homes"][j].cval());
+			hlib.printf ("%s/Shared/Library", home.cval());
 			pathvol["library"].newval() = hlib;
 		}
 		hlib.crop(0);
@@ -361,10 +360,10 @@ bool filesystem::cdrelative (const string &path)
 	
 	path_tree = strutil::split (path, '/');
 	
-	for (int i=0; i<path_tree.count(); ++i)
+	foreach (element, path_tree)
 	{
 		string d;
-		d = path_tree[i];
+		d = element;
 		
 		if (d == "..")
 		{
@@ -378,6 +377,7 @@ bool filesystem::cdrelative (const string &path)
 	cwd_path.crop(0);
 	if (cwd_volume.strlen())
 		cwd_path.printf ("%s:", cwd_volume.str());
+		
 	for (int j=0; j<cwd_tree.count(); ++j)
 	{
 		if (j) cwd_path += "/";
@@ -651,8 +651,8 @@ value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 	{
 		paths.newval() = path;
 	}
-		
-	for (int i=0; i<paths.count(); ++i)
+	
+	foreach (e, paths)
 	{
 		struct dirent *dir;
 		struct stat st;
@@ -660,9 +660,9 @@ value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 		
 		path.crop(0);
 		if (suffix.strlen())
-			path.printf ("%s/%s", paths[i].cval(), suffix.str());
+			path.printf ("%s/%s", e.cval(), suffix.str());
 		else
-			path = paths[i];
+			path = e;
 				
 		d = ::opendir(path.str());
 		if (d)
@@ -944,11 +944,11 @@ string *filesystem::findwrite (const char *pvol, const char *filename)
 	
 	res = getpaths (pvol);
 	
-	for (int i=0; i<res.count(); ++i)
+	foreach (e, res)
 	{
-		if (res[i]("readonly") == false)
+		if (e("readonly") == false)
 		{
-			(*resolved) = res[i];
+			(*resolved) = e;
 			if (maywrite ((*resolved).str()))
 			{
 				(*resolved).printf ("/%s", filename);

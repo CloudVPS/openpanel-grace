@@ -145,9 +145,9 @@ value *strutil::parsemime (const string &str)
 	
 	// Split the header into lines
 	hdrlin = strutil::splitlines (hdr);
-	for (int i=0; i<hdrlin.count(); ++i)
+	foreach (lin, hdrlin)
 	{
-		(*res) << strutil::parsehdr (hdrlin[i].sval());
+		(*res) << strutil::parsehdr (lin.sval());
 	}
 	
 	(*res)[".data"] = content;
@@ -420,19 +420,20 @@ value *strutil::parsehdr (const string &hdr)
 	    (split[0].sval().strchr (')') > 0))
 	{
 		(*res)[hdrname] = split[0];
+		split.rmindex (0);
 		
-		for (int j=1; j<split.count(); ++j)
+		foreach (namevalue, split)
 		{
 			value nvpair;
 			string sub;
 			int nospc;
 			
-			nvpair = strutil::splitquoted (split[j].sval(), '=');
+			nvpair = strutil::splitquoted (namevalue.sval(), '=');
 			
 			if (nvpair.count()>1)
 				(*res)[hdrname].setattrib (nvpair[0].sval(), nvpair[1].sval());
 			else
-				(*res)[hdrname].setattrib (split[j].sval(), "1");
+				(*res)[hdrname].setattrib (namevalue.sval(), "1");
 		}
 	}
 	else
@@ -591,14 +592,16 @@ string *strutil::wrap (const string &src, int width)
 	
 	lines = strutil::split (src, '\n');
 	
-	for (int ln=0; ln < lines.count(); ++ln)
+	foreach (line, lines)
 	{
-		words = strutil::split (lines[ln], ' ');
+		words = strutil::split (line, ' ');
 		crsr = 0;
+		int j=0;
 		
-		for (int j=0; j < words.count(); ++j)
+		foreach (cword, words)
 		{
-			wd = words[j].sval().strlen();
+			string word = cword;
+			wd = word.strlen();
 			if (j) wd+= 1;
 			
 			if (crsr + wd > width)
@@ -612,9 +615,6 @@ string *strutil::wrap (const string &src, int width)
 				if (wd > width)
 				{
 					string lft;
-					string word;
-
-					word = words[j];
 
 					while (word.strlen() > width)
 					{					
@@ -625,13 +625,13 @@ string *strutil::wrap (const string &src, int width)
 					
 					wd = word.strlen();
 					crsr = 0;
-					words[j] = word;
 				}
 			}
 			
 			if (j && crsr) (*res) += " ";
-			(*res) += words[j];
+			(*res) += word;
 			crsr += wd;
+			j++;
 		}
 		(*res) += "\n";
 	}
@@ -903,9 +903,11 @@ string *strutil::titlecaps (const string &src)
 		(*midwords)["te"] = true;
 	}
 	splitup = strutil::splitspace (src);
-	for (int i=0; i<splitup.count(); ++i)
+	
+	int i=0;
+	foreach (word, splitup)
 	{
-		myword = splitup[i].sval();
+		myword = word.sval();
 		
 		if ( (!i) || (! midwords->exists(myword)) )
 		{
@@ -913,6 +915,7 @@ string *strutil::titlecaps (const string &src)
 		}
 		if (i) res->strcat (' ');
 		res->strcat (myword);
+		i++;
 	}
 	return res;
 }
@@ -930,13 +933,13 @@ value *strutil::httpurldecode (const string &data)
 	value *result = new value;
 	
 	ampSplit = strutil::split (data, '&');
-	for (int i=0; i<ampSplit.count(); ++i)
+	foreach (e, ampSplit)
 	{
 		string elm;
 		string key;
 		string val;
 		
-		elm = ampSplit[i];
+		elm = e.sval();
 		key = elm.cutat ('=');
 		val = strutil::urldecode (elm);
 		
@@ -959,14 +962,14 @@ string *strutil::httpurlencode (value &data)
 	string *result = new string;
 	bool didfirst = false;
 	
-	for (int i=0; i<data.count(); ++i)
+	foreach (nameval, data)
 	{
 		string encd;
-		if (data[i].label())
+		if (nameval.id())
 		{
-			encd = strutil::urlencode (data[i].sval());
+			encd = strutil::urlencode (nameval.sval());
 			result->printf ("%s%s=%s", didfirst ? "&" : "",
-							data[i].name(), encd.str());
+							nameval.name(), encd.str());
 			didfirst = true;
 		}
 	}

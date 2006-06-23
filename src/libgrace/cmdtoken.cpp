@@ -95,9 +95,12 @@ void cmdtoken_data::run (value &v, string &buf)
 			dat = dat.mid (pos2+2);			
 
 			decl = strutil::splitquoted (tok, ' ');
-			for (int i=1; i<decl.count(); ++i)
+			string section = decl[0];
+			decl.rmindex (0);
+			
+			foreach (namevalue, decl)
 			{
-				ind = strutil::splitquoted (decl[i].sval(),'=');
+				ind = strutil::splitquoted (namevalue.sval(),'=');
 				if (ind.count() == 2)
 				{
 					v[ind[0].sval()] = ind[1];
@@ -132,27 +135,31 @@ void cmdtoken_loop::run (value &v, string &buf)
 	
 	//oldv = v;
 	
-	for (int i=0; i<loopdata.count(); ++i)
+	foreach (loopnode, loopdata)
 	{
-		if (loopdata[i].label())
+		if (loopnode.label())
 		{
-			v["@"] = loopdata[i].label().str();
+			v["@"] = loopnode.id().str();
 		}
-		if (! loopdata[i].count())
+		if (! loopnode.count())
 		{
-			v["0"] = loopdata[i];
+			v["0"] = loopnode;
 		}
-		for (int j=0; j<loopdata[i].count(); ++j)
+		
+		int j=0;
+		
+		foreach (var, loopnode)
 		{
 			string str;
 			
-			if (! loopdata[i][j].count())
+			if (! var.count())
 			{
 				string str;
 				str.printf ("%i", j);
-				v[str] = loopdata[i][j];
+				v[str] = var;
 			}
-			v[loopdata[i][j].id()] = loopdata[i][j];
+			v[var.id()] = var;
+			j++;
 		}
 		
 		cmdtoken *c;
@@ -212,17 +219,15 @@ void scriptparser::build (const string &src)
 	value lines;
 	lines = strutil::split (src, '\n');
 	
-	for (int l=0; l<lines.count(); ++l)
+	foreach (ln,lines)
 	{
-		string ln;
 		string stripped;
-		ln = lines[l];
 		int ps = 0;
 		
 		if (! ln) continue;
 		
-		while ((ln[ps] == ' ')||(ln[ps] == '\t')) ++ps;
-		stripped = ln.mid (ps);
+		while ((ln.sval()[ps] == ' ')||(ln.sval()[ps] == '\t')) ++ps;
+		stripped = ln.sval().mid (ps);
 		
 		if (stripped[0] == '@') // command
 		{
@@ -429,16 +434,20 @@ string *cmdtoken_parsedata (value &env, value &str)
 		(*res) = str[0].sval();
 		return res;
 	}
-	for (int i=0; i<str.count(); ++i)
+	
+	int i=0;
+	
+	foreach (element,str)
 	{
 		if (i & 1)
 		{
-			(*res) += cmdtoken_parseval (env, str[i].sval());
+			(*res) += cmdtoken_parseval (env, element.sval());
 		}
 		else
 		{
-			(*res) += str[i].sval();
+			(*res) += element.sval();
 		}
+		++i;
 	}
 	return res;
 }
@@ -473,9 +482,9 @@ string *cmdtoken_parseval (value &env, const string &_expr)
 		bool found = true;
 		splt = strutil::split (expr, "::");
 		
-		for (int i=0; i < splt.count(); ++i)
+		foreach (sclass,splt)
 		{
-			if (! probe.enter (splt[i].sval()))
+			if (! probe.enter (sclass.sval()))
 			{
 				found = false;
 				break;

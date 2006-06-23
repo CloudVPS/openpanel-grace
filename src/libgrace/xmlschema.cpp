@@ -311,7 +311,7 @@ void xmlschema::nstransattr (value &nsNames, statstring &attr, const value &v)
 				nsNames[atName] = nsReplace;
 			}
 			
-			visitor<value> probe (schema[".options"]["namespaces"][nsUri]);
+			visitor<const value> probe (schema[".options"]["namespaces"][nsUri]);
 			string aliasval;
 			string orgtype;
 			
@@ -380,7 +380,7 @@ const string &xmlschema::resolveid (const string &forclass,
 {
 	static string empty;
 	
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 	
 	if (! probe.enter (superclass))
 	{
@@ -435,7 +435,7 @@ const string &xmlschema::resolvetype (const statstring &forclass)
 const string &xmlschema::resolvetypeattrib (const statstring &forclass,
 											const statstring &withlabel)
 {
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 	
 	if (! probe.enter (forclass)) return t_string;
 	if (! probe.enter (key::xml_attributes)) return t_string;
@@ -455,7 +455,7 @@ void xmlschema::resolveclass (const statstring &id,
 							  const statstring &superid,
 							        statstring &into)
 {
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 	bool contained = false;
 	
 	/*::printf ("resolveclass id=<%s> currentclass=<%s> "
@@ -595,7 +595,7 @@ const statstring &xmlschema::resolveidexport (const statstring &id,
 											 const statstring &superid)
 {
 	static statstring empty;
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 	
 	if (probe.enter (superclass) || probe.enter (superid))
 	{
@@ -632,7 +632,7 @@ const statstring &xmlschema::resolveidexport (const statstring &id,
 // ========================================================================
 bool xmlschema::stringclassisbase64 (const statstring &theclass)
 {
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 	
 	if (probe.enter (theclass))
 	{
@@ -738,28 +738,28 @@ const statstring &xmlschema::resolveunion (const value *that,
 	string matchlabel;
 	string matchdata;
 	
-	for (int i=0; i<schema[theclass][key::xml_union].count(); ++i)
+	foreach (udef, schema[theclass][key::xml_union])
 	{
-		matchtype = schema[theclass][key::xml_union][i](key::type);
-		matchlabel = schema[theclass][key::xml_union][i](key::label);
-		matchdata = schema[theclass][key::xml_union][i].sval();
+		matchtype = udef(key::type);
+		matchlabel = udef(key::label);
+		matchdata = udef.sval();
 	
 		if (matchtype == "attribexists")
 		{
 			if (that->attribexists (matchlabel))
-				return schema[theclass][key::xml_union][i].id();
+				return udef.id();
 		}
 		else if (matchtype == "memberexists")
 		{
 			if (that->exists (matchlabel))
-				return schema[theclass][key::xml_union][i].id();
+				return udef.id();
 		}
 		else if (matchtype == "attribvalue")
 		{
 			if (that->attribexists (matchlabel))
 			{
 				if ((*that)(matchlabel).sval() == matchdata)
-					return schema[theclass][key::xml_union][i].id();
+					return udef.id();
 			}
 		}
 		else if (matchtype == "membervalue")
@@ -769,12 +769,12 @@ const statstring &xmlschema::resolveunion (const value *that,
 				string tmp;
 				tmp = (*that)[matchlabel].sval();
 				if (tmp == matchdata)
-					return schema[theclass][key::xml_union][i].id();
+					return udef.id();
 			}
 		}
 		else if (matchtype == "default")
 		{
-			return schema[theclass][key::xml_union][i].id();
+			return udef.id();
 		}
 	}
 	return theclass;
@@ -791,7 +791,7 @@ void xmlschema::resolveunionbase (statstring &theclass)
 
 bool xmlschema::iscontainerclass (const statstring &theclass)
 {
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 	
 	if (probe.enter (theclass))
 	{
@@ -865,7 +865,7 @@ const string &xmlschema::resolvecontainervalueclass (const statstring &thecl)
 string *xmlschema::resolvecontainerarrayclass (const statstring &thecl)
 {
 	string *result = new string;
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 
 	if (probe.enter (thecl))
 	{
@@ -892,7 +892,7 @@ string *xmlschema::resolvecontainerarrayclass (const statstring &thecl)
 string *xmlschema::resolvecontainerdictclass (const statstring &thecl)
 {
 	string *result = new string;
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 
 	if (probe.enter (thecl))
 	{
@@ -920,7 +920,7 @@ string *xmlschema::resolvecontainerboolclass (const statstring &thecl,
 											  bool val)
 {
 	string *result = new string;
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 
 	if (probe.enter (thecl))
 	{
@@ -974,7 +974,7 @@ string *xmlschema::resolvecontainertypeclass (const statstring &thecl,
 		default: realtype = "string"; break;
 	}
 
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 
 	if (probe.enter (thecl))
 	{
@@ -1003,7 +1003,7 @@ string *xmlschema::resolvecontainertypeclass (const statstring &thecl,
 const statstring &xmlschema::resolveindexname (const statstring &ofclass)
 {
 	static statstring defid (key::id);
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 	
 	if (! probe.enter (ofclass)) return defid;
 	if (! probe.enter (key::xml_attributes)) return defid;
@@ -1055,7 +1055,7 @@ bool xmlschema::validate (const value &obj,
 						  const value &parent,
 						  xmlschema::extspec extend)
 {
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 	statstring impliedclass;
 	
 	// we will use the canonized class if necessary
@@ -1193,11 +1193,11 @@ bool xmlschema::validate (const value &obj,
 			valueindex members;
 			members.indexproperty ((value &) probe.obj(), key::id);
 			
-			for (int it=0; it<obj.count(); ++it)
+			foreach (e, obj)
 			{
-				if (! probe.obj().exists (obj[it].type()))
+				if (! probe.obj().exists (e.type()))
 				{
-					if (! members.exists (obj[it].label()))
+					if (! members.exists (e.label()))
 						return false;
 				}
 			}
@@ -1215,7 +1215,7 @@ bool xmlschema::validate (const value &obj,
 // ========================================================================
 value *xmlschema::create (const statstring &type)
 {
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 	value *res;
 	
 	res = new value; res->type (type);
@@ -1281,7 +1281,7 @@ value &xmlschema::inspectcode (const char *opcode)
 	    (! codecache[opcode].exists (key::type)))
 	{
 		// Iterate over all class objects inside the schema
-		visitor<value> probe (schema);
+		visitor<const value> probe (schema);
 		if (probe.first()) do
 		{
 			// See if this one is ours
@@ -1488,7 +1488,7 @@ const char *xmlschema::resolvecode (const statstring &forclass)
 // ========================================================================
 const char *xmlschema::resolvecodeid (const statstring &forclass)
 {
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 	char *nullcode = NULL;
 	
 	if (! probe.enter (forclass)) return nullcode;
@@ -1510,7 +1510,7 @@ const char *xmlschema::resolvecodeid (const statstring &forclass)
 const char *xmlschema::resolvecodeattrib (const statstring &forclass,
 										  const statstring &withname)
 {
-	visitor<value> probe (schema);
+	visitor<const value> probe (schema);
 	char *nullcode = NULL;
 	
 	if (! probe.enter (forclass)) return nullcode;

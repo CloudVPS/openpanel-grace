@@ -187,25 +187,23 @@ void value::fromxml (const string &xml, xmlschema *schema)
 						schema->resolvecontainerenvelope (crsr->_type);
 				}
 				
-				for (int i=0; i<tag.properties.count(); ++i)
+				foreach (prop, tag.properties)
 				{
-					if (tag.properties[i]._name != __id__)
+					if (prop._name != __id__)
 					{
-						attrname = tag.properties[i]._name;
+						attrname = prop._name;
 						if (hasvalueattribute && (attrname == __val__))
 						{
-							(*this) = tag.properties[i].sval();
+							(*this) = prop.sval();
 						}
 						else if (nsAware)
 						{
-							schema->nstransattr (nsCache, attrname,
-												 tag.properties[i]);
-							setattrib (attrname, tag.properties[i].sval());
+							schema->nstransattr (nsCache, attrname, prop);
+							setattrib (attrname, prop.sval());
 						}
 						else
 						{	
-							setattrib (attrname,
-									   tag.properties[i].sval());
+							setattrib (attrname, prop.sval());
 						}
 					}
 				}
@@ -306,46 +304,44 @@ void value::fromxml (const string &xml, xmlschema *schema)
 					{
 						statstring propKey;
 					
-						for (int i=0; i<tag.properties.count(); ++i)
+						foreach (prop, tag.properties)
 						{
-							propKey = tag.properties[i]._name;
+							propKey = prop._name;
 							
 							if (propKey && (propKey != __id__))
 							{
 								if (hasvalueattribute && (propKey == __val__))
 								{
-									(*newcrsr) = tag.properties[i].sval();
+									(*newcrsr) = prop.sval();
 								}
 								else if (nsAware)
 								{
 									attrname = propKey;
-									schema->nstransattr (nsCache,
-														 attrname,
-														 tag.properties[i]);
+									schema->nstransattr (nsCache,attrname,prop);
 										
-									if (tag.properties[i].count() > 1)
+									if (prop.count() > 1)
 									{
 										(*newcrsr).attributes()[attrname] =
-											tag.properties[i];
+											prop;
 									}
 									else
 									{
 										(*newcrsr).setattrib (attrname,
-											tag.properties[i].sval());
+											prop.sval());
 									}
 								}
 								else // no namespaces
 								{
 									// multiple property values?
-									if (tag.properties[i].count() > 1)
+									if (prop.count() > 1)
 									{
 										(*newcrsr).attributes()[propKey] =
-											tag.properties[i];
+											prop;
 									}
 									else // no just set the attribute
 									{
 										(*newcrsr).setattrib (propKey,
-											tag.properties[i].sval());
+											prop.sval());
 									}
 								}
 							}
@@ -466,46 +462,40 @@ void value::fromxml (const string &xml, xmlschema *schema)
 					// Copy all other properties
 					statstring propKey;
 					
-					for (int i=0; i<tag.properties.count(); ++i)
+					foreach (prop, tag.properties)
 					{
-						propKey = tag.properties[i]._name;
+						propKey = prop._name;
 						
 						if (propKey && (propKey != __id__))
 						{
 							if (hasvalueattribute && (propKey == __val__))
 							{
-								(*newcrsr) = tag.properties[i].sval();
+								(*newcrsr) = prop.sval();
 							}
 							else if (nsAware)
 							{
 								attrname = propKey;
-								schema->nstransattr (nsCache,
-													 attrname,
-													 tag.properties[i]);
+								schema->nstransattr (nsCache,attrname,prop);
 									
-								if (tag.properties[i].count() > 1)
+								if (prop.count() > 1)
 								{
-									(*newcrsr).attributes()[attrname] =
-										tag.properties[i];
+									(*newcrsr).attributes()[attrname] = prop;
 								}
 								else
 								{
-									(*newcrsr).setattrib (attrname,
-										tag.properties[i].sval());
+									(*newcrsr).setattrib (attrname, prop.sval());
 								}
 							}
 							else // no namespaces
 							{
 								// multiple property values?
-								if (tag.properties[i].count() > 1)
+								if (prop.count() > 1)
 								{
-									(*newcrsr).attributes()[propKey] =
-										tag.properties[i];
+									(*newcrsr).attributes()[propKey] = prop;
 								}
 								else // no just set the attribute
 								{
-									(*newcrsr).setattrib (propKey,
-										tag.properties[i].sval());
+									(*newcrsr).setattrib (propKey, prop.sval());
 								}
 							}
 						}
@@ -823,26 +813,26 @@ void value::printxml (int indent, string &out, bool compact,
 				out.printf ("%s<%s", _VIDENT, rtype.str());
 				string sv;
 				statstring sn;
-				for (int i=0; i<attrib->count(); ++i)
+				foreach (attr, (*attrib))
 				{
-					sn = (*attrib)[i].label();
+					sn = attr.label();
 					if ( (!rid) || (sn != __id__) ) // we already covered the index
 					{
 						if (schema->containerhasattribute (rtype,
-								(*attrib)[i].id()))
+								attr.id()))
 						{
-							if ((*attrib)[i].count() > 1) // multiple attributes?
+							if (attr.count() > 1) // multiple attributes?
 							{
-								for (int j=0; j<(*attrib)[i].count(); ++j)
+								for (int j=0; j<attr.count(); ++j)
 								{
-									sv = (*attrib)[i][j].sval();
+									sv = attr[j].sval();
 									if (sv.strlen())
 										out.printf (" %s=\"%S\"", sn.str(), sv.str());
 								}
 							}
 							else // single named attribute
 							{
-								sv = (*attrib)[i].sval();
+								sv = attr.sval();
 						
 								if (sv.strlen())
 									out.printf (" %s=\"%S\"", sn.str(), sv.str());
@@ -1046,27 +1036,27 @@ void value::printxml (int indent, string &out, bool compact,
 	{
 		string sv;
 		statstring sn;
-		for (int i=0; i<attrib->count(); ++i)
+		foreach (attr,(*attrib))
 		{
-			sn = (*attrib)[i].label();
+			sn = attr.label();
 
 			if (hadattr && schema->containerhasattribute (containerclass, sn))
 				continue;
 
 			if ( (!rid) || (sn != __id__) ) // we already covered the index
 			{
-				if ((*attrib)[i].count() > 1) // multiple attributes?
+				if (attr.count() > 1) // multiple attributes?
 				{
-					for (int j=0; j<(*attrib)[i].count(); ++j)
+					for (int j=0; j<attr.count(); ++j)
 					{
-						sv = (*attrib)[i][j].sval();
+						sv = attr[j].sval();
 						if (sv.strlen())
 							out.printf (" %s=\"%S\"", sn.str(), sv.str());
 					}
 				}
 				else // single named attribute
 				{
-					sv = (*attrib)[i].sval();
+					sv = attr.sval();
 			
 					if (sv.strlen())
 						out.printf (" %s=\"%S\"", sn.str(), sv.str());

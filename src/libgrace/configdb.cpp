@@ -60,10 +60,7 @@ keypath::keypath (const char *v)
 	cvpos = cindex = 0;
 
 	splt = strutil::split (v, '/');
-	for (int i=0; i<splt.count(); ++i)
-	{
-		add (splt[i]);
-	}
+	foreach (e, splt) add (e);
 }
 
 // ========================================================================

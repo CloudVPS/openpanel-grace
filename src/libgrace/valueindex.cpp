@@ -161,20 +161,17 @@ void valueindex::indextypes (value &v)
 		root = NULL;
 	}
 	
-	if (v.count())
+	foreach (node, v)
 	{
-		for (int i=0; i<v.count(); ++i)
+		indexreference *r;
+		typ = node.type();
+		
+		r = find (typ);
+		if (!r)
 		{
-			indexreference *r;
-			typ = v[i].type();
-			
-			r = find (typ);
-			if (!r)
-			{
-				r = new indexreference (typ, this);
-			}
-			r->addreference (&(v[i]));
+			r = new indexreference (typ, this);
 		}
+		r->addreference (&node);
 	}	
 }
 
@@ -192,20 +189,17 @@ void valueindex::indexproperty (value &v, const statstring &prop)
 		root = NULL;
 	}
 	
-	if (v.count())
+	foreach (node, v)
 	{
-		for (int i=0; i<v.count(); ++i)
+		indexreference *r;
+		statstring pval = node(prop).sval();
+		
+		r = find (pval);
+		if (! r)
 		{
-			indexreference *r;
-			statstring pval = v[i](prop).sval();
-			
-			r = find (pval);
-			if (! r)
-			{
-				r = new indexreference (pval, this);
-			}
-			r->addreference (&(v[i]));
+			r = new indexreference (pval, this);
 		}
+		r->addreference (&node);
 	}
 }
 
@@ -225,20 +219,17 @@ void valueindex::indexrecord (value &v, const statstring &rec)
 		root = NULL;
 	}
 	
-	if (v.count())
+	foreach (node, v)
 	{
-		for (int i=0; i<v.count(); ++i)
+		indexreference *r;
+		rval = node[rec].sval();
+		
+		r = find (rval);
+		if (! r)
 		{
-			indexreference *r;
-			rval = v[i][rec].sval();
-			
-			r = find (rval);
-			if (! r)
-			{
-				r = new indexreference (rval, this);
-			}
-			r->addreference (&(v[i]));
+			r = new indexreference (rval, this);
 		}
+		r->addreference (&node);
 	}
 }
 

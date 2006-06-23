@@ -50,12 +50,14 @@ string *httpsocket::post (const string &url, const value &postvar,
 {
 	string postbody;
 	string encoded;
+	int i=0;
 	
-	for (int i=0; i<postvar.count(); ++i)
+	foreach (nmval, postvar)
 	{
 		if (i) postbody.strcat ('&');
-		encoded = strutil::urlencode (postvar[i].sval());
-		postbody.printf ("%s=%s", postvar[i].name(), encoded.str());
+		encoded = strutil::urlencode (nmval.sval());
+		postbody.printf ("%s=%s", nmval.name(), encoded.str());
+		++i;
 	}
 	
 	return post (url, "application/x-www-form-urlencoded", postbody, hdr);
@@ -141,10 +143,9 @@ string *httpsocket::post (const string &url, const string &ctype,
 			_sock.printf ("Host: %s\r\n", hostpart.str());
 		}
 		
-		for (int i=0; i<postheaders.count(); ++i)
+		foreach (hdr, postheaders)
 		{
-			_sock.printf ("%s: %s\r\n", postheaders[i].name(),
-										postheaders[i].cval());
+			_sock.printf ("%s: %s\r\n", hdr.name(), hdr.cval());
 		}
 		if (_keepalive)
 		{
@@ -241,10 +242,9 @@ string *httpsocket::get (const string &url, value *hdr)
 			_sock.printf ("Accept-Encoding: \r\n");
 		}
 		
-		for (int i=0; i<postheaders.count(); ++i)
+		foreach (hdr, postheaders)
 		{
-			_sock.printf ("%s: %s\r\n", postheaders[i].name(),
-										postheaders[i].cval());
+			_sock.printf ("%s: %s\r\n", hdr.name(), hdr.cval());
 		}
 		
 		if (_keepalive)

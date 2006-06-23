@@ -150,9 +150,9 @@ bool validator::matchId (const value &obj, const value &def, string &error)
 // ========================================================================
 bool validator::matchAnd (const value &obj, const value &def, string &error)
 {
-	for (int i=0; i< def.count(); ++i)
+	foreach (e, def)
 	{
-		if (! matchObject (obj, def[i], error))
+		if (! matchObject (obj, e, error))
 		{
 			return false;
 		}
@@ -167,9 +167,9 @@ bool validator::matchAnd (const value &obj, const value &def, string &error)
 // ========================================================================
 bool validator::matchOr (const value &obj, const value &def, string &error)
 {
-	for (int i=0; i<def.count(); ++i)
+	foreach (e, def)
 	{
-		if (matchObject (obj, def[i], error))
+		if (matchObject (obj, e, error))
 		{
 			return true;
 		}
@@ -192,18 +192,18 @@ bool validator::matchMandatory (const value &obj, const value &def,
 	string matchid;
 	bool mattrib;
 	
-	for (i=0; i<def.count(); ++i)
+	foreach (e, def)
 	{
-		action = def[i].type();
-		matchtype = def[i]("type").sval();
-		matchid = def[i]("key").sval();
+		action = e.type();
+		matchtype = e("type").sval();
+		matchid = e("key").sval();
 		
 		if (action == "or")
 		{
-			for (j=0; j<def[i].count(); ++j)
+			foreach (ee, e)
 			{
 				value tval;
-				tval.newval() = def[i][j];
+				tval.newval() = ee;
 				if (matchMandatory (obj, tval, error))
 				{
 					return true;
@@ -214,19 +214,19 @@ bool validator::matchMandatory (const value &obj, const value &def,
 		
 		if (matchtype == "class")
 		{
-			for (j=0; j<obj.count(); ++j)
+			foreach (node, obj)
 			{
-				if (obj[j].type() == matchid)
+				if (node.type() == matchid)
 				{
 					if (action == "optional")
 					{
-						if (! matchMandatory (obj, def[i], error))
+						if (! matchMandatory (obj, e, error))
 						{
 							if (! error.strlen())
 							{
 								makeerror (error, 904, "Error matching "
 										   "depending mandatory",
-										   def[i]("key").sval());
+										   e("key").sval());
 							}
 							return false;
 						}
@@ -251,12 +251,12 @@ bool validator::matchMandatory (const value &obj, const value &def,
 		{
 			if (mattrib ? obj.attribexists (matchid) : obj.exists (matchid))
 			{
-				if (! matchMandatory (obj, def[i], error))
+				if (! matchMandatory (obj, e, error))
 				{
 					if (! error.strlen())
 					{
 						makeerror (error, 904, "Error matching depending "
-								   "mandatory", def[i]("key").sval());
+								   "mandatory", e("key").sval());
 					}
 					return false;
 				}
@@ -266,10 +266,10 @@ bool validator::matchMandatory (const value &obj, const value &def,
 		{
 			if (! (mattrib ? obj.attribexists (matchid) : obj.exists (matchid)))
 			{
-				if (def[i].attribexists ("errortext"))
+				if (e.attribexists ("errortext"))
 				{
-					makeerror (error, def[i]("errorcode").ival(),
-							   def[i]("errortext").sval(), "");
+					makeerror (error, e("errorcode").ival(),
+							   e("errortext").sval(), "");
 				}
 				else
 				{
@@ -299,18 +299,19 @@ bool validator::matchMandatory (const value &obj, const value &def,
 bool validator::matchChild (const value &obj, const value &def, string &error)
 {
 	string rkey;
-	int i;
-	for (i=0; i<obj.count(); ++i)
+	int i = 0;
+	
+	foreach (node, obj)
 	{
-		if (obj[i].id()) idchain.newval() = obj[i].id().sval();
+		if (node.id()) idchain.newval() = node.id().sval();
 		else
 		{
 			rkey.crop();
-			rkey.printf ("%s[%i]", obj[i].type().str(), i);
+			rkey.printf ("%s[%i]",node.type().str(), i);
 			idchain.newval() = i;
 		}
 		
-		if (! matchOr (obj[i], def, error))
+		if (! matchOr (node, def, error))
 		{
 			if (! error.strlen())
 			{
@@ -324,6 +325,7 @@ bool validator::matchChild (const value &obj, const value &def, string &error)
 		}
 		
 		idchain.rmindex (idchain.count() -1);
+		++i;
 	}
 	return true;
 }
@@ -338,13 +340,13 @@ bool validator::matchAttrib (const value &obj, const value &def, string &error)
 	if (! obj.haveattributes()) return true;
 	string attrname;
 	
-	for (int i=0; i<obj.attributes().count(); ++i)
+	foreach (node, obj.attributes())
 	{
 		attrname = "ATTRIB::";
-		attrname.strcat (obj.attributes()[i].id().sval());
+		attrname.strcat (node.id().sval());
 		idchain.newval() = attrname;
 		
-		if (! matchOr (obj.attributes()[i], def, error))
+		if (! matchOr (node, def, error))
 		{
 			if (! error.strlen())
 			{
@@ -356,7 +358,7 @@ bool validator::matchAttrib (const value &obj, const value &def, string &error)
 				else
 				{
 					makeerror (error, 907, "Unknown attribute",
-							   obj.attributes()[i].label().sval());
+							   node.id().sval());
 				}
 			}
 			return false;
@@ -377,37 +379,37 @@ bool validator::matchData (const value &obj, const value &def, string &error)
 {
 	statstring mtype;
 	
-	for (int i=0; i<def.count(); ++i)
+	foreach (e, def)
 	{
-		mtype = def[i].type();
+		mtype = e.type();
 		if (mtype == "text")
 		{
-			if (matchDataText (obj, def[i].sval()))
+			if (matchDataText (obj, e.sval()))
 				return true;
 		}
 		else if (mtype == "regexp")
 		{
-			if (matchDataRegexp (obj, def[i].sval()))
+			if (matchDataRegexp (obj, e.sval()))
 				return true;
 		}
 		else if (mtype == "lt")
 		{
-			if (matchDataLessThan (obj, def[i].ival()))
+			if (matchDataLessThan (obj, e.ival()))
 				return true;
 		}
 		else if (mtype == "gt")
 		{
-			if (matchDataGreaterThan (obj, def[i].ival()))
+			if (matchDataGreaterThan (obj, e.ival()))
 				return true;
 		}
 		else if (mtype == "minsize")
 		{
-			if (matchDataMinSize (obj, def[i].ival()))
+			if (matchDataMinSize (obj, e.ival()))
 				return true;
 		}
 		else if (mtype == "maxsize")
 		{
-			if (matchDataMaxSize (obj, def[i].ival()))
+			if (matchDataMaxSize (obj, e.ival()))
 				return true;
 		}
 		else
@@ -589,16 +591,16 @@ string *validator::encodeidchain (void)
 {
 	string *res = new string;
 	
-	for (int i=0; i<idchain.count(); ++i)
+	foreach (e, idchain)
 	{
 		res->strcat ('/');
-		if (! idchain[i].sval().validate (V_NOENCODE))
+		if (! e.sval().validate (V_NOENCODE))
 		{
-			res->printf ("\"%S\"", idchain[i].cval());
+			res->printf ("\"%S\"", e.cval());
 		}
 		else
 		{
-			res->strcat (idchain[i].sval());
+			res->strcat (e.sval());
 		}
 	}
 	return res;
