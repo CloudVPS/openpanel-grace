@@ -682,18 +682,24 @@ tcpsocket *tcplistener::accept (void)
 		throw (EX_SOCK_CREATE);
 	}
 	
-	anint = sizeof (peer);
-	getpeername (s, (struct sockaddr *) &peer, &anint);
-	raddr = ntohl (peer.sin_addr.s_addr);
+	if (tcpdomain)
+	{
+		anint = sizeof (peer);
+		getpeername (s, (struct sockaddr *) &peer, &anint);
+		raddr = ntohl (peer.sin_addr.s_addr);
+	}
 
 	setsockopt (s, SOL_SOCKET, SO_KEEPALIVE, (char *) &pram,
 				sizeof (int));	
 	
 	tcpsocket *myfil = new tcpsocket;
 	(*myfil).openread (s);
-	(*myfil).peer_addr = raddr;
-	(*myfil).peer_port = ntohs (peer.sin_port);
-	(*myfil).peer_name = ip2str (raddr);
+	if (tcpdomain)
+	{
+		(*myfil).peer_addr = raddr;
+		(*myfil).peer_port = ntohs (peer.sin_port);
+		(*myfil).peer_name = ip2str (raddr);
+	}
 	(*myfil).ti_established = kernel.time.now();
 	return myfil;
 }
