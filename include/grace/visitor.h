@@ -137,7 +137,7 @@ public:
 						 }
 						 
 						 /// Get reference to object under cursor.
-	inline const kind	&obj (void)
+	inline kind			&obj (void)
 						 {
 						 	return *current;
 						 }
@@ -155,6 +155,6 @@ protected:
     __foreachctx.__forfirst && __foreachctx.__foreachv.first() || __foreachctx.__foreachv.next(); \
     __foreachctx.__forfirst = false) \
         for (bool __flipme=true; __flipme;) \
-            for (const typeof(object) &iterator = __foreachctx.__foreachv.obj(); __flipme; __flipme = false)
+            for (typeof(object) &iterator = __foreachctx.__foreachv.obj(); __flipme; __flipme = false)
     
 #endif
