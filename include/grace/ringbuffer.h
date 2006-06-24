@@ -80,9 +80,9 @@ public:
 					 /// Get write cursor.
 					 /// \return Position of the write cursor.
 	unsigned int	 wc (void) { return writecursor; }
+	char			*buffer; ///< The memory buffer.
 	
 protected:
-	char			*buffer; ///< The memory buffer.
 	unsigned int	 count; ///< Allocated buffer size.
 	unsigned int	 readcursor; ///< Read cursor position.
 	unsigned int	 writecursor; ///< Write cursor position.

@@ -553,6 +553,10 @@ CONTINUE:;
 // Reads a string from the file up to a newline.
 // ========================================================================
 
+void __file_breakme (void)
+{
+}
+
 string *file::gets (int maxlinesize)
 {
 	if (feof)
@@ -569,7 +573,7 @@ string *file::gets (int maxlinesize)
 	}
 
 	int nlpos;
-		
+	
 	while (buffer.room() && (! buffer.hasline()))
 	{
 		char buf[DEFAULT_SZ_FILE_READBUF];
@@ -620,16 +624,23 @@ string *file::gets (int maxlinesize)
 				}
 				catch (...)
 				{
+					__file_breakme();
 					err.crop(0);
 					err.printf ("Exception in ringbuffer (sz=%i am=%i)",
 								  sz, wanted);
 					throw (EX_FILE_ERR_READ);
 				}
+				if (sz == 365) __file_breakme();
 			}
 		}
 		else
 		{
 			feof = true;
+			err = "Broken pipe";
+			unsigned int p;
+			if (buffer.hasline (p)) err.printf (" hasline %i", p);
+			else err.printf (" noline");
+			__file_breakme ();
 			return NULL;
 		}
 	}

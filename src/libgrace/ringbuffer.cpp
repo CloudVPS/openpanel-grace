@@ -59,7 +59,10 @@ void ringbuffer::init (unsigned int sz)
 // ========================================================================
 unsigned int ringbuffer::backlog (void)
 {
-	if (! buffer) init (count);
+	if (! buffer)
+	{
+		init (count);
+	}
 	return ( ((writecursor + count) - readcursor) % count );
 }
 
@@ -74,7 +77,10 @@ unsigned int ringbuffer::backlog (void)
 unsigned int ringbuffer::room (void)
 {
 	unsigned int res;
-	if (! buffer) init (count);
+	if (! buffer)
+	{
+		init (count);
+	}
 	if (readcursor == writecursor) return count-256;
 	res = ( ((readcursor + count) - writecursor) % count );
 	if (res<256) return 0;
@@ -88,7 +94,10 @@ unsigned int ringbuffer::room (void)
 // ========================================================================
 void ringbuffer::add (const char *data, unsigned int sz)
 {
-	if (! buffer) init (count);
+	if (! buffer)
+	{
+		init (count);
+	}
 
 	unsigned int toend;
 	if (sz > count) throw (EX_RINGBUF_OVERFLOW);
@@ -114,7 +123,10 @@ void ringbuffer::add (const char *data, unsigned int sz)
 // ========================================================================
 string *ringbuffer::read (unsigned int sz)
 {
-	if (! buffer) init (count);
+	if (! buffer)
+	{
+		init (count);
+	}
 
 	unsigned int rsz = (sz > count) ? count : sz;
 	unsigned int toend = count - readcursor;
@@ -144,7 +156,10 @@ string *ringbuffer::read (unsigned int sz)
 // ========================================================================
 string *ringbuffer::peek (unsigned int sz)
 {
-	if (! buffer) init (count);
+	if (! buffer)
+	{
+		init (count);
+	}
 
 	unsigned int rsz = (sz > count) ? count : sz;
 	unsigned int toend = count - readcursor;
@@ -180,9 +195,15 @@ void ringbuffer::advance (unsigned int sz)
 // ========================================================================
 bool ringbuffer::hasline (void)
 {
-	if (! buffer) init (count);
+	if (! buffer)
+	{
+		init (count);
+	}
 
-	if (readcursor == writecursor) return false;
+	if (readcursor == writecursor)
+	{
+		return false;
+	}
 
 	unsigned int pcursor = readcursor;
 	while (pcursor != writecursor)
@@ -200,7 +221,10 @@ bool ringbuffer::hasline (void)
 // ========================================================================
 bool ringbuffer::hasline (unsigned int &atposition)
 {
-	if (! buffer) init (count);
+	if (! buffer)
+	{
+		init (count);
+	}
 
 	if (readcursor == writecursor) return false;
 	atposition = 0;
@@ -228,13 +252,16 @@ bool ringbuffer::hasline (unsigned int &atposition)
 // ========================================================================
 string *ringbuffer::readline (void)
 {
-	if (! buffer) init (count);
+	if (! buffer)
+	{
+		init (count);
+	}
 	string *result;
 
 	unsigned int eolpos = 0;
 	bool found = false;
 	bool previousWasCR = false;
-	if (readcursor == writecursor) return new string;
+	if (readcursor == writecursor) return NULL;
 	unsigned int pcursor = readcursor;
 	
 	while (pcursor != writecursor)

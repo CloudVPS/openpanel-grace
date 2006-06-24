@@ -295,6 +295,8 @@ bool value::fromcsv (const string &csvData, bool withHeaders,
 // ----------------
 // Loads a file in CSV format into a two-dimensional array.
 // ========================================================================
+void __csv_breakme (void) {}
+
 bool value::loadcsv (const string &filename, bool withHeaders,
 					 const string &key)
 {
@@ -328,6 +330,7 @@ bool value::loadcsv (const string &filename, bool withHeaders,
 	if (withHeaders)
 	{
 		row = csvFile.gets();
+		__csv_breakme();
 		columnSplit = strutil::splitcsv(row);
 		numColumns = columnSplit.count();
 		if (! numColumns)

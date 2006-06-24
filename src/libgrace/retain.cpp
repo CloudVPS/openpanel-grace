@@ -32,7 +32,7 @@ namespace memory
 
 	void *pool::alloc (size_t sz)
 	{
-		size_t rndsz = (sz+15+sizeof(block)) & 0xfffffff0;
+		size_t rndsz = sz+sizeof(block);
 		sizepool *c, *lastc;
 		c = lastc = pools;
 		while (c)
