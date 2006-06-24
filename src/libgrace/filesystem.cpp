@@ -273,9 +273,9 @@ bool filesystem::isdir (const string &_path)
 // ========================================================================
 value *filesystem::getinfo (const string &_path)
 {
+	returnclass (value) result retain;
 	string path;
 	string p;
-	value *result = new value;
 	char linkbuf[512];
 	int t;
 	
@@ -287,55 +287,55 @@ value *filesystem::getinfo (const string &_path)
 		struct stat st;
 		string tstr;
 		
-		if (stat (p.str(), &st)) return result;
+		if (stat (p.str(), &st)) return &result;
 		
-		(*result)["path"] = p;
-		(*result)["inode"] = (long long) st.st_ino;
-		(*result)["nlink"] = (int) st.st_nlink;
+		result["path"] = p;
+		result["inode"] = (long long) st.st_ino;
+		result["nlink"] = (int) st.st_nlink;
 		switch (st.st_mode & S_IFMT)
 		{
 			case S_IFSOCK:
-				(*result)["type"] = fsSocket; break;
+				result["type"] = fsSocket; break;
 			case S_IFLNK:
-				(*result)["type"] = fsSoftLink;
+				result["type"] = fsSoftLink;
 				if (( t = ::readlink (p.str(), linkbuf, 511))>=0)
 				{
 					linkbuf[t] = 0;
-					(*result)["link"] = linkbuf;
+					result["link"] = linkbuf;
 				}
 				break;
 			case S_IFREG:
-				(*result)["type"] = fsFile; break;
+				result["type"] = fsFile; break;
 			case S_IFBLK:
-				(*result)["type"] = fsBlockDevice; break;
+				result["type"] = fsBlockDevice; break;
 			case S_IFCHR:
-				(*result)["type"] = fsCharacterDevice; break;
+				result["type"] = fsCharacterDevice; break;
 			case S_IFDIR:
-				(*result)["type"] = fsDirectory;
+				result["type"] = fsDirectory;
 				break;
 			default:
-				(*result)["type"] = fsUnknown; break;
+				result["type"] = fsUnknown; break;
 		}
-		(*result)["mode"] = (unsigned int) st.st_mode & 07777;
-		(*result)["fuid"] = (unsigned int) st.st_uid;
-		(*result)["fgid"] = (unsigned int) st.st_gid;
-		(*result)["size"] = (unsigned int) (st.st_size & 0xffffffff);
-		(*result)["atime"] = (unsigned int) st.st_atime;
-		(*result)["mtime"] = (unsigned int) st.st_mtime;
-		(*result)["ctime"] = (unsigned int) st.st_ctime;
+		result["mode"] = (unsigned int) st.st_mode & 07777;
+		result["fuid"] = (unsigned int) st.st_uid;
+		result["fgid"] = (unsigned int) st.st_gid;
+		result["size"] = (unsigned int) (st.st_size & 0xffffffff);
+		result["atime"] = (unsigned int) st.st_atime;
+		result["mtime"] = (unsigned int) st.st_mtime;
+		result["ctime"] = (unsigned int) st.st_ctime;
 		if ((st.st_mode & S_IFMT) == S_IFDIR) p += "/";
 		p.printf (":<mime>");
 		if ((t = ::readlink (p.str(), linkbuf, 511)) >= 0)
 		{
 			linkbuf[t] = 0;
-			(*result)["mime"] = linkbuf;
+			result["mime"] = linkbuf;
 			if ((st.st_mode & S_IFMT) == S_IFDIR)
 			{
-				(*result)["type"] = fsBundle;
+				result["type"] = fsBundle;
 			}
 		}
 	}
-	return result;
+	return &result;
 }
 
 // ========================================================================
@@ -625,14 +625,12 @@ value *filesystem::dir (const char *_path)
 // ========================================================================
 value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 {
+	returnclass (value) res retain;
 	string path;
 	string suffix;
 	value paths;
-	value *res;
 	char linkbuf[512];
 	int t;
-	
-	res = new value;
 	
 	if (_path) path = _path;
 	else path = pwd();
@@ -680,14 +678,14 @@ value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 				else
 					fpath = nam;
 								
-				if (! (*res).exists(nam))
-					(*res)[nam]["path"] = fpath;
+				if (! res.exists(nam))
+					res[nam]["path"] = fpath;
 				else
 				{
 					string tp;
-					tp.printf ("%s,%s", (*res)[nam]["path"].cval(), fpath.str());
+					tp.printf ("%s,%s", res[nam]["path"].cval(), fpath.str());
 					
-					(*res)[nam]["path"] = tp;
+					res[nam]["path"] = tp;
 				}
 				
 				if (longformat)
@@ -699,48 +697,51 @@ value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 					pad.printf ("%s/%s", path.str(), nam.str());
 					if (! lstat (pad, &st))
 					{
-						(*res)[nam]["inode"] = (long long) st.st_ino;
-						(*res)[nam]["nlink"] = (int) st.st_nlink;
+						res[nam]["inode"] = (long long) st.st_ino;
+						res[nam]["nlink"] = (int) st.st_nlink;
 						switch (st.st_mode & S_IFMT)
 						{
 							case S_IFSOCK:
-								(*res)[nam]["type"] = fsSocket; break;
+								res[nam]["type"] = fsSocket; break;
 							case S_IFLNK:
-								(*res)[nam]["type"] = fsSoftLink;
+								res[nam]["type"] = fsSoftLink;
 								if (( t = ::readlink (pad.str(), linkbuf, 511))>=0)
 								{
 									linkbuf[t] = 0;
-									(*res)[nam]["link"] = linkbuf;
+									res[nam]["link"] = linkbuf;
 								}
 								break;
 							case S_IFREG:
-								(*res)[nam]["type"] = fsFile; break;
+								res[nam]["type"] = fsFile; break;
 							case S_IFBLK:
-								(*res)[nam]["type"] = fsBlockDevice; break;
+								res[nam]["type"] = fsBlockDevice; break;
 							case S_IFCHR:
-								(*res)[nam]["type"] = fsCharacterDevice; break;
+								res[nam]["type"] = fsCharacterDevice; break;
 							case S_IFDIR:
-								(*res)[nam]["type"] = fsDirectory;
+								res[nam]["type"] = fsDirectory;
 								break;
 							default:
-								(*res)[nam]["type"] = fsUnknown; break;
+								res[nam]["type"] = fsUnknown; break;
 						}
-						(*res)[nam]["mode"] = (unsigned int) st.st_mode & 07777;
-						(*res)[nam]["fuid"] = (unsigned int) st.st_uid;
-						(*res)[nam]["fgid"] = (unsigned int) st.st_gid;
-						(*res)[nam]["size"] = (unsigned int) (st.st_size & 0xffffffff);
-						(*res)[nam]["atime"] = (unsigned int) st.st_atime;
-						(*res)[nam]["mtime"] = (unsigned int) st.st_mtime;
-						(*res)[nam]["ctime"] = (unsigned int) st.st_ctime;
+						res[nam]["mode"] = (unsigned int) st.st_mode & 07777;
+						res[nam]["fuid"] = (unsigned int) st.st_uid;
+						res[nam]["fgid"] = (unsigned int) st.st_gid;
+						res[nam]["size"] = (unsigned int) (st.st_size & 0xffffffff);
+						res[nam]["atime"] = (unsigned int) st.st_atime;
+						res[nam]["mtime"] = (unsigned int) st.st_mtime;
+						res[nam]["ctime"] = (unsigned int) st.st_ctime;
+						
 						if ((st.st_mode & S_IFMT) == S_IFDIR) pad += "/";
 						pad.printf (":<mime>");
+						
 						if ((t = ::readlink (pad.str(), linkbuf, 511)) >= 0)
 						{
 							linkbuf[t] = 0;
-							(*res)[nam]["mime"] = linkbuf;
+							res[nam]["mime"] = linkbuf;
+							
 							if ((st.st_mode & S_IFMT) == S_IFDIR)
 							{
-								(*res)[nam]["type"] = fsBundle;
+								res[nam]["type"] = fsBundle;
 							}
 						}
 					}
@@ -750,10 +751,10 @@ value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 		}
 		else
 		{
-			(*res)("error") = ::strerror (errno);
+			res("error") = ::strerror (errno);
 		}
 	}
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -781,11 +782,12 @@ value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 // ========================================================================
 string *filesystem::getresource (const string &p, const string &rsrc, const string &idx)
 {
+	returnclass (string) res retain;
+	
 	string pad;
 	string pp;
 	struct stat st;
 	struct stat st2;
-	string *res = new string;
 	char linkbuf[512];
 	
 	pad = pp = p;
@@ -800,7 +802,7 @@ string *filesystem::getresource (const string &p, const string &rsrc, const stri
 	
 	if (lstat (pad, &st))
 	{
-		return res;
+		return &res;
 	}
 	
 	if ((st.st_mode & S_IFMT) == S_IFDIR)
@@ -818,20 +820,20 @@ string *filesystem::getresource (const string &p, const string &rsrc, const stri
 	
 	if (lstat (pad, &st2))
 	{
-		return res;
+		return &res;
 	}
 	
 	if ((st2.st_mode & S_IFMT) == S_IFDIR)
 	{
 		pad.printf ("/%s", idx.strlen() ? idx.str() : "data");
-		if (lstat (pad, &st2)) return res;
+		if (lstat (pad, &st2)) return &res;
 	}
 	else
 	{
 		if (idx.strlen())
 		{
 			pad.printf (":%s", idx.str());
-			if (lstat (pad, &st2)) return res;
+			if (lstat (pad, &st2)) return &res;
 		}
 	}
 		
@@ -843,15 +845,15 @@ string *filesystem::getresource (const string &p, const string &rsrc, const stri
 			if (t>511) t = 511;
 			linkbuf[t] = 0;
 			
-			(*res) = linkbuf;
+			res = linkbuf;
 		}
 	}
 	else if ((st2.st_mode & S_IFMT) == S_IFREG)
 	{
-		(*res) = fs.load (pad);
+		res = fs.load (pad);
 	}
 	
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -877,22 +879,22 @@ unsigned int filesystem::size (const string &path)
 // ========================================================================
 string *filesystem::findread (const char *pvol, const char *filename)
 {
+	returnclass (string) resolved retain;
 	value res;
-	string *resolved = new string;
 	
 	res = getpaths (pvol);
 	
 	for (int i=res.count()-1; i>=0; --i)
 	{
-		(*resolved) = res[i];
-		(*resolved).printf ("/%s", filename);
-		if (mayread ((*resolved).str()))
+		resolved = res[i];
+		resolved.printf ("/%s", filename);
+		if (mayread (resolved.str()))
 		{
-			return resolved;
+			return &resolved;
 		}
 	}
-	(*resolved).crop(0);
-	return resolved;
+	resolved.crop(0);
+	return &resolved;
 }
 
 // ========================================================================
@@ -909,26 +911,26 @@ string *filesystem::findread (const char *pvol, const char *filename)
 
 value *filesystem::getpaths (const  char *pvol)
 {
-	value *res = new value;
+	returnclass (value) res retain;
 	
-	if (pathvol.exists (pvol)) (*res) = pathvol[pvol];
+	if (pathvol.exists (pvol)) res = pathvol[pvol];
 	else
 	{
 		string pd;
 		
-		pd.printf ("/%s", pvol); (*res)[0] = pd;
+		pd.printf ("/%s", pvol); res[0] = pd;
 		pd.crop(0);
-		pd.printf ("/usr/%s", pvol); (*res)[1] = pd;
+		pd.printf ("/usr/%s", pvol); res[1] = pd;
 		pd.crop(0);
-		pd.printf ("/usr/local/%s", pvol); (*res)[2] = pd;
+		pd.printf ("/usr/local/%s", pvol); res[2] = pd;
 		pd.crop(0);
 		if (getenv ("HOME"))
 		{
 			pd.printf ("%s/.%s", getenv("HOME"), pvol);
-			(*res)[3] = pd;
+			res[3] = pd;
 		}
 	}
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -939,8 +941,8 @@ value *filesystem::getpaths (const  char *pvol)
 // ========================================================================
 string *filesystem::findwrite (const char *pvol, const char *filename)
 {
+	returnclass (string) resolved retain;
 	value res;
-	string *resolved = new string;
 	
 	res = getpaths (pvol);
 	
@@ -948,19 +950,19 @@ string *filesystem::findwrite (const char *pvol, const char *filename)
 	{
 		if (e("readonly") == false)
 		{
-			(*resolved) = e;
-			if (maywrite ((*resolved).str()))
+			resolved = e;
+			if (maywrite (resolved.str()))
 			{
-				(*resolved).printf ("/%s", filename);
-				if ( (! exists ((*resolved)))||(maywrite ((*resolved).str())) )
+				resolved.printf ("/%s", filename);
+				if ( (! exists (resolved))||(maywrite (resolved.str())) )
 				{
-					return resolved;
+					return &resolved;
 				}
 			}
 		}
 	}
-	(*resolved).crop(0);
-	return resolved;
+	resolved.crop(0);
+	return &resolved;
 }
 
 // Global instance

@@ -13,4 +13,4 @@ clean:
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -O2 -c $<
+	$(CXX) -I"../../include" -O2 -c -g $<

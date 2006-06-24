@@ -50,12 +50,12 @@ void value::load (const char *fname, file &f)
 		{
 			delete array[i];
 		}
-		free (array);
+		::free (array);
 		array = NULL;
 		arraysz = 0;
 	}
 	
-	stack<value> treestack;
+	stack<class value> treestack;
 	value *crsr = this;
 	
 	string ln;

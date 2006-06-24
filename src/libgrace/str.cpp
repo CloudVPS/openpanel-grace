@@ -122,14 +122,14 @@ threadref_t getref (void)
 // This constructor initializes an empty value object
 // ========================================================================
 
-string::string (void)
+string::string (void) : retainable()
 {
 	size = 0;
 	alloc = 0;
 	data = NULL;
 }
 
-string::string (unsigned int sz)
+string::string (unsigned int sz) : retainable()
 {
 	size = 0;
 	alloc = sz + sizeof (refblock);
@@ -143,7 +143,7 @@ string::string (unsigned int sz)
 // ----------------------
 // Copy-constructor for pointer-reference to a c-string
 // ========================================================================
-string::string (const char *s)
+string::string (const char *s) : retainable()
 {
 	// Verify that the supplied pointer is valid
 	
@@ -174,7 +174,7 @@ string::string (const char *s)
 // Creates an image after a referenced string, using copy-on-write
 // symantics to preserve memory and performance.
 // ========================================================================
-string::string (const string &s)
+string::string (const string &s) : retainable()
 {
 	// Verify the string is not empty
 	
@@ -208,7 +208,7 @@ string::string (const string &s)
 // Yanks the string data out of an existing statstring (which contains
 // a string object).
 // ========================================================================
-string::string (const statstring &s)
+string::string (const statstring &s) : retainable()
 {
 	// Verify the string is not empty
 	
@@ -248,23 +248,18 @@ string::string (const statstring &s)
 // Performs the same chores as the regular copy-constructor, but deletes
 // the original object (useful for picking up function/method returns).
 // ========================================================================
-string::string (string *s)
+string::string (string *s) : retainable()
 {
 	if (s && s->strlen())
 	{
-		alloc = s->alloc;
-		size = s->size;
-		data = s->data;
-		data->threadref = getref(); // take over thread ownership
-		s->alloc = s->size = 0;
-		s->data = NULL;
+		retainvalue (s);
 	}
 	else
 	{
 		size = alloc = 0;
 		data = NULL;
+		delete s;
 	}
-	if (s) delete s;
 }
 
 // ========================================================================
@@ -1128,7 +1123,7 @@ void string::strclone (const string &s)
 		}
 		else
 		{
-			free (data);
+			::free (data);
 			data = NULL;
 		}
 	}

@@ -118,22 +118,23 @@ string *ringbuffer::read (unsigned int sz)
 
 	unsigned int rsz = (sz > count) ? count : sz;
 	unsigned int toend = count - readcursor;
-	string *res = new string;
+	
+	returnclass (string) res retain;
 	
 	if (rsz > backlog()) rsz = backlog();
 	
 	if (rsz > toend)
 	{
-		res->strcat (buffer + readcursor, (size_t) toend);
-		res->strcat (buffer, (size_t) (rsz - toend));
+		res.strcat (buffer + readcursor, (size_t) toend);
+		res.strcat (buffer, (size_t) (rsz - toend));
 	}
 	else if (rsz)
 	{
-		res->strcat (buffer + readcursor, (size_t) rsz);
+		res.strcat (buffer + readcursor, (size_t) rsz);
 	}
 	
 	readcursor = (readcursor + rsz) % count;
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -147,21 +148,22 @@ string *ringbuffer::peek (unsigned int sz)
 
 	unsigned int rsz = (sz > count) ? count : sz;
 	unsigned int toend = count - readcursor;
-	string *res = new string;
+	
+	returnclass (string) res retain;
 	
 	if (rsz > backlog()) rsz = backlog();
 	
 	if (rsz > toend)
 	{
-		res->strcat (buffer + readcursor, (size_t) toend);
-		res->strcat (buffer, (size_t) (rsz - toend));
+		res.strcat (buffer + readcursor, (size_t) toend);
+		res.strcat (buffer, (size_t) (rsz - toend));
 	}
 	else if (rsz)
 	{
-		res->strcat (buffer + readcursor, (size_t) rsz);
+		res.strcat (buffer + readcursor, (size_t) rsz);
 	}
 	
-	return res;
+	return &res;
 }
 
 void ringbuffer::advance (unsigned int sz)
@@ -258,7 +260,7 @@ string *ringbuffer::readline (void)
 	}
 	
 	if (eolpos) result = read (eolpos);
-	else result = new string;
+	else result = new (memory::retainable::onstack) string;
 	
 	if (found)
 	{

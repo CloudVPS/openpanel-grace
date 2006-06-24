@@ -75,7 +75,7 @@ indexreference::indexreference (const statstring &id, class valueindex *p) :
 // ========================================================================
 indexreference::~indexreference (void)
 {
-	free (_refarray);
+	::free (_refarray);
 	if (higher) delete higher;
 	if (lower) delete lower;
 }

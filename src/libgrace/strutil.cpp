@@ -19,7 +19,7 @@
 // ========================================================================
 value *strutil::splitspace (const string &str)
 {
-	value *res = new value;
+	returnclass (value) res retain;
 	
 	int left=0;
 	int right=0;
@@ -33,12 +33,12 @@ value *strutil::splitspace (const string &str)
 		
 		if (right != left)
 		{
-			(*res).newval() = str.mid (left, right-left);
+			res.newval() = str.mid (left, right-left);
 		}
 		left = right;
 	}
 	
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -49,20 +49,20 @@ value *strutil::splitspace (const string &str)
 // ========================================================================
 value *strutil::split (const string &str, char s)
 {
-	value *res = new value;
+	returnclass (value) res retain;
 	
 	int left=0;
 	int right;
 	
 	while ((right = str.strchr (s, left)) >= 0)
 	{
-		if ((right-left)<1) (*res).newval() = "";
-		else (*res).newval() = str.mid (left, right-left);
+		if ((right-left)<1) res.newval() = "";
+		else res.newval() = str.mid (left, right-left);
 		left = right+1;
 	}
-	(*res).newval() = str.mid (left);
+	res.newval() = str.mid (left);
 	
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -73,20 +73,20 @@ value *strutil::split (const string &str, char s)
 // ========================================================================
 value *strutil::split (const string &str, const string &s)
 {
-	value *res = new value;
+	returnclass (value) res retain;
 	int left = 0;
 	int right;
 	int lns = s.strlen();
 	
 	while ((right = str.strstr (s, left)) >= 0)
 	{
-		if ((right-left)<1) (*res).newval() = "";
-		else (*res).newval() = str.mid (left, right-left);
+		if ((right-left)<1) res.newval() = "";
+		else res.newval() = str.mid (left, right-left);
 		left = right+lns;
 	}
-	(*res).newval() = str.mid (left);
+	res.newval() = str.mid (left);
 	
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -132,7 +132,7 @@ value *strutil::parsemime (const string &str)
 	string hdr;
 	string content;
 	bool crlf;
-	value *res = new value;
+	returnclass (value) res retain;
 	
 	// Make a working copy of the string
 	content = str;
@@ -147,11 +147,11 @@ value *strutil::parsemime (const string &str)
 	hdrlin = strutil::splitlines (hdr);
 	foreach (lin, hdrlin)
 	{
-		(*res) << strutil::parsehdr (lin.sval());
+		res << strutil::parsehdr (lin.sval());
 	}
 	
-	(*res)[".data"] = content;
-	return res;
+	res[".data"] = content;
+	return &res;
 }
 
 // ========================================================================
@@ -193,11 +193,11 @@ value *strutil::splitquoted (const string &str, char s)
 	int sz = str.strlen();
 	int lastnspace = 0;
 	bool escaped = false;
-	value *res = new value;
+	returnclass (value) res retain;
 	
 	char quot = 0;
 	
-	if (! str.strlen()) return res;
+	if (! str.strlen()) return &res;
 	
 	while (right <= sz)
 	{
@@ -245,14 +245,14 @@ value *strutil::splitquoted (const string &str, char s)
 					}
 					
 					if (((lastnspace+1)-left) < 1)
-						(*res).newval() = "";
+						res.newval() = "";
 						
 					else
 					{
 						string tmp;
 						
 						tmp = str.mid (left, (lastnspace+1) - left);
-						(*res).newval() = strutil::unescape (tmp);
+						res.newval() = strutil::unescape (tmp);
 					}
 					left = right+1;
 				}
@@ -265,7 +265,7 @@ value *strutil::splitquoted (const string &str, char s)
 		++right;
 	}
 	
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -276,17 +276,17 @@ value *strutil::splitquoted (const string &str, char s)
 // ========================================================================
 string *strutil::encodecsv (const string &data)
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	char c;
 	int sz = data.strlen();
 	
 	for (int i=0; i<sz; ++i)
 	{
 		c = data[i];
-		if (c == '\"') (*res).strcat ('\"');
-		(*res).strcat (c);
+		if (c == '\"') res.strcat ('\"');
+		res.strcat (c);
 	}
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -301,7 +301,7 @@ value *strutil::splitcsv (const string &str)
 	int sz = str.strlen();
 	bool quoted = false;
 	bool wasquoted = false;
-	value *res = new value;
+	returnclass (value) res retain;
 	string nval;
 	
 	char quot = 0;
@@ -334,16 +334,16 @@ value *strutil::splitcsv (const string &str)
 			{
 				if (nval.strchr ('.') >= 0)
 				{
-					(*res).newval() = ::atof (nval.str());
+					res.newval() = ::atof (nval.str());
 				}
 				else
 				{
-					(*res).newval() = nval.toint();
+					res.newval() = nval.toint();
 				}
 			}
 			else
 			{
-				(*res).newval() = nval;
+				res.newval() = nval;
 			}
 			nval = "";
 			wasquoted = false;
@@ -361,23 +361,23 @@ value *strutil::splitcsv (const string &str)
 		{
 			if (nval.strchr ('.') >= 0)
 			{
-				(*res).newval() = ::atof (nval.str());
+				res.newval() = ::atof (nval.str());
 			}
 			else
 			{
-				(*res).newval() = nval.toint();
+				res.newval() = nval.toint();
 			}
 		}
 		else
 		{
-			(*res).newval() = nval;
+			res.newval() = nval;
 		}
 	}
 	else
 	{
-		if (wasquoted) (*res).newval() = "";
+		if (wasquoted) res.newval() = "";
 	}
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -396,12 +396,12 @@ value *strutil::splitcsv (const string &str)
 // ========================================================================
 value *strutil::parsehdr (const string &hdr)
 {
-	value *res = new value;
+	returnclass (value) res retain;
 	int clnpos = hdr.strchr (':');
 	if (clnpos < 0)
 	{
-		(*res) = hdr;
-		return res;
+		res = hdr;
+		return &res;
 	}
 	
 	string hdrname;
@@ -419,7 +419,7 @@ value *strutil::parsehdr (const string &hdr)
 	if ((split[0].sval().strchr ('(') < 0) ||
 	    (split[0].sval().strchr (')') > 0))
 	{
-		(*res)[hdrname] = split[0];
+		res[hdrname] = split[0];
 		split.rmindex (0);
 		
 		foreach (namevalue, split)
@@ -431,16 +431,16 @@ value *strutil::parsehdr (const string &hdr)
 			nvpair = strutil::splitquoted (namevalue.sval(), '=');
 			
 			if (nvpair.count()>1)
-				(*res)[hdrname].setattrib (nvpair[0].sval(), nvpair[1].sval());
+				res[hdrname].setattrib (nvpair[0].sval(), nvpair[1].sval());
 			else
-				(*res)[hdrname].setattrib (namevalue.sval(), "1");
+				res[hdrname].setattrib (namevalue.sval(), "1");
 		}
 	}
 	else
 	{
-		(*res)[hdrname] = hval;
+		res[hdrname] = hval;
 	}
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -452,7 +452,7 @@ value *strutil::parsehdr (const string &hdr)
 // ========================================================================
 string *strutil::urldecode (const string &src)
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	int ln = src.strlen();
 	char c;
 	
@@ -472,9 +472,9 @@ string *strutil::urldecode (const string &src)
 				i += 2;
 			}
 		}
-		(*res).strcat (c);
+		res.strcat (c);
 	}
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -485,7 +485,7 @@ string *strutil::urldecode (const string &src)
 // ========================================================================
 string *strutil::urlencode (const string &src)
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	int ln = src.strlen();
 	char c;
 	
@@ -494,16 +494,16 @@ string *strutil::urlencode (const string &src)
 		c = src[i];
 		if ((c != '-') && (! isdigit (c)) && (! isalpha (c)))
 		{
-			if (c == ' ') (*res).strcat ('+');
+			if (c == ' ') res.strcat ('+');
 			else
 			{
-				(*res).strcat ('%');
-				(*res).printf ("%02x", (unsigned char) c);
+				res.strcat ('%');
+				res.printf ("%02x", (unsigned char) c);
 			}
 		}
-		else (*res).strcat (c);
+		else res.strcat (c);
 	}
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -514,7 +514,7 @@ string *strutil::urlencode (const string &src)
 // ========================================================================
 string *strutil::unescape (const string &src)
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	
 	int i=0;
 	int mx=src.strlen();
@@ -525,7 +525,7 @@ string *strutil::unescape (const string &src)
 		if (src[i]=='\\')
 		{
 			++i;
-			(*res).strcat (src[i]);
+			res.strcat (src[i]);
 		}
 		else
 		{
@@ -533,7 +533,7 @@ string *strutil::unescape (const string &src)
 			{
 				if (((i+1)<mx)&&(src[i+1] == '%'))
 				{
-					(*res).strcat ('%');
+					res.strcat ('%');
 					i++;
 				}
 				else if ((i+2)<mx)
@@ -549,18 +549,18 @@ string *strutil::unescape (const string &src)
 									rightd - '0' : 
 									(rightd - 'a')+10 ) & 15;
 									
-					(*res).strcat ((char) (rightd + (leftd << 4)));
+					res.strcat ((char) (rightd + (leftd << 4)));
 					i+=2;
 				}
 			}
 			else
 			{
-				(*res).strcat (src[i]);
+				res.strcat (src[i]);
 			}
 		}
 	}
 	
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -570,10 +570,10 @@ string *strutil::unescape (const string &src)
 // ========================================================================
 string *strutil::regexp (const string &src, const string &expr)
 {
-	string *result = new string;
+	returnclass (string) result retain;
 	regexpression r(expr);
-	(*result) = r.parse (src);
-	return result;
+	result = r.parse (src);
+	return &result;
 }
 
 // ========================================================================
@@ -584,7 +584,7 @@ string *strutil::regexp (const string &src, const string &expr)
 // ========================================================================
 string *strutil::wrap (const string &src, int width)
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	value lines;
 	value words;
 	int crsr;
@@ -608,7 +608,7 @@ string *strutil::wrap (const string &src, int width)
 			{
 				if (crsr)
 				{
-					(*res) += "\n";
+					res += "\n";
 					crsr = 0;
 					--wd;
 				}
@@ -620,7 +620,7 @@ string *strutil::wrap (const string &src, int width)
 					{					
 						lft = word.left (width);
 						word = word.mid (width);
-						(*res).printf ("%s\n", lft.str());
+						res.printf ("%s\n", lft.str());
 					}
 					
 					wd = word.strlen();
@@ -628,15 +628,15 @@ string *strutil::wrap (const string &src, int width)
 				}
 			}
 			
-			if (j && crsr) (*res) += " ";
-			(*res) += word;
+			if (j && crsr) res += " ";
+			res += word;
 			crsr += wd;
 			j++;
 		}
-		(*res) += "\n";
+		res += "\n";
 	}
 	
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -647,7 +647,7 @@ string *strutil::wrap (const string &src, int width)
 // ========================================================================
 string *strutil::htmlize (const string &src)
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	int ln = src.strlen();
 	char c;
 	
@@ -657,28 +657,28 @@ string *strutil::htmlize (const string &src)
 		switch (c)
 		{
 			case '<':
-				(*res).strcat ("&lt;");
+				res.strcat ("&lt;");
 				break;
 			
 			case '>':
-				(*res).strcat ("&gt;");
+				res.strcat ("&gt;");
 				break;
 			
 			case '\r':
-				if (src[i+1] != '\n') (*res).strcat ("<br>\n");
+				if (src[i+1] != '\n') res.strcat ("<br>\n");
 				break;
 			
 			case '\n':
-				(*res).strcat ("<br>\n");
+				res.strcat ("<br>\n");
 				break;
 			
 			default:
-				(*res).strcat (c);
+				res.strcat (c);
 				break;
 		}
 	}
 
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -886,7 +886,8 @@ string *strutil::titlecaps (const string &src)
 	static value *midwords = new value;
 	value splitup;
 	string myword;
-	string *res = new string;
+	
+	returnclass (string) res retain;
 	
 	if (! midwords->exists ("of"))
 	{
@@ -913,11 +914,11 @@ string *strutil::titlecaps (const string &src)
 		{
 			myword.capitalize();
 		}
-		if (i) res->strcat (' ');
-		res->strcat (myword);
+		if (i) res.strcat (' ');
+		res.strcat (myword);
 		i++;
 	}
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -930,7 +931,7 @@ value *strutil::httpurldecode (const string &data)
 {
 	value ampSplit;
 	value pairSplit;
-	value *result = new value;
+	returnclass (value) result retain;
 	
 	ampSplit = strutil::split (data, '&');
 	foreach (e, ampSplit)
@@ -945,11 +946,11 @@ value *strutil::httpurldecode (const string &data)
 		
 		if (key.strlen())
 		{
-			(*result)[key] = val;
+			result[key] = val;
 		}
 	}
 	
-	return result;
+	return &result;
 }
 
 // ========================================================================
@@ -959,7 +960,7 @@ value *strutil::httpurldecode (const string &data)
 // ========================================================================
 string *strutil::httpurlencode (value &data)
 {
-	string *result = new string;
+	returnclass (string) result retain;
 	bool didfirst = false;
 	
 	foreach (nameval, data)
@@ -968,13 +969,13 @@ string *strutil::httpurlencode (value &data)
 		if (nameval.id())
 		{
 			encd = strutil::urlencode (nameval.sval());
-			result->printf ("%s%s=%s", didfirst ? "&" : "",
-							nameval.name(), encd.str());
+			result.printf ("%s%s=%s", didfirst ? "&" : "",
+						   nameval.name(), encd.str());
 			didfirst = true;
 		}
 	}
 	
-	return result;
+	return &result;
 }
 
 // ========================================================================
@@ -1003,7 +1004,7 @@ string *strutil::makepath (const string &str)
 	
 	if (str.strchr ('/') >= 0)
 	{
-		result = new string (str);
+		result = new (memory::retainable::onstack) string (str);
 		(*result) = result->cutatlast ('/');
 	}
 	else
@@ -1027,7 +1028,7 @@ string *strutil::makepath (const string &str)
 // ========================================================================
 string *strutil::uuid (void)
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	static bool seeded (false);
 	if (! seeded)
 	{
@@ -1049,8 +1050,8 @@ string *strutil::uuid (void)
 	rndb ^= kernel.proc.self();
 	rndg ^= ::getuid();
 	
-	(*res).printf ("%08x-%04x-%04x-%04x-%04x%08x", rnda, rndb,
-				   rndc, rnde, rndf, rndg);
+	res.printf ("%08x-%04x-%04x-%04x-%04x%08x", rnda, rndb,
+				rndc, rnde, rndf, rndg);
 	
-	return res;
+	return &res;
 }

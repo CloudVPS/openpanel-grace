@@ -8,6 +8,7 @@
 #include <grace/currency.h>
 #include <grace/dictionary.h>
 #include <grace/stringdict.h>
+#include <grace/retain.h>
 
 #include <grace/checksum.h>
 #include <stdlib.h>
@@ -111,7 +112,7 @@ bool naturalLabelSort (value *, value *, const string &);
 /// The data created in this example would encode to XML like this:
 ///
 /// \verbinclude value_ex1.xml
-class value
+class value : public memory::retainable
 {
 friend class visitor<value>;
 friend class visitor<const value>;

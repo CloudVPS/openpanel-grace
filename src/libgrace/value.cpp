@@ -44,7 +44,7 @@ statstring t_currency;
 // -----------
 // This constructor initializes an empty value object
 // ========================================================================
-value::value (void)
+value::value (void) : memory::retainable ()
 {
 	padding = 1;
 	if (! t_unset)
@@ -87,7 +87,7 @@ value::value (void)
 // -----------
 // This constructor initializes an empty value object
 // ========================================================================
-value::value (const char *orig)
+value::value (const char *orig) : memory::retainable ()
 {
 	padding = 1;
 	if (! t_unset)
@@ -131,7 +131,7 @@ value::value (const char *orig)
 // -----------------
 // This constructor initializes value object with an integer key
 // ========================================================================
-value::value (creatorlabel l, unsigned int k)
+value::value (creatorlabel l, unsigned int k) : memory::retainable ()
 {
 	padding = 2;
 	if (! t_unset)
@@ -173,7 +173,7 @@ value::value (creatorlabel l, unsigned int k)
 // ----------------------
 // This constructor initializes value object with a c-string key
 // ========================================================================
-value::value (creatorlabel l,const char *k)
+value::value (creatorlabel l,const char *k) : memory::retainable ()
 {
 	padding = 3;
 	if (! t_unset)
@@ -216,7 +216,7 @@ value::value (creatorlabel l,const char *k)
 // This constructor initializes value object with a c-string key and a
 // defined numeric key.
 // ========================================================================
-value::value (creatorlabel l, const char *k, unsigned int ki)
+value::value (creatorlabel l, const char *k, unsigned int ki) : memory::retainable ()
 {
 	padding = 4;
 	if (! t_unset)
@@ -260,7 +260,7 @@ value::value (creatorlabel l, const char *k, unsigned int ki)
 // --------------------
 // This constructor initializes value object with a string key
 // ========================================================================
-value::value (creatorlabel l, const string &k)
+value::value (creatorlabel l, const string &k) : memory::retainable ()
 {
 	padding = 5;
 	if (! t_unset)
@@ -309,7 +309,7 @@ value::value (creatorlabel l, const string &k)
 // ----------------
 // Initializes a value as a copy of another value
 // ========================================================================
-value::value (value &v)
+value::value (value &v) : memory::retainable ()
 {
 	padding = 6;
 	if (! t_unset)
@@ -417,8 +417,9 @@ value::value (value &v)
 // Initializes a value as a copy of another value, destroying the
 // original.
 // ========================================================================
-value::value (value *v)
+value::value (value *v) : memory::retainable (v)
 {
+	/*
 	padding = 7;
 	if (! t_unset)
 	{
@@ -442,6 +443,7 @@ value::value (value *v)
 		t_date = "date";
 		t_currency = "currency";
 	}
+	
 	// Initialize as null
 	_type = t_unset;
 	itype = i_unset;
@@ -507,7 +509,7 @@ value::value (value *v)
 	v->ucount = 0;
 	v->arrayalloc = 0;
 
-	delete v;	
+	delete v;	*/
 }
 
 // ========================================================================
@@ -524,7 +526,7 @@ value::~value (void)
 			if (array[i]) delete array[i];
 			array[i] = NULL;
 		}
-		free (array);
+		::free (array);
 		array = NULL;
 		arraysz = 0;
 		arrayalloc = 0;
@@ -640,7 +642,7 @@ value &value::operator= (value *v)
 		{
 			if (array[i]) delete array[i];
 		}
-		free (array);
+		::free (array);
 		array = NULL;
 		arrayalloc = 0;
 		arraysz = 0;
@@ -1446,8 +1448,7 @@ const char ___SPC[] = "                                                         
 const char *_VALUE_INDENT_TABS="\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
 value *value::filter (const statstring &label, const string &what) const
 {
-	value *res;
-	res = new value;
+	returnclass (value) res retain;
 	
 	for (int i=0; i<arraysz; ++i)
 	{
@@ -1455,15 +1456,15 @@ value *value::filter (const statstring &label, const string &what) const
 		{
 			if (array[i]->_name)
 			{
-				(*res)[array[i]->_name] = (*(array[i]));
+				res[array[i]->_name] = (*(array[i]));
 			}
 			else
 			{
-				(*res).newval(array[i]->type()) = (*(array[i]));
+				res.newval(array[i]->type()) = (*(array[i]));
 			}
 		}
 	}
-	return res;
+	return &res;
 }
 
 void value::clear (void)
@@ -1477,7 +1478,7 @@ void value::clear (void)
 	}
 	if (array)
 	{
-		free (array);
+		::free (array);
 		array = NULL;
 	}
 	arraysz = 0;
@@ -1518,112 +1519,115 @@ void value::alloc (unsigned int count)
 
 value *value::cutleft (int pcnt)
 {
-	value *res = new value;
-	if (! pcnt) return res;
-	if (! arraysz) return res;
+	returnclass (value) res retain;
+
+	if (! pcnt) return &res;
+	if (! arraysz) return &res;
 	
 	int cnt = pcnt;
 	int i;
 	
 	if (cnt<0) cnt += arraysz;
-	if (cnt<0) return res;
+	if (cnt<0) return &res;
 	if (cnt>arraysz) cnt = arraysz;
 	
 	for (i=0; i<cnt; ++i)
 	{
 		if (array[0]->id())
 		{
-			(*res)[array[0]->id()] = *(array[0]);
+			res[array[0]->id()] = *(array[0]);
 		}
 		else
 		{
-			(*res).newval() = *(array[0]);
+			res.newval() = *(array[0]);
 		}
 		rmindex (0);
 	}
-	return res;
+	return &res;
 }
 
 value *value::copyleft (int pcnt) const
 {
-	value *res = new value;
-	if (! pcnt) return res;
-	if (! arraysz) return res;
+	returnclass (value) res retain;
+
+	if (! pcnt) return &res;
+	if (! arraysz) return &res;
 	
 	int cnt = pcnt;
 	int i;
 	
 	if (cnt<0) cnt += arraysz;
-	if (cnt<0) return res;
+	if (cnt<0) return &res;
 	if (cnt>arraysz) cnt = arraysz;
 	
 	for (i=0; i<cnt; ++i)
 	{
 		if (array[i]->id())
 		{
-			(*res)[array[i]->id()] = *(array[i]);
+			res[array[i]->id()] = *(array[i]);
 		}
 		else
 		{
-			(*res).newval() = *(array[i]);
+			res.newval() = *(array[i]);
 		}
 	}
-	return res;
+	return &res;
 }
 
 value *value::cutright (int pcnt)
 {
-	value *res = new value;
-	if (! pcnt) return res;
-	if (! arraysz) return res;
+	returnclass (value) res retain;
+	if (! pcnt) return &res;
+	if (! arraysz) return &res;
 	
 	int cnt = pcnt;
 	int i;
 	
 	if (cnt<0) cnt += arraysz;
-	if (cnt<0) return res;
+	if (cnt<0) return &res;
 	if (cnt>arraysz) cnt = arraysz;
 	
 	for (i=0; i<cnt; ++i)
 	{
 		if (array[arraysz-1]->id())
 		{
-			(*res)[array[arraysz-1]->id()] = *(array[arraysz-1]);
+			res[array[arraysz-1]->id()] = *(array[arraysz-1]);
 		}
 		else
 		{
-			(*res).newval() = *(array[arraysz-1]);
+			res.newval() = *(array[arraysz-1]);
 		}
 		rmindex (-1);
 	}
-	return res;
+	return &res;
 }
 
 value *value::copyright (int pcnt) const
 {
-	value *res = new value;
-	if (! pcnt) return res;
-	if (! arraysz) return res;
+	returnclass (value) res retain;
+
+	if (! pcnt) return &res;
+	if (! arraysz) return &res;
 	
 	int cnt = pcnt;
 	int i;
 	
 	if (cnt<0) cnt += arraysz;
-	if (cnt<0) return res;
+	if (cnt<0) return &res;
 	if (cnt>arraysz) cnt = arraysz;
 	
 	for (i=0; i<cnt; ++i)
 	{
 		if (array[(arraysz-1)-i]->id())
 		{
-			(*res)[array[(arraysz-1)-i]->id()] = *(array[(arraysz-1)-i]);
+			res[array[(arraysz-1)-i]->id()] = *(array[(arraysz-1)-i]);
 		}
 		else
 		{
-			(*res).newval() = *(array[(arraysz-1)-i]);
+			res.newval() = *(array[(arraysz-1)-i]);
 		}
 	}
-	return res;
+	return &res;
 }
 
 bool value::treecmp (const value &other) const

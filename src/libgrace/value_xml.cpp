@@ -69,7 +69,8 @@ void value::fromxml (const string &xml, xmlschema *schema)
 	}
 	if (array)
 	{
-		free (array);
+
+		::free (array);
 		array = NULL;
 	}
 	arrayalloc = 0;
@@ -141,6 +142,7 @@ void value::fromxml (const string &xml, xmlschema *schema)
 			}
 			else if (tagtype.str()[0] == '/')
 			{
+				if (treestack.count() == 0) break;
 				crsr = treestack.pull ();
 				if (schema && (! schema->iscontainerclass (crsr->_type)))
 				{

@@ -864,7 +864,7 @@ const string &xmlschema::resolvecontainervalueclass (const statstring &thecl)
 // ========================================================================
 string *xmlschema::resolvecontainerarrayclass (const statstring &thecl)
 {
-	string *result = new string;
+	returnclass (string) result retain;
 	visitor<const value> probe (schema);
 
 	if (probe.enter (thecl))
@@ -875,15 +875,15 @@ string *xmlschema::resolvecontainerarrayclass (const statstring &thecl)
 			{
 				if (probe.obj().exists ("array"))
 				{
-					(*result) = probe.obj()["array"].sval();
-					return result;
+					result = probe.obj()["array"].sval();
+					return &result;
 				}
 			}
 		}
 	}
 	
-	(*result) = "array";
-	return result;
+	result = "array";
+	return &result;
 }
 
 // ========================================================================
@@ -891,7 +891,7 @@ string *xmlschema::resolvecontainerarrayclass (const statstring &thecl)
 // ========================================================================
 string *xmlschema::resolvecontainerdictclass (const statstring &thecl)
 {
-	string *result = new string;
+	returnclass (string) result retain;
 	visitor<const value> probe (schema);
 
 	if (probe.enter (thecl))
@@ -902,15 +902,15 @@ string *xmlschema::resolvecontainerdictclass (const statstring &thecl)
 			{
 				if (probe.obj().exists ("dict"))
 				{
-					(*result) = probe.obj()["dict"].sval();
-					return result;
+					result = probe.obj()["dict"].sval();
+					return &result;
 				}
 			}
 		}
 	}
 	
-	(*result) = "dict";
-	return result;
+	result = "dict";
+	return &result;
 }
 
 // ========================================================================
@@ -919,7 +919,7 @@ string *xmlschema::resolvecontainerdictclass (const statstring &thecl)
 string *xmlschema::resolvecontainerboolclass (const statstring &thecl,
 											  bool val)
 {
-	string *result = new string;
+	returnclass (string) result retain;
 	visitor<const value> probe (schema);
 
 	if (probe.enter (thecl))
@@ -930,25 +930,25 @@ string *xmlschema::resolvecontainerboolclass (const statstring &thecl,
 			{
 				if (probe.obj().exists (t_bool))
 				{
-					(*result) = probe.obj()[t_bool].sval();
-					return result;
+					result = probe.obj()[t_bool].sval();
+					return &result;
 				}
 				else if (val && probe.obj().exists (t_bool_true))
 				{
-					(*result) = probe.obj()[t_bool_true].sval();
-					return result;
+					result = probe.obj()[t_bool_true].sval();
+					return &result;
 				}
 				else if (probe.obj().exists (t_bool_false))
 				{
-					(*result) = probe.obj()[t_bool_true].sval();
-					return result;
+					result = probe.obj()[t_bool_true].sval();
+					return &result;
 				}
 			}
 		}
 	}
 	
-	(*result) = "bool";
-	return result;
+	result = "bool";
+	return &result;
 }
 
 // ========================================================================
@@ -957,7 +957,7 @@ string *xmlschema::resolvecontainerboolclass (const statstring &thecl,
 string *xmlschema::resolvecontainertypeclass (const statstring &thecl,
 											  unsigned char itype)
 {
-	string *result = new string;
+	returnclass (string) result retain;
 	statstring realtype;
 	
 	switch (itype)
@@ -984,15 +984,15 @@ string *xmlschema::resolvecontainertypeclass (const statstring &thecl,
 			{
 				if (probe.obj().exists (realtype))
 				{
-					(*result) = probe.obj()[realtype].sval();
-					return result;
+					result = probe.obj()[realtype].sval();
+					return &result;
 				}
 			}
 		}
 	}
 	
-	(*result) = realtype.sval();
-	return result;
+	result = realtype.sval();
+	return &result;
 }
 
 // ========================================================================

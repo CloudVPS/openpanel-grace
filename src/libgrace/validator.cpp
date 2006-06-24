@@ -589,21 +589,21 @@ bool validator::matchDataMaxSize (const value &obj, int val)
 // ========================================================================
 string *validator::encodeidchain (void)
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	
 	foreach (e, idchain)
 	{
-		res->strcat ('/');
+		res.strcat ('/');
 		if (! e.sval().validate (V_NOENCODE))
 		{
-			res->printf ("\"%S\"", e.cval());
+			res.printf ("\"%S\"", e.cval());
 		}
 		else
 		{
-			res->strcat (e.sval());
+			res.strcat (e.sval());
 		}
 	}
-	return res;
+	return &res;
 }
 
 void validator::makeerror (string &into, int errorcode,

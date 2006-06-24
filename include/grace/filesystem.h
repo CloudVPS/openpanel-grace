@@ -1,6 +1,7 @@
 #ifndef _FILESYSTEM_H
 #define _FILESYSTEM_H 1
 
+#include <grace/retain.h>
 #include <grace/str.h>
 #include <grace/strutil.h>
 #include <grace/file.h>

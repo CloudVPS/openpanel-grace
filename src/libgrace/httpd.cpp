@@ -1086,7 +1086,8 @@ bool httpdauthenticator::authenticate (const string &u, const string &p)
 
 value *httpdauthenticator::getuser (const string &u)
 {
-	return new value;
+	returnclass (value) result retain;
+	return &result;
 }
 
 valueauth::valueauth (const value &db) : httpdauthenticator ()
@@ -1120,12 +1121,13 @@ bool valueauth::authenticate (const string &username, const string &passwd)
 
 value *valueauth::getuser (const string &username)
 {
-	value *res = new value;
+	returnclass (value) res retain;
+
 	if (userdb.exists (username))
 	{
-		(*res) = userdb[username].attributes();
+		res = userdb[username].attributes();
 	}
-	return res;
+	return &res;
 }
 
 pwfileauth::pwfileauth (const string &fname) : httpdauthenticator ()
@@ -1293,7 +1295,8 @@ bool pwfileauth::authenticate (const string &u, const string &pw)
 
 value *pwfileauth::getuser (const string &u)
 {
-	value *res = new value;
+	returnclass (value) res retain;
+
 	checkrecord ();
 	lck.lockr ();
 	if (userdb.exists (u))
@@ -1301,11 +1304,11 @@ value *pwfileauth::getuser (const string &u)
 		// FIXME: thread bullshit this should not be necessary
 		foreach (e, userdb[u])
 		{
-			(*res)[e.name()] = e.cval();
+			res[e.name()] = e.cval();
 		}
 	}
 	lck.unlock ();
-	return res;
+	return &res;
 }
 
 serverpage::serverpage (httpd &pparent, const string &uri)

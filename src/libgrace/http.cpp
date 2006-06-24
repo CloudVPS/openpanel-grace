@@ -85,7 +85,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 		{
 			error.crop(0);
 			error.printf ("%s is not a valid url", url.str());
-			return new string;
+			return NULL;
 		}
 	}
 	string rawuri;
@@ -112,7 +112,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 			error.crop(0);
 			error.printf ("Could not connect to proxy at address: '%s' port %i",
 					hostpart.str(), port);
-			return new string;
+			return NULL;
 		}	
 	}
 	else
@@ -122,7 +122,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 			error.crop(0);
 			error.printf ("Could not connect to '%s' port %i",
 					hostpart.str(), port);
-			return new string;
+			return NULL;
 		}
 	}
 	
@@ -165,7 +165,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 	}
 	catch (...)
 	{
-		return new string;
+		return NULL;
 	}
 }
 
@@ -189,7 +189,7 @@ string *httpsocket::get (const string &url, value *hdr)
 		else
 		{
 			error.printf ("%s is not a valid url", url.str());
-			return new string;
+			return NULL;
 		}
 	}
 	string rawuri;
@@ -213,7 +213,7 @@ string *httpsocket::get (const string &url, value *hdr)
 		{
 			error.printf ("Could not connect to proxy at address: '%s' port %i",
 					hostpart.str(), port);
-			return new string;
+			return NULL;
 		}	
 	}
 	else
@@ -221,7 +221,7 @@ string *httpsocket::get (const string &url, value *hdr)
 		if (! connectToHost (hostpart, port))
 		{
 			error = "Connection failed";
-			return new string;
+			return NULL;
 		}
 	}
 	
@@ -257,7 +257,7 @@ string *httpsocket::get (const string &url, value *hdr)
 	}
 	catch (...)
 	{
-		return new string;
+		return NULL;
 	}
 }
 
@@ -463,10 +463,10 @@ bool httpsocket::getData (string &into, size_t contentLength)
 // ========================================================================
 string *httpsocket::getResult (value *hdr)
 {
+	returnclass (string) result retain;
 	value *headers;
 	bool gotHeaders = false;
 	string line;
-	string *result;
 	value mySplit;
 	size_t csz = 0;
 	int thestatus = 100;
@@ -485,12 +485,11 @@ string *httpsocket::getResult (value *hdr)
 				{
 					error = "Connection timed out getting headers";
 					status = 0;
-					result = new string;
 					_sock.close();
 					_host.crop(0);
 					_port = 0;
 					delete headers;
-					return result;
+					return &result;
 				}
 			}
 			
@@ -532,11 +531,10 @@ string *httpsocket::getResult (value *hdr)
 			if ((*headers)["Transfer-Encoding"] == "chunked")
 			{
 				if (! hdr) delete headers;
-				result = new string;
 				
 				try
 				{
-					if (getChunked (*result)) return result;
+					if (getChunked (result)) return &result;
 				}
 				catch (...)
 				{
@@ -545,31 +543,29 @@ string *httpsocket::getResult (value *hdr)
 					_sock.close ();
 					_host.crop (0);
 				}
-				result->crop (0);
-				return result;
+				result.crop (0);
+				return &result;
 			}
 		}
 
 		if (! hdr) delete headers;					
-		result = new string;
 		
-		if (getData (*result, csz))
+		if (getData (result, csz))
 		{
-			return result;
+			return &result;
 		}
-		result->crop (0);
-		return result;
+		result.crop (0);
+		return &result;
 	}
 	catch (...)
 	{
 		error = "Connection failure while getting headers";
 		status = 0;
-		result = new string;
 		_sock.close();
 		_host.crop(0);
 		_port = 0;
 		delete headers;
-		return result;
+		return &result;
 	}
 }
 

@@ -428,11 +428,12 @@ void cmdtoken_if::run (value &v, string &buf)
 
 string *cmdtoken_parsedata (value &env, value &str)
 {
-	string *res = new string;
+	returnclass (string) res retain;
+
 	if (str.count() == 1)
 	{
-		(*res) = str[0].sval();
-		return res;
+		res = str[0].sval();
+		return &res;
 	}
 	
 	int i=0;
@@ -441,15 +442,15 @@ string *cmdtoken_parsedata (value &env, value &str)
 	{
 		if (i & 1)
 		{
-			(*res) += cmdtoken_parseval (env, element.sval());
+			res += cmdtoken_parseval (env, element.sval());
 		}
 		else
 		{
-			(*res) += element.sval();
+			res += element.sval();
 		}
 		++i;
 	}
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -460,8 +461,9 @@ string *cmdtoken_parsedata (value &env, value &str)
 
 string *cmdtoken_parseval (value &env, const string &_expr)
 {
+	returnclass (string) res retain;
+
 	string expr;
-	string *res = new string;
 	value myval;
 	char prefix;
 	
@@ -504,25 +506,25 @@ string *cmdtoken_parseval (value &env, const string &_expr)
 	switch (prefix)
 	{
 		case '#':
-			(*res).printf ("%i", myval.ival());
+			res.printf ("%i", myval.ival());
 			break;
 		case '/':
-			(*res) = myval.sval();
-			(*res).escape();
+			res = myval.sval();
+			res.escape();
 			break;
 		case '`':
-			(*res) = env[myval.sval()];
+			res = env[myval.sval()];
 			break;
 		case '^':
-			(*res) = strutil::htmlize (myval.sval());
+			res = strutil::htmlize (myval.sval());
 			break;
 		
 		default:
-			(*res) = myval.sval();
+			res = myval.sval();
 			break;
 	}
 	
-	return res;
+	return &res;
 }
 
 // ========================================================================

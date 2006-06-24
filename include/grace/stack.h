@@ -24,7 +24,7 @@ public:
 				 }
 				~stack (void)
 				 {
-				 	if (array) free (array);
+				 	if (array) ::free (array);
 				 }
 				
 	inline kind	*pull (void)
@@ -34,8 +34,11 @@ public:
 						--cnt;
 						return array[cnt];
 					}
+					if (array) ::free (array);
+					array = NULL;
 					throw (exStackUnderFlow);
 				 }
+				 
 	inline void	 push (kind *k)
 				 {
 				 	if (! array)

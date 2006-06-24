@@ -24,6 +24,7 @@
 #undef tolower
 
 #include <grace/reg.h>
+#include <grace/retain.h>
 
 // ========================================================================
 // The refblock is a structure for holding a c-string with a reference
@@ -87,7 +88,7 @@ threadref_t getref (void);
 
 /// Generic string storage.
 /// Uses copy-on-write shared storage for efficiency.
-class string
+class string : public memory::retainable
 {
 public:
 					 /// Constructor.
@@ -205,8 +206,8 @@ public:
 					 		crop (0);
 					 		return *this;
 					 	}
-					 	this->strcpy (*str);
-					 	delete str;
+					 	
+					 	retainvalue (str);
 						return *this;
 					 }
 					 
@@ -236,8 +237,9 @@ public:
 					 }
 	inline string	&operator+= (string *str)
 					 {
-					 	strcat (*str);
-						delete str;
+					 	string tmp;
+					 	tmp.retainvalue (str);
+					 	strcat (tmp);
 						return (*this);
 					 }
 	
@@ -700,22 +702,25 @@ public:
 					 /// \return Cut data.
 	inline string	*cutat (char c)
 					 {
-					 	string *res = new string;
-					 	if (! size) return res;
+					 	returnclass (string) res retain;
+
+					 	if (! size) return &res;
 					 	int isthere = strchr (c);
-						if (isthere < 0) return res;
-						(*res) = *this;
+						if (isthere < 0) return &res;
+						
+						res = *this;
 						docopyonwrite();
-						(*res).crop (isthere);
+						res.crop (isthere);
+						
 						if ( ((unsigned int)isthere+1) >= size )
 						{
 							data->v[0] = size = 0;
-							return res;
+							return &res;
 						}
 						memcpy (data->v, data->v + isthere+1, size - (isthere+1));
 						size -= (isthere+1);
 						data->v[size] = '\0';
-						return res;
+						return &res;
 					 }
 					 
 					 /// Split the string in two parts. Returns a new
@@ -733,25 +738,29 @@ public:
 					 /// \return Cut data.
 	inline string	*cutatlast (char c)
 					 {
-					 	string *res = new string;
-					 	if (! size) return res;
+					 	returnclass (string) res retain;
+
+					 	if (! size) return &res;
 					 	int nextmatch;
 					 	int isthere = strchr (c);
-						if (isthere < 0) return res;
+						if (isthere < 0) return &res;
+						
 						while ( (nextmatch = strchr (c, isthere+1)) >= 0 )
 							isthere = nextmatch;
-						(*res) = *this;
+							
+						res = *this;
 						docopyonwrite();
-						(*res).crop (isthere);
+						res.crop (isthere);
+						
 						if ( ((unsigned int)isthere+1) >= size )
 						{
 							data->v[0] = size = 0;
-							return res;
+							return &res;
 						}
 						memcpy (data->v, data->v + isthere+1, size - (isthere+1));
 						size -= (isthere+1);
 						data->v[size] = '\0';
-						return res;
+						return &res;
 					 }
 					 
 					 /// Split the string in two parts. Returns a new
@@ -766,23 +775,26 @@ public:
 					 /// \return Cut data.
 	inline string	*cutat (const char *c)
 					 {
+					 	returnclass (string) res retain;
 					 	int ssz = ::strlen (c);
-					 	string *res = new string;
-					 	if (! size) return res;
+
+					 	if (! size) return &res;
 					 	int isthere = strstr (c);
-					 	if (isthere < 0) return res;
-					 	(*res) = *this;
-					 	(*res).crop (isthere);
+					 	if (isthere < 0) return &res;
+					 	
+					 	res = *this;
+					 	res.crop (isthere);
 						docopyonwrite();
+						
 						if ( ((unsigned int)isthere+1) >= size )
 						{
 							data->v[0] = size = 0;
-							return res;
+							return &res;
 						}
 					 	memcpy (data->v, data->v + isthere+ssz, size - (isthere+ssz));
 					 	size -= (isthere+ssz);
 					 	data->v[size] = '\0';
-					 	return res;
+					 	return &res;
 					 }
 
 					 /// Split the string in two parts. Returns a new
@@ -797,26 +809,31 @@ public:
 					 /// \return Cut data.
 	inline string	*cutatlast (const char *c)
 					 {
+					 	returnclass (string) res retain;
 					 	int ssz = ::strlen (c);
-					 	string *res = new string;
-					 	if (! size) return res;
+
+					 	if (! size) return &res;
 					 	int nextmatch;
 					 	int isthere = strstr (c);
-					 	if (isthere < 0) return res;
+					 	if (isthere < 0) return &res;
+					 	
 					 	while ( (nextmatch = strstr (c, isthere+1))	>0 )
 					 		isthere = nextmatch;
-					 	(*res) = *this;
-					 	(*res).crop (isthere);
+					 		
+					 	res = *this;
+					 	res.crop (isthere);
 						docopyonwrite();
+						
 						if ( ((unsigned int)isthere+1) >= size )
 						{
 							data->v[0] = size = 0;
-							return res;
+							return &res;
 						}
+						
 					 	memcpy (data->v, data->v + isthere+ssz, size - (isthere+ssz));
 					 	size -= (isthere+ssz);
 					 	data->v[size] = '\0';
-					 	return res;
+					 	return &res;
 					 }
 	
 					 /// Split the string in two parts. Returns a new
