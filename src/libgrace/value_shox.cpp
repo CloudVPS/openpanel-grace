@@ -223,26 +223,26 @@ void value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 // ========================================================================
 string *value::toshox (void) const
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	size_t offs;
 	
-	(*res).strcat ("SHoX");
-	offs = (*res).binput16u (4, 0x0100); // Data format version
-	offs = (*res).binput16u (6, 0x0100); // Minimum required version
+	res.strcat ("SHoX");
+	offs = res.binput16u (4, 0x0100); // Data format version
+	offs = res.binput16u (6, 0x0100); // Minimum required version
 	
 	string		 shoxdata;
 	stringdict	 shoxdict;
 	
 	printshox (shoxdata, shoxdict);
 	
-	offs = (*res).binputvint (offs, shoxdict.count());
+	offs = res.binputvint (offs, shoxdict.count());
 	for (unsigned int i=0; i<shoxdict.count(); ++i)
 	{
-		offs = (*res).binputvstr (offs, shoxdict.get (i));
+		offs = res.binputvstr (offs, shoxdict.get (i));
 	}
 	
-	(*res).strcat (shoxdata);
-	return res;
+	res.strcat (shoxdata);
+	return &res;
 }
 
 // ========================================================================

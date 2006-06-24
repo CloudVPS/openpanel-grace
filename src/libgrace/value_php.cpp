@@ -299,9 +299,9 @@ const char *value::phpdeserialize (const char *phpdata, bool recursed)
 // ========================================================================
 string *value::phpserialize (bool withattr)
 {
-	string *result = new string;
-	printphp (*result, withattr);
-	return result;
+	returnclass (string) result retain;
+	printphp (result, withattr);
+	return &result;
 }
 
 // ========================================================================

@@ -22,21 +22,22 @@
 // ========================================================================
 string *value::tocsv (bool withHeaders, const char *indexName)
 {
-	string *out = new string;
+	returnclass (string) out retain;
+
 	value *child;
 	int columnCount;
 	int i;
 	int row;
 	
 	// no data, no cookie
-	if (! arraysz) return out;
+	if (! arraysz) return &out;
 	child = array[0];
 	columnCount = child->count();
 	
 	// print the headers first, if we need them
 	if (withHeaders)
 	{
-		out->printf ("\"%S\"", indexName);
+		out.printf ("\"%S\"", indexName);
 		for (i=0; i<columnCount; ++i)
 		{
 			string hdr;
@@ -46,9 +47,9 @@ string *value::tocsv (bool withHeaders, const char *indexName)
 			else
 				hdr.printf ("Value%i",i);
 
-			out->printf (",\"%S\"", hdr.str());
+			out.printf (",\"%S\"", hdr.str());
 		}
-		out->printf ("\n");
+		out.printf ("\n");
 	}
 	
 	string cdata;
@@ -61,11 +62,11 @@ string *value::tocsv (bool withHeaders, const char *indexName)
 		
 		if (child->label())
 		{
-			out->printf ("\"%S\",", child->name());
+			out.printf ("\"%S\",", child->name());
 		}
 		else
 		{
-			out->printf ("%i,", row);
+			out.printf ("%i,", row);
 		}
 		
 		// we keep to a strict columncount, if the child data is no
@@ -80,30 +81,30 @@ string *value::tocsv (bool withHeaders, const char *indexName)
 				case i_date:
 				case i_bool:
 					cdata = strutil::encodecsv ((*child)[i].sval());
-					out->printf ("\"%S\"%s",
+					out.printf ("\"%S\"%s",
 					     cdata.str(),
 						 ((i+1)<columnCount) ? ",":"");
 					break;
 
 				case i_double:
-					out->printf ("%f%s", (*child)[i].dval(), 
+					out.printf ("%f%s", (*child)[i].dval(), 
 								 ((i+1)<columnCount) ? ",":"");
 					break;
 					
 				case i_int:
-					out->printf ("%i%s", (*child)[i].ival(),
+					out.printf ("%i%s", (*child)[i].ival(),
 								 ((i+1)<columnCount) ? ",":"");
 					break;
 				
 				case i_currency:
-					printcurrency (*out, (*child)[i].getcurrency());
+					printcurrency (out, (*child)[i].getcurrency());
 					break;
 			}
 		}
-		out->printf ("\n");
+		out.printf ("\n");
 	}
 	
-	return out;
+	return &out;
 }
 
 // ========================================================================

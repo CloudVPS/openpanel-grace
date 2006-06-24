@@ -329,14 +329,14 @@ void value::save (file &f, bool compact) const
 
 string *value::encode (bool compact) const
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	
 	for (int x=0; x<arraysz; ++x)
 	{
-		array[x]->printstr (0, *res, compact);
+		array[x]->printstr (0, res, compact);
 	}
 	
-	return res;
+	return &res;
 }
 
 

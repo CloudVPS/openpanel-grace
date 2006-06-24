@@ -364,13 +364,12 @@ size_t value::parsecompressed (size_t offs, string &from, xmlschema &schema)
 
 string *value::tocxml (xmlschema &schema)
 {
+	returnclass (string) into retain;
 	value *root = new value;
-	string *into;
-	into = new string;
 	
-	printcompressed (0, *into, *root, schema);
+	printcompressed (0, into, *root, schema);
 	delete root;
-	return into;
+	return &into;
 }
 
 // ========================================================================
