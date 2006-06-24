@@ -296,19 +296,21 @@ void xmlschema::nstransattr (value &nsNames, statstring &attr, const value &v)
 			nsAction = schema[".options"]["namespaces"][nsUri](key::action);
 			nsReplace = schema[".options"]["namespaces"][nsUri](key::prefix);
 			
-			if (nsAction == "keep")
+			caseselector (nsAction)
 			{
-				nsNames[atName] = nsName;
-				nsReplace = nsName;
-			}
-			else if (nsAction == "strip")
-			{
-				nsNames[atName] = "";
-				nsReplace.crop (0);
-			}
-			else /* action="replace" */
-			{
-				nsNames[atName] = nsReplace;
+				incaseof ("keep") :
+					nsNames[atName] = nsName;
+					nsReplace = nsName;
+					break;
+				
+				incaseof ("strip") :
+					nsNames[atName] = "";
+					nsReplace.crop (0);
+					break;
+				
+				defaultcase :
+					nsNames[atName] = nsReplace;
+					break;
 			}
 			
 			visitor<const value> probe (schema[".options"]["namespaces"][nsUri]);
@@ -744,37 +746,37 @@ const statstring &xmlschema::resolveunion (const value *that,
 		matchlabel = udef(key::label);
 		matchdata = udef.sval();
 	
-		if (matchtype == "attribexists")
+		caseselector (matchtype)
 		{
-			if (that->attribexists (matchlabel))
-				return udef.id();
-		}
-		else if (matchtype == "memberexists")
-		{
-			if (that->exists (matchlabel))
-				return udef.id();
-		}
-		else if (matchtype == "attribvalue")
-		{
-			if (that->attribexists (matchlabel))
-			{
-				if ((*that)(matchlabel).sval() == matchdata)
+			incaseof ("attribexists") :
+				if (that->attribexists (matchlabel))
 					return udef.id();
-			}
-		}
-		else if (matchtype == "membervalue")
-		{
-			if (that->exists (matchlabel))
-			{
-				string tmp;
-				tmp = (*that)[matchlabel].sval();
-				if (tmp == matchdata)
+				break;
+			
+			incaseof ("memberexists") :
+				if (that->exists (matchlabel))
 					return udef.id();
-			}
-		}
-		else if (matchtype == "default")
-		{
-			return udef.id();
+				break;
+			
+			incaseof ("attribvalue") :
+				if (that->attribexists (matchlabel))
+				{
+					if ((*that)(matchlabel).sval() == matchdata)
+						return udef.id();
+				}
+				break;
+			
+			incaseof ("membervalue") :
+				if (that->exists (matchlabel))
+				{
+					string tmp;
+					tmp = (*that)[matchlabel].sval();
+					if (tmp == matchdata)
+						return udef.id();
+				}
+				break;
+			
+			defaultcase : return udef.id();
 		}
 	}
 	return theclass;

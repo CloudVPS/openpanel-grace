@@ -1,5 +1,13 @@
 0.8.13     In production                              <pi@madscience.nl>
 
+           * Created new baseclass memory::retainable, uses more
+             efficient preallocation for temporary return values.
+           
+           * Added "returnclass (type) name retain" macro to make
+             it easy to create return values that can be passed
+             as a pointer but can be accessed with a reference
+             throughout the function.
+
            * Added nifty foreach macro to visitor.h.
 
            * Allow xml schemas to define the tag type of an xml

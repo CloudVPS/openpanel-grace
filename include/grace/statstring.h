@@ -5,6 +5,7 @@
 #include <grace/str.h>
 #include <grace/checksum.h>
 #include <grace/lock.h>
+#include <grace/case.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <signal.h>

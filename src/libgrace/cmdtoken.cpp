@@ -242,89 +242,93 @@ void scriptparser::build (const string &src)
 				args.crop();
 			}
 			
-			if (cmd == "@section")
+			caseselector (cmd)
 			{
-				c = new cmdtoken (nopToken, this);
-				crsr++;
-				labels[args] = crsr;
-				cc = c;
-			}
-			else if (cmd == "@switch")
-			{
-				cc = new cmdtoken_switch (args,cc);
-			}
-			else if (cmd == "@endswitch")
-			{
-				if ( (! cc->parent) || (cc->parent == this) )
-					throw (EX_SCRIPT_ERR_UNBALANCED);
+				incaseof ("@section") :
+					c = new cmdtoken (nopToken, this);
+					crsr++;
+					labels[args] = crsr;
+					cc = c;
+					break;
+
+				incaseof ("@switch") :
+					cc = new cmdtoken_switch (args,cc);
+					break;
 				
-				if (cc->type == caseToken)
-				{
+				incaseof ("@endswitch") :
 					if ( (! cc->parent) || (cc->parent == this) )
 						throw (EX_SCRIPT_ERR_UNBALANCED);
+					
+					if (cc->type == caseToken)
+					{
+						if ( (! cc->parent) || (cc->parent == this) )
+							throw (EX_SCRIPT_ERR_UNBALANCED);
+							
+						cc = cc->parent;
+					}
+					if (cc->type != switchToken)
+					{
+						throw (EX_SCRIPT_ERR_UNBALANCED);
+					}
+					break;
+				
+				incaseof ("@case") :
+					if (cc->type == caseToken)
+					{
+						if ( (! cc->parent) || (cc->parent == this) )
+							throw (EX_SCRIPT_ERR_UNBALANCED);
 						
-					cc = cc->parent;
-				}
-				if (cc->type != switchToken)
-				{
-					throw (EX_SCRIPT_ERR_UNBALANCED);
-				}
-			}
-			else if (cmd == "@case")
-			{
-				if (cc->type == caseToken)
-				{
+						cc = cc->parent;
+					}
+					if (cc->type != switchToken)
+					{
+						throw (EX_SCRIPT_ERR_UNBALANCED);
+					}
+					
+					cc = new cmdtoken_case (args, cc);
+					break;
+				
+				incaseof ("@loop") :
+					cc = new cmdtoken_loop (args,cc);
+					break;
+
+				incaseof ("@endloop") :
+					if (cc->parent && (cc->parent != this))
+						cc = cc->parent;
+					break;
+
+				incaseof ("@if") :
+					cc = new cmdtoken_if (args,cc);
+					cc = new cmdtoken (nopToken, cc);
+					break;
+				
+				incaseof ("@else") :
 					if ( (! cc->parent) || (cc->parent == this) )
 						throw (EX_SCRIPT_ERR_UNBALANCED);
 					
 					cc = cc->parent;
-				}
-				if (cc->type != switchToken)
-				{
-					throw (EX_SCRIPT_ERR_UNBALANCED);
-				}
-				
-				cc = new cmdtoken_case (args, cc);
-			}
-			else if (cmd == "@loop")
-			{
-				cc = new cmdtoken_loop (args,cc);
-			}
-			else if (cmd == "@endloop")
-			{
-				if (cc->parent && (cc->parent != this))
+					if (cc->type != condToken)
+						throw (EX_SCRIPT_ERR_UNBALANCED);
+					
+					cc = new cmdtoken (nopToken, cc);
+					break;
+					
+				incaseof ("@endif") :
+					if ( (! cc->parent) || (cc->parent == this) )
+						throw (EX_SCRIPT_ERR_UNBALANCED);
+	
 					cc = cc->parent;
-			}
-			else if (cmd == "@if")
-			{
-				cc = new cmdtoken_if (args,cc);
-				cc = new cmdtoken (nopToken, cc);
-			}
-			else if (cmd == "@else")
-			{
-				if ( (! cc->parent) || (cc->parent == this) )
-					throw (EX_SCRIPT_ERR_UNBALANCED);
-				
-				cc = cc->parent;
-				if (cc->type != condToken)
-					throw (EX_SCRIPT_ERR_UNBALANCED);
-				
-				cc = new cmdtoken (nopToken, cc);
-			}
-			else if (cmd == "@endif")
-			{
-				if ( (! cc->parent) || (cc->parent == this) )
-					throw (EX_SCRIPT_ERR_UNBALANCED);
-
-				cc = cc->parent;
-				if ((cc->type != condToken) || (! cc->parent))
-					throw (EX_SCRIPT_ERR_UNBALANCED);
-
-				cc = cc->parent;
-			}
-			else if  (cmd == "@set")
-			{
-				new cmdtoken_set (args,cc);
+					if ((cc->type != condToken) || (! cc->parent))
+						throw (EX_SCRIPT_ERR_UNBALANCED);
+	
+					cc = cc->parent;
+					break;
+					
+				incaseof ("@set") :
+					new cmdtoken_set (args, cc);
+					break;
+					
+				defaultcase : break;
 			}
 		}
 		else
@@ -387,26 +391,15 @@ void cmdtoken_if::run (value &v, string &buf)
 		left = cmdtoken_parsedata (v, vleft);
 		right = cmdtoken_parsedata (v, vright);
 		opcode = condition[1];
-		
-		if (opcode == "==")
+
+		caseselector (opcode)
 		{
-			condset = (left == right);
-		}
-		else if (opcode == "!=")
-		{
-			condset = (left != right);
-		}
-		else if (opcode == "~=")
-		{
-			condset = left.globcmp (right);
-		}
-		else if (opcode == "<")
-		{
-			condset = (left.strcasecmp (right) < 0);
-		}
-		else if (opcode == ">")
-		{
-			condset = (left.strcasecmp (right) > 0);
+			incaseof ("==") : condset = (left == right); break;
+			incaseof ("!=") : condset = (left != right); break;
+			incaseof ("~=") : condset = left.globcmp (right); break;
+			incaseof ("<")  : condset = (left.strcasecmp (right)<0); break;
+			incaseof (">")  : condset = (left.strcasecmp (right)>0); break;
+			defaultcase     : condset = false;
 		}
 	}
 	
