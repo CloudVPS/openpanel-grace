@@ -19,6 +19,7 @@ OBJ			= 	application.o \
 				process.o \
 				reg.o \
 				regexpression.o \
+				retain.o \
 				ringbuffer.o \
 				smtp.o \
 				smtpd.o \
