@@ -46,9 +46,9 @@ value *netdb::gethostbyname (const string &name)
 	he = ::gethostbyname_r (name.str());
 	if (! he)
 	{
-		value *result = new value;
-		*result = false;
-		return result;
+		returnclass (value) result retain;
+		result = false;
+		return &result;
 	}
 	return netdb::converthostentry (he);
 }
@@ -67,31 +67,31 @@ value *netdb::gethostbyaddr (const string &addr)
 							AF_INET);
 	if (! he)
 	{
-		value *result = new value;
-		*result = false;
-		return result;
+		returnclass (value) result retain;
+		result = false;
+		return &result;
 	}
 	return netdb::converthostentry (he);
 }
 
 value *netdb::converthostentry (struct hostent *he)
-{	
-	value *res = new value;
+{
+	returnclass (value) res retain;
 	
 	if (he->h_name)
 	{
-		(*res)["name"].newval() = he->h_name;
+		res["name"].newval() = he->h_name;
 	}
 	else
 	{
-		(*res)["name"].newval() = "";
+		res["name"].newval() = "";
 	}
 	
 	if (he->h_aliases)
 	{
 		for (int i=0; he->h_aliases[i]; ++i)
 		{
-			(*res)["name"].newval() = he->h_aliases[i];
+			res["name"].newval() = he->h_aliases[i];
 		}
 	}
 	
@@ -101,9 +101,9 @@ value *netdb::converthostentry (struct hostent *he)
 		for (int i=0; he->h_addr_list[i]; ++i)
 		{
 			sin = ((struct in_addr *)he->h_addr_list[i]);
-			(*res)["address"].newval().setip (sin->s_addr);
+			res["address"].newval().setip (sin->s_addr);
 		}
 	}
 	
-	return res;
+	return &res;
 }

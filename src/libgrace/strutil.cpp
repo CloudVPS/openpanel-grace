@@ -74,6 +74,7 @@ value *strutil::split (const string &str, char s)
 value *strutil::split (const string &str, const string &s)
 {
 	returnclass (value) res retain;
+	
 	int left = 0;
 	int right;
 	int lns = s.strlen();
@@ -129,10 +130,11 @@ bool strutil::crlfornot (const string &str)
 // ========================================================================
 value *strutil::parsemime (const string &str)
 {
+	returnclass (value) res retain;
+
 	string hdr;
 	string content;
 	bool crlf;
-	returnclass (value) res retain;
 	
 	// Make a working copy of the string
 	content = str;
@@ -176,6 +178,7 @@ value *strutil::splitlines (const string &str)
 		
 	if (res->count() && (! (*res)[-1].sval().strlen()) )
 		res->rmindex (res->count() -1);
+		
 	return res;
 }
 
@@ -188,12 +191,13 @@ value *strutil::splitlines (const string &str)
 // ========================================================================
 value *strutil::splitquoted (const string &str, char s)
 {
+	returnclass (value) res retain;
+
 	int left=0;
 	int right=0;
 	int sz = str.strlen();
 	int lastnspace = 0;
 	bool escaped = false;
-	returnclass (value) res retain;
 	
 	char quot = 0;
 	
@@ -277,6 +281,7 @@ value *strutil::splitquoted (const string &str, char s)
 string *strutil::encodecsv (const string &data)
 {
 	returnclass (string) res retain;
+	
 	char c;
 	int sz = data.strlen();
 	
@@ -296,12 +301,13 @@ string *strutil::encodecsv (const string &data)
 // ========================================================================
 value *strutil::splitcsv (const string &str)
 {
+	returnclass (value) res retain;
+
 	int right=0;
 	int left = 0;
 	int sz = str.strlen();
 	bool quoted = false;
 	bool wasquoted = false;
-	returnclass (value) res retain;
 	string nval;
 	
 	char quot = 0;
@@ -397,6 +403,7 @@ value *strutil::splitcsv (const string &str)
 value *strutil::parsehdr (const string &hdr)
 {
 	returnclass (value) res retain;
+	
 	int clnpos = hdr.strchr (':');
 	if (clnpos < 0)
 	{
@@ -453,6 +460,7 @@ value *strutil::parsehdr (const string &hdr)
 string *strutil::urldecode (const string &src)
 {
 	returnclass (string) res retain;
+	
 	int ln = src.strlen();
 	char c;
 	
@@ -486,6 +494,7 @@ string *strutil::urldecode (const string &src)
 string *strutil::urlencode (const string &src)
 {
 	returnclass (string) res retain;
+	
 	int ln = src.strlen();
 	char c;
 	
@@ -571,6 +580,7 @@ string *strutil::unescape (const string &src)
 string *strutil::regexp (const string &src, const string &expr)
 {
 	returnclass (string) result retain;
+	
 	regexpression r(expr);
 	result = r.parse (src);
 	return &result;
@@ -585,6 +595,7 @@ string *strutil::regexp (const string &src, const string &expr)
 string *strutil::wrap (const string &src, int width)
 {
 	returnclass (string) res retain;
+	
 	value lines;
 	value words;
 	int crsr;
@@ -648,6 +659,7 @@ string *strutil::wrap (const string &src, int width)
 string *strutil::htmlize (const string &src)
 {
 	returnclass (string) res retain;
+	
 	int ln = src.strlen();
 	char c;
 	
@@ -883,26 +895,27 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 // ========================================================================
 string *strutil::titlecaps (const string &src)
 {
-	static value *midwords = new value;
+	returnclass (string) res retain;
+	
+	static value midwords;
 	value splitup;
 	string myword;
 	
-	returnclass (string) res retain;
-	
-	if (! midwords->exists ("of"))
+	if (! midwords.exists ("of"))
 	{
-		(*midwords)["a"] = true;
-		(*midwords)["an"] = true;
-		(*midwords)["in"] = true;
-		(*midwords)["of"] = true;
-		(*midwords)["the"] = true;
-		(*midwords)["de"] = true;
-		(*midwords)["van"] = true;
-		(*midwords)["aan"] = true;
-		(*midwords)["ter"] = true;
-		(*midwords)["der"] = true;
-		(*midwords)["te"] = true;
+		midwords["a"] = true;
+		midwords["an"] = true;
+		midwords["in"] = true;
+		midwords["of"] = true;
+		midwords["the"] = true;
+		midwords["de"] = true;
+		midwords["van"] = true;
+		midwords["aan"] = true;
+		midwords["ter"] = true;
+		midwords["der"] = true;
+		midwords["te"] = true;
 	}
+	
 	splitup = strutil::splitspace (src);
 	
 	int i=0;
@@ -910,7 +923,7 @@ string *strutil::titlecaps (const string &src)
 	{
 		myword = word.sval();
 		
-		if ( (!i) || (! midwords->exists(myword)) )
+		if ( (!i) || (! midwords.exists(myword)) )
 		{
 			myword.capitalize();
 		}
@@ -929,9 +942,10 @@ string *strutil::titlecaps (const string &src)
 // ========================================================================
 value *strutil::httpurldecode (const string &data)
 {
+	returnclass (value) result retain;
+
 	value ampSplit;
 	value pairSplit;
-	returnclass (value) result retain;
 	
 	ampSplit = strutil::split (data, '&');
 	foreach (e, ampSplit)
@@ -999,13 +1013,13 @@ string *strutil::valueparse (const string &str, value &env)
 // ========================================================================
 string *strutil::makepath (const string &str)
 {
-	string *result;
+	returnclass (string) result retain;
 	int p;
 	
 	if (str.strchr ('/') >= 0)
 	{
-		result = new (memory::retainable::onstack) string (str);
-		(*result) = result->cutatlast ('/');
+		result = str;
+		result = result.cutatlast ('/');
 	}
 	else
 	{
@@ -1015,10 +1029,10 @@ string *strutil::makepath (const string &str)
 		}
 		else
 		{
-			return NULL;
+			result.crop();
 		}
 	}
-	return result;
+	return &result;
 }
 
 // ========================================================================

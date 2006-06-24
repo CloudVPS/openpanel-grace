@@ -67,27 +67,30 @@ public:
 					 /// \return New string object with the absolute path.
 	inline string	*pwdize (const string &str)
 					 {
-						 string *res = new string;
-						 if (str[0] == '/')
-						 {
-							 *res = str;
-							 return res;
-						 }
-						 if (str.strchr (':') >= 0)
-						 {
-							 *res =str;
-							 return res;
-						 }
-						 if ((str[0] == '.')&&(str[1] == '/'))
-						 {
-						 	(*res).printf ("%s/%s", pwd().str(),
-						 							str.str() + 2);
-						 }
-						 else
-						 {
-						 	(*res).printf ("%s/%s", pwd().str(), str.str());
-						 }
-						 return res;
+					 	returnclass (string) res retain;
+
+						if (str[0] == '/')
+						{
+							res = str;
+							return &res;
+						}
+						
+						if (str.strchr (':') >= 0)
+						{
+							res =str;
+							return &res;
+						}
+						
+						if ((str[0] == '.')&&(str[1] == '/'))
+						{
+						   res.printf ("%s/%s", pwd().str(),
+												   str.str() + 2);
+						}
+						else
+						{
+						   res.printf ("%s/%s", pwd().str(), str.str());
+						}
+						return &res;
 					 }
 	
 					 /// Set filesystem mask.
@@ -159,18 +162,16 @@ public:
 					 /// \return New string object with the file contents.
 	inline string	*load (const string &_vpath)
 					 {
-					 	string *b;
+					 	returnclass (string) b retain;
 					 	file f;
-					 	
-					 	b = new string;
 					 	
 					 	f.openread (_vpath);
 					 	while (! f.eof())
 					 	{
-					 		(*b).strcat (f.read (8192));
+					 		b.strcat (f.read (8192));
 					 	}
 					 	f.close();
-					 	return b;
+					 	return &b;
 					 }
 					 
 					 /// Save a string object into a file.
@@ -194,13 +195,13 @@ public:
 					 /// \return New string object with translated full path.
 	inline string	*transr (const string &_vpath)
 					 {
+					 	returnclass (string) res retain;
 						string vpath;
-					 	string *res = new string;
 						int pos;
 						 
 						 vpath = pwdize (_vpath);
 						
-						if ((pos = vpath.strchr (':')) < 0) (*res) = vpath;
+						if ((pos = vpath.strchr (':')) < 0) res = vpath;
 						else
 						{
 							string vol, fil;
@@ -208,9 +209,9 @@ public:
 							vol = vpath.left (pos);
 							fil = vpath.mid (pos+1);
 							
-							(*res) = findread (vol, fil);
+							res = findread (vol, fil);
 						}
-						return res;
+						return &res;
 					 }
 					 
 					 /// Translate a relative/aliaspath to open a file for
@@ -220,13 +221,13 @@ public:
 					 /// \return New string object with translated full path.
 	string			*transw (const string &_vpath)
 					 {
+					 	returnclass (string) res retain;
 						string vpath;
-					 	string *res = new string;
 						int pos;
 						 
 						vpath = pwdize (_vpath);
 						
-						if ((pos = vpath.strchr (':')) < 0) (*res) = vpath;
+						if ((pos = vpath.strchr (':')) < 0) res = vpath;
 						else
 						{
 							string vol, fil;
@@ -234,9 +235,9 @@ public:
 							vol = vpath.left (pos);
 							fil = vpath.mid (pos+1);
 							
-							(*res) = findwrite (vol, fil);
+							res = findwrite (vol, fil);
 						}
-						return res;
+						return &res;
 					 }
 	
 	value			 pathvol; ///< Database of aliaspath translations.

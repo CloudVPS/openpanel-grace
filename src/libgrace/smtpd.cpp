@@ -436,7 +436,7 @@ mainloop:
 // ==========================================================================
 string *smtpd::maketransactionid (void)
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	static bool initialized = false;
 	
 	if (! initialized)
@@ -445,10 +445,10 @@ string *smtpd::maketransactionid (void)
 		srand (kernel.time.now());
 	}
 	
-	(*res).printf ("%08x-%04x-%08x", kernel.time.now(),
-				   kernel.proc.self(), rand());
+	res.printf ("%08x-%04x-%08x", kernel.time.now(),
+	            kernel.proc.self(), rand());
 	
-	return res;
+	return &res;
 }
 
 // ==========================================================================

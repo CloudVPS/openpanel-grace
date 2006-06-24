@@ -111,7 +111,8 @@ public:
 					 /// Get the current contents of the input buffer.
 	string			*getline (void)
 					 {
-					 	return new string (buffer + prompt.strlen());
+					 	return new (memory::retainable::onstack) string
+					 							(buffer + prompt.strlen());
 					 }
 					 
 					 /// Send a console message (should be called

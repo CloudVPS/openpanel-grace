@@ -43,8 +43,7 @@ bool thread::spawn (void)
 	if (! ipc.o["running"])
 	{
 		ipc.unlock();
-		if (pthread_create (&tid, &attr,
-							thread::dorun, this))
+		if (pthread_create (&tid, &attr, thread::dorun, this))
 		{
 			ipc.unlock();
 			throw (EX_THREAD_CREATE);
@@ -80,17 +79,18 @@ bool thread::runs (void)
 // ========================================================================
 value *thread::nextevent (void)
 {
-	value *res = new value;
+	returnclass (value) res retain;
+
 	ipc.lockw ();
 	if (! ipc.o["events"].count())
 	{
 		ipc.unlock ();
-		return res;
+		return &res;
 	}
-	(*res) = ipc.o["events"][0];
+	res = ipc.o["events"][0];
 	ipc.o["events"].rmindex (0);
 	ipc.unlock ();
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -101,21 +101,22 @@ value *thread::nextevent (void)
 // ========================================================================
 value *thread::waitevent (void)
 {
-	value *res = new value;
+	returnclass (value) res retain;
+	
 	ipc.lockw ();
 	while (! ipc.o["events"].count())
 	{
 		ipc.unlock ();
 		if (! event.wait())
 		{
-			return res;
+			return &res;
 		}
 		ipc.lockw ();
 	}
-	(*res) = ipc.o["events"][0];
+	res = ipc.o["events"][0];
 	ipc.o["events"].rmindex (0);
 	ipc.unlock ();
-	return res;
+	return &res;
 }
 
 // ========================================================================

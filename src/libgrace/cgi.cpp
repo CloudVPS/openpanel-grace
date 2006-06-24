@@ -429,14 +429,14 @@ bool cgitemplate::load (const string &fnam)
 // ========================================================================
 string *cgitemplate::parse (const string &section, value &env)
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	
 	if (! tmpl.exists(section))
 	{
-		(*res).printf ("<html><body bgcolor=white><h2>Error</h2>"
+		res.printf ("<html><body bgcolor=white><h2>Error</h2>"
 					   "Section '%s' not found."
 					   "</body></html>\n", section.str());
-		return res;
+		return &res;
 	}
 	
 	value split;
@@ -448,15 +448,15 @@ string *cgitemplate::parse (const string &section, value &env)
 	{
 		if (j & 1)
 		{
-			(*res) += env[e.cval()];
+			res += env[e.cval()];
 		}
 		else
 		{
-			(*res) += e.sval();
+			res += e.sval();
 		}
 	}
 	
-	return res;
+	return &res;
 }
 
 // ========================================================================

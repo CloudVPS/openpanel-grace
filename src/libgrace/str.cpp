@@ -1868,9 +1868,9 @@ size_t string::bingetvstr (size_t offset, string &into) const
 // ========================================================================
 string *string::encode64 (void) const
 {
-	string *result = new string;
+	returnclass (string) result retain;
 	
-	if (! strlen()) return result;
+	if (! strlen()) return &result;
 	
 	int pos = 0;
 	int i;
@@ -1909,10 +1909,10 @@ string *string::encode64 (void) const
 			else outbuf[i] = '=';
 		}
 		
-		result->strcat (outbuf);
+		result.strcat (outbuf);
 		pos += 3;
 	}
-	return result;
+	return &result;
 }
 
 // ========================================================================
@@ -1922,9 +1922,9 @@ string *string::encode64 (void) const
 // ========================================================================
 string *string::decode64 (void) const
 {
-	string *result = new string;
+	returnclass (string) result retain;
 	
-	if (! strlen()) return result;
+	if (! strlen()) return &result;
 	
 	int bufpos = 0;
 	int srcpos = 0;
@@ -1972,12 +1972,12 @@ string *string::decode64 (void) const
 				
 				for (int i=0; i<bufleft; ++i)
 				{
-					result->strcat (outbuf[i]);
+					result.strcat (outbuf[i]);
 				}
 			}
 		}
 	}
-	return result;
+	return &result;
 }
 
 // ========================================================================
@@ -2020,16 +2020,16 @@ string *string::filter (const string &set)
 	if (! data) return NULL;
 	if (! set) return NULL;
 	
-	string *res = new string;
+	returnclass (string) res retain;
 	
 	for (int i=0; i<size; ++i)
 	{
 		if (set.strchr (data->v[i]) >= 0)
 		{
-			res->strcat (data->v[i]);
+			res.strcat (data->v[i]);
 		}
 	}
-	return res;
+	return &res;
 }
 
 // ========================================================================
@@ -2042,14 +2042,14 @@ string *string::stripchar  (char stripchar)
 {
 	if (! data) return NULL;
 	
-	string *res = new string;
+	returnclass (string) res retain;
 	
 	for (int i=0; i<size; ++i)
 	{
 		if (data->v[i] != stripchar)
-			res->strcat (data->v[i]);
+			res.strcat (data->v[i]);
 	}
-	return res;
+	return &res;
 }
 	
 // ========================================================================
@@ -2063,16 +2063,16 @@ string *string::stripchars	(const string &stripset)
 	if (! data) return NULL;
 	if (! stripset) return NULL;
 	
-	string *res = new string;
+	returnclass (string) res retain;
 	
 	for (int i=0; i<size; ++i)
 	{
 		if ( stripset.strchr (data->v[i]) == -1)
 		{
-			res->strcat (data->v[i]);
+			res.strcat (data->v[i]);
 		}
 	}
-	return res;
+	return &res;
 }
 
 
@@ -2087,12 +2087,12 @@ string *string::trim (const string &set)
 	if(! data) return NULL;
 	if(! set)  return NULL;
 
-	string *res = new string;
+	returnclass (string) res retain;
 
-	(*res) = ltrim (set);
-	(*res) = (*res).rtrim (set);
+	res = ltrim (set);
+	res = res.rtrim (set);
 	
-	return res;
+	return &res;
 }
 					 
 // ========================================================================
@@ -2106,18 +2106,18 @@ string *string::ltrim (const string &set)
 	if(! data) return NULL;
 	if(! set)  return NULL;
 	
-	string *res = new string;
+	returnclass (string) res retain;
 		
 	for (int i=0; i<size; i++)
 	{		
 		if (set.strchr(data->v[i]) == -1)
 		{
-			res = this->right (size-i);
+			res = right (size-i);
 			break;
 		}
 	}
 	
-	return res;
+	return &res;
 }
 					 
 // ========================================================================
@@ -2131,7 +2131,7 @@ string *string::rtrim (const string &set)
 	if(! data) return NULL;
 	if(! set)  return NULL;
 	
-	string *res = new string;
+	returnclass (string) res retain;
 		
 	for (int i=size-1; i>-1; i--)
 	{	
@@ -2142,10 +2142,8 @@ string *string::rtrim (const string &set)
 		}
 	}
 	
-	return res;
+	return &res;
 }
-
-
 
 // ========================================================================
 // METHOD ::replace
@@ -2174,7 +2172,7 @@ string *string::copyuntil (char c)
 	int pos;
 	
 	pos = strchr (c);
-	if (pos < 0) return new string (*this);
+	if (pos < 0) return new (memory::retainable::onstack) string (*this);
 	return left (pos);
 }
 
@@ -2183,7 +2181,7 @@ string *string::copyuntil (const string &s)
 	int pos;
 	
 	pos = strstr (s);
-	if (pos < 0) return new string (*this);
+	if (pos < 0) return new (memory::retainable::onstack) string (*this);
 	return left (pos);
 }
 
@@ -2193,7 +2191,7 @@ string *string::copyuntillast (char c)
 	int npos;
 	
 	pos = strchr (c);
-	if (pos < 0) return new string (*this);
+	if (pos < 0) return new (memory::retainable::onstack) string (*this);
 	
 	npos = pos;
 	while (npos>0)
@@ -2210,7 +2208,7 @@ string *string::copyuntillast (const string &s)
 	int npos;
 	
 	pos = strstr (s);
-	if (pos < 0) return new string (*this);
+	if (pos < 0) return new (memory::retainable::onstack) string (*this);
 	
 	npos = pos;
 	while (npos>0)

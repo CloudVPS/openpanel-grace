@@ -1217,11 +1217,11 @@ bool xmlschema::validate (const value &obj,
 // ========================================================================
 value *xmlschema::create (const statstring &type)
 {
+	returnclass (value) res retain;
 	visitor<const value> probe (schema);
-	value *res;
-	
-	res = new value; res->type (type);
-	if (! probe.enter (type)) return res;
+
+	res.type (type);	
+	if (! probe.enter (type)) return &res;
 	
 	if (probe.enter (key::xml_attributes))
 	{
@@ -1234,15 +1234,15 @@ value *xmlschema::create (const statstring &type)
 				{
 					if (probe.obj()[key::type] == "string")
 					{
-						(*res).setattrib (probe.obj().label(), "");
+						res.setattrib (probe.obj().label(), "");
 					}
 					else if (probe.obj()[key::type] == "bool")
 					{
-						(*res).setattrib (probe.obj().label(), false);
+						res.setattrib (probe.obj().label(), false);
 					}
 					else
 					{
-						(*res).setattrib (probe.obj().label(), 0);
+						res.setattrib (probe.obj().label(), 0);
 					}
 				}
 			} while (probe.next());
@@ -1260,7 +1260,7 @@ value *xmlschema::create (const statstring &type)
 				if ((probe.obj()(key::mandatory) == true) &&
 				    (probe.obj().attributes().exists (key::id)))
 				{
-					(*res)[probe.obj()(key::id).sval()] = create (probe.obj().label());
+					res[probe.obj()(key::id).sval()] = create (probe.obj().label());
 				}
 			} while (probe.next());
 			//probe.up();
@@ -1268,7 +1268,7 @@ value *xmlschema::create (const statstring &type)
 		//probe.up();
 	}
 	
-	return res;
+	return &res;
 }
 
 // ========================================================================

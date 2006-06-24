@@ -132,16 +132,16 @@ public:
 		/// Convert passwd structure to a value object.
 		value *pwval (struct passwd *p)
 		{
-			value *r = new value;
-			(*r)["username"] = p->pw_name;
-			(*r)["passwd"] = p->pw_passwd;
-			(*r)["uid"] = (int) p->pw_uid;
-			(*r)["gid"] = (int) p->pw_gid;
-			(*r)["gecos"] = p->pw_gecos;
-			(*r)["home"] = p->pw_dir;
-			(*r)["shell"] = p->pw_shell;
+			returnclass (value) r retain;
+			r["username"] = p->pw_name;
+			r["passwd"] = p->pw_passwd;
+			r["uid"] = (int) p->pw_uid;
+			r["gid"] = (int) p->pw_gid;
+			r["gecos"] = p->pw_gecos;
+			r["home"] = p->pw_dir;
+			r["shell"] = p->pw_shell;
 			
-			return r;
+			return &r;
 		}
 	} userdb;
 	
@@ -152,13 +152,13 @@ public:
 		/// Create a MD5 hash string for a password.
 		string *md5 (const string &pw)
 		{
+			returnclass (string) res retain;
+			
 			char mysalt[16];
 			int i;
-			string *res;
 			
 			mkseed ();
 			
-			res = new string;
 			mysalt[0] = '$';
 			mysalt[1] = '1';
 			mysalt[2] = '$';
@@ -169,20 +169,19 @@ public:
 			}
 			mysalt[i+3] = 0;
 			
-			(*res) = __grace_internal_crypt (pw.str(), mysalt);
-			return res;
+			res = __grace_internal_crypt (pw.str(), mysalt);
+			return &res;
 		}
 		
 		/// Create a DES hash string for a password.
 		string *des (const string &pw)
 		{
+			returnclass (string) res retain;
+			
 			char mysalt[16];
-			string *res;
 			int i;
 			
 			mkseed ();
-			
-			res = new string;
 			
 			for (i=0;i<2;++i)
 			{
@@ -190,8 +189,8 @@ public:
 			}
 			mysalt[i] = 0;
 			
-			(*res) = __grace_internal_crypt (pw.str(), mysalt);
-			return res;
+			res = __grace_internal_crypt (pw.str(), mysalt);
+			return &res;
 		}
 		
 		/// Verify a DES/MD5 hash against a plaintext password.
