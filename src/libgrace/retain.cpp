@@ -147,7 +147,6 @@ namespace memory
 		block *b = (block *) ((char *) v - sizeof (block));
 		if (b->pool)
 		{
-			breakme();
 			retainpool().free (v);
 			return;
 		}
