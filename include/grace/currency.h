@@ -1,4 +1,5 @@
 #include <grace/str.h>
+#include <grace/retain.h>
 
 void printcurrency (string &, long long);
 long long parsecurrency (const string &);
@@ -11,7 +12,7 @@ long long parsecurrency (const string &);
 /// accuracy and uses this for calculations. When converting the
 /// currency for display, however, it is rounded to two decimal
 /// places.
-class currency
+class currency : public memory::retainable
 {
 public:
 					 currency (void);

@@ -42,10 +42,8 @@ currency::currency (const currency &orig)
 // ========================================================================
 // COPY-CONSTRUCTOR (ptr to currency)
 // ========================================================================
-currency::currency (currency *orig)
+currency::currency (currency *orig) : retainable (orig)
 {
-	val = orig->val;
-	delete orig;
 }
 
 // ========================================================================
@@ -97,8 +95,7 @@ currency &currency::operator= (const currency &orig)
 
 currency &currency::operator= (currency *orig)
 {
-	val = orig->val;
-	delete orig;
+	retainvalue (orig);
 	return *this;
 }
 
