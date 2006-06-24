@@ -1,16 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: value_cxml.exe
-	mkapp value_cxml
+		mkapp value_cxml
 
 value_cxml.exe: $(OBJ)
-	$(CXX) -o value_cxml.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+		$(CXX) $(LDFLAGS) -o value_cxml.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf value_cxml.app
-	rm -f value_cxml
+		rm -f *.o *.exe
+		rm -rf value_cxml.app
+		rm -f value_cxml
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -g -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+

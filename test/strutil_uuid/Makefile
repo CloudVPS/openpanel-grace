@@ -1,16 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: strutil_uuid.exe
-	mkapp strutil_uuid
+		mkapp strutil_uuid
 
 strutil_uuid.exe: $(OBJ)
-	$(CXX) -o strutil_uuid.exe $(OBJ) "../../lib/libgrace.a" -lpthread #-lcrypt
+		$(CXX) $(LDFLAGS) -o strutil_uuid.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf strutil_uuid.app
-	rm -f strutil_uuid
+		rm -f *.o *.exe
+		rm -rf strutil_uuid.app
+		rm -f strutil_uuid
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -g -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+

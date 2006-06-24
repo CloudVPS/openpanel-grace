@@ -1,16 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: value_sort.exe
-	mkapp value_sort
+		mkapp value_sort
 
 value_sort.exe: $(OBJ)
-	$(CXX) -o value_sort.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+		$(CXX) $(LDFLAGS) -o value_sort.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf value_sort.app
-	rm -f value_sort
+		rm -f *.o *.exe
+		rm -rf value_sort.app
+		rm -f value_sort
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -O2 -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+

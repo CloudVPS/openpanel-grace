@@ -1,16 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: smtp.exe
-	mkapp smtp
+		mkapp smtp
 
 smtp.exe: $(OBJ)
-	$(CXX) -o smtp.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+		$(CXX) $(LDFLAGS) -o smtp.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf smtp.app
-	rm -f smtp
+		rm -f *.o *.exe
+		rm -rf smtp.app
+		rm -f smtp
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -g -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+

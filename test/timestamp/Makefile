@@ -1,16 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: timestamp.exe
-	mkapp timestamp
+		mkapp timestamp
 
 timestamp.exe: $(OBJ)
-	$(CXX) -o timestamp.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+		$(CXX) $(LDFLAGS) -o timestamp.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf timestamp.app
-	rm -f timestamp
+		rm -f *.o *.exe
+		rm -rf timestamp.app
+		rm -f timestamp
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -g -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+

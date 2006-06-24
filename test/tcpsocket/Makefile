@@ -1,16 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: tcpsocket.exe
-	mkapp tcpsocket
+		mkapp tcpsocket
 
 tcpsocket.exe: $(OBJ)
-	$(CXX) -o tcpsocket.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+		$(CXX) $(LDFLAGS) -o tcpsocket.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf tcpsocket.app
-	rm -f tcpsocket
+		rm -f *.o *.exe
+		rm -rf tcpsocket.app
+		rm -f tcpsocket
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -O2 -g -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+

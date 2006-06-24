@@ -1,16 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: value_xmlgremlins.exe
-	mkapp value_xmlgremlins
+		mkapp value_xmlgremlins
 
 value_xmlgremlins.exe: $(OBJ)
-	$(CXX) -o value_xmlgremlins.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+		$(CXX) $(LDFLAGS) -o value_xmlgremlins.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf value_xmlgremlins.app
-	rm -f value_xmlgremlins
+		rm -f *.o *.exe
+		rm -rf value_xmlgremlins.app
+		rm -f value_xmlgremlins
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -g -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+

@@ -1,16 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: str_binmethods.exe
-	mkapp str_binmethods
+		mkapp str_binmethods
 
 str_binmethods.exe: $(OBJ)
-	$(CXX) -o str_binmethods.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+		$(CXX) $(LDFLAGS) -o str_binmethods.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf str_binmethods.app
-	rm -f str_binmethods
+		rm -f *.o *.exe
+		rm -rf str_binmethods.app
+		rm -f str_binmethods
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -g -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+

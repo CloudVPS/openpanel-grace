@@ -1,17 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: iocodec.exe
-	mkapp iocodec
+		mkapp iocodec
 
 iocodec.exe: $(OBJ)
-	$(CXX) -o iocodec.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+		$(CXX) $(LDFLAGS) -o iocodec.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf iocodec.app
-	rm -f iocodec
+		rm -f *.o *.exe
+		rm -rf iocodec.app
+		rm -f iocodec
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -g -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
 

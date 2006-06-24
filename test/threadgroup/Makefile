@@ -1,16 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: threadgroup.exe
-	mkapp threadgroup
+		mkapp threadgroup
 
 threadgroup.exe: $(OBJ)
-	$(CXX) -o threadgroup.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+		$(CXX) $(LDFLAGS) -o threadgroup.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf threadgroup.app
-	rm -f threadgroup
+		rm -f *.o *.exe
+		rm -rf threadgroup.app
+		rm -f threadgroup
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -g -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+

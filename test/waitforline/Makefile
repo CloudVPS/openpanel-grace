@@ -1,16 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: waitforline.exe
-	mkapp waitforline
+		mkapp waitforline
 
 waitforline.exe: $(OBJ)
-	$(CXX) -o waitforline.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+		$(CXX) $(LDFLAGS) -o waitforline.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf waitforline.app
-	rm -f waitforline
+		rm -f *.o *.exe
+		rm -rf waitforline.app
+		rm -f waitforline
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -g -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+

@@ -1,16 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: value_ini.exe
-	mkapp value_ini
+		mkapp value_ini
 
 value_ini.exe: $(OBJ)
-	$(CXX) -o value_ini.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+		$(CXX) $(LDFLAGS) -o value_ini.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf value_ini.app
-	rm -f value_ini
+		rm -f *.o *.exe
+		rm -rf value_ini.app
+		rm -f value_ini
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -O2 -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+

@@ -1,15 +1,19 @@
 #!/bin/sh
-echo -n "str_binmethods: "
+testname=`echo "str_binmethods                        " | cut -c 1-24`; echo -n "${testname}: "
 rm -f *.o output.xml >/dev/null 2>&1
+echo -n "."
 make clean >/dev/null 2>&1 || echo -n ""
+echo -n "."
 make > test.log 2>&1 || {
-  echo "failed (BUILD)"
+  echo "   failed (BUILD)"
   exit 1
 }
+echo -n "."
 echo "--- start run" >> test.log
 ./str_binmethods >> test.log 2>&1 || {
-  echo "failed (RUN)"
+  echo "  failed(RUN)"
   exit 1
 }
+echo -n "."
 rm -f test.log
-echo "passed"
+echo " passed"

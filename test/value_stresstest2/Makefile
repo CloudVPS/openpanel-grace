@@ -1,16 +1,19 @@
-OBJ	= main.o
+include ../../src/libgrace/makeinclude
+
+OBJ		= main.o
 
 all: value_stresstest2.exe
-	mkapp value_stresstest2
+		mkapp value_stresstest2
 
 value_stresstest2.exe: $(OBJ)
-	$(CXX) -o value_stresstest2.exe $(OBJ) "../../lib/libgrace.a" -lpthread
+		$(CXX) $(LDFLAGS) -o value_stresstest2.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
-	rm -f *.o *.exe
-	rm -rf value_stresstest2.app
-	rm -f value_stresstest2
+		rm -f *.o *.exe
+		rm -rf value_stresstest2.app
+		rm -f value_stresstest2
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) -I"../../include" -g -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+
