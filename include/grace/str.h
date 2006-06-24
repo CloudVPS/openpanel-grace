@@ -125,10 +125,10 @@ public:
 					 /// Array access.
 					 /// Out-of-range indices return a '\0'.
 					 /// \param n Position. Use negative for position from the right.
-	inline char		 operator[] (int n) const
+	inline const char operator[] (int n) const
 					 {
 					 	if (! data) return 0;
-					 	if (((unsigned int) n) > size) return 0;
+					 	if (((unsigned int) (n>0) ? n : -n) > size) return 0;
 					 	if (n < 0)
 					 	{
 					 		if ((-n) > ((int)size)) return 0;
@@ -136,6 +136,26 @@ public:
 					 	}
 						return data->v[n];
 					 }
+					 
+	inline char &operator[] (int n)
+					 {
+					 	static char nul = 0;
+					 	if ((! data) || (n >= size))
+					 	{
+					 		pad (n, ' ');
+					 	}
+					 	
+					 	docopyonwrite();
+					 	
+					 	if (n < 0)
+					 	{
+					 		if ((-n) > ((int)size)) return nul;
+					 		return data->v[size+n];
+					 	}
+					 	
+						return data->v[n];
+					 }
+					 	
 	
 	// --------------------------------------------------------------------
 	// Various string compare methods
@@ -625,22 +645,22 @@ public:
 	string			*stripchars	(const string &stripset);			 
 					 
 					 /// Trims charcters from the left and right of the
-					 /// current string until it finds an not given 
-					 /// character
+					 /// current string until it finds a character not 
+					 /// in the set.
 					 /// \param set Set of special characters
 					 /// \return New trimmed string
 	string			*trim (const string &set=" ");			 
 					 
 					 /// Trims charcters from the left of the
-					 /// current string until it finds an not given 
-					 /// character
+					 /// current string until it finds a character not 
+					 /// in the set.
 					 /// \param set Set of special characters
 					 /// \return New trimmed string
 	string			*ltrim (const string &set=" ");			 
 					 
 					 /// Trims charcters from the right of the
-					 /// current string until it finds an not given 
-					 /// character
+					 /// current string until it finds a character not 
+					 /// in the set.
 					 /// \param set Set of special characters
 					 /// \return New trimmed string
 	string			*rtrim (const string &set=" ");			 
