@@ -2,10 +2,6 @@
 
 memory::pool *__retain_ptr;
 
-void breakme (void)
-{
-}
-
 namespace memory
 {
 	pool *getretain (void)
@@ -101,6 +97,8 @@ namespace memory
 	void pool::free (void *ptr)
 	{
 		block *b = (block *) (((char*)ptr) - sizeof (block));
+		
+#ifdef PARANOID_MEMORY_CHECKS
 		sizepool *c = pools;
 		while (c)
 		{
@@ -115,8 +113,9 @@ namespace memory
 		}
 		if (!c)
 		{
-			breakme();
+			throw (EX_MEMORY_DEFUNCT_POINTER);
 		}
+#endif
 		b->status = memory::free;
 	}
 	
