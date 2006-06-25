@@ -55,6 +55,7 @@ struct hostent *__grace_internal_gethostbyname (const char *name)
 		int addr_count;
 		int i;
 		
+		// How do I hate thee, let me count the ways...
 		result = new struct hostent;
 		result->h_name = ::strdup (reply->h_name);
 		for (aliascount=0; reply->h_aliases[aliascount]; ++aliascount);
