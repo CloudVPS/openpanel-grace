@@ -503,6 +503,35 @@ protected:
 
 #endif
 
+#define exclusiveaccess(lname) if (bool __section_flip = true) \
+	for (lname.lockw(); __section_flip; lname.unlock()) \
+	  for (; __section_flip;) if (! (__section_flip = false))
+
+#define sharedaccess(lname) if (bool __section_flip = true) \
+	for (lname.lockw(); __section_flip; lname.unlock()) \
+	  for (; __section_flip;) if (! (__section_flip = false))
+
+#define exclusivesection(lname) if (bool __section_shared = false) {} else \
+  if (bool __section_flip = true) \
+	for (lname.lockw(); __section_flip; lname.unlock()) \
+	  for (typeof( lname ) &sectionlock = lname; __section_flip;) \
+		for (typeof(sectionlock.o) &lname = sectionlock.o;__section_flip;) if (! (__section_flip = false))
+
+#define sharedsection(lname) if (bool __section_shared = true) \
+  if (bool __section_flip = true) \
+	for (lname.lockr(); __section_flip; lname.unlock()) \
+	  for (typeof( lname ) &sectionlock = lname; __section_flip;) \
+		for (typeof(sectionlock.o) &lname = sectionlock.o;__section_flip;) if (! (__section_flip = false))
+
+#define unprotected(lname) if (bool __section_flip = true) \
+	for (typeof( lname ) &sectionlock = lname; __section_flip;) \
+		for (typeof(sectionlock.o) &lname = sectionlock.o; __section_flip;) \
+			if (! (__section_flip = false))
+
+#define breaksection if (bool __break_flip = true) \
+	for (sectionlock.unlock(); __break_flip; (void)(__section_shared ? sectionlock.lockr() : sectionlock.lockw())) \
+		for (; __break_flip; ) if (! (__break_flip = false))
+
 /// Conditional.
 /// Implies a condition that one or more threads can wait on that
 /// other threads can raise. 
