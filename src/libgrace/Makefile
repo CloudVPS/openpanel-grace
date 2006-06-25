@@ -56,12 +56,15 @@ OBJ			= 	application.o \
 AR = ar cr
 
 all: ../../include/grace/platform.h $(OBJ)
-	mkdir -p ../lib
+	mkdir -p ../../lib
 	$(AR) ../../lib/libgrace.a $(OBJ)
 	$(RANLIB) ../../lib/libgrace.a
 
 install: all
 	./makeinstall
+
+depend:
+	@makedepend -I../../include -fMakefile.depend *.cpp 2>/dev/null
 
 clean:
 	rm -f *.o *.a
@@ -72,3 +75,5 @@ clean:
 .SUFFIXES: .cpp .o
 .cpp.o: 
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -I../../include -c -g $<
+
+include Makefile.depend
