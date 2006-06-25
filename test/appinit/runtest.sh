@@ -1,5 +1,5 @@
 #!/bin/sh
-testname=`echo "appinit                " | cut -c 1-24`
+testname=`echo "appinit                        " | cut -c 1-24`
 echo -n "${testname}: "
 rm -f *.o output.xml >/dev/null 2>&1
 echo -n "."
