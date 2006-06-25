@@ -348,14 +348,29 @@ int application::main (void)
 // A way to get a pointer to the global application object.
 extern "C" application *app(void);
 
+typedef void (*initfuncptr)(void);
+
 // ==========================================================================
 // FUNCTION main
 // -------------
 // Uses the global 'app' as defined by the APPOBJECT() macro to
 // kickstart an application.
 // ==========================================================================
+
+#include <dlfcn.h>
+
 int main (int argc, char *argv[])
 {
+	initfuncptr inithook = NULL;
+	void *dlh = NULL;
+	
+	dlh = dlopen (NULL, RTLD_LAZY);
+	if (dlh)
+	{
+		inithook = (initfuncptr) dlsym (dlh, "init");
+		if (inithook) (*inithook)();
+	}
+	
 	app()->init (argc, argv);
 	return app()->main ();
 }
