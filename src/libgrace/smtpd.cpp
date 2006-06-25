@@ -164,19 +164,20 @@ void smtpd::run (void)
 // ==========================================================================
 void smtpworker::run (void)
 {
-	tcpsocket s;
-	value ev;
-	string line;
-	bool run = true;
-	value env;
-	string helostr;
-	string threadid;
-	string mailfrom;
-	string myrcpt;
-	string mailbody;
-	int failcnt;
-	string exip;
+	tcpsocket s; // Incoming socket.
+	value ev; // Event data.
+	string line; // Line of text as read from the socket.
+	bool run = true; // True as long as we should be running.
+	value env; // SMTP environment
+	string helostr; // Remote host self-identification
+	string threadid; // Stored thread-id
+	string mailfrom; // Remote host mail from
+	string myrcpt; // Remote host recipient argument.
+	string mailbody; // Received mail body.
+	int failcnt; // Failure counter.
+	string exip; // Remote host ip.
 	
+	// Internal states.
 	enum smtpstate
 	{
 		SMTP_WAITHELO,
@@ -186,11 +187,12 @@ void smtpworker::run (void)
 		SMTP_DATA,
 		SMTP_QUIT
 	};
-	
+
+	// Some initialization	
 	smtpstate st = SMTP_WAITHELO;
-	
 	threadid.printf ("smtpworker/%i", tid);
 	
+	// Send an event if someone cares
 	if (parent->mask & SMTP_INFO)
 	{
 		value outev;
@@ -200,13 +202,17 @@ void smtpworker::run (void)
 		parent->eventhandle (outev);
 	}
 	
+	// Loop
 	while (run)
 	{
+		// Wait for a connection, if there's nothing to be had
+		// we might as well check events.
 		while (! parent->tcplock.trylockw(5))
 		{
 			ev = nextevent();
 			if (ev.count())
 			{
+				// Oh no, the event of death!
 				if (ev["command"] == "die")
 				{
 					run = false;
@@ -222,10 +228,12 @@ void smtpworker::run (void)
 				}
 			}
 		}
+		
+		// We got the lock, now try to accept a socket.
 		while (! s)
 		{
 			s = parent->lsock.tryaccept (2.0);
-			if (! s)
+			if (! s) // No socket, might as well check events.
 			{
 				ev = nextevent();
 				if (ev.count())
@@ -239,15 +247,19 @@ void smtpworker::run (void)
 				}
 			}
 		}
+
+		// Jay, we have a working socket.
 		
-		int nload;
+		int nload; // New load counter once we're up.
 		
+		// Get the new load number.
 		parent->tcplock.unlock();
 		parent->load.lockw();
 		nload = parent->load.o++;
 		parent->load.unlock();
 		exip = s.peer_name;
 		
+		// Send an event for the connection, if someone wants it.
 		if (parent->mask & SMTP_INFO)
 		{
 			value outev;
@@ -259,10 +271,11 @@ void smtpworker::run (void)
 			parent->eventhandle (outev);
 		}
 		
-		st = SMTP_WAITHELO;
+		st = SMTP_WAITHELO; // next state.
 		
 		try
 		{
+			// Send banner.
 			s.printf ("220 %s ESMTP\r\n", parent->banner.str());
 	
 mainloop:
@@ -351,6 +364,7 @@ mainloop:
 			
 			failcnt = 0;
 			
+			// Handling of DATA mode, wait for \r\n.\r\n.
 			while (st != SMTP_QUIT)
 			{
 				line = s.gets();
@@ -470,8 +484,8 @@ bool smtpd::deliver (const string &mailbody, value &env)
 	string fn_xml;
 	
 	transid = env["transaction-id"];
-	fn_dat.printf ("%s.dat", transid.str());
-	fn_xml.printf ("%s.xml", transid.str());
+	fn_dat.printf ("%S.dat", transid.str());
+	fn_xml.printf ("%S.xml", transid.str());
 	
 	fs.save (fn_dat, mailbody);
 	env.savexml (fn_xml);

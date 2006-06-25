@@ -1,4 +1,8 @@
 0.8.13     In production                              <pi@madscience.nl>
+           * Cleaned up test system.
+           
+           * Added caseselector { incaseof() : ...; defaultcase : ...; }
+             macros that allow switch/case with string keys.
 
            * Created new baseclass memory::retainable, uses more
              efficient preallocation for temporary return values.
