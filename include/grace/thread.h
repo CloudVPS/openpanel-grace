@@ -26,7 +26,7 @@ public:
 					 	spawned = false;
 					 	finished = false;
 					 	__THREADED = true;
-					 	ipc.o["running"] = false;
+					 	unprotected (ipc) { ipc["running"] = false; }
 					 	pthread_attr_init (&attr);
 					 }
 					 
@@ -98,9 +98,10 @@ public:
 					 /// \param v The event data.
 	void			 sendevent (const value &v)
 					 {
-					 	ipc.lockw ();
-					 	ipc.o["events"].newval () = v;
-					 	ipc.unlock ();
+					 	exclusivesection (ipc)
+					 	{
+					 		ipc["events"].newval () = v;
+					 	}
 					 	event.signal ();
 					 }
 					 
@@ -109,9 +110,10 @@ public:
 	int			 	 eventqueue (void)
 					 {
 					 	int result = 0;
-					 	ipc.lockr ();
-					 	result = ipc.o["events"].count ();
-					 	ipc.unlock ();
+					 	sharedsection (ipc)
+						{
+						 	result = ipc["events"].count ();
+						}
 					 	return result;
 					 }
 

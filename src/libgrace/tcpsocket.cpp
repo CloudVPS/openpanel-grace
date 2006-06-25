@@ -47,34 +47,35 @@ struct hostent *__grace_internal_gethostbyname (const char *name)
 	struct hostent *reply;
 	struct hostent *result = NULL;
 	
-	lck.lockw();
-	reply = ::gethostbyname (name);
-	if (reply)
+	exclusivesection (lck)
 	{
-		int aliascount;
-		int addr_count;
-		int i;
-		
-		// How do I hate thee, let me count the ways...
-		result = new struct hostent;
-		result->h_name = ::strdup (reply->h_name);
-		for (aliascount=0; reply->h_aliases[aliascount]; ++aliascount);
-		result->h_aliases = (char **) malloc ((aliascount+1) * sizeof(char *));
-		for (i=0; i<aliascount; ++i)
-			result->h_aliases[i] = ::strdup (reply->h_aliases[i]);
-		result->h_aliases[i] = NULL;
-		result->h_addrtype = reply->h_addrtype;
-		result->h_length = reply->h_length;
-		for (addr_count=0; reply->h_addr_list[addr_count]; ++addr_count);
-		result->h_addr_list = (char **) malloc ((addr_count+1) * sizeof(char *));
-		for (i=0; i<addr_count; ++i)
+		reply = ::gethostbyname (name);
+		if (reply)
 		{
-			result->h_addr_list[i] = (char *) malloc ((size_t) reply->h_length);
-			::memcpy (result->h_addr_list[i], reply->h_addr_list[i], reply->h_length);
+			int aliascount;
+			int addr_count;
+			int i;
+			
+			// How do I hate thee, let me count the ways...
+			result = new struct hostent;
+			result->h_name = ::strdup (reply->h_name);
+			for (aliascount=0; reply->h_aliases[aliascount]; ++aliascount);
+			result->h_aliases = (char **) malloc ((aliascount+1) * sizeof(char *));
+			for (i=0; i<aliascount; ++i)
+				result->h_aliases[i] = ::strdup (reply->h_aliases[i]);
+			result->h_aliases[i] = NULL;
+			result->h_addrtype = reply->h_addrtype;
+			result->h_length = reply->h_length;
+			for (addr_count=0; reply->h_addr_list[addr_count]; ++addr_count);
+			result->h_addr_list = (char **) malloc ((addr_count+1) * sizeof(char *));
+			for (i=0; i<addr_count; ++i)
+			{
+				result->h_addr_list[i] = (char *) malloc ((size_t) reply->h_length);
+				::memcpy (result->h_addr_list[i], reply->h_addr_list[i], reply->h_length);
+			}
+			result->h_addr_list[i] = NULL;
 		}
-		result->h_addr_list[i] = NULL;
 	}
-	lck.unlock();
 	return result;
 }
 
@@ -534,7 +535,7 @@ tcplistener::tcplistener (int port)
 
 tcplistener::tcplistener (void)
 {
-	sock.o = 0;
+	unprotected (sock) { sock = 0; }
 	listening = false;
 	tcpdomain = true;
 	tcpdomainport = 0;
@@ -547,49 +548,50 @@ tcplistener::tcplistener (void)
 // ========================================================================
 void tcplistener::listento (int port)
 {
-	sock.lockw();
-	if (listening)
+	exclusivesection (sock)
 	{
-		close (sock.o);
-		listening = false;
+		if (listening)
+		{
+			close (sock);
+			listening = false;
+		}
+		
+		tcpdomain = true;
+		tcpdomainport = port;
+		
+		struct sockaddr_in	 remote;
+		struct in_addr		 bindaddr;
+		struct hostent 		*myhostent;
+		int					 pram = 1;
+	
+		bzero ((char *) &remote, sizeof (remote));
+		remote.sin_family = AF_INET;
+		remote.sin_addr.s_addr = htonl (INADDR_ANY);
+		remote.sin_port = htons (port);
+		
+		sock = socket (AF_INET, SOCK_STREAM, 0);
+		if (sock < 0)
+		{
+			breaksection throw (EX_SOCK_CREATE);
+		}
+		
+		setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, (char *) &pram,
+					sizeof (int));
+					
+	#ifdef SO_REUSEPORT
+		setsockopt (sock, SOL_SOCKET, SO_REUSEPORT, (char *) &pram,
+					sizeof (int));
+	#endif
+	
+		if (bind (sock, (struct sockaddr *) &remote, sizeof (remote)) < 0)
+		{
+			close (sock);
+			breaksection throw (EX_SOCK_CREATE);
+		}
+		
+		listen (sock, TUNE_TCPLISTENER_BACKLOG);
+		listening = true;
 	}
-	
-	tcpdomain = true;
-	tcpdomainport = port;
-	
-	struct sockaddr_in	 remote;
-	struct in_addr		 bindaddr;
-	struct hostent 		*myhostent;
-	int					 pram = 1;
-
-	bzero ((char *) &remote, sizeof (remote));
-	remote.sin_family = AF_INET;
-	remote.sin_addr.s_addr = htonl (INADDR_ANY);
-	remote.sin_port = htons (port);
-	
-	sock.o = socket (AF_INET, SOCK_STREAM, 0);
-	if (sock.o < 0)
-	{
-		throw (EX_SOCK_CREATE);
-	}
-	
-	setsockopt (sock.o, SOL_SOCKET, SO_REUSEADDR, (char *) &pram,
-				sizeof (int));
-				
-#ifdef SO_REUSEPORT
-	setsockopt (sock.o, SOL_SOCKET, SO_REUSEPORT, (char *) &pram,
-				sizeof (int));
-#endif
-
-	if (bind (sock.o, (struct sockaddr *) &remote, sizeof (remote)) < 0)
-	{
-		close (sock.o);
-		throw (EX_SOCK_CREATE);
-	}
-	
-	listen (sock.o, TUNE_TCPLISTENER_BACKLOG);
-	listening = true;
-	sock.unlock();
 }
 
 // ========================================================================
@@ -609,45 +611,46 @@ tcplistener::tcplistener (const string &path)
 // ========================================================================
 void tcplistener::listento (const string &path)
 {
-	sock.lockw();
-	if (listening)
+	exclusivesection (sock)
 	{
-		close (sock.o);
-		listening = false;
+		if (listening)
+		{
+			close (sock);
+			listening = false;
+		}
+		
+		string realpath;
+		realpath = fs.transw (path);
+		
+		tcpdomain = false;
+		unixdomainpath = path;
+		
+		struct sockaddr_un remote;
+		int    pram = 1;
+		
+		bzero ((char *) &remote, sizeof (remote));
+		remote.sun_family = AF_UNIX;
+		strncpy (remote.sun_path, realpath.str(), 107);
+		remote.sun_path[107] = 0;
+		
+		sock = socket (AF_UNIX, SOCK_STREAM, 0);
+		if (sock < 0)
+		{
+			breaksection throw (EX_SOCK_CREATE);
+		}
+		
+		setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, (char *) &pram,
+					sizeof (int));
+		
+		if (bind (sock, (struct sockaddr *) &remote, sizeof (remote)) < 0)
+		{
+			close (sock);
+			breaksection throw (EX_SOCK_CREATE);
+		}
+		
+		listen (sock, TUNE_TCPLISTENER_BACKLOG);
+		listening = true;
 	}
-	
-	string realpath;
-	realpath = fs.transw (path);
-	
-	tcpdomain = false;
-	unixdomainpath = path;
-	
-	struct sockaddr_un remote;
-	int    pram = 1;
-	
-	bzero ((char *) &remote, sizeof (remote));
-	remote.sun_family = AF_UNIX;
-	strncpy (remote.sun_path, realpath.str(), 107);
-	remote.sun_path[107] = 0;
-	
-	sock.o = socket (AF_UNIX, SOCK_STREAM, 0);
-	if (sock.o < 0)
-	{
-		throw (EX_SOCK_CREATE);
-	}
-	
-	setsockopt (sock.o, SOL_SOCKET, SO_REUSEADDR, (char *) &pram,
-				sizeof (int));
-	
-	if (bind (sock.o, (struct sockaddr *) &remote, sizeof (remote)) < 0)
-	{
-		close (sock.o);
-		throw (EX_SOCK_CREATE);
-	}
-	
-	listen (sock.o, TUNE_TCPLISTENER_BACKLOG);
-	listening = true;
-	sock.unlock();
 }
 
 // ========================================================================
@@ -657,7 +660,7 @@ void tcplistener::listento (const string &path)
 // ========================================================================
 tcplistener::~tcplistener (void)
 {
-	::close (sock.o);
+	unprotected (sock) { ::close (sock); }
 }
 
 // ========================================================================
@@ -674,9 +677,11 @@ tcpsocket *tcplistener::accept (void)
 	int pram=1;
 	unsigned int raddr;
 	
-	//sock.lockw();
-	int s = ::accept (sock.o, (struct sockaddr *) &remote, &anint);
-	//sock.unlock();
+	int s;
+	unprotected (sock)
+	{
+		s = ::accept (sock, (struct sockaddr *) &remote, &anint);
+	}
 	
 	if (s<0)
 	{
@@ -734,23 +739,27 @@ tcpsocket *tcplistener::tryaccept (double timeout)
 	tv.tv_sec = (int) timeout;
 	tv.tv_usec = (int) (10000.0 * ( timeout - ((double) tv.tv_sec)));
 
-	FD_ZERO (&fds);
-	FD_SET (sock.o, &fds);
-		
-	//sock.lockw();
-	if (select (sock.o+1, &fds, NULL, NULL, &tv) > 0)
+	int selresult;
+	unprotected (sock)
 	{
-		sock.lockw();
 		FD_ZERO (&fds);
-		FD_SET (sock.o, &fds);
-		tv.tv_sec = tv.tv_usec = 0;
-		if (select (sock.o+1, &fds, NULL, NULL, &tv) > 0)
-		{
-			s = ::accept (sock.o, (struct sockaddr *) &remote, &anint);
-		}
-		sock.unlock();
+		FD_SET (sock, &fds);
+		selresult = select (sock+1, &fds, NULL, NULL, &tv);
 	}
-	//sock.unlock();
+	
+	if (selresult > 0)
+	{
+		exclusivesection (sock)
+		{
+			FD_ZERO (&fds);
+			FD_SET (sock, &fds);
+			tv.tv_sec = tv.tv_usec = 0;
+			if (select (sock+1, &fds, NULL, NULL, &tv) > 0)
+			{
+				s = ::accept (sock, (struct sockaddr *) &remote, &anint);
+			}
+		}
+	}
 	
 	if (s<0)
 	{

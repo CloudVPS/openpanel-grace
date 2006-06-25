@@ -7,7 +7,7 @@
 #include <grace/statstring.h>
 #include <grace/thread.h>
 
-statstring nil;
+statstring nokey;
 
 // ========================================================================
 // FUNCTION dumpstringref
@@ -103,27 +103,31 @@ void stringrefdb::rmref (stringref *ref)
 // ========================================================================
 void stringrefdb::unref (stringref *ref)
 {
-	treelock.lockw();
-	ref->refcnt--;
-	
-	if (ref->parent && (ref->refcnt == 0))
+	exclusivesection (treelock)
 	{
-		unsigned int oldcount;
-		unsigned int sz = ref->str.strlen();
-		dirtycount.lockw();
-		oldcount = dirtycount.o;
-		dirtycount.o += ref->str.strlen();
-		if ((dirtycount.o > 65536) || (sz && (dirtycount.o <= oldcount)))
+		ref->refcnt--;
+		
+		if (ref->parent && (ref->refcnt == 0))
 		{
-			dirtycount.o = 0;
-			dirtycount.unlock();
-			reap (root);
-			cleanups++;
+			unsigned int oldcount;
+			unsigned int sz = ref->str.strlen();
+			
+			exclusivesection (dirtycount)
+			{
+				oldcount = dirtycount;
+				dirtycount += ref->str.strlen();
+				if ((dirtycount > 65536) || (sz && (dirtycount <= oldcount)))
+				{
+					dirtycount = 0;
+					breaksection
+					{
+						reap (root);
+						cleanups++;
+					}
+				}
+			}
 		}
-		else dirtycount.unlock();
 	}
-	
-	treelock.unlock();
 }
 
 // ========================================================================
@@ -133,9 +137,7 @@ void stringrefdb::unref (stringref *ref)
 // ========================================================================
 void stringrefdb::cpref (stringref *ref)
 {
-	treelock.lockw();
-	ref->refcnt++;
-	treelock.unlock();
+	exclusivesection (treelock) ref->refcnt++;
 }
 
 // ========================================================================
@@ -211,49 +213,57 @@ stringref *stringrefdb::getref (const char *str, unsigned int key)
 		key = checksum (str);
 	}
 	
-	// Need write-lock because we'll add stuff if there's no match.
-	treelock.lockw();
-	stringref *crsr = root;
-	stringref *oldcrsr = root;
+	stringref *crsr;
+	stringref *oldcrsr;
+	unsigned short cnt;
 	
-	while (crsr)
+	// Need write-lock because we'll add stuff if there's no match.
+	exclusivesection (treelock)
 	{
-		oldcrsr = crsr;
+		crsr = root;
+		oldcrsr = root;
 		
-		if (crsr->key == key)
+		while (crsr)
 		{
-			if (crsr->str.strcmp (str) == 0)
+			oldcrsr = crsr;
+			
+			if (crsr->key == key)
 			{
-				crsr->refcnt++;
-				treelock.unlock();
-				if (crsr->refcnt == 1)
+				if (crsr->str.strcmp (str) == 0)
 				{
-					dirtycount.lockw();
-					dirtycount.o -= crsr->str.strlen();
-					dirtycount.unlock();
+					crsr->refcnt++;
+					cnt = crsr->refcnt;
+					breaksection
+					{
+						if (cnt == 1)
+						{
+							exclusivesection (dirtycount)
+							{
+								dirtycount -= crsr->str.strlen();
+							}
+						}
+						return crsr;
+					}
 				}
-				return crsr;
+				else crsr = crsr->lower;
 			}
+			else if (crsr->key < key) crsr = crsr->higher;
 			else crsr = crsr->lower;
 		}
-		else if (crsr->key < key) crsr = crsr->higher;
-		else crsr = crsr->lower;
+		
+		// The oldcrsr points to what will be our parent object,
+		// by increasing the refcnt we make sure it will not
+		// disappear from under our feet.
+		
+		crsr = newref ();
+		crsr->str = str;
+		crsr->refcnt = 1;
+		crsr->key = key;
+		crsr->parent = oldcrsr;
+	
+		if (oldcrsr->key < key) oldcrsr->higher = crsr;
+		else oldcrsr->lower = crsr;
 	}
-	
-	// The oldcrsr points to what will be our parent object,
-	// by increasing the refcnt we make sure it will not
-	// disappear from under our feet.
-	
-	crsr = newref ();
-	crsr->str = str;
-	crsr->refcnt = 1;
-	crsr->key = key;
-	crsr->parent = oldcrsr;
-
-	if (oldcrsr->key < key) oldcrsr->higher = crsr;
-	else oldcrsr->lower = crsr;
-
-	treelock.unlock();		
 	return crsr;
 }
 

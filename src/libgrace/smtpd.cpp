@@ -111,9 +111,7 @@ void smtpd::run (void)
 		sleep (TUNE_SMTPD_MAINTHREAD_IDLE);
 		int tload;
 		
-		load.lockr();
-		tload = load.o;
-		load.unlock();
+		sharedsection (load) { tload = load; }
 		
 		// Can we still take an extra connection?
 		if ( (tload+1) >= workers.count() )
@@ -254,9 +252,9 @@ void smtpworker::run (void)
 		
 		// Get the new load number.
 		parent->tcplock.unlock();
-		parent->load.lockw();
-		nload = parent->load.o++;
-		parent->load.unlock();
+		
+		exclusiveaccess (parent->load) { nload = parent->load.o++; }
+		
 		exip = s.peer_name;
 		
 		// Send an event for the connection, if someone wants it.
@@ -429,9 +427,7 @@ mainloop:
 		}
 		
 		env.clear();
-		parent->load.lockw();
-		nload = parent->load.o--;
-		parent->load.unlock();
+		exclusiveaccess (parent->load) { nload = parent->load.o--; }
 		
 		if (parent->mask & SMTP_INFO)
 		{

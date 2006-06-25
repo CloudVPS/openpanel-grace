@@ -195,9 +195,9 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		// ------------------------------------------------------------------
 		// Send RCPT TO for each recipient and parse repl(y|ies).
 		// ------------------------------------------------------------------
-		for (int i=0; i<rcptto.count(); ++i)
+		foreach (rcp, rcptto)
 		{
-			sock.printf ("RCPT TO: <%s>\r\n", rcptto[i].cval());
+			sock.printf ("RCPT TO: <%s>\r\n", rcp.cval());
 			line = sock.gets();
 			if (line.toint() != 250)
 			{
@@ -242,9 +242,9 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 				sock.printf ("To: Undisclosed Recipients\r\n");
 			}
 		}
-		for (int h=0; h<headers.count(); ++h)
+		foreach (hdr, headers)
 		{
-			sock.printf ("%s: %s\r\n", headers[h].name(), headers[h].cval());
+			sock.printf ("%s: %s\r\n", hdr.name(), hdr.cval());
 		}
 		sock.printf ("\r\n");
 		

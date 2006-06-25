@@ -16,6 +16,7 @@
 #include <grace/system.h>
 #include <grace/timestamp.h>
 #include <grace/xmlschema.h>
+#include <grace/case.h>
 
 // ========================================================================
 // DESTRUCTOR httpd
@@ -50,9 +51,7 @@ void httpd::run (void)
 		int tload;
 		
 		// Get the current load
-		load.lockr();
-		tload = load.o;
-		load.unlock();
+		sharedsection (load) { tload = load; }
 		
 		// Can we still take an extra connection?
 		if ( (tload+1) >= workers.count() )
@@ -241,9 +240,13 @@ void httpd::eventhandle (value &ev)
 	httpdeventhandler *hdl;
 	int eventclass = 0;
 	
-	if (ev("class") == "access") eventclass = HTTPD_ACCESS;
-	else if (ev("class") == "error") eventclass = HTTPD_ERROR;
-	else if (ev("class") == "info") eventclass = HTTPD_INFO;
+	caseselector (ev("class"))
+	{
+		incaseof ("access") : eventclass = HTTPD_ACCESS; break;
+		incaseof ("error") : eventclass = HTTPD_ERROR; break;
+		incaseof ("info") : eventclass = HTTPD_INFO; break;
+		defaultcase : return;
+	}
 	
 	hdl = firsthandler;
 	while (hdl)
@@ -498,9 +501,7 @@ void httpdworker::run (void)
 		// Handle the parent httpd's load
 		int nload;
 		
-		parent->load.lockw();
-		nload = parent->load.o++;
-		parent->load.unlock();
+		exclusiveaccess (parent->load) { nload = parent->load.o++; }
 
 		// Should we tell anyone?
 		if (parent->eventmask & HTTPD_INFO)
@@ -701,9 +702,7 @@ void httpdworker::run (void)
 		s.close();
 		
 		// Downgrade to DEFCON foo-1
-		parent->load.lockw();
-		nload = parent->load.o--;
-		parent->load.unlock();
+		exclusiveaccess (parent->load) { nload = parent->load.o--; }
 
 		// Inform those who want to be informed
 		if (parent->eventmask & HTTPD_INFO)
@@ -911,30 +910,32 @@ int httpdlogger::handle (value &ev)
 		if (! remuser.strlen()) remuser = "-";
 		
 		// We'll be called from any thread, lock the file access.
-		faccess.lockw();
-		faccess.o.printf ("%s - %S [%s] \"%s %S HTTP/%S\" "
-						  "%i %i \"%S\" \"%S\"\n",
-						  ev["ip"].cval(),
-						  remuser.str(),
-						  timestr.str(),
-						  ev["method"].cval(),
-						  uri.str(),
-						  ev["httpver"].cval(),
-						  ev["status"].ival(),
-						  ev["bytes"].ival(),
-						  ev["referrer"].cval(),
-						  ev["useragent"].cval());
-		faccess.unlock();
+		exclusivesection (faccess)
+		{
+			faccess.printf ("%s - %S [%s] \"%s %S HTTP/%S\" "
+							"%i %i \"%S\" \"%S\"\n",
+							ev["ip"].cval(),
+							remuser.str(),
+							timestr.str(),
+							ev["method"].cval(),
+							uri.str(),
+							ev["httpver"].cval(),
+							ev["status"].ival(),
+							ev["bytes"].ival(),
+							ev["referrer"].cval(),
+							ev["useragent"].cval());
+		}
 	}
 	else if (haserrorlog)
 	{
 		// We'll be called from any thread, lock the file access.
-		ferror.lockw();
-		ferror.o.printf ("[%s] [error] [client %s] %s\n",
-						 timestr.str(),
-						 ev["ip"].cval(),
-						 ev["text"].cval());
-		ferror.unlock();
+		exclusivesection (ferror)
+		{
+			ferror.printf ("[%s] [error] [client %s] %s\n",
+						   timestr.str(),
+						   ev["ip"].cval(),
+						   ev["text"].cval());
+		}
 	}
 	return 1;
 }

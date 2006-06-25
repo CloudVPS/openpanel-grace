@@ -38,7 +38,7 @@ struct stringref
 /// Dumps the stringref database to disk.
 void dumpstringref (int signal);
 
-extern statstring nil;
+extern statstring nokey;
 
 /// Stringref database.
 /// Keeps a global collection of stringref objects.

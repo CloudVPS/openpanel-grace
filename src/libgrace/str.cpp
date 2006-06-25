@@ -91,28 +91,29 @@ threadref_t getref (void)
 	
 	if (! createdKey)
 	{
-		sequence.lockw();
-		if (! createdKey)
+		exclusivesection (sequence)
 		{
-			pthread_key_create (&pkey, removeref);
-			sequence.o = 1;
-			createdKey = true;
+			if (! createdKey)
+			{
+				pthread_key_create (&pkey, removeref);
+				sequence = 1;
+				createdKey = true;
+			}
 		}
-		sequence.unlock();
 	}
 	
 	res = (threadref_t *) pthread_getspecific (pkey);
 	if (! res)
 	{
-		sequence.lockw();
-		res = new threadref_t;
-		(*res) = sequence.o++;
-		pthread_setspecific (pkey, res);
-		sequence.unlock();
+		exclusivesection (sequence)
+		{
+			res = new threadref_t;
+			(*res) = sequence++;
+			pthread_setspecific (pkey, res);
+		}
 	}
 	
-	TSEQ = sequence.o;
-	
+	TSEQ = (*res);
 	return (*res);
 }
 

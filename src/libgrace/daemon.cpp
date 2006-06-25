@@ -204,23 +204,23 @@ void daemon::log (log::priority prio, const string &modulename,
 	
 	// Keep a cache of conversion from text-based priorities
 	// to log::priority values.
-	static value *prioNames = new value;
+	static value prioNames;
 	
 	// Fill the cache if it is empty
-	if (! prioNames->exists ("debug"))
+	if (! prioNames.exists ("debug"))
 	{
-		(*prioNames)["debug"] = log::debug;
-		(*prioNames)["info"]  = log::info;
-		(*prioNames)["warning"] = log::warning;
-		(*prioNames)["error"] = log::error;
-		(*prioNames)["critical"] = log::critical;
-		(*prioNames)["alert"] = log::alert;
-		(*prioNames)["emergency"] = log::emergency;
-		(*prioNames)["application"] = log::application;
-		(*prioNames)["allinfo"] = 255 - log::debug;
-		(*prioNames)["allerror"] = log::error | log::critical
+		prioNames["debug"] = log::debug;
+		prioNames["info"]  = log::info;
+		prioNames["warning"] = log::warning;
+		prioNames["error"] = log::error;
+		prioNames["critical"] = log::critical;
+		prioNames["alert"] = log::alert;
+		prioNames["emergency"] = log::emergency;
+		prioNames["application"] = log::application;
+		prioNames["allinfo"] = 255 - log::debug;
+		prioNames["allerror"] = log::error | log::critical
 								 | log::alert | log::emergency;
-		(*prioNames)["all"]= 255;
+		prioNames["all"]= 255;
 	}
 
 	// If no logtargets were manually defined, get the desired
@@ -252,7 +252,7 @@ void daemon::log (log::priority prio, const string &modulename,
 			
 			foreach (reqprio, logdef["priorities"])
 			{
-				int myprio = ((*prioNames)[reqprio.sval()].ival());
+				int myprio = (prioNames[reqprio.sval()].ival());
 				myprio |= (int) prio;
 				prio = ((log::priority) myprio);
 			}

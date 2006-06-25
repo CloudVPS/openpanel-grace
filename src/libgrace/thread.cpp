@@ -39,19 +39,20 @@ bool thread::spawn (void)
 		return true;
 	}
 	bool result = false;
-	ipc.lockr();
-	if (! ipc.o["running"])
+
+	sharedsection (ipc)
 	{
-		ipc.unlock();
-		if (pthread_create (&tid, &attr, thread::dorun, this))
+		if (! ipc["running"])
 		{
-			ipc.unlock();
-			throw (EX_THREAD_CREATE);
+			if (pthread_create (&tid, &attr, thread::dorun, this))
+			{
+				sectionlock.unlock();
+				throw (EX_THREAD_CREATE);
+			}
+			pthread_detach (tid);
+			result = true;
 		}
-		pthread_detach (tid);
-		result = true;
 	}
-	else ipc.unlock();
 	
 	spawned = result;
 	return result;
@@ -65,9 +66,10 @@ bool thread::spawn (void)
 bool thread::runs (void)
 {
 	bool result;
-	ipc.lockr();
-	result = ipc.o["running"];
-	ipc.unlock();
+	sharedsection (ipc)
+	{
+		result = ipc["running"];
+	}
 	return result;
 }
 	
@@ -81,15 +83,18 @@ value *thread::nextevent (void)
 {
 	returnclass (value) res retain;
 
-	ipc.lockw ();
-	if (! ipc.o["events"].count())
+	exclusivesection (ipc)
 	{
-		ipc.unlock ();
-		return &res;
+		if (! ipc["events"].count())
+		{
+			breaksection
+			{
+				return &res;
+			}
+		}
+		res = ipc["events"][0];
+		ipc["events"].rmindex (0);
 	}
-	res = ipc.o["events"][0];
-	ipc.o["events"].rmindex (0);
-	ipc.unlock ();
 	return &res;
 }
 
@@ -103,19 +108,22 @@ value *thread::waitevent (void)
 {
 	returnclass (value) res retain;
 	
-	ipc.lockw ();
-	while (! ipc.o["events"].count())
+	exclusivesection (ipc)
 	{
-		ipc.unlock ();
-		if (! event.wait())
+		while (! ipc["events"].count())
 		{
-			return &res;
+			breaksection
+			{
+				if (! event.wait())
+				{
+					return &res;
+				}
+			}
 		}
-		ipc.lockw ();
+		res = ipc["events"][0];
+		ipc["events"].rmindex (0);
 	}
-	res = ipc.o["events"][0];
-	ipc.o["events"].rmindex (0);
-	ipc.unlock ();
+
 	return &res;
 }
 
@@ -130,17 +138,16 @@ value *thread::waitevent (void)
 void threadgroup::gc (void)
 {
 	int idx;
-	lck.lockr();
-	for (idx=0; idx<cnt; ++idx)
+	sharedsection (lck)
 	{
-		if (array[idx]->finished)
+		for (idx=0; idx<cnt; ++idx)
 		{
-			lck.unlock();
-			delete array[idx];
-			lck.lockr();
+			if (array[idx]->finished)
+			{
+				breaksection { delete array[idx]; }
+			}
 		}
 	}
-	lck.unlock();
 }
 
 // ========================================================================
