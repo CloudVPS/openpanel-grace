@@ -12,8 +12,6 @@ enum memoryException
 	EX_MEMORY_RETAIN_MISMATCH = 0xbf682be7,
 	EX_MEMORY_DEFUNCT_POINTER = 0xebb649e2
 };
-	
-#define EX_MEMORY_RETAIN_MISMATCH 666
 
 /// Namespace for custom memory management.
 namespace memory
@@ -129,6 +127,7 @@ namespace memory
 	};
 };
 
+/// Global pointer for debugging purposes.
 extern memory::pool *__retain_ptr;
 	
 #endif

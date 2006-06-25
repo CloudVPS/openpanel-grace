@@ -584,7 +584,7 @@ public:
 						 httpdlogger (httpd &parent,
 						 			  const string &accesslog,
 						 			  const string &errorlog="",
-						 			  unsigned int maxsz = defaults::sz::logfile;
+						 			  unsigned int maxsz = defaults::sz::logfile)
 						 	: httpdeventhandler (parent,
 						 						 HTTPD_ACCESS|HTTPD_ERROR)
 						 {

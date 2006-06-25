@@ -31,7 +31,7 @@ application.o: ../../include/grace/dictionary.h ../../include/grace/array.h
 application.o: ../../include/grace/stringdict.h
 application.o: ../../include/grace/filesystem.h ../../include/grace/strutil.h
 application.o: ../../include/grace/regexpression.h /usr/include/regex.h
-application.o: ../../include/grace/xmlschema.h
+application.o: ../../include/grace/xmlschema.h /usr/include/dlfcn.h
 cgi.o: ../../include/grace/system.h /usr/include/sys/types.h
 cgi.o: /usr/include/sys/appleapiopts.h /usr/include/sys/cdefs.h
 cgi.o: /usr/include/machine/types.h /usr/include/ppc/types.h
@@ -215,6 +215,7 @@ daemon.o: ../../include/grace/filesystem.h ../../include/grace/strutil.h
 daemon.o: ../../include/grace/regexpression.h /usr/include/regex.h
 daemon.o: ../../include/grace/defaults.h /usr/include/syslog.h
 daemon.o: /usr/include/sys/syslog.h
+defaults.o: ../../include/grace/defaults.h
 dictionary.o: ../../include/grace/dictionary.h /usr/include/stdlib.h
 dictionary.o: /usr/include/sys/cdefs.h /usr/include/_types.h
 dictionary.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
@@ -677,8 +678,9 @@ smtpd.o: /usr/include/arpa/inet.h /usr/include/stdint.h
 smtpd.o: /usr/include/sys/param.h /usr/include/sys/syslimits.h
 smtpd.o: /usr/include/limits.h /usr/include/machine/limits.h
 smtpd.o: /usr/include/ppc/limits.h ../../include/grace/timestamp.h
-smtpd.o: ../../include/grace/filesystem.h ../../include/grace/strutil.h
-smtpd.o: ../../include/grace/regexpression.h /usr/include/regex.h
+smtpd.o: ../../include/grace/defaults.h ../../include/grace/filesystem.h
+smtpd.o: ../../include/grace/strutil.h ../../include/grace/regexpression.h
+smtpd.o: /usr/include/regex.h
 socketpool.o: ../../include/grace/socketpool.h
 socketpool.o: ../../include/grace/tcpsocket.h ../../include/grace/file.h
 socketpool.o: ../../include/grace/str.h ../../include/grace/value.h

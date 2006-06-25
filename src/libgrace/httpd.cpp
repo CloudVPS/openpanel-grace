@@ -47,7 +47,7 @@ void httpd::run (void)
 	// Main loop
 	while (! _shutdown)
 	{
-		sleep (TUNE_HTTPD_MAINTHREAD_IDLE); // No rush
+		sleep (tune::httpd::mainthread::idle); // No rush
 		int tload;
 		
 		// Get the current load
@@ -64,7 +64,7 @@ void httpd::run (void)
 				
 				// Don't kill this drone any time during the next
 				// five rounds.
-				tdelay = TUNE_HTTPD_WKTHREAD_MINROUNDS;
+				tdelay = tune::httpd::wkthread::minrounds;
 			}
 		}
 		else if (! tdelay) // There's room, did we recently spawn?
@@ -73,7 +73,8 @@ void httpd::run (void)
 			if (workers.count() > minthr)
 			{
 				// Do we carry more than two threads over the load?
-				if ((workers.count() - tload) > TUNE_HTTPD_WKTHREAD_MINOVERHEAD)
+				if ((workers.count() - tload) >
+								tune::httpd::wkthread::minoverhead);
 				{
 					// Have we not already asked one of these threads
 					// to die as of late?
@@ -296,8 +297,11 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 	value outhdr;
 	string outbody;
 	
-	if ( (TUNE_HTTPD_KEEPALIVE_TRIG * load.o) > workers.count() )
+	unprotected (load)
+	{
+		if ( (tune::httpd::keepalive::trigger * load) > workers.count() )
 		keepalive = false;
+	}
 		
 	// Give the objects access to the keepalive status
 	env["keepalive"] = keepalive;

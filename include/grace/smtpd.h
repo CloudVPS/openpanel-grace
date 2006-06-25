@@ -3,6 +3,7 @@
 
 #include <grace/thread.h>
 #include <grace/tcpsocket.h>
+#include <grace/defaults.h>
 
 enum smtpdException {
 	EX_SMTPD_LISTENPORT		= 0xe61e5af4

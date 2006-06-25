@@ -8,6 +8,8 @@
 #ifndef _DEFAULTS_H
 #define _DEFAULTS_H 1
 
+// The defaults.cpp file includes this file with an extra #define, turning
+// the 'extern' declarations of the header into actual initializations.
 #ifdef _DEFAULTS_CPP
  #define parameter 
  #define defaultvalue(foo) = foo
