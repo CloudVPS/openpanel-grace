@@ -589,7 +589,7 @@ void tcplistener::listento (int port)
 			breaksection throw (EX_SOCK_CREATE);
 		}
 		
-		listen (sock, TUNE_TCPLISTENER_BACKLOG);
+		listen (sock, tune::tcplistener::backlog);
 		listening = true;
 	}
 }
@@ -648,7 +648,7 @@ void tcplistener::listento (const string &path)
 			breaksection throw (EX_SOCK_CREATE);
 		}
 		
-		listen (sock, TUNE_TCPLISTENER_BACKLOG);
+		listen (sock, tune::tcplistener::backlog);
 		listening = true;
 	}
 }

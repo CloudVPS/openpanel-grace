@@ -1,6 +1,7 @@
 #include <grace/smtpd.h>
 #include <grace/system.h>
 #include <grace/filesystem.h>
+#include <grace/defaults.h>
 
 // ==========================================================================
 // CONSTRUCTOR smtpd
@@ -108,7 +109,7 @@ void smtpd::run (void)
 		
 	while (! _shutdown)
 	{
-		sleep (TUNE_SMTPD_MAINTHREAD_IDLE);
+		sleep (tune::smtpd::mainthread::idle);
 		int tload;
 		
 		sharedsection (load) { tload = load; }
@@ -119,14 +120,15 @@ void smtpd::run (void)
 			if (workers.count() < maxthr)
 			{
 				new smtpworker (this);
-				tdelay = TUNE_SMTPD_WKTHREAD_MINROUNDS;
+				tdelay = tune::smtpd::wkthread::minrounds;
 			}
 		}
 		else if (! tdelay)
 		{
 			if (workers.count() > minthr)
 			{
-				if ((workers.count() - tload) > TUNE_SMTPD_WKTHREAD_MINOVERHEAD)
+				if ((workers.count() - tload) >
+									tune::smtpd::wkthread::minoverhead)
 				{
 					if (workers.count() != skimcount)
 					{

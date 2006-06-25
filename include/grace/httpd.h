@@ -584,7 +584,7 @@ public:
 						 httpdlogger (httpd &parent,
 						 			  const string &accesslog,
 						 			  const string &errorlog="",
-						 			  unsigned int maxsz = DEFAULT_SZ_LOGFILE)
+						 			  unsigned int maxsz = defaults::sz::logfile;
 						 	: httpdeventhandler (parent,
 						 						 HTTPD_ACCESS|HTTPD_ERROR)
 						 {
@@ -643,7 +643,7 @@ public:
 					 	: thread (), listener (DomainSocket)
 					 {
 					 	if (inmaxt < inmint) inmaxt = inmint;
-					 	_maxpostsize = DEFAULT_LIM_HTTPD_POSTSIZE;
+					 	_maxpostsize = defaults::lim::httpd::postsize;
 					 	minthr = inmint;
 					 	maxthr = inmaxt;
 					 	eventmask = 0;
@@ -663,7 +663,7 @@ public:
 					 	: thread (), listener (listenport)
 					 {
 					 	if (inmaxt < inmint) inmaxt = inmint;
-					 	_maxpostsize = DEFAULT_LIM_HTTPD_POSTSIZE;
+					 	_maxpostsize = defaults::lim::httpd::postsize;
 					 	minthr = inmint;
 					 	maxthr = inmaxt;
 					 	eventmask = 0;
@@ -679,7 +679,7 @@ public:
 					 httpd (void)
 					 	: thread (), listener ()
 					 {
-					 	_maxpostsize = DEFAULT_LIM_HTTPD_POSTSIZE;
+					 	_maxpostsize = defaults::lim::httpd::postsize;
 					 	minthr = 2;
 					 	maxthr = 4;
 					 	eventmask = 0;

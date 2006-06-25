@@ -8,6 +8,7 @@ OBJ			= 	application.o \
 				configdb.o \
 				currency.o \
 				daemon.o \
+				defaults.o \
 				dictionary.o \
 				file.o \
 				filesystem.o \

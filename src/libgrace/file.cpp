@@ -576,11 +576,11 @@ string *file::gets (int maxlinesize)
 	
 	while (buffer.room() && (! buffer.hasline()))
 	{
-		char buf[DEFAULT_SZ_FILE_READBUF];
+		char buf[defaults::sz::file::readbuf];
 		size_t sz;
 		size_t wanted;
 		
-		wanted = DEFAULT_SZ_FILE_READBUF;
+		wanted = defaults::sz::file::readbuf;
 		if (wanted > buffer.room()) wanted = buffer.room();
 
 		int opts;
@@ -931,10 +931,10 @@ string *file::read (size_t sz)
 		}
 	}
 
-	char buf[DEFAULT_SZ_FILE_READBUF];
+	char buf[defaults::sz::file::readbuf];
 	while ( (! feof) && (buffer.backlog() < sz) )
 	{
-		unsigned int am = DEFAULT_SZ_FILE_READBUF;
+		unsigned int am = defaults::sz::file::readbuf;
 		if (am > buffer.room()) am = buffer.room();
 
 		ssz = ::read (filno, buf, am);
@@ -997,9 +997,9 @@ string *file::read (size_t sz, int timeout_ms)
 	
 	fd_set fds;
 	struct timeval tv;
-	char buf[DEFAULT_SZ_FILE_READBUF];
+	char buf[defaults::sz::file::readbuf];
 	int ssz;
-	unsigned int am = DEFAULT_SZ_FILE_READBUF;
+	unsigned int am = defaults::sz::file::readbuf;
 	if (am > buffer.room()) am = buffer.room();
 	
 	tv.tv_sec = timeout_ms/1000;

@@ -4,10 +4,6 @@
 #include <grace/thread.h>
 #include <grace/tcpsocket.h>
 
-#define TUNE_SMTPD_MAINTHREAD_IDLE	5
-#define TUNE_SMTPD_WKTHREAD_MINROUNDS	3
-#define TUNE_SMTPD_WKTHREAD_MINOVERHEAD	1
-
 enum smtpdException {
 	EX_SMTPD_LISTENPORT		= 0xe61e5af4
 };

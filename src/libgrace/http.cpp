@@ -317,10 +317,10 @@ bool httpsocket::getChunked (string &into)
 				}
 			}
 			chunksz = ln.toint (16);
-			if (chunksz>DEFAULT_LIM_HTTP_CHUNKSIZE)
+			if (chunksz>defaults::lim::httpd::chunksize)
 			{
 				error = "Max chunksize ";
-				error.printf ("%i < %i", DEFAULT_LIM_HTTP_CHUNKSIZE, chunksz);
+				error.printf ("%i < %i", defaults::lim::httpd::chunksize, chunksz);
 				throw (EX_HTTP_MAX_CHUNKSIZE);
 			}
 			if (chunksz>0)

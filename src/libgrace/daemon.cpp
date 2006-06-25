@@ -415,7 +415,7 @@ void logthread::run (void)
 					
 					// rotate logfiles
 					unsigned int msize;
-					msize = tf->maxsize ? tf->maxsize:DEFAULT_SZ_LOGFILE;
+					msize = tf->maxsize ? tf->maxsize : (defaults::sz::logfile);
 					if (tf->f.pos() > msize)
 					{
 						string olda, oldb, oldc, oldd;

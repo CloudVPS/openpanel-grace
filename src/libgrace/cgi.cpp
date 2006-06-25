@@ -97,10 +97,10 @@ cgi::cgi (const char *appname) : application (appname)
 		
 		int clen = v["Content-length"];
 		
-		if (clen > (DEFAULT_LIM_CGI_POSTSIZE))
+		if (clen > (defaults::lim::cgi::postsize))
 		{
 			headers["Content-type"] = "text/html";
-			buffer.printf ("<body>Max 8MB</body>\n");
+			buffer.printf ("<body>Size overflow</body>\n");
 			
 			sendpage();
 			throw (EX_CGI_EOF);
