@@ -69,9 +69,9 @@ namespace memory
 		sizepool		*pools; ///< Linked list of sizepools.
 	};
 	
-	pool *memory::getretain (void);
+	pool *getretain (void);
 	
-	inline pool &memory::retainpool (void) { return *memory::getretain(); }
+	inline pool &retainpool (void) { return *memory::getretain(); }
 
 	/// Base class for return-by-pointer memory management.
 	/// Uses a custom allocator if the memory::retainable::onstack argument
