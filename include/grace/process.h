@@ -213,6 +213,14 @@ public:
 					 {
 					 	_argv = args;
 					 }	
+
+					 systemprocess (const value &args, const value &env,
+					 				bool withStdErr = false)
+					 	 : process (args[0].sval(), withStdErr)
+					 {
+					 	_argv = args;
+					 	_env = env;
+					 }				
 					 
 	virtual			~systemprocess (void)
 					 {
@@ -236,6 +244,11 @@ public:
 					 	}
 					 	myargv[i] = NULL;
 					 	
+					 	foreach (var, _env)
+					 	{
+					 		::setenv (var.id().str(), var.cval(), 1);
+					 	}
+					 	
 					 	cpath = fs.transr (myargv[0]);
 					 	
 					 	execv (cpath.str(), myargv);
@@ -245,6 +258,7 @@ public:
 
 protected:
 	value			 _argv; ///< Command line arguments used
+	value			 _env;
 };
 
 #endif
