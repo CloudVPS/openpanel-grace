@@ -178,6 +178,9 @@ string::string (const char *s) : retainable()
 string::string (const string &s) : retainable()
 {
 	// Verify the string is not empty
+	size = 0;
+	alloc = 0;
+	data = NULL;
 	
 	if (size = s.strlen())
 	{
@@ -212,6 +215,9 @@ string::string (const string &s) : retainable()
 string::string (const statstring &s) : retainable()
 {
 	// Verify the string is not empty
+	size = 0;
+	alloc = 0;
+	data = NULL;
 	
 	if (size = s.sval().strlen())
 	{
