@@ -51,4 +51,12 @@ with other programs.
   - Unix background process with logging: \link daemon daemon \endlink
   - Configuration and change control: \link configdb<appclass> configdb \endlink
 
+\subsection intro_macros Macros:
+  - foreach (node, collection) { ... } implemented through the 
+    \link visitor<kind> visitor \endlink protocol.
+  - caseselector (object) { ... } works on any native or object type that
+    understands operator==.
+  - exclusivesection (lockedobject) {...}, sharedsection (lockedobject) {...},
+    breaksection {...} and unprotected (lockedobject) {...} all need a
+    \link lock<kind> lock \endlink object.
 */
