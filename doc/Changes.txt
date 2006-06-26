@@ -1,4 +1,20 @@
 0.8.13     In production                              <pi@madscience.nl>
+
+           * Moved default values from macro-definition to initialized
+             globals. Runtime changes to these defaults can be achieved
+             by defining an optional init function in your code that
+             gets executed before the application object is created.
+             This is in preparation for the 0.9 series that will be
+             built as a shared library (which also implies we need
+             to focus on stabilizing the API/ABI at that point).
+
+           * Fixed a bug in the pointer-copy-constructor of string.
+
+           * Added exclusivesection (var) {...}, sharedsection (var)
+             and unprotected (var) {...} macros to access values wrapped
+             inside a lock<> template with a clear indication of the
+             scope of the lock.
+
            * Cleaned up test system.
            
            * Added caseselector { incaseof() : ...; defaultcase : ...; }
