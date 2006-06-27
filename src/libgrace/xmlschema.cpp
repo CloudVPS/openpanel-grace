@@ -127,6 +127,20 @@ void xmlschema::load (const string &name)
 {
 	xmlschema xmlroot (XMLRootSchemaType);
 	schema.loadxml (name,xmlroot);
+	
+	foreach (cl, schema)
+	{
+		if (cl.exists (key::xml_proplist))
+		{
+			foreach (member, cl[key::xml_proplist])
+			{
+				if (member.attribexists (key::type))
+				{
+					schema[member.id()][key::xml_type] = member (key::type);
+				}
+			}
+		}
+	}
 }
 
 // ========================================================================

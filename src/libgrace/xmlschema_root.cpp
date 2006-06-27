@@ -342,6 +342,9 @@ void xmlschema::xmlrootschema (void)
 	schema[-1][-1][key::id].type (key::xml_attribute);
 	schema[-1][-1][-1][key::xml_type] = "string";
 	schema[-1][-1][-1][key::xml_code] = "XMid";
+	schema[-1][-1][key::type].type (key::xml_attribute);
+	schema[-1][-1][-1][key::xml_type] = "string";
+	schema[-1][-1][-1][key::xml_code] = "XMtp";
 	schema[-1][-1][key::mandatory].type (key::xml_attribute);
 	schema[-1][-1][-1][key::xml_type] = "string";
 	schema[-1][-1][-1][key::xml_code] = "XMma";

@@ -258,6 +258,10 @@
         <xml.type>string</xml.type>
         <xml.code>XMid</xml.code>
       </xml.attribute>
+      <xml.attribute label="type">
+        <xml.type>string</xml.type>
+        <xml.code>XMtp</xml.code>
+      </xml.attribute>
       <xml.attribute label="mandatory">
         <xml.type>bool</xml.type>
         <xml.code>XMma</xml.code>
