@@ -24,6 +24,7 @@
 		<match.id>doctype</match.id>
 		<match.rule>xml.option.doctype</match.rule>
 	  </and>
+	  <match.id>rootclass</match.id>
 	</match.child>
   </datarule>
   
@@ -174,6 +175,7 @@
     <match.attribute>
       <match.id>id</match.id>
       <match.id>mandatory</match.id>
+      <match.id>type</match.id>
     </match.attribute>
   </datarule>
   
