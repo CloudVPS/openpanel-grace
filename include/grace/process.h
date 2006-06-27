@@ -37,6 +37,9 @@ public:
 					 	data = v;
 					 	init (name, withStdErr);
 					 }
+					 process (bool nostart)
+					 {
+					 }
 	
 	void			 init (const string &name, bool withStdErr)
 					 {
@@ -202,24 +205,28 @@ public:
 					 /// \param withStdErr True if the stderr channel should be caught.
 					 systemprocess (const string &mcommand,
 					 				bool withStdErr = false)
-					 	 : process (mcommand, withStdErr)
+					 				: process (false)
 					 {
 					 	_argv = strutil::splitquoted (mcommand, ' ');
+					 	init (mcommand, withStdErr);
 					 }
 					 
 					 systemprocess (const value &args,
 					 				bool withStdErr = false)
-					 	: process (args[0].sval(), withStdErr)
+					 				: process (false)
 					 {
 					 	_argv = args;
+					 	init (args[0].sval(), withStdErr);
 					 }	
 
 					 systemprocess (const value &args, const value &env,
 					 				bool withStdErr = false)
-					 	 : process (args[0].sval(), withStdErr)
+					 				: process (false)
 					 {
 					 	_argv = args;
 					 	_env = env;
+					 	init (args[0].sval(), withStdErr);
+					 	run ();
 					 }				
 					 
 	virtual			~systemprocess (void)

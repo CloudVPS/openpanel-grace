@@ -411,6 +411,46 @@ value::value (value &v) : memory::retainable ()
 	}
 }
 
+value::value (const value &v)
+{
+	padding = 1;
+	if (! t_unset)
+	{
+		t_int = "integer";
+		t_unsigned = "unsigned";
+		t_ulong = "ulong";
+		t_bool = "bool";
+		t_bool_true = "bool.true";
+		t_bool_false = "bool.false";
+		t_double = "float";
+		t_string = "string";
+		t_ipaddr = "ipaddress";
+		t_unset = "void";
+		t_long = "long";
+		t_array = "array";
+		t_dict = "dict";
+		t_char = "char";
+		t_uchar = "uchar";
+		t_short = "short";
+		t_ushort = "ushort";
+		t_date = "date";
+		t_currency = "currency";
+	}
+	_type = t_unset;
+	itype = i_unset;
+	
+	t.lval = 0;
+	key = 0;
+	lower = higher = NULL;
+	array = NULL;
+	arraysz = 0;
+	arrayalloc = 0;
+	ucount = 0;
+	attrib = NULL;
+	
+	(*this) = v;
+}
+
 // ========================================================================
 // COPY CONSTRUCTOR
 // ----------------

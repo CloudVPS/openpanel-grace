@@ -136,6 +136,9 @@ public:
 					 /// Copy-constructor.
 					 value (value &);
 					 
+					 /// Const copy-constructor.
+					 value (const value &);
+					 
 					 /// Copy-constructor (deletes original).
 					 value (value *);
 					 
