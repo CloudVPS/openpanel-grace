@@ -74,12 +74,18 @@ string *httpsocket::post (const string &url, const string &ctype,
 	error.crop (0);
 	string re ("s#http://##");
 	status = 0;
+	bool unixdomain = false;
 	
 	if (! url.globcmp ("http://*"))
 	{
 		if ((_sock.codec) && (url.globcmp ("https://*")))
 		{
 			re = "s#https://##";
+		}
+		else if (url.globcmp ("unix://*"))
+		{
+			re = "s#unix://##";
+			unixdomain = true;
 		}
 		else
 		{
@@ -94,18 +100,49 @@ string *httpsocket::post (const string &url, const string &ctype,
 	int port = 80;
 	
 	rawuri = strutil::regexp (url, re);
-	hostpart = rawuri.cutat ('/');
-		
-	if (hostpart.strchr (':') >= 0)
+	if (rawuri[0] == '[')
 	{
-		portpart = hostpart;
-		hostpart = portpart.cutat (':');
-		port = atoi (portpart);
+		hostpart = rawuri.cutat ("]");
+		hostpart = hostpart.mid (1);
+		portpart = rawuri.cutat ('/');
+		if (portpart.strlen())
+		{
+			if (portpart[0] == ':')
+				port = atoi (portpart.cval() +1);
+		}
+	}
+	else
+	{
+		hostpart = rawuri.cutat ('/');
+		
+		if (hostpart.strchr (':') >= 0)
+		{
+			portpart = hostpart;
+			hostpart = portpart.cutat (':');
+			port = atoi (portpart);
+		}
 	}
 	
 	// If a proxy server was set we where
 	// not supposed to open a direct connection
-	if (_useproxy)
+	if (unixdomain)
+	{
+		if (_host.strlen())
+		{
+			_sock.close();
+			_host.crop(0);
+			_port = 0;
+		}
+		_keepalive = false;
+		
+		if (! _sock.uconnect (hostpart))
+		{
+			error.crop (0);
+			error.printf ("Could not connect to socket '%s'", hostpart.str());
+			return NULL;
+		}
+	}
+	else if (_useproxy)
 	{
 		if (! connectToHost (_proxyhost, _proxyport))
 		{
@@ -179,12 +216,18 @@ string *httpsocket::get (const string &url, value *hdr)
 	error.crop (0);
 	string re ("s#http://##");
 	status = 0;
+	bool unixdomain = false;
 	
 	if (! url.globcmp ("http://*"))
 	{
 		if ((_sock.codec) && (url.globcmp ("https://*")))
 		{
 			re = "s#https://##";
+		}
+		else if (url.globcmp ("unix://*"))
+		{
+			re = "s#unix://##";
+			unixdomain = true;
 		}
 		else
 		{
@@ -197,17 +240,46 @@ string *httpsocket::get (const string &url, value *hdr)
 	string portpart;
 	int port = 80;
 	rawuri = strutil::regexp (url, re);
-	hostpart = rawuri.cutat ('/');
-	if (hostpart.strchr (':') >= 0)
+	if (rawuri[0] == '[')
 	{
-		portpart = hostpart;
-		hostpart = portpart.cutat (':');
-		port = atoi (portpart);
+		hostpart = rawuri.cutat ("]");
+		hostpart = hostpart.mid (1);
+		portpart = rawuri.cutat ('/');
+		if (portpart.strlen())
+		{
+			if (portpart[0] == ':')
+				port = atoi (portpart.cval() +1);
+		}
+	}
+	else
+	{
+		hostpart = rawuri.cutat ('/');
+		if (hostpart.strchr (':') >= 0)
+		{
+			portpart = hostpart;
+			hostpart = portpart.cutat (':');
+			port = atoi (portpart);
+		}
 	}
 	
-		// If a proxy server was set we where
-	// not supposed to open a direct connection
-	if (_useproxy)
+	if (unixdomain)
+	{
+		if (_host.strlen())
+		{
+			_sock.close();
+			_host.crop(0);
+			_port = 0;
+		}
+		_keepalive = false;
+		
+		if (! _sock.uconnect (hostpart))
+		{
+			error.crop (0);
+			error.printf ("Could not connect to socket '%s'", hostpart.str());
+			return NULL;
+		}
+	}
+	else if (_useproxy)
 	{
 		if (! connectToHost (_proxyhost, _proxyport))
 		{
