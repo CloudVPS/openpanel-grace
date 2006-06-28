@@ -133,6 +133,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 			_host.crop(0);
 			_port = 0;
 		}
+		_host = hostpart;
 		_keepalive = false;
 		
 		if (! _sock.uconnect (hostpart))
@@ -270,6 +271,7 @@ string *httpsocket::get (const string &url, value *hdr)
 			_host.crop(0);
 			_port = 0;
 		}
+		_host = hostpart;
 		_keepalive = false;
 		
 		if (! _sock.uconnect (hostpart))
