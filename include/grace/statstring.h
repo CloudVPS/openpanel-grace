@@ -368,7 +368,14 @@ public:
 							if (!ref) return "";
 							return ref->str.str();
 						}
-						
+
+						/// Cast to c string.
+	inline const char	*cval (void) const
+						{
+							if (!ref) return "";
+							return ref->str.str();
+						}
+												
 						/// Cast to const string.
 	const string		&sval (void) const
 						{
