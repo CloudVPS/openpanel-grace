@@ -239,6 +239,8 @@ public:
 		}
 	}
 	
+	void off (void) { termbuf.off(); }
+	
 	/// Explicitly set the input buffer.
 	void set (const string &s) { termbuf.set(s); }
 
