@@ -297,7 +297,7 @@ const char *value::phpdeserialize (const char *phpdata, bool recursed)
 // have an extra layer in the form of two children called ".data" and
 // ".attr" for every exported object that has attributes.
 // ========================================================================
-string *value::phpserialize (bool withattr)
+string *value::phpserialize (bool withattr) const
 {
 	returnclass (string) result retain;
 	printphp (result, withattr);
@@ -309,7 +309,7 @@ string *value::phpserialize (bool withattr)
 // -----------------
 // The actual brains behind the phpserialize() operation.
 // ========================================================================
-void value::printphp (string &into, bool withattr)
+void value::printphp (string &into, bool withattr) const
 {
 	unsigned int marraysz;
 	marraysz = arraysz + ((attrib&&withattr) ? attrib->count() : 0);
