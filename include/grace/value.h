@@ -1049,7 +1049,7 @@ public:
 					 /// to have a key and only really knows about ints
 					 /// and strings.
 					 /// \return A new string object.
-	string			*phpserialize (bool withattr = false);
+	string			*phpserialize (bool withattr = false) const;
 					 
 					 /// Save in XML format.
 					 /// \param fn File name to save.
@@ -1252,7 +1252,7 @@ protected:
 	void			 printplist (int, string &, bool compact=false) const;
 	
 					 /// Internal method for serializing as PHP data.
-	void			 printphp (string &into, bool withattr);
+	void			 printphp (string &into, bool withattr) const;
 	
 					 /// Internal method for translating PHP data.
 	const char		*phpdeserialize (const char *, bool);
