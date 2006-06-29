@@ -144,29 +144,29 @@ public:
 					 {
 					 	for (int i=0; i<wsize; ++i) curview[i] = 0;
 					 }
-	
+					 
 protected:
 	file			 fin, fout; // Input/output file descriptors.
-	int				 size; //< Total size of the buffer.
-	int				 wsize; //< Width of the display
-	int				 len; //< Current length of text in buffer.
-	int				 crsr; //< Current cursor position.
-	int				 ocrsr; //< Old cursor position.
-	int				 wcrsr; //< Current offset of the viewport.
-	int				 owcrsr; //< Old offset of the viewport.
-	char 			*buffer; //< The input buffer.
-	char			*curview; //< The screen buffer.
-	string			 prompt; //< The prompt string.
+	int				 size; ///< Total size of the buffer.
+	int				 wsize; ///< Width of the display
+	int				 len; ///< Current length of text in buffer.
+	int				 crsr; ///< Current cursor position.
+	int				 ocrsr; ///< Old cursor position.
+	int				 wcrsr; ///< Current offset of the viewport.
+	int				 owcrsr; ///< Old offset of the viewport.
+	char 			*buffer; ///< The input buffer.
+	char			*curview; ///< The screen buffer.
+	string			 prompt; ///< The prompt string.
 	
-	value			 events; //< Queue of console events.
+	value			 events; ///< Queue of console events.
 	lock<int>		 eventlock; ///< Lock on the event queue.
 	
-	value			 history; //< Command history.
-	int				 historycrsr; //< Current position in command history.
+	value			 history; ///< Command history.
+	int				 historycrsr; ///< Current position in command history.
 
-	struct termios 	 oldterm; //< Stored termios settings.
-	struct termios	 newterm; //< Active termios settings.
-
+	struct termios 	 oldterm; ///< Stored termios settings.
+	struct termios	 newterm; ///< Active termios settings.
+	
 					 /// Automatically advance viewport cursor to updated
 					 /// situation.
 	void			 advance (void);
@@ -266,6 +266,57 @@ public:
 			r->prev = NULL;
 			first = last = r;
 		}
+	}
+	
+	/// Read a password. Extended keyresponders are not called,
+	/// only home, end, delte/backspace, clear and return
+	/// are mapped.
+	/// \param prompt The password prompt.
+	string *readpass (const string &prompt)
+	{
+		termbuf.setprompt (prompt);
+		termbuf.on ();
+		termbuf.clear ();
+		termbuf.draw ();
+		
+		bool done = false;
+		int ki;
+		
+		while (! done)
+		{
+			ki = termbuf.getkey();
+			switch (ki)
+			{
+				case KEYCODE_HOME:
+					termbuf.crhome();
+					break;
+				
+				case KEYCODE_END:
+					termbuf.crend();
+					break;
+				
+				case KEYCODE_DELETE:
+				case KEYCODE_BACKSPACE:
+					termbuf.backspace();
+					break;
+					
+				case KEYCODE_CLEAR:
+					termbuf.clear();
+					break;
+
+				case KEYCODE_RETURN:
+					done = true;
+					break;
+				
+				default:
+					termbuf.insert (ki);
+					break;
+			}
+		}
+		
+		termbuf.tprintf ("\n");
+		termbuf.off ();
+		return termbuf.getline ();
 	}
 	
 	/// Read a line of input.
