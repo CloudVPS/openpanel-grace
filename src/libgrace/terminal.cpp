@@ -8,6 +8,7 @@
 //      012345678 TAB-O-METER should measure 4
 //      ^	^
 #include <grace/terminal.h>
+#include <grace/strutil.h>
 
 #define VT100_CRRIGHT "\033[C"
 #define VT100_CRLEFT "\033[D"
@@ -471,4 +472,111 @@ int termbuffer::getkey (void)
 	}
 	
 	return res[0];
+}
+
+void cliutil::splitwords (const string &src, int atpos, value &into)
+{
+	string tmpres;
+	int i;
+	int tsz = 0;
+	
+	into = strutil::splitquoted (src, ' ');
+	if (! src.strlen()) return;
+	
+	for (i=0; tsz < atpos; ++i)
+	{
+		const string &v = into[i].sval();
+		tsz += v.strlen() + 1;
+		if (v.strchr (' ') >= 0)
+		{
+			if (v.strchr ('\"') < 0) tsz += 2;
+		}
+	}
+	
+	while (i<into.count()) into.rmindex (i);
+}
+
+void cliutil::expandword (const string &part, const value &options,
+						  string &into)
+{
+	string completion;
+	
+	foreach (opt, options)
+	{
+		string total = opt.id().sval();
+		if (total[-1] == '*')
+		{
+			total = total.copyuntil ('*');
+		}
+		else total.strcat (' ');
+		
+		//::printf ("<opt '%s'>", total.str());
+		
+		if (part.strncmp (total, part.strlen()) == 0)
+		{
+			if (! completion.strlen())
+			{
+				completion = total;
+			}
+			else
+			{
+				for (int i=0; i<completion.strlen(); ++i)
+				{
+					if (completion[i] != total[i])
+					{
+						completion.crop (i);
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	if (completion == "*") return;
+	if (completion.strlen()) into = completion.mid (part.strlen());
+}
+
+void cliutil::displayoptions (termbuffer &tb, const value &options)
+{
+	int maxlen = 8;
+	foreach (opt, options)
+	{
+		int w = opt.id().sval().strlen();
+		if (w > maxlen) maxlen = w;
+	}
+	
+	tb.tprintf ("\n");
+	
+	foreach (opt, options)
+	{
+		string nm = opt.id().sval();
+		nm.pad (maxlen, ' ');
+		tb.tprintf ("%s  %s\n", nm.str(), opt.cval());
+	}
+	tb.redraw ();
+}
+
+void cliutil::parsedeclaration (const string &cmd, string &declr, value &tree)
+{
+	value splt = strutil::split (declr, ' ');
+	visitor<value> probe (tree);
+	
+	foreach (word, splt)
+	{
+		probe.obj()[word.sval()]("description") = "Unknown";
+		probe.enter (word.sval());
+	}
+	probe.obj()("cmd") = cmd;
+}
+
+void cliutil::sethelp (const string &path, const string &info, value &tree)
+{
+	value split;
+	visitor<value> probe (tree);
+	split = strutil::split (path, ' ');
+	foreach (word, split)
+	{
+		if (! probe.enter (word.sval())) return;
+	}
+	probe.obj()("description") = info;
 }

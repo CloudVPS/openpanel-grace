@@ -867,49 +867,49 @@ public:
 					 /// of a separator.
 					 /// \param s The separator.
 					 /// \return Copied object.
-	string			*copyuntil (const string &s);
+	string			*copyuntil (const string &s) const;
 	
 					 /// Get a copy of the string until the first occurence
 					 /// of a separator.
 					 /// \param c The separator.
 					 /// \return Copied object.
-	string			*copyuntil (char c);
+	string			*copyuntil (char c) const;
 
 					 /// Get a copy of the string until the last occurence
 					 /// of a separator.
 					 /// \param s The separator.
 					 /// \return Copied object.
-	string			*copyuntillast (const string &s);
+	string			*copyuntillast (const string &s) const;
 	
 					 /// Get a copy of the string until the last occurence
 					 /// of a separator.
 					 /// \param c The separator.
 					 /// \return Copied object.
-	string			*copyuntillast (char c);
+	string			*copyuntillast (char c) const;
 
 					 /// Get a copy of the string after the first occurence
 					 /// of a separator.
 					 /// \param s The separator.
 					 /// \return Copied object.
-	string			*copyafter (const string &s);
+	string			*copyafter (const string &s) const;
 	
 					 /// Get a copy of the string after the first occurence
 					 /// of a separator.
 					 /// \param c The separator.
 					 /// \return Copied object.
-	string			*copyafter (char c);
+	string			*copyafter (char c) const;
 
 					 /// Get a copy of the string after the last occurence
 					 /// of a separator.
 					 /// \param s The separator.
 					 /// \return Copied object.
-	string			*copyafterlast (const string &s);
+	string			*copyafterlast (const string &s) const;
 	
 					 /// Get a copy of the string after the last occurence
 					 /// of a separator.
 					 /// \param c The separator.
 					 /// \return Copied object.
-	string			*copyafterlast (char c);
+	string			*copyafterlast (char c) const;
 	
 					 /// Convert buffer to lowercase.
 	void			 ctolower (void)

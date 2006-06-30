@@ -2174,7 +2174,7 @@ void string::replace (const string &set, char with)
 	}
 }
 
-string *string::copyuntil (char c)
+string *string::copyuntil (char c) const
 {
 	int pos;
 	
@@ -2183,7 +2183,7 @@ string *string::copyuntil (char c)
 	return left (pos);
 }
 
-string *string::copyuntil (const string &s)
+string *string::copyuntil (const string &s) const
 {
 	int pos;
 	
@@ -2192,7 +2192,7 @@ string *string::copyuntil (const string &s)
 	return left (pos);
 }
 
-string *string::copyuntillast (char c)
+string *string::copyuntillast (char c) const
 {
 	int pos;
 	int npos;
@@ -2209,7 +2209,7 @@ string *string::copyuntillast (char c)
 	return left (pos);
 }
 
-string *string::copyuntillast (const string &s)
+string *string::copyuntillast (const string &s) const
 {
 	int pos;
 	int npos;
@@ -2227,7 +2227,7 @@ string *string::copyuntillast (const string &s)
 }
 
 
-string *string::copyafter (char c)
+string *string::copyafter (char c) const
 {
 	int pos;
 	
@@ -2236,7 +2236,7 @@ string *string::copyafter (char c)
 	return mid (pos+1);
 }
 
-string *string::copyafter (const string &s)
+string *string::copyafter (const string &s) const
 {
 	int pos;
 	
@@ -2245,7 +2245,7 @@ string *string::copyafter (const string &s)
 	return mid (pos+1);
 }
 
-string *string::copyafterlast (char c)
+string *string::copyafterlast (char c) const
 {
 	int pos;
 	int npos;
@@ -2262,7 +2262,7 @@ string *string::copyafterlast (char c)
 	return mid (pos+1);
 }
 
-string *string::copyafterlast (const string &s)
+string *string::copyafterlast (const string &s) const
 {
 	int pos;
 	int npos;

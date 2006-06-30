@@ -3,6 +3,7 @@
 
 #include <grace/file.h>
 #include <grace/str.h>
+#include <grace/strutil.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -418,13 +419,352 @@ public:
 		return termbuf.getline();
 	}
 	
+	termbuffer termbuf;
 				
 protected:
 	ctlclass *ctl;
 	keyresponse *first;
 	keyresponse *last;
-	termbuffer termbuf;
 	
+};
+
+class cliutil
+{
+public:
+	static void splitwords (const string &src, int atpos, value &into);
+	static void expandword (const string &part, const value &options,
+							string &into);
+	static void displayoptions (termbuffer &tb, const value &options);
+	static void parsedeclaration (const string &, string &, value &);
+	static void sethelp (const string &, const string &, value &);
+};
+
+template <class ctlclass> class cli
+{
+public:
+	/// A callback method.
+	typedef value *(ctlclass::*srcmethod)(const value &, int);
+	typedef int (ctlclass::*hmethod)(const value &);
+
+	class expandsource
+	{
+	public:
+						 expandsource (const statstring &sname, srcmethod m)
+						 {
+						 	name = sname;
+						 	method = m;
+						 	next = prev = NULL;
+						 }
+						~expandsource (void) {}
+						
+		value			*callsrc (ctlclass *x, const value &ln, int p)
+						 {
+						 	return (x->*method) (ln, p);
+						 }
+		
+		expandsource	*next, *prev;
+		statstring		 name;
+		srcmethod		 method;
+	};
+	
+	class cmdhandler
+	{
+	public:
+						 cmdhandler (const statstring &ppath, hmethod m)
+						 {
+						 	path = ppath;
+						 	method = m;
+						 	next = prev = NULL;
+						 }
+						~cmdhandler (void)
+						 {
+						 }
+						 
+		int				 runcmd (ctlclass *x, const value &argv)
+						 {
+						 	return (x->*method) (argv);
+						 }
+						 
+		cmdhandler		*next, *prev;
+		statstring		 path;
+		hmethod			 method;
+	};
+	
+	cli (ctlclass *p, file &in, file &out, int _size=4096, int _wsize=0)
+		: term (this, in, out, (int) _size, (int) _wsize)
+	{
+		first = last = NULL;
+		hfirst = hlast = NULL;
+		exitcmd = "exit";
+		upcmd = "..";
+		owner = p;
+		
+		term.addkeyresponse (4, &cli<ctlclass>::exithandler);
+		term.addkeyresponse (26, &cli<ctlclass>::uphandler);
+		term.addkeyresponse (9, &cli<ctlclass>::tabhandler);
+		term.addkeyresponse ('?', &cli<ctlclass>::tabhandler);
+	}
+
+	~cli (void)
+	{
+		expandsource *s, *ns;
+		s = first;
+		while (s)
+		{
+			ns = s->next;
+			delete s;
+			s = ns;
+		}
+		first = last = NULL;
+	}
+	
+	value *callsrc (const statstring &srcid, const value &cmd, int pos)
+	{
+		expandsource *s;
+		s = first;
+		while (s)
+		{
+			if (s->name == srcid)
+			{
+				return s->callsrc (owner, cmd, pos);
+			}
+			s = s->next;
+		}
+		return NULL;
+	}
+	
+	void addsrc (const statstring &srcid, srcmethod m)
+	{
+		expandsource *s = new expandsource (srcid, m);
+		if (last)
+		{
+			s->prev = last;
+			last->next = s;
+			last = s;
+		}
+		else
+		{
+			last = first = s;
+		}
+	}
+	
+	void addsyntax (const string &cmd, hmethod m)
+	{
+		string hackme = cmd;
+		cliutil::parsedeclaration (cmd, hackme, cmdtree);
+		
+		cmdtree.savexml ("cmd.xml");
+		
+		cmdhandler *h = new cmdhandler (cmd, m);
+		if (hlast)
+		{
+			h->prev = hlast;
+			hlast->next = h;
+			hlast = h;
+		}
+		else
+		{
+			hfirst = hlast = h;
+		}
+	}
+	
+	void addhelp (const string &path, const string &help)
+	{
+		cliutil::sethelp (path, help, cmdtree);
+	}
+	
+	void fullexpand (visitor<value> &probe, value &cmd,
+					 int atpos, value &into)
+	{
+		statstring theid;
+		string word;
+		
+		word = cmd[atpos];
+		
+		foreach (obj, probe.obj())
+		{
+			value opts;
+			value res;
+			string ocmd;
+			
+			ocmd = obj.id().sval();
+			
+			if (ocmd[0] == '@')
+			{
+				opts = callsrc (obj.id(), cmd, atpos);
+				foreach (opt, opts)
+				{
+					if ((! word.strlen()) || 
+					    (word.strncmp (opt.id().sval(), word.strlen()) == 0))
+					{
+						into[opt.id()] = opt;
+						into[-1]("node") = ocmd;
+					}
+				}
+			}
+			else
+			{
+				if ((! word.strlen()) || 
+				    (word.strncmp (ocmd, word.strlen()) == 0))
+				{
+					into[obj.id()] = obj ("description");
+					into[-1]("node") = obj.id().sval();
+				}
+			}
+		}
+	}
+	
+	int exithandler (int ki, termbuffer &tb)
+	{
+		tb.set (exitcmd);
+		return 1;
+	}
+	
+	int uphandler (int key, termbuffer &tb)
+	{
+		tb.set (upcmd);
+		return 1;
+	}
+	
+	int tabhandler (int ki, termbuffer &tb)
+	{
+		value split;
+		string ln;
+		visitor<value> probe (cmdtree);
+		value opts;
+		int i;
+		cmdline.clear();
+		
+		ln = tb.getline();
+		cliutil::splitwords (ln, ki ? tb.crsrpos() : ln.strlen(), split);
+		if (! ki) ln = ln.rtrim ();
+		if (ki == '?') split.newval();
+		
+		for (i=0; i< (split.count()-1); ++i)
+		{
+			opts.clear ();
+			fullexpand (probe, split, i, opts);
+			
+			switch (opts.count())
+			{
+				case 0:
+					tb.tprintf ("\n%% Error at '%s'\n", split[i].cval());
+					if (ki) tb.redraw ();
+					return 0;
+				
+				case 1:
+					if (!ki) split[i] = opts[0].id().sval();
+					probe.enter (opts[0]("node").sval());
+					break;
+				
+				default:
+					tb.tprintf ("\n%% Ambiguous command at '%s'\n",
+								split[i].cval());
+					if (ki) tb.redraw ();
+					return 0;
+			}
+		}
+		opts.clear ();
+		if (ki) probe.obj().savexml ("probe.xml");
+		fullexpand (probe, split, i, opts);
+		
+		if (ki == '?')
+		{
+			cliutil::displayoptions(tb, opts);
+			return 0;
+		}
+		
+		switch (opts.count())
+		{
+			case 0:
+				tb.tprintf ("\n%% Error at '%s'\n", split[i].cval());
+				if (ki) tb.redraw ();
+				break;
+			
+			case 1:
+				if (!ki) split[i] = opts[0].id().sval();
+				cliutil::expandword (split[i].sval(), opts, ln);
+				if (ki == 9) tb.insert (ln);
+				else if (! ki)
+				{
+					curcmd = "@error";
+					if (probe.enter (opts[0]("node").sval()))
+					{
+						if (probe.obj().attribexists ("cmd"))
+						{
+							curcmd = probe.obj()("cmd").sval();
+						}
+					}
+				}
+				break;
+				
+			default:
+				if (ki)
+				{
+					if (ki==9) cliutil::expandword (split[i].sval(), opts, ln);
+					cliutil::displayoptions (tb, opts);
+					if (ki==9) tb.insert (ln);
+					tb.redraw ();
+				}
+				else
+				{
+					tb.tprintf ("\n%% Ambiguous command at '%s'\n",
+								split[i].cval());
+				}
+				break;
+		}
+		cmdline = split;
+		return 0;
+	}
+	
+	void run (const string &p)
+	{
+		bool done = false;
+		string res;
+		setprompt (p);
+		
+		while (! done)
+		{
+			res = term.readline (prompt);
+			if (res.strlen())
+			{
+				tabhandler (0, term.termbuf);
+				if (curcmd == "@error")
+				{
+					term.termbuf.tprintf ("%% Incomplete command\n");
+				}
+				else
+				{
+					cmdhandler *h = hfirst;
+					while (h)
+					{
+						if (h->path == curcmd)
+						{
+							if (h->runcmd (owner, cmdline)) done = true;
+							break;
+						}
+						
+						h = h->next;
+					}
+				}
+			}
+		}
+	}
+	
+	void setprompt (const string &p) { prompt = p; }
+	
+	terminal<cli <ctlclass> > term;
+
+protected:
+	expandsource *first, *last;
+	cmdhandler *hfirst, *hlast;
+	value cmdtree;
+	string exitcmd;
+	string prompt;
+	string upcmd;
+	ctlclass *owner;
+	statstring curcmd;
+	value cmdline;
 };
 
 #endif
