@@ -598,8 +598,25 @@ public:
 				opts = callsrc (obj.id(), cmd, atpos);
 				foreach (opt, opts)
 				{
-					if ((! word.strlen()) || 
-					    (word.strncmp (opt.id().sval(), word.strlen()) == 0))
+					string mopt;
+					mopt = opt.id().sval();
+					if ((mopt.strlen()>1) && (mopt[-1] == '*'))
+					{
+						if ((! word.strlen()) ||
+						    (word.strncmp (mopt, word.strlen()) == 0) ||
+						    (word.strncmp (mopt, mopt.strlen()-1) == 0))
+						{
+							into[opt.id()] = opt;
+							into[-1]("node") = ocmd;
+						}
+					}
+					else if (mopt == "*")
+					{
+						into[word] = opt;
+						into[-1]("node") = ocmd;
+					}
+					else if ((! word.strlen()) || 
+					         (word.strncmp (opt.id().sval(), word.strlen()) == 0))
 					{
 						into[opt.id()] = opt;
 						into[-1]("node") = ocmd;
@@ -670,7 +687,14 @@ public:
 					return 0;
 				
 				case 1:
-					if (!ki) split[i] = opts[0].id().sval();
+					if (!ki)
+					{
+						string obid = opts[0].id().sval();
+						if ((obid.strlen() == 1) || (obid[-1] != '*'))
+						{
+							split[i] = opts[0].id().sval();
+						}
+					}
 					probe.enter (opts[0]("node").sval());
 					break;
 				
@@ -681,16 +705,20 @@ public:
 					return 0;
 			}
 			
-			if (probe.obj().id() == "#")
+			if (probe.exists ("#"))
 			{
 				probe.up();
 			}
 		}
-		if (probe.obj().id() == "#")
+		
+		opts.clear ();
+		
+		if (probe.enter ("#"))
 		{
 			probe.up();
+			probe.up();
 		}
-		opts.clear ();
+		
 		fullexpand (probe, split, i, opts);
 		
 		if (ki == '?')
@@ -712,7 +740,14 @@ public:
 				return 0;
 			
 			case 1:
-				if (!ki) split[i] = opts[0].id().sval();
+				if (!ki)
+				{
+						string obid = opts[0].id().sval();
+						if ((obid.strlen() == 1) || (obid[-1] != '*'))
+						{
+							split[i] = opts[0].id().sval();
+						}
+				}
 				cliutil::expandword (split[i].sval(), opts, ln);
 				if (ki == 9) tb.insert (ln);
 				else if (! ki)

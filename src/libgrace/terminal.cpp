@@ -507,8 +507,19 @@ void cliutil::expandword (const string &part, const value &options,
 		string total = opt.id().sval();
 		if (total[-1] == '*')
 		{
-			if (total.strlen()>1) total = total.copyuntil ('*');
-			else hadwildcard = true;
+			if (total.strlen()>1)
+			{
+				total = total.copyuntil ('*');
+				if (total.strncmp (part, total.strlen()) == 0)
+				{
+					total = part;
+					total.strcat (" ");
+				}
+			}
+			else
+			{
+				hadwildcard = true;
+			}
 		}
 		else total.strcat (' ');
 		
