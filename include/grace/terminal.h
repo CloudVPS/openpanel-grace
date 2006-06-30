@@ -559,8 +559,6 @@ public:
 		string hackme = cmd;
 		cliutil::parsedeclaration (cmd, hackme, cmdtree);
 		
-		cmdtree.savexml ("cmd.xml");
-		
 		cmdhandler *h = new cmdhandler (cmd, m);
 		if (hlast)
 		{
@@ -693,7 +691,6 @@ public:
 			probe.up();
 		}
 		opts.clear ();
-		if (ki) probe.obj().savexml ("probe.xml");
 		fullexpand (probe, split, i, opts);
 		
 		if (ki == '?')
