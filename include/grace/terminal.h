@@ -548,6 +548,12 @@ public:
 		}
 	}
 	
+	void addsyntax (const string &cmd, hmethod m, const string &help)
+	{
+		addsyntax (cmd, m);
+		addhelp   (cmd, help);
+	}
+	
 	void addsyntax (const string &cmd, hmethod m)
 	{
 		string hackme = cmd;
@@ -600,6 +606,19 @@ public:
 						into[opt.id()] = opt;
 						into[-1]("node") = ocmd;
 					}
+				}
+			}
+			else if (ocmd == "*")
+			{
+				if (word.strlen())
+				{
+					into[word] = obj("description");
+					into[-1]("node") = "*";
+				}
+				else
+				{
+					into["<string>"] = obj("description");
+					into[-1]("node") = "*";
 				}
 			}
 			else
@@ -663,6 +682,15 @@ public:
 					if (ki) tb.redraw ();
 					return 0;
 			}
+			
+			if (probe.obj().id() == "#")
+			{
+				probe.up();
+			}
+		}
+		if (probe.obj().id() == "#")
+		{
+			probe.up();
 		}
 		opts.clear ();
 		if (ki) probe.obj().savexml ("probe.xml");
@@ -677,9 +705,14 @@ public:
 		switch (opts.count())
 		{
 			case 0:
+				if (probe.enter ("#"))
+				{
+					if (ki==9) tb.insert (" ");
+					break;
+				}
 				tb.tprintf ("\n%% Error at '%s'\n", split[i].cval());
 				if (ki) tb.redraw ();
-				break;
+				return 0;
 			
 			case 1:
 				if (!ki) split[i] = opts[0].id().sval();

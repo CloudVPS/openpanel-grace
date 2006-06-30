@@ -500,13 +500,15 @@ void cliutil::expandword (const string &part, const value &options,
 						  string &into)
 {
 	string completion;
+	bool hadwildcard = false;
 	
 	foreach (opt, options)
 	{
 		string total = opt.id().sval();
 		if (total[-1] == '*')
 		{
-			total = total.copyuntil ('*');
+			if (total.strlen()>1) total = total.copyuntil ('*');
+			else hadwildcard = true;
 		}
 		else total.strcat (' ');
 		
@@ -534,11 +536,12 @@ void cliutil::expandword (const string &part, const value &options,
 	
 	if (completion == "*") return;
 	if (completion.strlen()) into = completion.mid (part.strlen());
+	else if (part.strlen() && hadwildcard) into = " ";
 }
 
 void cliutil::displayoptions (termbuffer &tb, const value &options)
 {
-	int maxlen = 8;
+	int maxlen = 14;
 	foreach (opt, options)
 	{
 		int w = opt.id().sval().strlen();
