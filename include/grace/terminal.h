@@ -668,7 +668,7 @@ public:
 		value opts;
 		int i;
 		cmdline.clear();
-		curcmd.crop();
+		curcmd = "";
 		
 		ln = tb.getline();
 		cliutil::splitwords (ln, ki ? tb.crsrpos() : ln.strlen(), split);
