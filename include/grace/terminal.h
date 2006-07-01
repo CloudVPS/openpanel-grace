@@ -54,8 +54,11 @@ public:
 	void			 setprompt (const string &prmpt);
 	
 					 /// Insert a character into the buffer.
-	void			 insert (char);
+					 /// \param c The character to insert.
+	void			 insert (char c);
 	
+					 /// Insert a string into the buffer.
+					 /// \param str The text to insert.
 	void			 insert (const string &str)
 					 {
 						for (int i=0; i<str.strlen(); ++i) insert (str[i]);
@@ -196,6 +199,8 @@ public:
 	/// A callback method.
 	typedef int (ctlclass::*kmethod)(int, termbuffer &);
 
+	/// A node in the keyboard response list. Contains
+	/// a pointer to a method to call.
 	class keyresponse
 	{
 	public:
@@ -240,6 +245,7 @@ public:
 		}
 	}
 	
+	/// Turn terminal mode off.
 	void off (void) { termbuf.off(); }
 	
 	/// Explicitly set the input buffer.
@@ -418,16 +424,17 @@ public:
 		
 		return termbuf.getline();
 	}
-	
-	termbuffer termbuf;
+		
+	termbuffer termbuf; ///< Embedded termbuffer.
 				
 protected:
-	ctlclass *ctl;
-	keyresponse *first;
-	keyresponse *last;
+	ctlclass *ctl; ///< The parent object.
+	keyresponse *first; ///< First node in the keyresponse linked list.
+	keyresponse *last; ///< Last node in the keyresponse linked list.
 	
 };
 
+/// Utility class for the cli template class to save on inlining.
 class cliutil
 {
 public:
@@ -439,13 +446,32 @@ public:
 	static void sethelp (const string &, const string &, value &);
 };
 
+/// A vt100 command line interface and command parser module.
+/// The parser's main principle is a syntax tree where certain nodes
+/// may be of a dynamic type. The end of a tree leads to a callback.
+/// Callbacks both for dynamic types and command execution are non-static
+/// methods of the ctlclass.
+///
+/// Here's an example of an application using a cli without dynamic
+/// lists:
+/// \verbinclude cli_ex1.cpp
+/// The two built-in tokens '*' and '#' can be used to substitute generic
+/// string input. A word in a syntax rule containing a '*' will accept any
+/// non-whitespace input or input enclosed by full quotes. The '#' word can
+/// be appended at the end of a rule and indicates that the previous rule
+/// should be evaluated for each consecutive word in the command line. Here
+/// is an example:
+/// \verbinclude cli_ex2.cpp
 template <class ctlclass> class cli
 {
 public:
-	/// A callback method.
+	/// A callback method for a dynamic list.
 	typedef value *(ctlclass::*srcmethod)(const value &, int);
+	
+	/// A callback method for command execution.
 	typedef int (ctlclass::*hmethod)(const value &);
 
+	/// An array node containing a link to a specific dynamic list method.
 	class expandsource
 	{
 	public:
@@ -467,6 +493,7 @@ public:
 		srcmethod		 method;
 	};
 	
+	/// An array node containing a link to a specific command execution method.
 	class cmdhandler
 	{
 	public:
@@ -490,6 +517,12 @@ public:
 		hmethod			 method;
 	};
 	
+	/// Constructor.
+	/// \param p The parent object to associate with callbacks.
+	/// \param in The application input stream.
+	/// \param out The application output stream.
+	/// \param _size The buffer size (default 4096).
+	/// \param _wsize THe window width (default auto).
 	cli (ctlclass *p, file &in, file &out, int _size=4096, int _wsize=0)
 		: term (this, in, out, (int) _size, (int) _wsize)
 	{
@@ -505,6 +538,8 @@ public:
 		term.addkeyresponse ('?', &cli<ctlclass>::tabhandler);
 	}
 
+	/// Destructor.
+	/// Remove linked lists.
 	~cli (void)
 	{
 		expandsource *s, *ns;
@@ -516,8 +551,22 @@ public:
 			s = ns;
 		}
 		first = last = NULL;
+		
+		cmdhandler *h, *nh;
+		h = hfirst;
+		while (h)
+		{
+			nh = h->next;
+			delete h;
+			h = nh;
+		}
+		hfirst = hlast = NULL;
 	}
 	
+	/// Call a dynamic list source with a specific command line context.
+	/// \param srcid The source id, including the leading '@'.
+	/// \param cmd The command line.
+	/// \param pos The focused position in the command list.
 	value *callsrc (const statstring &srcid, const value &cmd, int pos)
 	{
 		expandsource *s;
@@ -533,6 +582,13 @@ public:
 		return NULL;
 	}
 	
+	/// Add a link to a dynamic list source.
+	/// A source should be a method to the parent class that returns
+	/// a pointer to a new value object which contains a context-
+	/// sensitive list of expansion options for a given command list
+	/// at a given cursor position.
+	/// \param srcid The source id, including the leading '@'.
+	/// \param m The method to call on the parent object.
 	void addsrc (const statstring &srcid, srcmethod m)
 	{
 		expandsource *s = new expandsource (srcid, m);
@@ -548,12 +604,24 @@ public:
 		}
 	}
 	
+	/// Add a syntax rule and help text. A rule is a list of words
+	/// separated by a single space. Words can be either:
+	/// - A literal string ("kill", "maim", ...)
+	/// - A wildcard ("*", "poontang=*")
+	/// - A reference to a dynamic list/type ("@files", "@ipaddress", ...)
+	/// - A repeat indicator '#'.
+	/// \param cmd The command and its parameters.
+	/// \param m The method on the parent object to call.
+	/// \param help text for the final node of the command list.
 	void addsyntax (const string &cmd, hmethod m, const string &help)
 	{
 		addsyntax (cmd, m);
 		addhelp   (cmd, help);
 	}
 	
+	/// Add a syntax rule.
+	/// \param cmd The command and its parameters.
+	/// \param m The method on the parent object to call.
 	void addsyntax (const string &cmd, hmethod m)
 	{
 		string hackme = cmd;
@@ -572,11 +640,30 @@ public:
 		}
 	}
 	
+	/// Add a help text. Dynamic lists/types can generate their own
+	/// help data, but any static text words should be explained.
+	/// So, if you declare the syntax "show fridge status", you
+	/// should add help for "show", "show fridge" as well as
+	/// "show fridge status".
+	/// \param path The command and its parameters.
+	/// \param help The help text for the final node.
 	void addhelp (const string &path, const string &help)
 	{
 		cliutil::sethelp (path, help, cmdtree);
 	}
 	
+	/// Internal expansion method. Given a visitor to the syntax
+	/// tree, the array of input words, the current input word
+	/// position, this method will gather a list of all possible
+	/// completions for the currently entered characters at
+	/// the position.
+	/// \param probe The syntax cursor.
+	/// \param cmd The command line.
+	/// \param atpos The word the cursor is in.
+	/// \param into The return array. Nodes will have the completed
+	///             word as their id, the description as their value
+	///             and the actual token represented by the match
+	///             in the syntax tree inside the "node" attribute.
 	void fullexpand (visitor<value> &probe, value &cmd,
 					 int atpos, value &into)
 	{
@@ -648,18 +735,29 @@ public:
 		}
 	}
 	
+	/// Keyhandler for the ^D command.
+	/// \param ki The pressed key.
+	/// \param tb The termbuffer.
 	int exithandler (int ki, termbuffer &tb)
 	{
 		tb.set (exitcmd);
 		return 1;
 	}
 	
+	/// Keyhandler for the ^Z command.
+	/// \param ki The pressed key.
+	/// \param tb The termbuffer.
 	int uphandler (int key, termbuffer &tb)
 	{
 		tb.set (upcmd);
 		return 1;
 	}
 	
+	/// Keyhandler for tab expansion and the question mark key.
+	/// \param ki The pressed key, either '\t', '?' or 0, which is
+	///           a special trigger to fully expand any abbreviated
+	///           words to their full syntax tree equivalent.
+	/// \param tb The termbuffer.
 	int tabhandler (int ki, termbuffer &tb)
 	{
 		value split;
@@ -783,6 +881,8 @@ public:
 		return 0;
 	}
 	
+	/// Start the command line interpreter.
+	/// \param p The prompt.
 	void run (const string &p)
 	{
 		bool done = false;
@@ -817,20 +917,28 @@ public:
 		}
 	}
 	
+	/// Change the prompt. Can be used by callbacks.
 	void setprompt (const string &p) { prompt = p; }
 	
+	/// Send data to the console. Can be used by other threads while
+	/// the cli is in run() mode.
+	void sendconsole (const string &s) { term.sendconsole (s); }
+	
+	/// The embedded terminal object.
 	terminal<cli <ctlclass> > term;
 
 protected:
-	expandsource *first, *last;
-	cmdhandler *hfirst, *hlast;
-	value cmdtree;
-	string exitcmd;
-	string prompt;
-	string upcmd;
-	ctlclass *owner;
-	statstring curcmd;
-	value cmdline;
+	expandsource *first; ///< First node in the expandsource linked list.
+	expandsource *last; ///< Last node in the expandsource linked list.
+	cmdhandler *hfirst; ///< First node in the cmdhandler linked list.
+	cmdhandler *hlast; ///< Last node in the cmdhandler linked list.
+	value cmdtree; ///< The syntax tree.
+	string exitcmd; ///< The command that will be used for ^D.
+	string upcmd; ///< The command that will be used for ^Z.
+	string prompt; ///< The current prompt.
+	ctlclass *owner; ///< Pointer to the parent object.
+	statstring curcmd; ///< The declaration of a matched command stream. 
+	value cmdline; ///< The last parsed command stream.
 };
 
 #endif

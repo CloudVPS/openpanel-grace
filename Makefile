@@ -10,8 +10,11 @@ install: all
 	cd src/matrixssl && ./makeinstall
 	cd src/libgrace-ssl && ./makeinstall
 
-doc:
-	doxygen doxygenconf
+grace:
+	cd src/libgrace && ./configure && make
+
+docs:
+	./mkdoc.sh
 
 clean:
 	cd src/libgrace && make clean

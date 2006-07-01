@@ -121,7 +121,7 @@ public:
 				 /// \param fn Name (and path) of the file.
 				 /// \param mode Unix permissio bits.
 				 /// \return Result, \b true if open succeeded.
-	bool		 openappend (const string &, int mode=0644);
+	bool		 openappend (const string &fn, int mode=0644);
 
 				 /// Close a currently opened file.	
 	void		 close (void);
@@ -194,7 +194,7 @@ public:
 				 /// \throw EX_SSL_BUFFER_SNAFU Error in sslcodec buffer.
 				 /// \throw EX_SSL_PROTOCOL_ERROR Error in sslcodec protocol.
 				 /// \throw EX_SSL_CLIENT_ALERT Unhandled sslcodec client alert.
-	string		*read (size_t, int timeout_ms);
+	string		*read (size_t sz, int timeout_ms);
 	
 				 /// Write a string followed by a newline.
 				 /// \param str The string to write.
@@ -221,7 +221,7 @@ public:
 				 /// \return Number of bytes written.
 				 /// \throw EX_SSL_NO_HANDSHAKE No sslcodec handshake done.
 				 /// \throw EX_SSL_BUFFER_SNAFU Error in sslcodec buffer.
-	int			 tryputs (const char *, size_t, unsigned int tmout=0);
+	int			 tryputs (const char *str, size_t sz, unsigned int tmout=0);
 	
 				 /// A libc-style printf.
 				 /// \return Status, \b true for success.
@@ -245,7 +245,10 @@ public:
 				 /// Casts to true if the file is open.
 				 operator bool (void) { return (filno>=0); };
 
+				 /// Last generated error string.
 	const string &error (void) { return err; };
+	
+				 /// Last generated error code.
 	unsigned int errorcode (void) { return errcode; };
 
 	ringbuffer	 buffer; ///< The internal ringbuffer.

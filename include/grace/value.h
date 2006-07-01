@@ -49,6 +49,8 @@ extern statstring t_currency;
 
 typedef statstring dtenum;
 
+/// Use this to access a constructor that allows the id/type to be set in
+/// the arguments.
 enum creatorlabel {
 	valueWithKey,
 	valueWithType,
@@ -71,6 +73,7 @@ enum itypes {
   i_currency ///< fixed point currency
 };
 
+/// Exceptions raised by the value class.
 enum valueException {
 	EX_VALUE_FILE_NOTFOUND	= 0xc1eb726d, ///< Attempted to load a non-existing file.
 	EX_VALUE_ERR_PARSE 		= 0x9712c89b ///< Error parsing data.
@@ -147,12 +150,15 @@ public:
 					 
 					 /// Destructor.
 					~value (void);
-		
+	
+					 /// Options for xml encoding.
 	enum			 xmlargs {
-						compact = true,
-						nocompact = false
+						compact = true, ///< Compacted output.
+						nocompact = false ///< Indented output.
 					 };
 
+					 /// Returns true if the provided type string
+					 /// represents a grace built-in.
 	static bool		 isbuiltin (const statstring &type);
 	
 	/// Access by array index.
@@ -310,44 +316,61 @@ public:
 		(*attrib)[ki] = val;
 	}
 
-			 /// Set as an IPv4 address.		
+			 /// Set as an IPv4 address. Address is in host format.	
 	value	&setip (unsigned int);
 	
 	value	&operator= (const value &v);
 	value	&operator= (value *v);
 
+	/// Cast as bool.
 	inline			 operator bool (void) const
 	{
 		return bval();
 	}
+	
+	/// Cast as 64 bits signed.
 	inline			 operator long long (void) const
 	{
 		return lval();
 	}
+	
+	/// Cast as 64 bits unsigned.
 	inline			 operator unsigned long long (void) const
 	{
 		return ulval();
 	}
+	
+	/// Cast as int.
 	inline			 operator int (void) const
 	{
 		return ival();
 	}
+	
+	/// Cast as unsigned int.
 	inline			 operator unsigned int (void) const
 	{
 		return uval();
 	}
+	
+	/// Cast as const string.
 	inline			 operator const string & (void) const
 	{
 		return sval();
 	}
+	
+	/// Cast as c string.
 	inline			 operator const char * (void) const
 	{
 		return cval();
 	}
+	
+	/// Cast as double precision float.
 	inline			 operator double (void) const
 	{
 		return dval();
 	}
+	
+	/// Assign to bool.
 	inline value	&operator= (bool bval)
 	{
 		t.ival = bval ? 1 : 0;
@@ -355,6 +378,8 @@ public:
 		if (_type == t_unset) _type = t_bool;
 		return *this;
 	}
+	
+	/// Assign to 64 bits signed.
 	inline value	&operator= (long long dval)
 	{
 		t.lval = dval;
@@ -362,25 +387,28 @@ public:
 		if (_type == t_unset) _type = t_long;
 		return *this;
 	}
+	
+	/// Assign to fixed point currency.
 	inline value	&operator= (const class currency &c)
 	{
 		assign (c);
 		return *this;
 	}
+	
+	/// Assign to fixed point currency.
 	inline value	&operator= (class currency &c)
 	{
 		assign (c);
 		return *this;
 	}
+	
+					 /// Assign to a currency object.
 	void			 assign (const class currency &);
+	
+					 /// Assign to a currency object.
 	void			 assign (class currency *);
 	
-/*	inline value	&operator= (time_t ti)
-	{
-		t.uval = ti;
-		itype = i_date;
-		if (_type == t_unset) _type = t_date;
-	} */
+	/// Assign to unsigned 64 bits.
 	inline value	&operator= (unsigned long long val)
 	{
 		t.ulval = val;
@@ -388,6 +416,8 @@ public:
 		if (_type == t_unset) _type = t_ulong;
 		return *this;
 	}
+	
+	/// Assign to c string.
 	inline value	&operator= (const char *str)
 	{
 		s = str;
@@ -395,6 +425,8 @@ public:
 		if (_type == t_unset) _type = t_string;
 		return *this;
 	}
+	
+	/// Assign to string.
 	inline value	&operator= (const string &str)
 	{
 		s = str;
@@ -402,6 +434,8 @@ public:
 		if (_type == t_unset) _type= t_string;
 		return *this;
 	}
+	
+	/// Assign to statstring.
 	inline value	&operator= (const statstring &str)
 	{
 		s = str.sval();
@@ -409,12 +443,19 @@ public:
 		if (_type == t_unset) _type= t_string;
 		return *this;
 	}
+	
+	/// Set the value as a fixed point decimal number with three digits
+	/// behind the decimal point.
 	inline void		 setcurrency (long long cnew)
 	{
 		t.lval = cnew;
 		itype = i_currency;
 		if (_type == t_unset) _type = t_currency;
 	}
+	
+	/// Get the value as a fixed point decimal number with three digits
+	/// behind the decimal point, giving a resolution of 0.1 cents of an
+	/// arbitrary currency.
 	inline long long getcurrency (void) const
 	{
 		switch (itype)
@@ -443,6 +484,8 @@ public:
 		}
 		return 0LL; // unreachable
 	}
+	
+	/// Assign to retained string.
 	inline value	&operator= (string *str)
 	{
 		// By assigning s to str, it will get pointer-nuked, plz not
@@ -452,6 +495,8 @@ public:
 		if (_type == t_unset) _type = t_string;
 		return *this;
 	}
+	
+	/// Assign to int.
 	value	&operator= (int i)
 	{
 		t.ival = i;
@@ -460,6 +505,8 @@ public:
 		return *this;
 		
 	}
+	
+	/// Assign to unsigned int.
 	inline value	&operator= (unsigned int i)
 	{
 		t.uval = i;
@@ -467,6 +514,8 @@ public:
 		if (_type == t_unset) _type = t_unsigned;
 		return *this;
 	}
+	
+	/// Assign to double precision float.
 	inline value	&operator= (double d)
 	{
 		t.dval = d;
@@ -474,6 +523,8 @@ public:
 		if (_type == t_unset) _type  = t_double;
 		return *this;
 	}
+	
+	/// Merge children of other value into current tree.
 	inline value	&operator<< (value *v)
 	{
 		for (int i=0; i<(*v).count(); ++i)
@@ -483,6 +534,8 @@ public:
 		delete v;
 		return *this;
 	}
+
+	/// Merge children of other value into current tree.
 	inline value	&operator<< (value &v)
 	{
 		for (int i=0; i<v.count(); ++i)
@@ -491,14 +544,23 @@ public:
 		}
 		return *this;
 	}
+	
+	/// Case-sensitive string comparison, limited by size.
+	/// \param st The other string.
+	/// \param sz The maximum size to compare, if 0 the comparison
+	///           stops at the size of the shortest of two strings.
 	inline int		 strncmp (const string &st, int sz = 0) const
 	{
 		return sval().strncmp (st, sz);
 	}
+	
+	/// Case-insensitive string comparison.
 	inline int		 strcasecmp (const string &st) const
 	{
 		return sval().strcasecmp (st);
 	}
+	
+	/// Case-insensitive string comparison, limited by size.
 	inline int		 strncasecmp (const string &st, int sz = 0) const
 	{
 		return sval().strncasecmp (st, sz);
@@ -588,6 +650,7 @@ public:
 		return (*this);
 	}
 	
+	/// Comparison by value.
 	inline bool operator< (const value &other) const
 	{
 		switch (other.itype)
@@ -609,6 +672,8 @@ public:
 				return (dval() < other.dval());
 		}
 	}
+
+	/// Comparison by value.
 	inline bool operator< (const value &other)
 	{
 		switch (other.itype)
@@ -630,6 +695,8 @@ public:
 				return (dval() < other.dval());
 		}
 	}
+
+	/// Comparison by value.
 	inline bool operator> (const value &other) const
 	{
 		switch (other.itype)
@@ -651,6 +718,8 @@ public:
 				return (dval() > other.dval());
 		}
 	}
+
+	/// Comparison by value.
 	inline bool operator> (const value &other)
 	{
 		switch (other.itype)
@@ -672,6 +741,8 @@ public:
 				return (dval() > other.dval());
 		}
 	}
+
+	/// Comparison by value.
 	inline bool operator<= (const value &other)
 	{
 		switch (other.itype)
@@ -693,6 +764,8 @@ public:
 				return (dval() <= other.dval());
 		}
 	}
+
+	/// Comparison by value.
 	inline bool operator<= (const value &other) const
 	{
 		switch (other.itype)
@@ -714,6 +787,8 @@ public:
 				return (dval() <= other.dval());
 		}
 	}
+
+	/// Comparison by value.
 	inline bool operator>= (const value &other) const
 	{
 		switch (other.itype)
@@ -735,6 +810,8 @@ public:
 				return (dval() >= other.dval());
 		}
 	}
+
+	/// Comparison by value.
 	inline bool operator>= (const value &other)
 	{
 		switch (other.itype)
@@ -756,6 +833,8 @@ public:
 				return (dval() >= other.dval());
 		}
 	}
+
+	/// Comparison by value.
 	inline bool operator== (const value &other) const
 	{
 		switch (other.itype)
@@ -777,6 +856,8 @@ public:
 				return (dval() == other.dval());
 		}
 	}
+
+	/// Comparison by value.
 	inline bool operator== (const value &other)
 	{
 		switch (other.itype)
@@ -798,6 +879,8 @@ public:
 				return (dval() == other.dval());
 		}
 	}
+
+	/// Comparison by value.
 	inline bool operator!= (const value &other) const
 	{
 		switch (other.itype)
@@ -819,6 +902,8 @@ public:
 				return (dval() != other.dval());
 		}
 	}
+
+	/// Comparison by value.
 	inline bool operator!= (const value &other)
 	{
 		switch (other.itype)
@@ -840,6 +925,8 @@ public:
 				return (dval() != other.dval());
 		}
 	}
+
+	/// Case sensitive compare to c string.
 	inline bool operator== (const char *other) const
 	{
 		return (sval().strcmp (other) == 0);
@@ -901,10 +988,12 @@ public:
 	DEFOPERATORS(long long,lval())
 	DEFOPERATORS(unsigned long long,ulval())
 	
+	/// Case-sensitive string compare.
 	inline bool operator!= (const string &other) const
 	{
 		return (sval().strcmp (other));
 	}
+
 	inline bool operator!= (const statstring &other) const
 	{
 		return (sval().strcmp (other.sval()));
@@ -1231,6 +1320,7 @@ public:
 					 ///            total array size.
 	value			*copyright (int num) const;
 
+					 /// Compare two value objects on a tree level.
 	bool			 treecmp (const value &other) const;
 
 protected:
@@ -1278,7 +1368,10 @@ protected:
 					 	return compressbuiltin (sz, a, b, s, d);
 					 };
 	
+					 /// Internal method for SHoX parsing.
 	void			 readshox (class stringdict &, size_t &, const string &);
+					 
+					 /// Internal method for SHoX serialization.
 	void			 printshox (string &, stringdict &) const;
 		
 	dtenum			 _type; ///< The registered type/class.

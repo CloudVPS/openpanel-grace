@@ -13,7 +13,7 @@ unsigned int stringdict::get (const statstring &id)
 {
 	unsigned int cnt;
 	if (bystring.exists (id)) return bystring[id];
-	byid.add (new statstring (id));
+	byid.add (new (memory::retainable::onstack) statstring (id));
 	cnt = byid.count() -1;
 	bystring[id] = cnt;
 	return cnt;

@@ -34,7 +34,10 @@ namespace defaults
 		/// Buffer settings for objects derived from file.
 		namespace file
 		{
+			/// Default size of an i/o read buffer.
 			parameter int readbuf defaultvalue (8 KB);
+			
+			/// Default size of an i/o write buffer.
 			parameter int writebuf defaultvalue (8 KB);
 		}
 	}
@@ -64,15 +67,29 @@ namespace tune
 	namespace httpd
 	{
 		/// Behaviour of the main thread.
-		namespace mainthread { parameter int idle defaultvalue (5); }
+		namespace mainthread
+		{
+			/// Number of seconds to idle between event polling.
+			parameter int idle defaultvalue (5);
+		}
 		
 		/// Keepalive behaviour.
-		namespace keepalive { parameter int trigger defaultvalue (2); }
+		namespace keepalive
+		{
+			/// The keepalive trigger. If the maximum number of threads
+			/// divided by this parameter exceeds the number of active
+			/// threads, keepalive should not be honored.
+			parameter int trigger defaultvalue (2);
+		}
 		
 		/// Worker thread deallocation strategy.
 		namespace wkthread
 		{
+			/// Number of rounds to keep a thread alone.
 			parameter int minrounds defaultvalue (5);
+			
+			/// Minimum headroom space before we should consider
+			/// trimming threads.
 			parameter int minoverhead defaultvalue (2);
 		}
 	}
@@ -89,7 +106,11 @@ namespace tune
 		/// Worker thread deallocation strategy.
 		namespace wkthread
 		{
+			/// Number of rounds to keep a thread alone.
 			parameter int minrounds defaultvalue (5);
+
+			/// Minimum headroom space before we should consider
+			/// trimming threads.
 			parameter int minoverhead defaultvalue (2);
 		}
 	}

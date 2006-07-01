@@ -89,14 +89,16 @@ protected:
 	statstring			**array; ///< Array containing the keys.
 	unsigned int		  acount; ///< Number of elements in the array.
 	unsigned int		  asize; ///< Allocated array size.
-	
+						  
+						  /// Grow the array allocation by one.
 	void				  grow1 (void);
 };
 
 /// A thread-bound local copy of a database.
 struct tsdbentry
 {
-	tsdbentry	*next, *prev;
+	tsdbentry	*next; ///< Linked list glue.
+	tsdbentry	*prev; ///< Linked list glue.
 	pthread_t	 assocthr; ///< Thread-id of associated thread
 	time_t		 lastupdate; ///< Last update time of cached db
 	value		 dat; ///< The cached db
@@ -110,14 +112,21 @@ struct tsdbentry
 class tsdb
 {
 public:
+				 /// Constructor.
 				 tsdb (void);
+				 
+				 /// Destructor.
 				~tsdb (void);
 				
+				 /// Return a thread-specific copy of a value object.
+				 /// \param from The source object.
+				 /// \param ti The time the source object last changed.
 	const value	&get (const value &from, time_t ti);
 
 protected:
-	lock<bool>	 lck;
-	tsdbentry	*first, *last;
+	lock<bool>	 lck; ///< Lock on the database.
+	tsdbentry	*first; ///< First node in the tsdbentry linked list.
+	tsdbentry	*last; ///< Last node in the tsdbentry linked list.
 };
 
 /// List of actions.
@@ -127,7 +136,14 @@ protected:
 /// of actions with the data a callback should expect to handle.
 namespace config
 {
-	enum action {isvalid, create, change, remove};
+	/// Callback type.
+	enum action
+	{
+		isvalid, ///< Validate sanity.
+		create, ///< Create new configuration item.
+		change, ///< Change existing configuration item.
+		remove ///< Remove existing configuration item.
+	};
 };
 
 #define __ACTIONARGS config::action, keypath &, const value &, const value &
@@ -139,7 +155,8 @@ namespace config
 template <class appclass> class configdb
 {
 public:
-	
+
+	/// Pointer to a method in the parent class for the callback.	
 	typedef bool (appclass::*pmethod)(__ACTIONARGS);
 
 	/// Constructor.
@@ -150,6 +167,7 @@ public:
 		first = last = NULL;
 	}
 	 
+	/// Destructor.
 	~configdb (void)
 	{
 	}
@@ -315,16 +333,28 @@ public:
 		
 		return true;
 	}
-							
+	
+	/// A callback registration for a specific key or list of
+	/// subkeys in the configuration database.
 	class configaction
 	{
 	public:
+						 /// Constructor.
+						 /// \param kp The matching path.
+						 /// \param m The method to call.
 						 configaction (keypath &kp, pmethod m)
 						 {
 						 	path = kp;
 							_method = m;
 						 }
-						 
+		
+						 /// Perform callback for this action.
+						 /// \param app The parent object.
+						 /// \param act The kind of configuration action
+						 ///            (config::isvalid, config::create,
+						 ///             config::change or config::remove)
+						 /// \param newdb The configuration db after the change.
+						 /// \param olddb The configuration db before the change.
 		bool			 call (appclass *app,
 							   config::action act,
 							   const value &newdb,
@@ -333,15 +363,17 @@ public:
 							return (app->*_method) (act, path, newdb, olddb);
 						 }
 		
-		configaction	*next, *prev;
-		keypath			 path;
+		configaction	*next; ///< Linked list glue.
+		configaction	*prev; ///< Linked list glue.
+		keypath			 path; ///< The matching path.
 	protected:
-		pmethod	 		_method;
+		pmethod	 		_method; ///< The method to call.
 	};
 
 protected:
 	appclass		*app; ///< Link back to application.
-	configaction 	*first, *last;
+	configaction 	*first; ///< First callback.
+	configaction	*last; ///< Last callback.
 	xmlschema		 cschema; ///< Configuration schema.
 	validator		 cval; ///< Configuration validator.
 	value			 db; ///< Current configuration db.
