@@ -28,7 +28,7 @@ public:
 					 }
 					~array (void)
 					 {
-					 	if (_array) free (_array);
+					 	if (_array) ::free (_array);
 					 }
 					 
 					 /// Add a new entry to the array.
@@ -36,7 +36,7 @@ public:
 					 /// power-of-two preallocation.
 					 ///
 					 /// \param element Pointer to the entry
-	void			 add (kind *foo)
+	void			 add (kind *element)
 					 {
 						if (! _arraysz)
 						{
@@ -53,7 +53,7 @@ public:
 						}
 						if ( (_count+1) < _arraysz)
 						{
-							_array[_count] = foo;
+							_array[_count] = element;
 							_count++;
 						}
 					 }

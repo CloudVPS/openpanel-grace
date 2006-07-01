@@ -369,6 +369,11 @@ void statstring::assign (const statstring &str)
 	}
 }
 
+void statstring::assign (statstring *str)
+{
+	retainvalue (str);
+}
+
 statstring &statstring::operator= (const value &orig)
 {
 	assign (orig.sval());

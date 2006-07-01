@@ -143,7 +143,7 @@ stringrefdb &STRINGREF(void);
 /// Storage for a mostly immutable string of text together with a
 /// checksum key that makes it easy for keyed access methods of
 /// other classes.
-class statstring
+class statstring : public memory::retainable
 {
 public:
 						 /// Constructor. Creates a 'nil' object.
@@ -188,6 +188,10 @@ public:
 						 	ref = NULL;
 						 	assign (str);
 						 }
+						 
+						 statstring (statstring *str) : retainable (str)
+						 {
+						 }
 					 
 						~statstring (void)
 						 {
@@ -213,6 +217,9 @@ public:
 	
 						 /// Assign from other statstring object.
 	void				 assign (const statstring &);
+	
+						 /// Assign to a retained statstring.
+	void				 assign (statstring *);
 	
 	inline unsigned int	 strlen (void) const
 						 {
