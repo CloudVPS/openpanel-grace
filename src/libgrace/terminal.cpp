@@ -474,6 +474,9 @@ int termbuffer::getkey (void)
 	return res[0];
 }
 
+// ==========================================================================
+// METHOD cliutil::splitwords
+// ==========================================================================
 void cliutil::splitwords (const string &src, int atpos, value &into)
 {
 	string tmpres;
@@ -496,6 +499,9 @@ void cliutil::splitwords (const string &src, int atpos, value &into)
 	while (i<into.count()) into.rmindex (i);
 }
 
+// ==========================================================================
+// METHOD cliutil::expandword
+// ==========================================================================
 void cliutil::expandword (const string &part, const value &options,
 						  string &into)
 {
@@ -550,6 +556,9 @@ void cliutil::expandword (const string &part, const value &options,
 	else if (part.strlen() && hadwildcard) into = " ";
 }
 
+// ==========================================================================
+// METHOD cliutil::displayoptions
+// ==========================================================================
 void cliutil::displayoptions (termbuffer &tb, const value &options)
 {
 	int maxlen = 14;
@@ -570,6 +579,9 @@ void cliutil::displayoptions (termbuffer &tb, const value &options)
 	tb.redraw ();
 }
 
+// ==========================================================================
+// METHOD cliutil::parsedeclaration
+// ==========================================================================
 void cliutil::parsedeclaration (const string &cmd, string &declr, value &tree)
 {
 	value splt = strutil::split (declr, ' ');
@@ -583,6 +595,9 @@ void cliutil::parsedeclaration (const string &cmd, string &declr, value &tree)
 	probe.obj()("cmd") = cmd;
 }
 
+// ==========================================================================
+// METHOD cliutil::sethelp
+// ==========================================================================
 void cliutil::sethelp (const string &path, const string &info, value &tree)
 {
 	value split;
