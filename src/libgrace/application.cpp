@@ -367,7 +367,7 @@ int main (int argc, char *argv[])
 	dlh = dlopen (NULL, RTLD_LAZY);
 	if (dlh)
 	{
-		inithook = (initfuncptr) dlsym (dlh, "init");
+		inithook = (initfuncptr) dlsym (dlh, "grace_init");
 		if (inithook) (*inithook)();
 	}
 	

@@ -21,7 +21,7 @@ APPOBJECT(appinittestApp);
 
 int myglobal;
 
-extern "C" void init (void)
+extern "C" void grace_init (void)
 {
 	myglobal = 42;
 }
