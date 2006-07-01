@@ -23,25 +23,8 @@ extern lock<value> THREADLIST;
 class thread
 {
 public:
-					 thread (void)
-					 {
-					 	threadname = "thread";
-					 	spawned = false;
-					 	finished = false;
-					 	__THREADED = true;
-					 	unprotected (ipc) { ipc["running"] = false; }
-					 	pthread_attr_init (&attr);
-					 }
-					 
-					 thread (const string &nm)
-					 {
-					 	threadname = nm;
-					 	spawned = false;
-					 	finished = false;
-					 	__THREADED = true;
-					 	unprotected (ipc) { ipc["running"] = false; }
-					 	pthread_attr_init (&attr);
-					 }
+					 thread (void);
+					 thread (const string &nm);
 					 
 	virtual			~thread (void)
 					 {
@@ -61,42 +44,7 @@ public:
 					 /// Used as an argument for the system thread create.
 					 /// \param param Pointer to the thread object.
 					 /// \return NULL (return value mandated by POSIX API).
-	static void		*dorun (void *param)
-					 {
-					 	thread *me = (thread *) param;
-					 	sigset_t sigs;
-					 	
-					 	sigemptyset (&sigs);
-					 	sigaddset (&sigs, SIGPIPE);
-					 	pthread_sigmask (SIG_BLOCK, &sigs, NULL);
-					 	pthread_setcanceltype (PTHREAD_CANCEL_DISABLE, NULL);
-
-					 	(*me).ipc.lockw();
-						(*me).ipc.o["running"] = true;
-						(*me).ipc.unlock();
-
-						string mtid;
-						mtid.printf ("%08x", me);
-
-						exclusivesection (THREADLIST)
-						{
-							THREADLIST[mtid] = me->threadname;
-						}
-
-						(*me).run();
-						
-						(*me).ipc.lockw();
-						(*me).ipc.o["running"] = false;
-						(*me).ipc.unlock();
-						(*me).finished = true;
-						
-						exclusivesection (THREADLIST)
-						{
-							THREADLIST.rmindex (mtid);
-						}
-						
-						return NULL;
-					 }
+	static void		*dorun (void *param);
 					 
 					 /// Spawn the thread in the background.
 					 /// \throw threadException Error creating a thread.
@@ -203,43 +151,10 @@ public:
 					 
 					 /// Add a new thread to the array.
 					 /// Called from the groupthread constructor.
-	inline void		 add (class groupthread *t)
-					 {
-					 	lck.lockw();
-					 	if (! array)
-						{
-							arraysz = 8;
-							array = (class groupthread **)
-								malloc (8 * sizeof (class groupthread *));
-						}
-						if ( (cnt+1) > arraysz )
-						{
-							array = (class groupthread **)
-								realloc (array, (arraysz*2) *
-										        sizeof (class groupthread *));
-							arraysz *= 2;
-						}
-						array[cnt++] = t;
-						lck.unlock();
-					 }
+	void			 add (class groupthread *t);
 					 
 					 /// Remove a thread object from the array.
-	inline void		 remove (class groupthread *t)
-					 {
-					 	lck.lockw();
-					 	for (int i=0; i<cnt; ++i)
-						{
-							if (array[i] == t)
-							{
-								for (int j=i+1; j<cnt; ++j)
-								{
-									array[i++] = array[j];
-								}
-								--cnt;
-							}
-						}
-						lck.unlock();
-					 }
+	void			 remove (class groupthread *t);
 					 
 					 /// Array access operator.
 					 /// \param idx The index number.
