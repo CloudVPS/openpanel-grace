@@ -39,6 +39,10 @@ namespace defaults
 			
 			/// Default size of an i/o write buffer.
 			parameter int writebuf defaultvalue (8 KB);
+			
+			/// Default size of the ringbuffer for
+			/// reading lines.
+			parameter int ringbuffer defaultvalue (16 KB);
 		}
 	}
 	

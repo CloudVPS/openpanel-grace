@@ -27,7 +27,7 @@ const char __HEXTAB[] = "0123456789abcdef";
 // ========================================================================
 
 file::file (void)
-	: buffer (2*65536)
+	: buffer (defaults::sz::file::ringbuffer)
 {
 	filno = -1;
 	feof = true;
