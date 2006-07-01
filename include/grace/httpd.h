@@ -640,7 +640,7 @@ public:
 					 /// \param inmaxt Maximum number of threads
 					 httpd (const string &DomainSocket,
 					 		int inmint=2, int inmaxt=4)
-					 	: thread (), listener (DomainSocket)
+					 	: thread ("httpd"), listener (DomainSocket)
 					 {
 					 	if (inmaxt < inmint) inmaxt = inmint;
 					 	_maxpostsize = defaults::lim::httpd::postsize;
@@ -660,7 +660,7 @@ public:
 					 /// \param inmaxt Maximum number of threads.
 					 httpd (int listenport,
 					 		int inmint=2, int inmaxt=4)
-					 	: thread (), listener (listenport)
+					 	: thread ("httpd"), listener (listenport)
 					 {
 					 	if (inmaxt < inmint) inmaxt = inmint;
 					 	_maxpostsize = defaults::lim::httpd::postsize;
@@ -677,7 +677,7 @@ public:
 					 /// For situations where you want to define the
 					 /// listenport later.
 					 httpd (void)
-					 	: thread (), listener ()
+					 	: thread ("httpd"), listener ()
 					 {
 					 	_maxpostsize = defaults::lim::httpd::postsize;
 					 	minthr = 2;
@@ -856,7 +856,7 @@ class httpdworker : public groupthread
 {
 public:
 					 httpdworker (httpd *pop)
-					 	: groupthread (pop->workers)
+					 	: groupthread (pop->workers, "httpdworker")
 					 {
 					 	parent = pop;
 					 	spawn ();

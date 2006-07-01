@@ -16,6 +16,8 @@ enum threadException {
 	EX_THREAD_INVALID_INDEX = 0xd079dc79  ///< Wrong index threadgroup array.
 };
 
+extern lock<value> THREADLIST;
+
 /// Base class for threads.
 /// Derived classes can use this class to spawn into a background thread.
 class thread
@@ -23,6 +25,17 @@ class thread
 public:
 					 thread (void)
 					 {
+					 	threadname = "thread";
+					 	spawned = false;
+					 	finished = false;
+					 	__THREADED = true;
+					 	unprotected (ipc) { ipc["running"] = false; }
+					 	pthread_attr_init (&attr);
+					 }
+					 
+					 thread (const string &nm)
+					 {
+					 	threadname = nm;
 					 	spawned = false;
 					 	finished = false;
 					 	__THREADED = true;
@@ -62,12 +75,26 @@ public:
 						(*me).ipc.o["running"] = true;
 						(*me).ipc.unlock();
 
+						string mtid;
+						mtid.printf ("%08x", me);
+
+						exclusivesection (THREADLIST)
+						{
+							THREADLIST[mtid] = me->threadname;
+						}
+
 						(*me).run();
 						
 						(*me).ipc.lockw();
 						(*me).ipc.o["running"] = false;
 						(*me).ipc.unlock();
 						(*me).finished = true;
+						
+						exclusivesection (THREADLIST)
+						{
+							THREADLIST.rmindex (mtid);
+						}
+						
 						return NULL;
 					 }
 					 
@@ -137,6 +164,17 @@ public:
 	lock<value>		 ipc; ///< Event queue.
 	conditional		 event; ///< Event trigger.
 	lock<value>		 data; ///< More internal storage.
+	
+	string			 threadname;
+	static value	*getlist (void)
+					 {
+					 	returnclass (value) res retain;
+					 	sharedsection (THREADLIST)
+					 	{
+					 		res = THREADLIST;
+					 	}
+					 	return &res;
+					 }
 	
 protected:
 	pthread_t		 tid; ///< Local thread id.
@@ -244,7 +282,15 @@ class groupthread : public thread
 public:
 					 /// Constructor.
 					 /// \param gr Parent threadgroup to link into.
-					 groupthread (threadgroup &gr) : thread()
+					 groupthread (threadgroup &gr) : thread("groupthread")
+					 {
+					 	__THREADED = true;
+					 	group = &gr;
+					 	(*group).add (this);
+					 }
+					 
+					 groupthread (threadgroup &gr, const string &nm)
+					 	: thread (nm)
 					 {
 					 	__THREADED = true;
 					 	group = &gr;

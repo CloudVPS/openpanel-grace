@@ -17,6 +17,8 @@
 
 #include <time.h>
 
+lock<value> THREADLIST;
+
 // Statically kept statstrings to be used as common keys in log events.
 namespace logproperty
 {

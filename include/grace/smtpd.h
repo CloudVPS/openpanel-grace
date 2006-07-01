@@ -110,7 +110,7 @@ class smtpworker : public groupthread
 public:
 						 /// Constructor. Links back to parent and spawns.
 						 smtpworker (smtpd *pop)
-						 	: groupthread (pop->workers)
+						 	: groupthread (pop->workers, "smtpworker")
 						 {
 							parent = pop;
 							spawn();

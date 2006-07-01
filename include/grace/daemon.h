@@ -23,7 +23,7 @@ friend class daemon;
 public:
 					 /// Constructor.
 					 /// \param d The daemon object to attach to
-					 logthread (class daemon *d) : thread ()
+					 logthread (class daemon *d) : thread ("logthread")
 					 {
 					 	app = d;
 					 }
