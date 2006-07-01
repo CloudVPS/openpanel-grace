@@ -1,7 +1,7 @@
 // ========================================================================
 // file.cpp: GRACE file class
 //
-// (C) Copyright 2003-2004 Pim van Riezen <pi@madscience.nl>
+// (C) Copyright 2003-2006 Pim van Riezen <pi@madscience.nl>
 //                         Madscience Labs, Rotterdam 
 // ========================================================================
 
