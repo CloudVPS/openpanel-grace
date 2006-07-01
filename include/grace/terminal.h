@@ -324,7 +324,7 @@ public:
 	
 	/// Read a line of input.
 	/// \param prompt The input prompt.
-	string *readline (const string &prompt)
+	string *readline (const string &prompt, bool basicmode=false)
 	{
 		termbuf.setprompt (prompt);
 		termbuf.on ();
@@ -341,7 +341,7 @@ public:
 			handled = false;
 			
 			keyresponse *r = first;
-			while (r)
+			while ((!basicmode) && r)
 			{
 				if (r->key == ki)
 				{
@@ -414,7 +414,7 @@ public:
 		
 		termbuf.tprintf ("\n");
 		termbuf.off();
-		termbuf.tohistory();
+		if (! basicmode) termbuf.tohistory();
 		
 		return termbuf.getline();
 	}
@@ -682,7 +682,7 @@ public:
 			switch (opts.count())
 			{
 				case 0:
-					tb.tprintf ("\n%% Error at '%s'\n", split[i].cval());
+					tb.tprintf ("%% Error at '%s'\n", split[i].cval());
 					if (ki) tb.redraw ();
 					return 0;
 				
@@ -699,8 +699,8 @@ public:
 					break;
 				
 				default:
-					tb.tprintf ("\n%% Ambiguous command at '%s'\n",
-								split[i].cval());
+					tb.tprintf ("%s%% Ambiguous command at '%s'\n",
+								ki?"\n":"", split[i].cval());
 					if (ki) tb.redraw ();
 					return 0;
 			}
@@ -735,18 +735,18 @@ public:
 					if (ki==9) tb.insert (" ");
 					break;
 				}
-				tb.tprintf ("\n%% Error at '%s'\n", split[i].cval());
+				tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"", split[i].cval());
 				if (ki) tb.redraw ();
 				return 0;
 			
 			case 1:
 				if (!ki)
 				{
-						string obid = opts[0].id().sval();
-						if ((obid.strlen() == 1) || (obid[-1] != '*'))
-						{
-							split[i] = opts[0].id().sval();
-						}
+					string obid = opts[0].id().sval();
+					if ((obid.strlen() == 1) || (obid[-1] != '*'))
+					{
+						split[i] = opts[0].id().sval();
+					}
 				}
 				cliutil::expandword (split[i].sval(), opts, ln);
 				if (ki == 9) tb.insert (ln);
@@ -773,8 +773,8 @@ public:
 				}
 				else
 				{
-					tb.tprintf ("\n%% Ambiguous command at '%s'\n",
-								split[i].cval());
+					tb.tprintf ("%s%% Ambiguous command at '%s'\n",
+								ki?"\n":"", split[i].cval());
 				}
 				break;
 		}
@@ -798,7 +798,7 @@ public:
 				{
 					term.termbuf.tprintf ("%% Incomplete command\n");
 				}
-				else
+				else if (cmdline.count())
 				{
 					cmdhandler *h = hfirst;
 					while (h)
