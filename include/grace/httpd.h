@@ -855,12 +855,16 @@ enum httpdworkerException {
 class httpdworker : public groupthread
 {
 public:
+					 /// Construcotr. Spawns the thread.
+					 /// \param pop Parent httpd object.
 					 httpdworker (httpd *pop)
 					 	: groupthread (pop->workers, "httpdworker")
 					 {
 					 	parent = pop;
 					 	spawn ();
 					 }
+					 
+					 /// Destructor.
 					~httpdworker (void)
 					 {
 					 }
@@ -876,7 +880,7 @@ public:
 	virtual void	 run (void);
 
 protected:
-	httpd			*parent;
+	httpd			*parent; ///< Link to parent httpd.
 };
 
 #endif

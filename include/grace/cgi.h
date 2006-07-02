@@ -6,6 +6,7 @@
 #include <grace/xmlschema.h>
 #include <grace/dictionary.h>
 
+/// Exceptions thrown by the cgi class.
 enum cgiException {
 	EX_CGI_EOF				= 0xd2c169d6,///< Unexpected end-of-file
 	EX_CGI_POST_FORMAT		= 0x811956ca ///< Error in format of posted data.

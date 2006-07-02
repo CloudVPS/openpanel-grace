@@ -189,10 +189,13 @@ public:
 						 	assign (str);
 						 }
 						 
+						 /// Copy-constructor (retained).
 						 statstring (statstring *str) : retainable (str)
 						 {
 						 }
 					 
+					 	 /// Destructor. Remove reference from the
+					 	 /// global ref table.
 						~statstring (void)
 						 {
 						 	if (ref) STRINGREF().unref (ref);

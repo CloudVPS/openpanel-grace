@@ -538,6 +538,8 @@ protected:
 class conditional
 {
 public:
+				 /// Constructor.
+				 /// Sets up POSIX attributes.
 				 conditional (void)
 				 {
 					attr = new pthread_mutexattr_t;
@@ -549,6 +551,9 @@ public:
 					pthread_mutex_init (mutex, attr);
 					pthread_cond_init (cond, NULL);
 				 }
+				 
+				 /// Destructor.
+				 /// Cleans up POSIX structures.
 				~conditional (void)
 				 {
 					pthread_mutex_destroy (mutex); delete mutex;
@@ -618,10 +623,10 @@ public:
 				 }
 	
 protected:
-	pthread_mutexattr_t		*attr;
-	pthread_mutex_t			*mutex;
-	pthread_cond_t			*cond;
-	int						 queue;
+	pthread_mutexattr_t		*attr; ///< POSIX mutex attribute.
+	pthread_mutex_t			*mutex; ///< POSIX mutex.
+	pthread_cond_t			*cond; ///< POSIX conditional.
+	int						 queue; ///< Queue counter.
 };
 
 #endif

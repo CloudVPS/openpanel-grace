@@ -101,13 +101,13 @@ public:
 	bool			 dosmtp (const value &rcptto, const string &body);
 
 protected:
-	string			 smtphost;
-	int				 smtpport;
-	string			 sender;
-	string			 sendername;
-	string			 hostname;
-	value			 headers;
-	string			 err;
+	string			 smtphost; ///< The hostname of the remote SMTP.
+	int				 smtpport; ///< The tcp port of the remote SMTP.
+	string			 sender; ///< The sender address.
+	string			 sendername; ///< The sender name.
+	string			 hostname; ///< My hostname.
+	value			 headers; ///< Output headers.
+	string			 err; ///< Error data.
 };
 
 #endif

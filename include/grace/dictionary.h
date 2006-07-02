@@ -257,16 +257,26 @@ dictionaryEntry 	*demand (unsigned int key, bool alloc=true)
 class stringdict
 {
 public:
+								 /// Constructor.
 								 stringdict (void);
+								 
+								 /// Destructor.
 								~stringdict (void);
-				
+	
+								 /// Get the position for the provided
+								 /// string, a new position will be created
+								 /// if the string is new to the dict.
 	unsigned int				 get (const statstring &);
+	
+								 /// Return the string for a numbered position.
 	const statstring			&get (unsigned int);
+	
+								 /// Return the number of strings in the dict.
 	unsigned int				 count (void);
 
 protected:
-	dictionary<unsigned int>	 bystring;
-	array<statstring>			 byid;
+	dictionary<unsigned int>	 bystring; ///< Indexed by int id.
+	array<statstring>			 byid; ///< Array of statstrings.
 };
 
 #endif

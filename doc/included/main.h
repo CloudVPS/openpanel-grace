@@ -10,6 +10,7 @@ with other programs.
 \section intro_classes GRACE Classes
 
 \subsection intro_classes_data Data containers
+  - Quick passing of objects by pointer: \link memory::retainable memory::retainable \endlink
   - String container: \link string string \endlink
   - Static key string container: \link statstring statstring \endlink
   - Date container: \link timestamp timestamp \endlink
@@ -34,6 +35,7 @@ with other programs.
   - HTTP daemon: \link httpd httpd \endlink
   - VT100 terminal buffer: \link termbuffer termbuffer \endlink
   - VT100 command line interface: \link terminal terminal \endlink
+  - VT100 command line parser: \link cli cli \endlink
 
 \subsection intro_classes_tasks Task Management
   - Forked background task: \link process process \endlink

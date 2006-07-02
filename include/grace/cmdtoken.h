@@ -7,7 +7,6 @@
 
 /// Token types.
 /// Lists the different cmdtoken classes.
-
 typedef enum {
 	nopToken, ///< Dummy or null.
 	switchToken, ///< A switch/endswitch block
@@ -68,6 +67,8 @@ protected:
 	
 };
 
+/// A text data token. Prints out text with parseable elements between
+/// '$' marks.
 class cmdtoken_data : public cmdtoken
 {
 public:
@@ -86,6 +87,7 @@ protected:
 	value			 data;
 };
 
+/// A token representing a @loop instruction.
 class cmdtoken_loop : public cmdtoken
 {
 public:
@@ -103,6 +105,7 @@ protected:
 	string			 loopvar;
 };
 
+/// A token representing the @if instruction.
 class cmdtoken_if : public cmdtoken
 {
 public:
@@ -121,6 +124,7 @@ protected:
 	value			 condition;
 };
 
+/// A token representing the @case instruction.
 class cmdtoken_case : public cmdtoken
 {
 public:
@@ -139,6 +143,7 @@ public:
 	string			 caselabel;
 };
 
+/// A token representing the @switch instruction
 class cmdtoken_switch : public cmdtoken
 {
 public:
@@ -162,6 +167,7 @@ string *cmdtoken_parsedata (value &, value &);
 string *cmdtoken_parsestring (value &v, const string &s);
 string *cmdtoken_parseval (value &, const string &);
 
+/// A token representing the @set instruction
 class cmdtoken_set : public cmdtoken
 {
 public:

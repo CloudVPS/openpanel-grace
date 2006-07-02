@@ -204,6 +204,9 @@ public:
 					 	(*group).add (this);
 					 }
 					 
+					 /// Constructor.
+					 /// \param gr Parent threadgroup to link into.
+					 /// \param nm Thread name in the thread list.
 					 groupthread (threadgroup &gr, const string &nm)
 					 	: thread (nm)
 					 {
@@ -212,11 +215,13 @@ public:
 					 	(*group).add (this);
 					 }
 					 
+					 /// Destructor.
 	virtual			~groupthread (void)
 					 {
 						(*group).remove (this);
 					 }
 					 
+					 /// Main run method for the thread.
 	virtual void	 run (void);
 					 
 protected:

@@ -1,5 +1,10 @@
 0.8.13     In production                              <pi@madscience.nl>
 
+           * Added VT100 terminal emulation for keyboard input,
+             including classes to set up a fully fledged assistive
+             IOS-style command line interface with complex syntaxes
+             and callbacks.
+
            * Moved default values from macro-definition to initialized
              globals. Runtime changes to these defaults can be achieved
              by defining an optional init function in your code that
@@ -8,7 +13,7 @@
              built as a shared library (which also implies we need
              to focus on stabilizing the API/ABI at that point).
 
-           * Fixed a bug in the pointer-copy-constructor of string.
+           * Fixed a bug in the retained copy-constructor of string.
 
            * Added exclusivesection (var) {...}, sharedsection (var)
              and unprotected (var) {...} macros to access values wrapped
@@ -30,6 +35,8 @@
 
            * Added nifty foreach macro to visitor.h.
 
+           * Moved codebase to a mercurial repository.
+           
            * Allow xml schemas to define the tag type of an xml
              node as implied by the object's datatype.
 

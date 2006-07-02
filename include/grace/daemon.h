@@ -16,7 +16,6 @@
 /// Background log message dispatcher.
 /// A thread object that is part of the daemon class, routing log messages
 /// to a file or syslog daemon.
-
 class logthread : public thread
 {
 friend class daemon;
@@ -44,14 +43,14 @@ namespace log
 	/// Priority levels.
 	/// Multiple priorities can be combined with a logical OR.
 	enum priority {
-		debug = 0x01, //< debugging messages
-		info = 0x02, //< informational messages
-		warning = 0x04, //< warning messages
-		error = 0x08, //< error messages
-		critical = 0x10, //< critical failure messages
-		alert = 0x20, //< system alert messages 
-		emergency = 0x40, //< imminent emergency messages
-		application = 0x80, //< application-specific messages
+		debug = 0x01, ///< debugging messages
+		info = 0x02, ///< informational messages
+		warning = 0x04, ///< warning messages
+		error = 0x08, ///< error messages
+		critical = 0x10, ///< critical failure messages
+		alert = 0x20, ///< system alert messages 
+		emergency = 0x40, ///< imminent emergency messages
+		application = 0x80, ///< application-specific messages
 		allerror=0xf8, ///< all levels of error and above
 		allwarning = 0xfc, ///< all levels of warning and above
 		allinfo = 0xfe, ///< all levels of info and above
@@ -107,6 +106,8 @@ public:
 					 	_logtargets = NULL;
 					 	daemonized = false;
 					 }
+					 
+					 /// Destructor.
 	virtual			~daemon (void);
 	
 					 /// Check for another running instance.

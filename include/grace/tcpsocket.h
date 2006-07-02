@@ -22,6 +22,7 @@ enum socketException
 class tcpsocket : public file
 {
 public:
+				 /// Constructor.
 				 tcpsocket (void) : file()
 				 {
 				 	peer_pid = 0;
@@ -34,6 +35,8 @@ public:
 					// Is ignored by connect when string is empty
 					localbindaddr = "";
 				 }
+				 
+				 /// Destructor.
 				~tcpsocket (void)
 				 {
 				 }
@@ -206,10 +209,10 @@ public:
 	tcpsocket	*tryaccept (double timeout);
 
 protected:
-	bool		 listening;
-	bool		 tcpdomain;
-	int			 tcpdomainport;
-	string		 unixdomainpath;
+	bool		 listening; ///< True if the socket is listening.
+	bool		 tcpdomain; ///< True if we're AF_INET/tcp
+	int			 tcpdomainport; ///< Listen port for tcp.
+	string		 unixdomainpath; ///< Listen path for AF_UNIX.
 	lock<int>	 sock; ///< Lock to allow for cross-thread non blocking.
 };
 

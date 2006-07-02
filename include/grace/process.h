@@ -211,6 +211,9 @@ public:
 					 	init (mcommand, withStdErr);
 					 }
 					 
+					 /// Constructor.
+					 /// \param args The command + arguments array.
+					 /// \param withStdErr True if the stderr channel should be caught.
 					 systemprocess (const value &args,
 					 				bool withStdErr = false)
 					 				: process (false)
@@ -219,6 +222,10 @@ public:
 					 	init (args[0].sval(), withStdErr);
 					 }	
 
+					 /// Constructor.
+					 /// \param args The command + arguments array.
+					 /// \param env The environment variables.
+					 /// \param withStdErr True if the stderr channel should be caught.
 					 systemprocess (const value &args, const value &env,
 					 				bool withStdErr = false)
 					 				: process (false)
@@ -229,6 +236,7 @@ public:
 					 	run ();
 					 }				
 					 
+					 /// Destructor.
 	virtual			~systemprocess (void)
 					 {
 					 }
@@ -265,7 +273,7 @@ public:
 
 protected:
 	value			 _argv; ///< Command line arguments used
-	value			 _env;
+	value			 _env; ///< The environment variables.
 };
 
 #endif

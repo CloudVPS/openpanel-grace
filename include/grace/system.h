@@ -39,17 +39,19 @@ char *__grace_internal_crypt (const char *, const char *);
 class systemclass
 {
 public:
+	/// Constructor.
 	systemclass (void)
 	{
 		pwcrypt.randseeded = false;
 	}
 
+	/// Exceptions thrown by systemclass.
 	enum systemException {
 		exNoSuchUser
 	};
 
 	/// Process-related functions.	
-	class
+	class procFunctions
 	{
 	public:
 		/// Check if a pid is running.
@@ -75,7 +77,7 @@ public:
 	} proc;
 	
 	/// User-related functionality.
-	class
+	class userdbFunctions
 	{
 	public:
 		/// Get current userid.
@@ -146,7 +148,7 @@ public:
 	} userdb;
 	
 	/// Password crypting functionality.
-	class
+	class pwcryptFunctions
 	{
 	public:
 		/// Create a MD5 hash string for a password.
@@ -217,7 +219,7 @@ public:
 	} pwcrypt;
 	
 	/// Self-limiting functionality.
-	class
+	class limitsFunctions
 	{
 	public:
 		/// Perform a system chroot.
@@ -245,7 +247,7 @@ public:
 #endif
 	} limits;
 
-	class
+	class timeFunctions
 	{
 	public:
 		/// Get current system time.
@@ -299,7 +301,7 @@ public:
 	} time;
 	
 	/// Network related functions.
-	class
+	class netFunctions
 	{
 	public:
 		/// Get our local hostname.

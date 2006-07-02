@@ -50,7 +50,11 @@ namespace defaults
 	namespace lim
 	{
 		/// Maximum post size handled by CGI objects.
-		namespace cgi { parameter int postsize defaultvalue (8 MB); }
+		namespace cgi
+		{
+			/// Maximum post size.
+			parameter int postsize defaultvalue (8 MB);
+		}
 		
 		/// Data limits for httpd
 		namespace httpd
@@ -99,13 +103,21 @@ namespace tune
 	}
 	
 	/// TCP listening options.
-	namespace tcplistener { parameter int backlog defaultvalue (32); }	
+	namespace tcplistener
+	{
+		/// Maximum backlog.
+		parameter int backlog defaultvalue (32);
+	}	
 	
 	/// Tuning settings for the smtpd.
 	namespace smtpd
 	{
 		/// Behaviour of the main thread.
-		namespace mainthread { parameter int idle defaultvalue (5); }
+		namespace mainthread
+		{
+			/// Number of seconds to idle between event polling.
+			parameter int idle defaultvalue (5);
+		}
 		
 		/// Worker thread deallocation strategy.
 		namespace wkthread

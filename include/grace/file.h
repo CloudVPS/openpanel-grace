@@ -151,6 +151,7 @@ public:
 				 /// \throw EX_SSL_CLIENT_ALERT Unhandled sslcodec client alert.
 	bool		 waitforline (string &into, int timeout_ms,
 							  int maxlinesize=1024);
+							  
 				 /// Keep reading into a string until a specific
 				 /// byte sequence occurs.
 				 /// \param into String to append data to.
@@ -231,6 +232,7 @@ public:
 	
 				 /// Write out what's left in the buffer.
 	void		 flush (void);
+	
 				 /// End-of-file.
 				 /// \return EOF status, \b true if the end of the file has 
 				 ///         been reached.

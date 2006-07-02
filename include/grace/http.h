@@ -143,8 +143,6 @@ protected:
 	bool		 _keepalive; ///< Flag for HTTP keepalive.
 	int			 _timeout; ///< Timeout value for non-blocking, 0 for blocking.
 	
-				 /// HTTP Socket proxy configuration
-				 /// parameters 
 	bool		 _useproxy;		///< Use a proxy server to connect
 	string 		 _proxyhost;	///< Proxy server host name or IP
 	int 		 _proxyport;	///< Proxy server port to connect

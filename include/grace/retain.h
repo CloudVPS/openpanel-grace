@@ -7,6 +7,7 @@
 #include <grace/lock.h>
 #include <stdlib.h>
 
+/// Exceptions thrown by memory::retainable.
 enum memoryException
 {
 	EX_MEMORY_RETAIN_MISMATCH = 0xbf682be7,

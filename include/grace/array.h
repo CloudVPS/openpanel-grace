@@ -26,6 +26,9 @@ public:
 					 	_count = 0;
 					 	_arraysz = 0;
 					 }
+					 
+					 /// Destructor. Only the array is freed, no object
+					 /// destructors are called.
 					~array (void)
 					 {
 					 	if (_array) ::free (_array);
