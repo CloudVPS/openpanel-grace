@@ -61,7 +61,8 @@ else
   fi
 fi
 
-
+COMPILER=${CXX}
+COMPILERFLAGS=${CXXFLAGS}
 # ---------------------------------------------------------------------------
 # Figure out if there's a Vendorware C++ compiler on board
 # ---------------------------------------------------------------------------
@@ -112,7 +113,7 @@ rm -f conftest.cpp conftest contest.o
 # Check for libpthread functionality
 # ---------------------------------------------------------------------------
 
-cat >conftest.cpp <<EOF
+cat >conftest.c <<EOF
 #include <pthread.h>
 #include <stdio.h>
 
@@ -128,14 +129,14 @@ int main (int argc, char *argv[])
 EOF
 
 $ECHON "checking for pthread support: $NNL"
-if $CXX $CXXFLAGS -o conftest conftest.cpp >>configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest conftest.c >>configure.log 2>&1; then
   LIBPTHREAD=""
   echo "yes"
 else
-  if $CXX $CXXFLAGS -o conftest conftest.cpp -lpthread >>configure.log 2>&1; then
+  if $COMPILER $COMPILERFLAGS -o conftest conftest.c -lpthread >>configure.log 2>&1; then
     LIBPTHREAD="-lpthread"
 	echo "-lpthread"
-  elif $CXX $CXXFLAGS -o conftest conftest.cpp -lc_r >>configure.log 2>&1; then
+  elif $COMPILER $COMPILERFLAGS -o conftest conftest.c -lc_r >>configure.log 2>&1; then
     LIBPTHREAD="-lc_r"
     echo "-lc_r"
   else
@@ -146,7 +147,7 @@ else
 fi
 
 $ECHON "checking for ctime_r: $NNL"
-cat > conftest.cpp << EOF
+cat > conftest.c << EOF
 #include <time.h>
 int main (int argc, char *argv[])
 {
@@ -157,10 +158,10 @@ int main (int argc, char *argv[])
 	return 0;
 }
 EOF
-if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.c >>configure.log 2>&1; then
   echo "time.h"
 else
-  cat > conftest.cpp << EOF
+  cat > conftest.c << EOF
 #define _POSIX_C_SOURCE 199506L
 #define _POSIX_PTHREAD_SEMANTICS 1
 #define _XOPEN_SOURCE 1
@@ -176,7 +177,7 @@ int main (int argc, char *argv[])
 	return 0;
 }
 EOF
-  if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
+  if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.c >>configure.log 2>&1; then
     echo "time.h with solaris twist"
     CTIME_R_INCLUDE="#include <pthread.h>"
     CTIME_R_PTHREAD_DEFINE="#define _POSIX_PTHREAD_SEMANTICS 1"
@@ -190,7 +191,7 @@ EOF
 fi
 
 $ECHON "checking for pthread_rwlock_t: $NNL"
-cat > conftest.cpp << EOF
+cat > conftest.c << EOF
 #include <pthread.h>
 int main (int argc, char *argv[])
 {
@@ -199,11 +200,11 @@ int main (int argc, char *argv[])
 	return 0;
 }
 EOF
-if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.c >>configure.log 2>&1; then
   echo "yes"
   PTHREAD_HAVE_RWLOCK="#define PTHREAD_HAVE_RWLOCK 1"
   $ECHON "checking for pthread_rwlock_timedwrlock: $NNL"
-  cat > conftest.cpp << EOF
+  cat > conftest.c << EOF
 #include <pthread.h>
 #include <time.h>
 int main (int argc, char *argv[])
@@ -214,7 +215,7 @@ int main (int argc, char *argv[])
 	return 0;
 }
 EOF
-  if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >> configure.log 2>&1; then
+  if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.c >> configure.log 2>&1; then
     echo "yes"
     PTHREAD_HAVE_TIMEDLOCK="#define PTHREAD_HAVE_TIMEDLOCK 1"
   else
@@ -228,7 +229,7 @@ else
 fi
 
 
-rm -f conftest conftest.o conftest.cpp
+rm -f conftest conftest.o conftest.c
 # ---------------------------------------------------------------------------
 # Figure out whether we need libdl
 # ---------------------------------------------------------------------------
@@ -258,7 +259,7 @@ rm -f conftest.cpp conftest
 # Figure out whether we neet libsocket
 # ---------------------------------------------------------------------------
 
-cat >conftest.cpp <<EOF
+cat >conftest.c <<EOF
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -270,7 +271,7 @@ int main (int argc, char *argv[])
 EOF
 
 $ECHON "checking whether socket needs -lsocket: $NNL"
-if $CXX $CXXFLAGS -o conftest conftest.cpp >>configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest conftest.c >>configure.log 2>&1; then
   LIBSOCKET=""
   echo "no"
 else
@@ -278,13 +279,13 @@ else
   echo "yes"
 fi
 
-rm -f conftest.cpp conftest
+rm -f conftest.c conftest
 
 # ---------------------------------------------------------------------------
 # Figure out whether we need libnsl
 # ---------------------------------------------------------------------------
 
-cat >conftest.cpp <<EOF
+cat >conftest.c <<EOF
 #include <netdb.h>
 
 int main (int argc, char *argv[])
@@ -295,7 +296,7 @@ int main (int argc, char *argv[])
 EOF
 
 $ECHON "checking whether gethostbyname needs -lnsl: $NNL"
-if $CXX $CXXFLAGS -o conftest conftest.cpp >>configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest conftest.c >>configure.log 2>&1; then
   LIBNSL=""
   echo "no"
 else
@@ -303,13 +304,13 @@ else
   echo "yes"
 fi
 
-rm -f conftest.cpp conftest
+rm -f conftest.c conftest
 
 # ---------------------------------------------------------------------------
 # Figure out whether socklen_t is defined
 # ---------------------------------------------------------------------------
 
-cat >conftest.cpp <<EOF
+cat >conftest.c <<EOF
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -323,7 +324,7 @@ int main(int argc, char *argv[])
 EOF
 
 $ECHON "checking whether socklen_t needs to be defined: $NNL"
-if $CXX $CXXFLAGS -o conftest conftest.cpp >> configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest conftest.c >> configure.log 2>&1; then
   SOCKLEN_TYPEDEF=""
   echo "no"
 else
@@ -331,14 +332,14 @@ else
   echo "yes"
 fi
 
-rm -f conftest conftest.cpp
+rm -f conftest conftest.c
 
 
 # ---------------------------------------------------------------------------
 # Figure out whether we need libcrypt
 # ---------------------------------------------------------------------------
 
-cat >conftest.cpp <<EOF
+cat >conftest.c <<EOF
 #include <crypt.h>
 int main (int argc, char *argv[])
 {
@@ -348,11 +349,11 @@ int main (int argc, char *argv[])
 EOF
 
 $ECHON "checking where crypt() hides: $NNL"
-if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >> configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.c >> configure.log 2>&1; then
   CRYPTH="#include <crypt.h>"
   echo "crypt.h"
 else
-cat >conftest.cpp <<EOF
+cat >conftest.c <<EOF
 #include <unistd.h>
 int main (int argc, char *argv[])
 {
@@ -360,11 +361,11 @@ int main (int argc, char *argv[])
    return 1;
 }
 EOF
-if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.c >>configure.log 2>&1; then
   echo "unistd.h"
   CRYPTDEFINE=""
 else
-cat >conftest.cpp <<EOF
+cat >conftest.c <<EOF
 #define _XOPEN_SOURCE
 #include <unistd.h>
 int main (int argc, char *argv[])
@@ -373,11 +374,11 @@ int main (int argc, char *argv[])
    return 1;
 }
 EOF
-if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >>configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.c >>configure.log 2>&1; then
   echo "unistd.h"
   CRYPTDEFINE="#define _XOPEN_SOURCE"
 else
-  cat > conftest.cpp <<EOF
+  cat > conftest.c <<EOF
 #define _XOPEN_SOURCE 5
 #include <unistd.h>
 int main (int argc, char *argv[])
@@ -386,7 +387,7 @@ int main (int argc, char *argv[])
     return 1;
 }
 EOF
-if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >> configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.c >> configure.log 2>&1; then
   echo "unistd.h (evil netbsd)"
   CRYPTDEFINE="#define _XOPEN_SOURCE 5"
 else
@@ -397,7 +398,7 @@ fi
 fi
 fi
 $ECHON "checking whether crypt needs -lcrypt: $NNL"
-if $CXX $CXXFLAGS -o conftest conftest.o >>configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest conftest.o >>configure.log 2>&1; then
   LIBCRYPT=""
   echo "no"
 else
@@ -405,14 +406,14 @@ else
   echo "yes"
 fi
 
-rm -f conftest.cpp conftest.o conftest
+rm -f conftest.c conftest.o conftest
 # ---------------------------------------------------------------------------
 # Figure out if struct tm has a tm_gmtoff
 # ---------------------------------------------------------------------------
 
 
 $ECHON "checking for tm_gmtoff support: $NNL"
-cat > conftest.cpp << EOF
+cat > conftest.c << EOF
 #include <time.h>
 
 int main (int argc, char *argv[])
@@ -422,13 +423,13 @@ int main (int argc, char *argv[])
 	return 0;
 }
 EOF
-if $CXX $CXXFLAGS -o conftest conftest.cpp >> configure.log 2>&1; then
+if $COMPILER $COMPILERFLAGS -o conftest conftest.c >> configure.log 2>&1; then
   HAVE_GMTOFF="#define HAVE_GMTOFF 1"
   echo "yes"
 else
   echo "no"
 fi
-rm -f conftest.cpp conftest >/dev/null 2>&1
+rm -f conftest.c conftest >/dev/null 2>&1
 # ---------------------------------------------------------------------------
 # Figure out if the system supports linux-style sendfile()
 # ---------------------------------------------------------------------------
@@ -493,6 +494,8 @@ DATE=`date`
 cat >makeinclude <<EOF
 # Makeinclude generated by configure: $DATE
 
+COMPILER = $COMPILER
+COMPILERFLAGS = $COMPILERFLAGS
 CXX = $CXX
 CXXFLAGS = $CXXFLAGS
 LD = $LD
