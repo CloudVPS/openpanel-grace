@@ -471,6 +471,45 @@ bool filesystem::cp (const string &from, const string &to)
 	
 	pfrom = transr (from);
 	pto = transw (to);
+	
+	if (pfrom == pto) return false;
+	
+	file fin;
+	file fout;
+	
+	if (! fin.openread (pfrom)) return false;
+	if (! fout.openwrite (pto))
+	{
+		fin.close();
+		return false;
+	}
+	
+	string buf;
+	
+	while (! fin.eof())
+	{
+		buf = fin.read (8192);
+		if (buf.strlen())
+		{
+			if (! fout.puts (buf))
+			{
+				fin.close();
+				fout.close();
+				fs.rm (pto);
+				return false;
+			}
+		}
+		else break;
+	}
+	fin.close ();
+	fout.close ();
+	return true;
+}
+
+bool filesystem::chmod (const string &path, int perms)
+{
+	if (::chmod (path.str(), perms)) return false;
+	return true;
 }
 
 bool filesystem::chgrp (const string &path, const string &gr)
