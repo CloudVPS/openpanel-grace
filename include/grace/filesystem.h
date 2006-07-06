@@ -176,7 +176,7 @@ public:
 					 /// \param idx Optional resource index.
 					 /// \return New string object with the resource data.
 	string			*getresource (const string &pat, const string &rsrc,
-					 const string &idx = "");
+					 			  const string &idx = "");
 					 
 					 /// Get current directory path.
 					 /// \return Reference to the path variable.
