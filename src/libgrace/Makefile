@@ -5,6 +5,7 @@ OBJ			= 	application.o \
 				cgi.o \
 				checksum.o \
 				cmdtoken.o \
+				commonkeys.o \
 				configdb.o \
 				currency.o \
 				daemon.o \

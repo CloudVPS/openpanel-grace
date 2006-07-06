@@ -7,108 +7,13 @@
 
 #include <grace/value.h>
 #include <grace/visitor.h>
-#include <grace/xmlschema.h>
 #include <grace/valueindex.h>
+#include <grace/xmlschema.h>
 
 // ------------------------------------------------------------------------
 // Static keys used extensively in XML schemas. This will save space and
 // needless hash calculations
 // ------------------------------------------------------------------------
-
-namespace key {
-	const statstring xml_schema					("xml.schema");
-	const statstring xml_type					("xml.type");
-	const statstring xml_code					("xml.code");
-	const statstring xml_encoding				("xml.encoding");
-	const statstring xml_proplist				("xml.proplist");
-	const statstring xml_member					("xml.member");
-	const statstring xml_class					("xml.class");
-	const statstring xml_attributes				("xml.attributes");
-	const statstring xml_attribute  			("xml.attribute");
-	const statstring xml_validate				("xml.validate");
-	const statstring xml_string					("xml.string");
-	const statstring xml_regexp					("xml.regexp");
-	const statstring xml_schema_options 		("xml.schema.options");
-	const statstring xml_option_rootclass 		("xml.option.rootclass");
-	const statstring xml_option_namespaces 		("xml.option.namespaces");
-	const statstring xml_option_doctype			("xml.option.doctype");
-	const statstring xml_namespace      		("xml.namespace");
-	const statstring xml_namespace_type 		("xml.namespace.type");
-	const statstring xml_union					("xml.union");
-	const statstring xml_union_match			("xml.union.match");
-	const statstring xml_container				("xml.container");
-	const statstring xml_container_envelope		("xml.container.envelope");
-	const statstring xml_container_valueclass	("xml.container.valueclass");
-	const statstring xml_container_wrapclass	("xml.container.wrapclass");
-	const statstring xml_container_idclass		("xml.container.idclass");
-	const statstring xml_container_types		("xml.container.types");
-	const statstring xml_container_type			("xml.container.type");
-	const statstring container					("container");
-	const statstring contained					("contained");
-	const statstring alias						("alias");
-	const statstring cunion						("union");
-	const statstring array						("array");
-	const statstring wrap						("wrap");
-	const statstring attribvalue				("attribvalue");
-	const statstring prefix						("prefix");
-	const statstring action						("action");
-	const statstring name						("name");
-	const statstring status						("status");
-	const statstring dtd						("dtd");
-	const statstring label						("label");
-	const statstring isindex					("isindex");
-	const statstring id							("id");
-	const statstring uri    		            ("uri");
-	const statstring klass						("class");
-	const statstring mandatory					("mandatory");
-	const statstring type						("type");
-	const statstring isdict						("isdict");
-	const statstring isattribute				("isattribute");
-	const statstring implicit					("implicit");
-	const statstring isclass					("isclass");
-	const statstring isprecedent				("isprecedent");
-	const statstring ofclass					("ofclass");
-	const statstring strict						("strict");
-	const statstring grace_netdb_host			("grace.netdb.host");
-	const statstring host_name					("host.name");
-	const statstring host_address				("host.address");
-	const statstring hostname					("hostname");
-	const statstring address					("address");
-	const statstring grace_runoptions			("grace.runoptions");
-	const statstring grace_option				("grace.option");
-	const statstring grace_long					("grace.long");
-	const statstring grace_argc					("grace.argc");
-	const statstring grace_default				("grace.default");
-	const statstring grace_help					("grace.help");
-	const statstring g_long						("long");
-	const statstring g_argc						("argc");
-	const statstring g_default					("default");
-	const statstring g_help						("help");
-	
-	const statstring grace_validator			("grace.validator");
-	const statstring datarule					("datarule");
-	const statstring land						("and");
-	const statstring lor						("or");
-	const statstring match_child				("match.child");
-	const statstring match_id					("match.id");
-	const statstring match_class				("match.class");
-	const statstring match_type					("match.type");
-	const statstring match_data					("match.data");
-	const statstring match_attribute			("match.attribute");
-	const statstring match_hasindex				("match.hasindex");
-	const statstring match_rule					("match.rule");
-	const statstring text						("text");
-	const statstring regexp						("regexp");
-	const statstring lt							("lt");
-	const statstring gt							("gt");
-	const statstring minsize					("minsize");
-	const statstring maxsize					("maxsize");
-	const statstring errorcode					("errorcode");
-	const statstring errortext					("errortext");
-	const statstring match_mandatory			("match.mandatory");
-	const statstring optional					("optional");
-	const statstring key						("key");
-};
 
 // ========================================================================
 // CONSTRUCTOR xmlschema

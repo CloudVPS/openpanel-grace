@@ -127,6 +127,7 @@ void xmlschema::runoptschema (void)
  	//     <xml.member class="grace.argc" id="argc"/>
  	//     <xml.member class="grace.default" id="default"/>
  	//     <xml.member class="grace.help" id="help"/>
+ 	//     <xml.member class="grace.hide" id="hide"/>
  	//   </xml.proplist>
  	// </xml.class>
 	// -------------------------------------------------------------------
@@ -152,6 +153,9 @@ void xmlschema::runoptschema (void)
 	
 	schema[-1][-1][key::grace_help].type (key::xml_member);
 	schema[-1][-1][-1].setattrib (key::id,(const char *) "help");
+	
+	schema[-1][-1][key::grace_hide].type (key::xml_member);
+	schema[-1][-1][-1].setattrib (key::id,(const char *) "hide");
 
 	// -------------------------------------------------------------------
 	//  <xml.class name="grace.long">
@@ -196,6 +200,17 @@ void xmlschema::runoptschema (void)
 	schema[key::grace_help].type (key::xml_class);
 	schema[-1][key::xml_type] = "string";
 	schema[-1][key::xml_code] = "OHLP";
+
+	// -------------------------------------------------------------------
+	//  <xml.class name="grace.hide">
+	//    <xml.type>bool</xml.type>
+	//    <xml.code>OHID</xml.code>
+	//  </xml.class>
+	// -------------------------------------------------------------------
+
+	schema[key::grace_hide].type (key::xml_class);
+	schema[-1][key::xml_type] = "bool";
+	schema[-1][key::xml_code] = "OHID";
 }
 
 // ========================================================================

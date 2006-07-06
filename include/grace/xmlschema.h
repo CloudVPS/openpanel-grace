@@ -4,106 +4,13 @@
 #include <grace/str.h>
 #include <grace/statstring.h>
 #include <grace/filesystem.h>
+#include <grace/commonkeys.h>
 
 // ------------------------------------------------------------------------
 // Static keys used extensively in XML schemas. This will save space and
 // needless hash calculations
 // ------------------------------------------------------------------------
 
-namespace key {
-	extern const statstring xml_schema;
-	extern const statstring xml_type;
-	extern const statstring xml_code;
-	extern const statstring xml_encoding;
-	extern const statstring xml_proplist;
-	extern const statstring xml_member;
-	extern const statstring xml_class;
-	extern const statstring xml_attributes;
-	extern const statstring xml_attribute;
-	extern const statstring xml_validate;
-	extern const statstring xml_string;
-	extern const statstring xml_regexp;
-	extern const statstring xml_schema_options;
-	extern const statstring xml_option_rootclass;
-	extern const statstring xml_option_namespaces;
-	extern const statstring xml_option_doctype;
-	extern const statstring xml_namespace;
-	extern const statstring xml_namespace_type;
-	extern const statstring xml_union;
-	extern const statstring xml_union_match;
-	extern const statstring xml_container;
-	extern const statstring xml_container_valueclass;
-	extern const statstring xml_container_wrapclass;
-	extern const statstring xml_container_envelope;
-	extern const statstring xml_container_idclass;
-	extern const statstring xml_container_types;
-	extern const statstring xml_container_type;
-	extern const statstring container;
-	extern const statstring contained;
-	extern const statstring name;
-	extern const statstring status;
-	extern const statstring dtd;
-	extern const statstring alias;
-	extern const statstring cunion;
-	extern const statstring array;
-	extern const statstring prefix;
-	extern const statstring action;
-	extern const statstring label;
-	extern const statstring isindex;
-	extern const statstring id;
-	extern const statstring uri;
-	extern const statstring klass;
-	extern const statstring mandatory;
-	extern const statstring type;
-	extern const statstring isdict;
-	extern const statstring isattribute;
-	extern const statstring implicit;
-	extern const statstring isclass;
-	extern const statstring isprecedent;
-	extern const statstring ofclass;
-	extern const statstring strict;
-	extern const statstring wrap;
-	extern const statstring attribvalue;
-	extern const statstring grace_netdb_host;
-	extern const statstring host_name;
-	extern const statstring host_address;
-	extern const statstring hostname;
-	extern const statstring address;
-	extern const statstring grace_runoptions;
-	extern const statstring grace_option;
-	extern const statstring grace_long;
-	extern const statstring grace_argc;
-	extern const statstring grace_default;
-	extern const statstring grace_help;
-	extern const statstring g_long;
-	extern const statstring g_argc;
-	extern const statstring g_default;
-	extern const statstring g_help;
-	
-	extern const statstring grace_validator;
-	extern const statstring datarule;
-	extern const statstring land;
-	extern const statstring lor;
-	extern const statstring match_child;
-	extern const statstring match_id;
-	extern const statstring match_class;
-	extern const statstring match_type;
-	extern const statstring match_data;
-	extern const statstring match_attribute;
-	extern const statstring match_hasindex;
-	extern const statstring match_rule;
-	extern const statstring text;
-	extern const statstring regexp;
-	extern const statstring lt;
-	extern const statstring gt;
-	extern const statstring minsize;
-	extern const statstring maxsize;
-	extern const statstring errorcode;
-	extern const statstring errortext;
-	extern const statstring match_mandatory;
-	extern const statstring optional;
-	extern const statstring key;
-};
 
 /// List of built-in schemas.
 typedef enum

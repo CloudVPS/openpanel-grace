@@ -22,6 +22,7 @@
       <xml.member class="grace.argc" id="argc"/>
       <xml.member class="grace.default" id="default"/>
       <xml.member class="grace.help" id="help"/>
+      <xml.member class="grace.hide" id="hide"/>
     </xml.proplist>
   </xml.class>
   
@@ -43,6 +44,11 @@
   <xml.class name="grace.help">
     <xml.type>string</xml.type>
     <xml.code>OHLP</xml.code>
+  </xml.class>
+  
+  <xml.class name="grace.hide">
+    <xml.type>bool</xml.type>
+    <xml.code>OHID</xml.code>
   </xml.class>
   
 </xml.schema>
