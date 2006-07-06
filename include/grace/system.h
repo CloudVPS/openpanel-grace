@@ -10,6 +10,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <time.h>
+#include <grp.h>
 
 //#include <crypt.h>
 #include <grace/value.h>
@@ -104,11 +105,39 @@ public:
 		value *getpwnam (const string &s)
 		{
 			struct passwd *p;
+			value *res = NULL;
 			
-			p = ::getpwnam (s.str());
-			if (! p) throw (exNoSuchUser);
+			sharedsection (uidcache)
+			{
+				if (uidcache["byname"].exists (s))
+				{
+					returnclass (value) res retain;
+					res = uidcache["byname"][s];
+					breaksection return &res;
+				}
+			}
 			
-			return pwval (p);
+			exclusivesection (pwdbSpinLock)
+			{
+				p = ::getpwnam (s.str());
+				if (! p)
+				{
+					breaksection
+					{
+						return NULL;
+					}
+				}
+				res = pwval (p);
+			}
+			
+			if (res)
+			{
+				exclusivesection (uidcache)
+				{
+					uidcache["byname"][s] = *res;
+				}
+			}
+			return res;
 		}
 		
 		/// Look up a user account by its uid.
@@ -123,11 +152,115 @@ public:
 		value *getpwuid (uid_t uid)
 		{
 			struct passwd *p;
+			value *res = NULL;
 			
-			p = ::getpwuid (uid);
-			if (! p) throw (exNoSuchUser);
+			string uids;
+			uids.printf ("%u", uid);
 			
-			return pwval (p);
+			sharedsection (uidcache)
+			{
+				if (uidcache["byuid"].exists (uids))
+				{
+					returnclass (value) res retain;
+					res = uidcache["byuid"][uids];
+					breaksection return &res;
+				}
+			}
+			
+			exclusivesection (pwdbSpinLock)
+			{
+				p = ::getpwuid (uid);
+				if (! p) 
+				{
+					breaksection return NULL;
+				}
+				res = pwval (p);
+			}
+			
+			if (res)
+			{
+				exclusivesection (uidcache)
+				{
+					uidcache["byuid"][uids] = *res;
+				}
+			}
+			
+			return res;
+		}
+		
+		value *getgrnam (const string &s)
+		{
+			struct group *p;
+			value *res = NULL;
+			
+			sharedsection (gidcache)
+			{
+				if (gidcache["byname"].exists (s))
+				{
+					returnclass (value) res retain;
+					res = gidcache["byname"][s];
+					breaksection return &res;
+				}
+			}
+			
+			exclusivesection (pwdbSpinLock)
+			{
+				p = ::getgrnam (s.cval());
+				if (! p)
+				{
+					breaksection return NULL;
+				}
+				res = grval (p);
+			}
+			
+			if (res)
+			{
+				exclusivesection (gidcache)
+				{
+					gidcache["byname"][s] = *res;
+				}
+			}
+			
+			return res;
+		}
+
+		value *getgrgid (gid_t gid)
+		{
+			struct group *p;
+			value *res = NULL;
+			
+			string gids;
+			gids.printf ("%u", gid);
+			
+			sharedsection (gidcache)
+			{
+				if (gidcache["bygid"].exists (gids))
+				{
+					returnclass (value) res retain;
+					res = gidcache["byname"][gids];
+					breaksection return &res;
+				}
+			}
+			
+			exclusivesection (pwdbSpinLock)
+			{
+				p = ::getgrgid (gid);
+				if (! p)
+				{
+					breaksection return NULL;
+				}
+				res = grval (p);
+			}
+
+			if (res)
+			{
+				exclusivesection (gidcache)
+				{
+					gidcache["bygid"][gids] = *res;
+				}
+			}
+			
+			return res;
 		}
 		
 	protected:
@@ -137,14 +270,35 @@ public:
 			returnclass (value) r retain;
 			r["username"] = p->pw_name;
 			r["passwd"] = p->pw_passwd;
-			r["uid"] = (int) p->pw_uid;
-			r["gid"] = (int) p->pw_gid;
+			r["uid"] = (unsigned int) p->pw_uid;
+			r["gid"] = (unsigned int) p->pw_gid;
 			r["gecos"] = p->pw_gecos;
 			r["home"] = p->pw_dir;
 			r["shell"] = p->pw_shell;
 			
 			return &r;
 		}
+		
+		value *grval (struct group *g)
+		{
+			returnclass (value) r retain;
+			if (! g) return &r;
+			
+			r["groupname"] = g->gr_name;
+			r["gid"] = (unsigned int) g->gr_gid;
+			
+			for (int i=0; g->gr_mem[i]; i++)
+			{
+				r["members"].newval() = g->gr_mem[i];
+			}
+			
+			return &r;
+		}
+		
+		lock<value> uidcache;
+		lock<value> gidcache;
+		
+		lock<bool> pwdbSpinLock;
 	} userdb;
 	
 	/// Password crypting functionality.
