@@ -61,6 +61,16 @@ public:
 					 /// \return Status, \b true if the object was moved.
 	bool			 mv (const string &pold, const string &pnew);
 	
+					 /// Copy a file on the filesystem.
+					 /// \param pold The old path.
+					 /// \param pnew The new path.
+	bool			 cp (const string &pold, const string &pnew);
+	
+					 /// Change mode flags for a filesystem object.
+					 /// \param path The path to the object.
+					 /// \param perms The access permissions.
+	bool			 chmod (const string &path, int perms);
+	
 					 /// Convert a relative or aliaspath to an
 					 /// absolute path. 
 					 /// \param str The relative/alias path.

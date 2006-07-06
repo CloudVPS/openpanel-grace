@@ -102,6 +102,10 @@ filesystem::filesystem (void)
 	
 	if (! pathvol.exists ("var"))
 	{
+		pathvol["var"].newval() = "/var";
+		pathvol["log"].newval() = "/var/log";
+		pathvol["run"].newval() = "/var/run";
+
 		string tstr = hom;
 		tstr.strcat ("/var");
 		if (fs.exists (tstr))
@@ -115,12 +119,6 @@ filesystem::filesystem (void)
 			pathvol["log"].newval() = logpath;
 			runpath = transw ("var:run");
 			pathvol["run"].newval() = runpath;
-		}
-		else if (fs.exists ("/var"))
-		{
-			pathvol["var"].newval() = "/var";
-			pathvol["log"].newval() = "/var/log";
-			pathvol["run"].newval() = "/var/run";
 		}
 	}
 
@@ -464,6 +462,15 @@ bool filesystem::chown (const string &path, const string &usr, const string &gr)
 	
 	if (::chown (resolved.str(), uid, gid)) return false;
 	return true;
+}
+
+bool filesystem::cp (const string &from, const string &to)
+{
+	string pfrom;
+	string pto;
+	
+	pfrom = transr (from);
+	pto = transw (to);
 }
 
 bool filesystem::chgrp (const string &path, const string &gr)
