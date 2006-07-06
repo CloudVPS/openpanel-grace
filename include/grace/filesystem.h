@@ -97,6 +97,23 @@ public:
 					 /// \param msk The mask.
 	void			 umask (int msk);
 	
+					 /// Change object's ownership.
+					 /// \param path The grace path.
+					 /// \param user The owner's name.
+	bool			 chown (const string &path, const string &user);
+	
+					 /// Change object's ownership and group ownership.
+					 /// \param path The grace path.
+					 /// \param user The owner's name.
+					 /// \param group The group name.
+	bool			 chown (const string &path, const string &user,
+							const string &group);
+					
+					 /// Change object's group ownership.
+					 /// \param path The grace path.
+					 /// \param group The group name.
+	bool			 chgrp (const string &path, const string &group);
+	
 					 /// Size up a filesystem object.
 					 /// \param path Path to the object.
 					 /// \return Size in bytes.
@@ -113,6 +130,8 @@ public:
 					 ///   \arg mode Permission bits.
 					 ///   \arg fuid File owner.
 					 ///   \arg fgid File group.
+					 ///   \arg user Resolved username for the owner.
+					 ///   \arg group Resolved group name for the group.
 					 ///   \arg size File size.
 					 ///   \arg atime,mtime,ctime Access times.
 					 ///   \arg mime (explicit mimetype).

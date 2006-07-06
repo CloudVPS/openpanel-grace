@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <signal.h>
+#include <grace/system.h>
 
 extern char **environ;
 
@@ -319,6 +320,33 @@ value *filesystem::getinfo (const string &_path)
 		result["mode"] = (unsigned int) st.st_mode & 07777;
 		result["fuid"] = (unsigned int) st.st_uid;
 		result["fgid"] = (unsigned int) st.st_gid;
+		
+		value tmpv;
+
+		tmpv = kernel.userdb.getpwuid (st.st_uid);
+		if (tmpv.exists ("username"))
+		{
+			result["user"] = tmpv["username"];
+		}
+		else
+		{
+			tstr.crop();
+			tstr.printf ("#%u", st.st_uid);
+			result["user"] = tstr;
+		}
+			
+		tmpv = kernel.userdb.getgrgid (st.st_gid);
+		if (tmpv.exists ("groupname"))
+		{
+			result["group"] = tmpv["groupname"];
+		}
+		else
+		{
+			tstr.crop();
+			tstr.printf ("#%u", st.st_gid);
+			result["group"] = tstr;
+		}
+		
 		result["size"] = (unsigned int) (st.st_size & 0xffffffff);
 		result["atime"] = (unsigned int) st.st_atime;
 		result["mtime"] = (unsigned int) st.st_mtime;
@@ -391,6 +419,72 @@ bool filesystem::cdrelative (const string &path)
 	}
 	
 	return false;
+}
+
+bool filesystem::chown (const string &path, const string &touser)
+{
+	string resolved;
+	resolved = fs.transw (path);
+	
+	if (! resolved.strlen())
+		return false;
+	
+	value pwdat = kernel.userdb.getpwnam (touser);
+	value finf = fs.getinfo (resolved);
+	
+	if (! pwdat.count()) return false;
+	if (! finf.count()) return false;
+		
+	uid_t uid;
+	gid_t gid;
+	
+	uid = pwdat["uid"];
+	gid = finf["gid"];
+	
+	if (::chown (resolved.str(), uid, gid)) return false;
+	return true;
+}
+
+bool filesystem::chown (const string &path, const string &usr, const string &gr)
+{
+	string resolved;
+	resolved = fs.transw (path);
+	
+	if (! resolved.strlen())
+		return false;
+	
+	value pwdat = kernel.userdb.getpwnam (usr);
+	value grdat = kernel.userdb.getgrnam (gr);
+	
+	if (! pwdat.count()) return false;
+	if (! grdat.count()) return false;
+	
+	uid_t uid = pwdat["uid"];
+	gid_t gid = pwdat["gid"];
+	
+	if (::chown (resolved.str(), uid, gid)) return false;
+	return true;
+}
+
+bool filesystem::chgrp (const string &path, const string &gr)
+{
+	string resolved;
+	resolved = fs.transw (path);
+	
+	if (! resolved.strlen())
+		return false;
+	
+	value grdat = kernel.userdb.getgrnam (gr);
+	value finf = fs.getinfo (resolved);
+	
+	if (! grdat.count()) return false;
+	if (! finf.count()) return false;
+	
+	gid_t gid = grdat["gid"];
+	uid_t uid = finf["uid"];
+	
+	if (::chown (resolved.str(), uid, gid)) return false;
+	return true;
 }
 
 // ========================================================================
