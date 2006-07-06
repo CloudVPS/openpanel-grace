@@ -234,7 +234,7 @@ void application::init (int Argc, char *Argv[])
 						argv[longname] = Argv[crsr];
 						if (longarg["hide"] == true)
 						{
-							Argv[crsr] = "*";
+							Argv[crsr][0] = 0;
 						}
 					}
 				}
@@ -265,7 +265,7 @@ void application::init (int Argc, char *Argv[])
 							argv[arg][i] = Argv[crsr];
 							if (opt[arg]["hide"] == true)
 							{
-								Argv[crsr] = "*";
+								Argv[crsr][0] = 0;
 							}
 							++crsr;
 						}
@@ -277,7 +277,13 @@ void application::init (int Argc, char *Argv[])
 					{
 						++crsr;
 						if (crsr < Argc)
+						{
 							argv[arg] = Argv[crsr];
+							if (opt[arg]["hide"] == true)
+							{
+								Argv[crsr][0] = 0;
+							}
+						}
 					}
 					else argv[arg] = 1;
 				}
