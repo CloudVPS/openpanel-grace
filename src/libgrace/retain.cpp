@@ -168,7 +168,7 @@ namespace memory
 	{
 		if (! r)
 		{
-			retaininitrefs ();
+			//retaininitrefs ();
 			return;
 		}
 		size_t mysz = retainpool().getsize (r);
