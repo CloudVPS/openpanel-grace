@@ -488,10 +488,28 @@ bool filesystem::cp (const string &from, const string &to)
 	
 	while (! fin.eof())
 	{
-		buf = fin.read (8192);
+		try
+		{
+			buf = fin.read (8192);
+		}
+		catch (...)
+		{
+			break;
+		}
+		
 		if (buf.strlen())
 		{
-			if (! fout.puts (buf))
+			try
+			{
+				if (! fout.puts (buf))
+				{
+					fin.close();
+					fout.close();
+					fs.rm (pto);
+					return false;
+				}
+			}
+			catch (...)
 			{
 				fin.close();
 				fout.close();
