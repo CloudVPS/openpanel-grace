@@ -19,56 +19,13 @@
 #include <stdio.h>
 #include <string.h>
 
-statstring t_char;
-statstring t_uchar;
-statstring t_short;
-statstring t_ushort;
-statstring t_int;
-statstring t_unsigned;
-statstring t_ulong;
-statstring t_bool;
-statstring t_bool_true;
-statstring t_bool_false;
-statstring t_double;
-statstring t_string;
-statstring t_ipaddr;
-statstring t_unset;
-statstring t_long;
-statstring t_array;
-statstring t_dict;
-statstring t_date;
-statstring t_currency;
-
 // ========================================================================
 // CONSTRUCTOR
 // -----------
 // This constructor initializes an empty value object
 // ========================================================================
-value::value (void) : memory::retainable ()
+value::value (void)
 {
-	padding = 1;
-	if (! t_unset)
-	{
-		t_int = "integer";
-		t_unsigned = "unsigned";
-		t_ulong = "ulong";
-		t_bool = "bool";
-		t_bool_true = "bool.true";
-		t_bool_false = "bool.false";
-		t_double = "float";
-		t_string = "string";
-		t_ipaddr = "ipaddress";
-		t_unset = "void";
-		t_long = "long";
-		t_array = "array";
-		t_dict = "dict";
-		t_char = "char";
-		t_uchar = "uchar";
-		t_short = "short";
-		t_ushort = "ushort";
-		t_date = "date";
-		t_currency = "currency";
-	}
 	_type = t_unset;
 	itype = i_unset;
 	
@@ -87,31 +44,8 @@ value::value (void) : memory::retainable ()
 // -----------
 // This constructor initializes an empty value object
 // ========================================================================
-value::value (const char *orig) : memory::retainable ()
+value::value (const char *orig)
 {
-	padding = 1;
-	if (! t_unset)
-	{
-		t_int = "integer";
-		t_unsigned = "unsigned";
-		t_ulong = "ulong";
-		t_bool = "bool";
-		t_bool_true = "bool.true";
-		t_bool_false = "bool.false";
-		t_double = "float";
-		t_string = "string";
-		t_ipaddr = "ipaddress";
-		t_unset = "void";
-		t_long = "long";
-		t_array = "array";
-		t_dict = "dict";
-		t_char = "char";
-		t_uchar = "uchar";
-		t_short = "short";
-		t_ushort = "ushort";
-		t_date = "date";
-		t_currency = "currency";
-	}
 	_type = t_unset;
 	itype = i_unset;
 	
@@ -131,31 +65,8 @@ value::value (const char *orig) : memory::retainable ()
 // -----------------
 // This constructor initializes value object with an integer key
 // ========================================================================
-value::value (creatorlabel l, unsigned int k) : memory::retainable ()
+value::value (creatorlabel l, unsigned int k)
 {
-	padding = 2;
-	if (! t_unset)
-	{
-		t_int = "integer";
-		t_unsigned = "unsigned";
-		t_ulong = "ulong";
-		t_bool = "bool";
-		t_bool_true = "bool.true";
-		t_bool_false = "bool.false";
-		t_double = "float";
-		t_string = "string";
-		t_ipaddr = "ipaddress";
-		t_unset = "void";
-		t_long = "long";
-		t_array = "array";
-		t_dict = "dict";
-		t_char = "char";
-		t_uchar = "uchar";
-		t_short = "short";
-		t_ushort = "ushort";
-		t_date = "date";
-		t_currency = "currency";
-	}
 	_type = t_unset;
 	itype = i_unset;
 	t.lval = 0;
@@ -173,31 +84,8 @@ value::value (creatorlabel l, unsigned int k) : memory::retainable ()
 // ----------------------
 // This constructor initializes value object with a c-string key
 // ========================================================================
-value::value (creatorlabel l,const char *k) : memory::retainable ()
+value::value (creatorlabel l,const char *k)
 {
-	padding = 3;
-	if (! t_unset)
-	{
-		t_int = "integer";
-		t_unsigned = "unsigned";
-		t_ulong = "ulong";
-		t_bool = "bool";
-		t_bool_true = "bool.true";
-		t_bool_false = "bool.false";
-		t_double = "float";
-		t_string = "string";
-		t_ipaddr = "ipaddress";
-		t_unset = "void";
-		t_long = "long";
-		t_array = "array";
-		t_dict = "dict";
-		t_char = "char";
-		t_uchar = "uchar";
-		t_short = "short";
-		t_ushort = "ushort";
-		t_date = "date";
-		t_currency = "currency";
-	}
 	_type = t_unset;
 	t.lval = 0;
 	key = checksum (k);
@@ -216,31 +104,8 @@ value::value (creatorlabel l,const char *k) : memory::retainable ()
 // This constructor initializes value object with a c-string key and a
 // defined numeric key.
 // ========================================================================
-value::value (creatorlabel l, const char *k, unsigned int ki) : memory::retainable ()
+value::value (creatorlabel l, const char *k, unsigned int ki)
 {
-	padding = 4;
-	if (! t_unset)
-	{
-		t_int = "integer";
-		t_unsigned = "unsigned";
-		t_ulong = "ulong";
-		t_bool = "bool";
-		t_bool_true = "bool.true";
-		t_bool_false = "bool.false";
-		t_double = "float";
-		t_string = "string";
-		t_ipaddr = "ipaddress";
-		t_unset = "void";
-		t_long = "long";
-		t_array = "array";
-		t_dict = "dict";
-		t_char = "char";
-		t_uchar = "uchar";
-		t_short = "short";
-		t_ushort = "ushort";
-		t_date = "date";
-		t_currency = "currency";
-	}
 	_type = t_unset;
 	itype = i_unset;
 	
@@ -260,31 +125,8 @@ value::value (creatorlabel l, const char *k, unsigned int ki) : memory::retainab
 // --------------------
 // This constructor initializes value object with a string key
 // ========================================================================
-value::value (creatorlabel l, const string &k) : memory::retainable ()
+value::value (creatorlabel l, const string &k)
 {
-	padding = 5;
-	if (! t_unset)
-	{
-		t_int = "integer";
-		t_unsigned = "unsigned";
-		t_ulong = "ulong";
-		t_bool = "bool";
-		t_bool_true = "bool.true";
-		t_bool_false = "bool.false";
-		t_double = "float";
-		t_string = "string";
-		t_ipaddr = "ipaddress";
-		t_unset = "void";
-		t_long = "long";
-		t_array = "array";
-		t_dict = "dict";
-		t_char = "char";
-		t_uchar = "uchar";
-		t_short = "short";
-		t_ushort = "ushort";
-		t_date = "date";
-		t_currency = "currency";
-	}
 	_type = t_unset;
 	itype = i_unset;
 	t.lval = 0;
@@ -309,31 +151,8 @@ value::value (creatorlabel l, const string &k) : memory::retainable ()
 // ----------------
 // Initializes a value as a copy of another value
 // ========================================================================
-value::value (value &v) : memory::retainable ()
+value::value (value &v)
 {
-	padding = 6;
-	if (! t_unset)
-	{
-		t_int = "integer";
-		t_unsigned = "unsigned";
-		t_ulong = "ulong";
-		t_bool = "bool";
-		t_bool_true = "bool.true";
-		t_bool_false = "bool.false";
-		t_double = "float";
-		t_string = "string";
-		t_ipaddr = "ipaddress";
-		t_unset = "void";
-		t_long = "long";
-		t_array = "array";
-		t_dict = "dict";
-		t_char = "char";
-		t_uchar = "uchar";
-		t_short = "short";
-		t_ushort = "ushort";
-		t_date = "date";
-		t_currency = "currency";
-	}
 	// First do a default null-initialization
 	_type = t_unset;
 	itype = i_unset;
@@ -413,29 +232,6 @@ value::value (value &v) : memory::retainable ()
 
 value::value (const value &v)
 {
-	padding = 1;
-	if (! t_unset)
-	{
-		t_int = "integer";
-		t_unsigned = "unsigned";
-		t_ulong = "ulong";
-		t_bool = "bool";
-		t_bool_true = "bool.true";
-		t_bool_false = "bool.false";
-		t_double = "float";
-		t_string = "string";
-		t_ipaddr = "ipaddress";
-		t_unset = "void";
-		t_long = "long";
-		t_array = "array";
-		t_dict = "dict";
-		t_char = "char";
-		t_uchar = "uchar";
-		t_short = "short";
-		t_ushort = "ushort";
-		t_date = "date";
-		t_currency = "currency";
-	}
 	_type = t_unset;
 	itype = i_unset;
 	

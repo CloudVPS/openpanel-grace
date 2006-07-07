@@ -142,7 +142,7 @@ public:
 	inline char &operator[] (int n)
 					 {
 					 	static char nul = 0;
-					 	if ((! data) || (n >= size))
+					 	if ((! data) || (((unsigned int) (n>0) ? n : -n) >= size))
 					 	{
 					 		pad (n, ' ');
 					 	}

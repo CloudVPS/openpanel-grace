@@ -27,25 +27,34 @@ typedef union dtypes
 	unsigned long long	ulval;
 } dtype;
 
-extern statstring t_char;
-extern statstring t_uchar;
-extern statstring t_short;
-extern statstring t_ushort;
-extern statstring t_int;
-extern statstring t_unsigned;
-extern statstring t_bool;
-extern statstring t_bool_true;
-extern statstring t_bool_false;
-extern statstring t_double;
-extern statstring t_string;
-extern statstring t_ipaddr;
-extern statstring t_unset;
-extern statstring t_long;
-extern statstring t_ulong;
-extern statstring t_array;
-extern statstring t_dict;
-extern statstring t_date;
-extern statstring t_currency;
+#ifdef _VALUE_CPP
+ #define TYPENAME statstring
+ #define VALUE(x) (x)
+ #undef _VALUE_CPP
+#else
+ #define TYPENAME extern const statstring
+ #define VALUE(x)
+#endif
+
+TYPENAME t_char VALUE ("char");
+TYPENAME t_uchar VALUE ("uchar");
+TYPENAME t_short VALUE ("short");
+TYPENAME t_ushort VALUE ("ushort");
+TYPENAME t_int VALUE ("integer");
+TYPENAME t_unsigned VALUE ("unsigned");
+TYPENAME t_bool VALUE ("bool");
+TYPENAME t_bool_true VALUE ("bool.true");
+TYPENAME t_bool_false VALUE ("bool.false");
+TYPENAME t_double VALUE ("float");
+TYPENAME t_string VALUE ("string");
+TYPENAME t_ipaddr VALUE ("ipaddress");
+TYPENAME t_unset VALUE ("void");
+TYPENAME t_long VALUE ("long");
+TYPENAME t_ulong VALUE ("ulong");
+TYPENAME t_array VALUE ("array");
+TYPENAME t_dict VALUE ("dict");
+TYPENAME t_date VALUE ("date");
+TYPENAME t_currency VALUE ("currency");
 
 typedef statstring dtenum;
 
@@ -419,6 +428,14 @@ public:
 	
 	/// Assign to c string.
 	inline value	&operator= (const char *str)
+	{
+		s = str;
+		itype = i_string;
+		if (_type == t_unset) _type = t_string;
+		return *this;
+	}
+
+	inline value	&operator= (const unsigned char *str)
 	{
 		s = str;
 		itype = i_string;
@@ -1383,7 +1400,6 @@ protected:
 	class statstring _name; ///< String key.
 	
 	value			*lower, *higher; ///< Hash tree links.
-	int				 padding; ///< Ununsed
 	value			*attrib; ///< Attributes.
 	
 	value			**array; ///< Child array.
