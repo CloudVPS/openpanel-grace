@@ -459,7 +459,20 @@ value::value (const value &v)
 // ========================================================================
 value::value (value *v) : memory::retainable (v)
 {
-	if (!v) value();
+	if (!v)
+	{
+		_type = t_unset;
+		itype = i_unset;
+		
+		t.lval = 0;
+		key = 0;
+		lower = higher = NULL;
+		array = NULL;
+		arraysz = 0;
+		arrayalloc = 0;
+		ucount = 0;
+		attrib = NULL;
+	}
 }
 
 // ========================================================================
