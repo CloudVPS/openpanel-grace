@@ -110,6 +110,6 @@ namespace key {
 };
 
 #undef STRINGRSRC
-#undef VALUE(x)
+#undef VALUE
 
 #endif

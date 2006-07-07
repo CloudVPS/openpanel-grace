@@ -458,7 +458,7 @@ bool filesystem::chown (const string &path, const string &usr, const string &gr)
 	if (! grdat.count()) return false;
 	
 	uid_t uid = pwdat["uid"];
-	gid_t gid = pwdat["gid"];
+	gid_t gid = grdat["gid"];
 	
 	if (::chown (resolved.str(), uid, gid)) return false;
 	return true;
