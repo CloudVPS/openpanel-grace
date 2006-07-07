@@ -8,6 +8,7 @@
 //      012345678 TAB-O-METER should measure 4
 //      ^	^
 
+#define _VALUE_CPP 1
 
 #include "platform.h"
 #include <grace/value.h>

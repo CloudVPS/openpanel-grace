@@ -98,6 +98,9 @@ public:
 					 /// Copy-constructor (C string).
 					 string (const char *);
 					 
+					 /// Copy-constructor (C unsigned string)
+					 string (const unsigned char *);
+					 
 					 /// Copy-constructor.
 					 /// Shares the other object's refblock.
 					 string (const string &);
@@ -198,6 +201,16 @@ public:
 						}
 						this->strcpy (str);
 						return *this;
+					 }
+	inline string	&operator= (const unsigned char *str)
+					 {
+					 	if (! str)
+						{
+							this->strcpy ("");
+							return *this;
+						}
+						this->strcpy ((const char *) str);
+					 	return *this;
 					 }
 	
 	inline string	&operator= (string *str)

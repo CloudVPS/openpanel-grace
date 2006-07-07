@@ -169,6 +169,32 @@ string::string (const char *s) : retainable()
 	}
 }
 
+string::string (const unsigned char *ss)
+{
+	const char *s = (const char *) ss;
+	// Verify that the supplied pointer is valid
+	
+	if (s != NULL)
+	{
+		// Copy the c-string
+		
+		size = ::strlen (s);
+		alloc = GROW(size+1+sizeof (refblock));
+		data = (refblock *) malloc ((size_t) alloc);
+		::strcpy (data->v, s);
+		data->refcount = 0;
+		data->threadref = getref();
+	}
+	else
+	{
+		// Allocate as empty
+	
+		size = 0;
+		alloc = 0;
+		data = NULL;
+	}
+}
+
 // ========================================================================
 // COPY CONSTRUCTOR
 // ----------------

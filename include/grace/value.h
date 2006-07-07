@@ -29,32 +29,32 @@ typedef union dtypes
 
 #ifdef _VALUE_CPP
  #define TYPENAME statstring
- #define VALUE(x) (x)
+ #define TVALUE(x) (x)
  #undef _VALUE_CPP
 #else
  #define TYPENAME extern const statstring
- #define VALUE(x)
+ #define TVALUE(x)
 #endif
 
-TYPENAME t_char VALUE ("char");
-TYPENAME t_uchar VALUE ("uchar");
-TYPENAME t_short VALUE ("short");
-TYPENAME t_ushort VALUE ("ushort");
-TYPENAME t_int VALUE ("integer");
-TYPENAME t_unsigned VALUE ("unsigned");
-TYPENAME t_bool VALUE ("bool");
-TYPENAME t_bool_true VALUE ("bool.true");
-TYPENAME t_bool_false VALUE ("bool.false");
-TYPENAME t_double VALUE ("float");
-TYPENAME t_string VALUE ("string");
-TYPENAME t_ipaddr VALUE ("ipaddress");
-TYPENAME t_unset VALUE ("void");
-TYPENAME t_long VALUE ("long");
-TYPENAME t_ulong VALUE ("ulong");
-TYPENAME t_array VALUE ("array");
-TYPENAME t_dict VALUE ("dict");
-TYPENAME t_date VALUE ("date");
-TYPENAME t_currency VALUE ("currency");
+TYPENAME t_char 		TVALUE ("char");
+TYPENAME t_uchar 		TVALUE ("uchar");
+TYPENAME t_short 		TVALUE ("short");
+TYPENAME t_ushort 		TVALUE ("ushort");
+TYPENAME t_int 			TVALUE ("integer");
+TYPENAME t_unsigned 	TVALUE ("unsigned");
+TYPENAME t_bool 		TVALUE ("bool");
+TYPENAME t_bool_true 	TVALUE ("bool.true");
+TYPENAME t_bool_false 	TVALUE ("bool.false");
+TYPENAME t_double 		TVALUE ("float");
+TYPENAME t_string 		TVALUE ("string");
+TYPENAME t_ipaddr 		TVALUE ("ipaddress");
+TYPENAME t_unset 		TVALUE ("void");
+TYPENAME t_long 		TVALUE ("long");
+TYPENAME t_ulong 		TVALUE ("ulong");
+TYPENAME t_array 		TVALUE ("array");
+TYPENAME t_dict 		TVALUE ("dict");
+TYPENAME t_date 		TVALUE ("date");
+TYPENAME t_currency 	TVALUE ("currency");
 
 typedef statstring dtenum;
 
