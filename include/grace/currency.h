@@ -61,13 +61,23 @@ public:
 	
 	currency		&operator*= (int);
 	currency		&operator*= (double);
+	currency		&operator*= (const currency &);
+	currency		&operator*= (long long);
+	
 	currency		&operator/= (int);
 	currency		&operator/= (double);
+	currency		&operator/= (const currency &);
+	currency		&operator/= (long long);
 	
 	long long		 operator* (int) const;
 	long long		 operator* (double) const;
+	long long		 operator* (const currency &) const;
+	long long		 operator* (long long) const;
+	
 	long long		 operator/ (int) const;
 	long long		 operator/ (double) const;
+	long long		 operator/ (const currency &) const;
+	long long		 operator/ (long long) const;
 	
 					 /// Cast to 64 bits fixed point with 3 decimals.
 					 operator long long (void) { return val; }

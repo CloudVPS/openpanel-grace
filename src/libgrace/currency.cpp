@@ -200,10 +200,73 @@ currency &currency::operator*= (double with)
 	return *this;
 }
 
+currency &currency::operator*= (long long with)
+{
+	val *= with;
+	val /= 1000LL;
+	return *this;
+}
+
+currency &currency::operator*= (const currency &with)
+{
+	val *= with.val;
+	val /= 1000LL;
+	return *this;
+}
+
+currency &currency::operator/= (double wwith)
+{
+	double with = 1.0/wwith;
+
+	long long intfactor;
+	double dintfactor,fraction;
+	long long fractpart;
+	
+	intfactor = llrint (with);
+	dintfactor = intfactor;
+	fraction = with - dintfactor;
+	
+	fractpart = llrint (((double)val )* fraction);
+	val *= intfactor;
+	val += fractpart;
+	return *this;
+}
+
+currency &currency::operator/= (int with)
+{
+	long long fact = with;
+	val /= fact;
+	return *this;
+}
+
+currency &currency::operator/= (long long with)
+{
+	val *= 1000LL;
+	val /= with;
+	return *this;
+}
+
+currency &currency::operator/= (const currency &with)
+{
+	val *= 1000LL;
+	val /= with.val;
+	return *this;
+}
+
 long long currency::operator* (int with) const
 {
 	long long mfact = with;
 	return (val * mfact);
+}
+
+long long currency::operator* (long long with) const
+{
+	return ( val * with / 1000LL );
+}
+
+long long currency::operator* (const currency &with) const
+{
+	return ( val * with.val / 1000LL );
 }
 
 long long currency::operator* (double with) const
@@ -228,6 +291,16 @@ long long currency::operator/ (int with) const
 {
 	long long mfact = with;
 	return (val / mfact);
+}
+
+long long currency::operator/ (long long with) const
+{
+	return ( (val * 1000LL) / with );
+}
+
+long long currency::operator/ (const currency &with) const
+{
+	return ( (val * 1000LL) / with.val );
 }
 
 long long currency::operator/ (double with) const
