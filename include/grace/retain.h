@@ -121,7 +121,7 @@ namespace memory
 					 /// constructor methods.
 		void		 retainvalue (retainable *r);
 		
-		void		 retaininitrefs (void)
+		virtual void init (bool first = true)
 					 {
 					 	memset ((void *) this, 0, retainpool().getsize ((void *) this));
 					 }

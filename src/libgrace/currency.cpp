@@ -383,3 +383,7 @@ long long parsecurrency (const string &from)
 	return (1000LL * base) + fract;
 }
 
+void currency::init (bool first)
+{
+	val = 0;
+}

@@ -969,6 +969,9 @@ public:
 	
 					 /// Strip leading and trailing whitespace.
 	void			 chomp (void);
+	
+					 /// Initialization (retainable)
+	virtual void	 init (bool first);
 
 protected:
 	unsigned int	 size; ///< Size of the string data.

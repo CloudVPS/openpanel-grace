@@ -27,17 +27,7 @@
 // ========================================================================
 value::value (void)
 {
-	_type = t_unset;
-	itype = i_unset;
-	
-	t.lval = 0;
-	key = 0;
-	lower = higher = NULL;
-	array = NULL;
-	arraysz = 0;
-	arrayalloc = 0;
-	ucount = 0;
-	attrib = NULL;
+	init();
 }
 
 // ========================================================================
@@ -47,17 +37,7 @@ value::value (void)
 // ========================================================================
 value::value (const char *orig)
 {
-	_type = t_unset;
-	itype = i_unset;
-	
-	t.lval = 0;
-	key = 0;
-	lower = higher = NULL;
-	array = NULL;
-	arraysz = 0;
-	arrayalloc = 0;
-	ucount = 0;
-	attrib = NULL;
+	init();
 	(*this) = orig;
 }
 
@@ -155,15 +135,7 @@ value::value (creatorlabel l, const string &k)
 value::value (value &v)
 {
 	// First do a default null-initialization
-	_type = t_unset;
-	itype = i_unset;
-	t.lval = 0;
-	lower = higher = NULL;
-	array = NULL;
-	attrib = NULL;
-	arraysz = 0;
-	arrayalloc = 0;
-	ucount = 0;
+	init ();
 	
 	// Copy the name
 	if (v._name)
@@ -256,20 +228,6 @@ value::value (const value &v)
 // ========================================================================
 value::value (value *v) : memory::retainable (v)
 {
-	if (!v)
-	{
-		_type = t_unset;
-		itype = i_unset;
-		
-		t.lval = 0;
-		key = 0;
-		lower = higher = NULL;
-		array = NULL;
-		arraysz = 0;
-		arrayalloc = 0;
-		ucount = 0;
-		attrib = NULL;
-	}
 }
 
 // ========================================================================
@@ -1507,4 +1465,26 @@ bool value::isbuiltin (const statstring &type)
 	}
 	
 	return tplist.exists (type);
+}
+
+void value::init (bool first)
+{
+	if (first)
+	{
+		_type = t_unset;
+		itype = i_unset;
+		
+		t.lval = 0;
+		key = 0;
+		lower = higher = NULL;
+		array = NULL;
+		arraysz = 0;
+		arrayalloc = 0;
+		ucount = 0;
+		attrib = NULL;
+	}
+	else
+	{
+		clear ();
+	}
 }

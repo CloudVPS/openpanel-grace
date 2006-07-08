@@ -401,3 +401,13 @@ void statstring::assign (unsigned int k)
 	
 	ref = STRINGREF().getref ("",k);
 }
+
+void statstring::init (bool first)
+{
+	if (first) ref = NULL;
+	else
+	{
+		if (ref) STRINGREF().unref (ref);
+		ref = NULL;
+	}
+}

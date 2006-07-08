@@ -95,6 +95,8 @@ public:
 
 					 /// Cast to 64 bits fixed point with 3 decimals.
 	long long		 value (void) const { return val; };
+	
+	virtual void	 init (bool first);
 
 protected:
 	long long		 val; ///< Internal fixed point representation.

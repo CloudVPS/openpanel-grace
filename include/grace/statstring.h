@@ -394,6 +394,7 @@ public:
 							return ref->str;
 						}
 
+	virtual void		init (bool first);
 protected:
 	stringref		*ref; ///< This string's stringref struct (from stringrefdb).
 };

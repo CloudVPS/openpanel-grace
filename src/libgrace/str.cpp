@@ -125,9 +125,7 @@ threadref_t getref (void)
 
 string::string (void) : retainable()
 {
-	size = 0;
-	alloc = 0;
-	data = NULL;
+	init (true);
 }
 
 string::string (unsigned int sz) : retainable()
@@ -2412,3 +2410,18 @@ void string::chomp (void)
 	
 	(*this) = mid (left, (right-left));
 }
+
+void string::init (bool first)
+{
+	if (first)
+	{
+		size = 0;
+		alloc = 0;
+		data = NULL;
+	}
+	else
+	{
+		crop ();
+	}
+}
+

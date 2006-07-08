@@ -1435,6 +1435,8 @@ protected:
 					 	if (pindex >= arraysz) return NULL;
 					 	return array[(index<0) ? arraysz-index : index];
 					 }
+					 
+	void			 init (bool first=true);
 };
 
 string *ip2str (unsigned int ipaddr);
