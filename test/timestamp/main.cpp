@@ -38,9 +38,19 @@ int timestamptestApp::main (void)
 	// test sub
 	tsresult = tsb - tsa;
 	::printf ("Operator - : result : %llu \n", tsresult.getusec());
-	if(tsresult.getusec() == 0){
-		fout.printf ("Failed operator -\n");
-		return 1;
+	if(tsresult.getusec() == 0)
+	{
+		// try it again, there is this 1:1000000 chance that
+		// this was just a fluke and we managed to measure tsb
+		// at exactly 0usec past the second.
+		tsa = kernel.time.now();
+		tsb = kernel.time.unow();
+		tsresult = tsb - tsa;
+		if (tresult.getusec() == 0)
+		{
+			fout.printf ("Failed operator -\n");
+			return 1;
+		}
 	}
 	
 	// Test comparisons
