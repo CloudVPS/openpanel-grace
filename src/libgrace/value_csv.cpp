@@ -27,7 +27,7 @@ string *value::tocsv (bool withHeaders, const char *indexName)
 	value *child;
 	int columnCount;
 	int i;
-	int row;
+	unsigned int row;
 	
 	// no data, no cookie
 	if (! arraysz) return &out;
@@ -120,7 +120,7 @@ bool value::savecsv (const string &fileName, bool withHeaders,
 	value *child;
 	int columnCount;
 	int i;
-	int row;
+	unsigned int row;
 	string tmpstr;
 	
 	// cowardly refuse to save an empty file

@@ -46,7 +46,7 @@ void value::load (const char *fname, file &f)
 {
 	if (arraysz)
 	{
-		for (int i=0; i<arraysz; ++i)
+		for (unsigned int i=0; i<arraysz; ++i)
 		{
 			delete array[i];
 		}
@@ -320,7 +320,7 @@ void value::save (const string &fname, bool compact) const
 
 void value::save (file &f, bool compact) const
 {
-	for (int x=0; x<arraysz; ++x)
+	for (unsigned int x=0; x<arraysz; ++x)
 	{
 		array[x]->print (0, f, compact);
 	}
@@ -331,7 +331,7 @@ string *value::encode (bool compact) const
 {
 	returnclass (string) res retain;
 	
-	for (int x=0; x<arraysz; ++x)
+	for (unsigned int x=0; x<arraysz; ++x)
 	{
 		array[x]->printstr (0, res, compact);
 	}
@@ -426,7 +426,7 @@ void value::print (int indent, file &out, bool compact) const
 		
 		out.puts (outstr);
 		
-		for (int i=0; i<arraysz; ++i)
+		for (unsigned int i=0; i<arraysz; ++i)
 		{
 			array[i]->print (indent+2, out, compact);
 		}
@@ -518,7 +518,7 @@ void value::printstr (int indent, string &out, bool compact) const
 		if (outstr.strlen())
 			out.strcat (outstr.str());
 		
-		for (int i=0; i<arraysz; ++i)
+		for (unsigned int i=0; i<arraysz; ++i)
 		{
 			array[i]->printstr (indent+2, out);
 		}

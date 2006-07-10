@@ -61,9 +61,10 @@ public:
 					 /// \param str The text to insert.
 	void			 insert (const string &str)
 					 {
-						for (int i=0; i<str.strlen(); ++i) insert (str[i]);
+						for (unsigned int i=0; i<str.strlen(); ++i)
+							insert (str[i]);
 					 }
-									 /// Perform a backspace.
+					 /// Perform a backspace.
 	void			 backspace (void);
 	
 					 /// Perform a cursor left movement.
@@ -135,29 +136,29 @@ public:
 	int				 length (void) { return len - prompt.strlen(); }
 	
 					 /// Set the cursorposition.
-	int				 setcrsr (int i)
+	void			 setcrsr (int i)
 					 {
 					 	crsr = prompt.strlen() + i;
 					 	if (crsr>len) crsr = len;
-					 	if (crsr<0) crsr = 0;
+					 	if (i<0) crsr = 0;
 					 }
 					 
 					 /// Force the buffer to be completely redrawn
 					 /// on the next draw() cycle.
 	void			 redraw (void)
 					 {
-					 	for (int i=0; i<wsize; ++i) curview[i] = 0;
+					 	for (unsigned int i=0; i<wsize; ++i) curview[i] = 0;
 					 }
 					 
 protected:
 	file			 fin, fout; // Input/output file descriptors.
-	int				 size; ///< Total size of the buffer.
-	int				 wsize; ///< Width of the display
-	int				 len; ///< Current length of text in buffer.
-	int				 crsr; ///< Current cursor position.
-	int				 ocrsr; ///< Old cursor position.
-	int				 wcrsr; ///< Current offset of the viewport.
-	int				 owcrsr; ///< Old offset of the viewport.
+	unsigned int	 size; ///< Total size of the buffer.
+	unsigned int	 wsize; ///< Width of the display
+	unsigned int	 len; ///< Current length of text in buffer.
+	unsigned int	 crsr; ///< Current cursor position.
+	unsigned int	 ocrsr; ///< Old cursor position.
+	unsigned int	 wcrsr; ///< Current offset of the viewport.
+	unsigned int	 owcrsr; ///< Old offset of the viewport.
 	char 			*buffer; ///< The input buffer.
 	char			*curview; ///< The screen buffer.
 	string			 prompt; ///< The prompt string.

@@ -126,7 +126,6 @@ void cmdtoken_data::run (value &v, string &buf)
 
 void cmdtoken_loop::run (value &v, string &buf)
 {
-	static int seq = 0;
 	value loopdata;
 	
 	string ploopvar = cmdtoken_parsestring (v, loopvar);
@@ -333,7 +332,7 @@ void scriptparser::build (const string &src)
 		}
 		else
 		{
-			cmdtoken *t = new cmdtoken_data (ln, cc);
+			new cmdtoken_data (ln, cc);
 		}
 	}
 }

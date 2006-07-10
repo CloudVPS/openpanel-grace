@@ -823,7 +823,7 @@ value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 		d = ::opendir(path.str());
 		if (d)
 		{
-			while (dir = readdir(d))
+			while ((dir = readdir(d)))
 			{
 				string nam,fpath;
 				nam = dir->d_name;

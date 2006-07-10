@@ -516,7 +516,7 @@ bool file::printf (const char *fmtx, ...)
 							
 							copy_s = copy_p;
 							
-							if (copy_s.strlen() < asz)
+							if (copy_s.strlen() < (unsigned int) asz)
 							{
 								string spc;
 								spc = "                                                                                               ";
@@ -572,8 +572,6 @@ string *file::gets (int maxlinesize)
 		throw (EX_FILE_NOTOPEN);
 	}
 
-	int nlpos;
-	
 	while (buffer.room() && (! buffer.hasline()))
 	{
 		char buf[defaults::sz::file::readbuf];
@@ -648,7 +646,7 @@ string *file::gets (int maxlinesize)
 	unsigned int eolpos;
 	if (buffer.hasline(eolpos))
 	{
-		if (eolpos >= maxlinesize)
+		if (eolpos >= (unsigned int) maxlinesize)
 		{
 			return buffer.read (maxlinesize);
 		}
@@ -683,8 +681,6 @@ bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 	
 	unsigned int room = buffer.room();
 
-	int nlpos;
-	
 	if (room && (! buffer.hasline()))
 	{
 		if (! nonblocking)
@@ -699,7 +695,6 @@ bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 		struct timeval tv;
 		char buf[8192];
 		int ssz;
-		int opt;
 		
 		tv.tv_sec = timeout_ms/1000;
 		tv.tv_usec = (timeout_ms % 1000) * 1000;
@@ -777,7 +772,7 @@ bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 			into.crop(0);
 			return true;
 		}
-		if (eolpos >= maxlinesize)
+		if (eolpos >= (unsigned int) maxlinesize)
 		{
 			into = buffer.read (maxlinesize);
 		}
@@ -1147,6 +1142,7 @@ void iocodec::doneoutput (unsigned int sz)
 
 bool iocodec::canoutput (unsigned int sz)
 {
+	return false;
 }
 
 const string &iocodec::error (void)

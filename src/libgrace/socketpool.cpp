@@ -25,6 +25,7 @@ poolsocket::~poolsocket (void)
 bool basicpoolhandler::isvalid (tcpsocket &s, time_t last)
 {
 	if (! timeout) return true;
+	return false;
 }
 
 // ========================================================================

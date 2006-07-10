@@ -557,7 +557,7 @@ size_t value::printcompressed (size_t _offs, string &into, const value &parent,
 		}
 		if (arraysz) // for god's sake, think of the children!
 		{
-			for (int i=0; i < arraysz; ++i)
+			for (unsigned int i=0; i < arraysz; ++i)
 			{
 				// recursion: see recursion
 				crsr = array[i]->printcompressed (crsr, into, *this, schema);

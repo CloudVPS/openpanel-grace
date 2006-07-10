@@ -194,7 +194,7 @@ value *value::iniparse (const string &line)
 	goteq = gotnmstart = gotvastart = false;
 	vaquote = 0;
 	
-	for (int i=0; i<line.strlen(); ++i)
+	for (unsigned int i=0; i<line.strlen(); ++i)
 	{
 		if (isspace (line[i]))
 		{

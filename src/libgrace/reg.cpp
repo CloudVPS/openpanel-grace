@@ -142,7 +142,8 @@ int wild_match_end (char *pattern, char *str)
 		while ((pattern[i])&&(str[i]))
 		{
 			if (pattern[i]=='*') return 1;
-			if (lower_tab[pattern[i]]!=lower_tab[str[i]]) return 0;
+			if (lower_tab[(int) pattern[i]]!= lower_tab[(int) str[i]])
+				return 0;
 			++i;
 		}
 		if (!(pattern[i])) return 1;

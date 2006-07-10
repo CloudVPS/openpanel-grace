@@ -6,7 +6,8 @@
 #include <grace/defaults.h>
 
 enum smtpdException {
-	EX_SMTPD_LISTENPORT		= 0xe61e5af4
+	EX_SMTPD_LISTENPORT		= 0xe61e5af4,
+	EX_SMTPD_PIGSFLY		= 0xd3dcb7d5
 };
 
 typedef int smtpeventmask;

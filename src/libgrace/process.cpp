@@ -55,6 +55,7 @@ void process::serialize (void)
 int process::main (void)
 {
 	::printf ("eek, unoverloaded process::main()\n");
+	return 1;
 }
 
 // ========================================================================

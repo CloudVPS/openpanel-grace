@@ -65,7 +65,7 @@ namespace memory
 		}
 		
 		c->lck.lockw();
-		for (int i=0; i<c->count; ++i)
+		for (unsigned int i=0; i<c->count; ++i)
 		{
 			block *b = (block *) (c->blocks + (i * c->sz));
 			if (b->status == memory::free)

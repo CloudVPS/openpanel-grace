@@ -285,7 +285,7 @@ void value::printshox (string &outstr, stringdict &sdict) const
 	{
 		outstr.binputvint (outstr.strlen(), arraysz);
 		
-		for (int i=0; i<arraysz; ++i)
+		for (unsigned int i=0; i<arraysz; ++i)
 		{
 			array[i]->printshox (outstr, sdict);
 		}

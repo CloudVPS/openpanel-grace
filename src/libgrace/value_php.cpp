@@ -175,11 +175,12 @@ const char *value::phpdeserialize (const char *phpdata, bool recursed)
 				crsr++;
 				SKIPEXPECTED(':');
 				itmp = ::atoi (crsr);
+				if (itmp<0) return NULL;
 				while (::isdigit (*crsr)) crsr++;
 				SKIPEXPECTED(':');
 				SKIPEXPECTED('\"');
 				oldcrsr = crsr;
-				if (::strlen (crsr) < itmp) return NULL;
+				if (::strlen (crsr) < (unsigned int) itmp) return NULL;
 				tmp.strcpy (crsr, itmp);
 				crsr += itmp;
 				if (*crsr != '\"')
@@ -317,7 +318,7 @@ void value::printphp (string &into, bool withattr) const
 	if (marraysz)
 	{
 		into.printf ("a:%i:{", marraysz);
-		for (int i=0; i<arraysz; ++i)
+		for (unsigned int i=0; i<arraysz; ++i)
 		{
 			if (array[i]->id())
 			{

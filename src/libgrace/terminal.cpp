@@ -41,7 +41,7 @@ termbuffer::termbuffer (file &in, file &out, int _size, int _wsize)
 		wsize = sz.ws_col;
 	}
 
-	for (int i=0; i<wsize; ++i) curview[i] = ' ';
+	for (unsigned int i=0; i<wsize; ++i) curview[i] = ' ';
 	
 	// Initialize all other cursors.
 	crsr = ocrsr = wcrsr = owcrsr = 0;
@@ -110,7 +110,7 @@ void termbuffer::off (void)
 void termbuffer::setprompt (const string &p)
 {
 	// If it doesn't fit, don't try it.
-	if ((p.strlen() + len - prompt.strlen()) > size) return;
+	if ((p.strlen() + len - prompt.strlen()) > (unsigned int) size) return;
 	int diff;
 	
 	diff = (p.strlen() - prompt.strlen());
@@ -383,8 +383,8 @@ void termbuffer::setpos (int cpos, int npos)
 // ==========================================================================
 void termbuffer::draw (void)
 {
-	int xc;
-	int cpos = ocrsr - owcrsr;
+	unsigned int xc;
+	unsigned int cpos = ocrsr - owcrsr;
 
 	for (xc=0; xc<(wsize-1); ++xc)
 	{
@@ -539,7 +539,7 @@ void cliutil::expandword (const string &part, const value &options,
 			}
 			else
 			{
-				for (int i=0; i<completion.strlen(); ++i)
+				for (unsigned int i=0; i<completion.strlen(); ++i)
 				{
 					if (completion[i] != total[i])
 					{

@@ -206,7 +206,7 @@ string::string (const string &s) : retainable()
 	alloc = 0;
 	data = NULL;
 	
-	if (size = s.strlen())
+	if ((size = s.strlen()))
 	{
 		// Make a copy-on-write reference
 	
@@ -243,7 +243,7 @@ string::string (const statstring &s) : retainable()
 	alloc = 0;
 	data = NULL;
 	
-	if (size = s.sval().strlen())
+	if ((size = s.sval().strlen()))
 	{
 		// Make a copy-on-write reference
 		threadref_t me = getref();
@@ -503,7 +503,7 @@ void string::printf_va (const char *_fmtx, va_list *ap)
 							
 							copy_s = (const char *) copy_p;
 							
-							if (copy_s.strlen() < asz)
+							if (copy_s.strlen() < (unsigned int) asz)
 							{
 								string spc;
 								spc = "                                                                                               ";
@@ -1216,18 +1216,18 @@ void string::strcpy (const char *src, size_t sz)
 int string::strstr (const char *substr, size_t slen, int offs) const
 {
 	if (data == NULL) return -1;
-	if (offs >= size) return -1;
+	if (offs >= (int) size) return -1;
 	if (offs < 0) return -1;
 
 	char *ptr = (data->v) + offs;
 	
-	while (ptr = (char *)
-		   (memchr (ptr, substr[0], size - (/*slen + */(ptr - data->v)))))
+	while ((ptr = (char *)
+		   (memchr (ptr, substr[0], size - (/*slen + */(ptr - data->v))))))
 	{
 		if (! memcmp (ptr, substr, slen))
 			return (ptr - data->v);
 		++ptr;
-		if ((ptr - data->v) >= size) return -1;
+		if (((unsigned int)(ptr - data->v)) >= size) return -1;
 	}
 	return -1;
 }
@@ -1310,7 +1310,7 @@ int string::strcasecmp (const char *s) const
 int string::strncasecmp (const string &s, int sz) const
 {
 	if (! size) return (! sz);
-	int rsz = sz;
+	unsigned int rsz = sz;
 	if (! rsz)
 	{
 		rsz = s.strlen();
@@ -1327,7 +1327,7 @@ int string::strncasecmp (const string &s, int sz) const
 int string::strncmp (const string &s, int sz) const
 {
 	if (! size) return ( !sz);
-	int rsz = sz;
+	unsigned int rsz = sz;
 	if (! rsz)
 	{
 		rsz = s.strlen();
@@ -1368,10 +1368,10 @@ void string::crop (void)
 // ========================================================================
 string *string::mid (int pos, int psz) const
 {
-	if (pos > size) return new string("");
+	if (pos > (int) size) return new string("");
 	int sz = psz;
 	if (!sz) sz = (size-pos);
-	if ((pos+sz) > size) sz = (size-pos);
+	if ((pos+sz) > (int) size) sz = (size-pos);
 	
 	string *res = new string;
 	res->alloc = GROW(sz+1+sizeof (refblock));
@@ -1439,7 +1439,7 @@ void string::crop (int sz)
 		return;
 	}
 	
-	if (size > _sz)
+	if (size > (unsigned int) _sz)
 	{
 		if (data->refcount)
 		{
@@ -1480,7 +1480,7 @@ void string::pad (int sz, char p)
 	
 	docopyonwrite();
 	
-	if (sz < size)
+	if (((unsigned int) sz) < size)
 	{
 		data->v[sz] = 0;
 		size = sz;
@@ -1502,7 +1502,7 @@ void string::pad (int sz, char p)
 	}
 	if (p)
 	{
-		for (unsigned int i=size; i<sz; ++i)
+		for (unsigned int i=size; i < (unsigned int) sz; ++i)
 		{
 			data->v[i] = p;
 		}
@@ -1903,9 +1903,9 @@ string *string::encode64 (void) const
 	
 	if (! strlen()) return &result;
 	
-	int pos = 0;
-	int i;
-	int remains;
+	unsigned int pos = 0;
+	unsigned int i;
+	unsigned int remains;
 	char inbuf[3];
 	char outbuf[5];
 	
@@ -1918,7 +1918,7 @@ string *string::encode64 (void) const
 		
 		for (i=0; i<3; ++i)
 		{
-			int ix = pos+i;
+			unsigned int ix = pos+i;
 			if (ix < strlen())
 				inbuf[i] = data->v[ix];
 			else
@@ -2033,7 +2033,7 @@ bool string::validate (const string &set) const
 	if (! data) return true;
 	if (! set) return true;
 	
-	for (int i=0; i<size; ++i)
+	for (unsigned int i=0; i<size; ++i)
 	{
 		if (set.strchr (data->v[i]) < 0) return false;
 	}
@@ -2053,7 +2053,7 @@ string *string::filter (const string &set)
 	
 	returnclass (string) res retain;
 	
-	for (int i=0; i<size; ++i)
+	for (unsigned int i=0; i<size; ++i)
 	{
 		if (set.strchr (data->v[i]) >= 0)
 		{
@@ -2075,7 +2075,7 @@ string *string::stripchar  (char stripchar)
 	
 	returnclass (string) res retain;
 	
-	for (int i=0; i<size; ++i)
+	for (unsigned int i=0; i<size; ++i)
 	{
 		if (data->v[i] != stripchar)
 			res.strcat (data->v[i]);
@@ -2096,7 +2096,7 @@ string *string::stripchars	(const string &stripset)
 	
 	returnclass (string) res retain;
 	
-	for (int i=0; i<size; ++i)
+	for (unsigned int i=0; i<size; ++i)
 	{
 		if ( stripset.strchr (data->v[i]) == -1)
 		{
@@ -2139,7 +2139,7 @@ string *string::ltrim (const string &set)
 	
 	returnclass (string) res retain;
 		
-	for (int i=0; i<size; i++)
+	for (unsigned int i=0; i<size; i++)
 	{		
 		if (set.strchr(data->v[i]) == -1)
 		{
@@ -2189,7 +2189,7 @@ void string::replace (const string &set, char with)
 	
 	docopyonwrite();
 	
-	for (int i=0; i<size; ++i)
+	for (unsigned int i=0; i<size; ++i)
 	{
 		if (set.strchr (data->v[i]) >= 0)
 		{

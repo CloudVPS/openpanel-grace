@@ -206,6 +206,8 @@ dictionaryEntry 	*demand (const statstring &s, bool alloc=true)
 								}
 							}
 						}
+						
+						return NULL;
 					 }
 
 					 /// Look up an entry in the dictionary by its numeric key.

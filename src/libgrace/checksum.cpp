@@ -18,7 +18,7 @@ unsigned int checksum (const char *string)
 	
 	for (pos=0;pos<len;++pos)
 	{
-		c = _tolower(string[pos]);
+		c = (char) _tolower((int) string[pos]);
 		if (c & 0xc0)
 		{
 			result ^= ((((c & 0xdf)^obox[(pos+7) & 0x1f]) & 0x3f) << obox[pos & 0x1f]);
@@ -59,12 +59,12 @@ unsigned long long checksum64 (const char *string)
 	
 	for (pos=0; pos<len; ++pos)
 	{
-		c = _tolower (string[pos]);
+		c = (unsigned long long) _tolower ((int) string[pos]);
 	}
 
 	for (pos=0;string[pos];++pos)
 	{
-		c = _tolower(string[pos]);
+		c = (unsigned long long) _tolower((int) string[pos]);
 		if (c & 0xc0)
 		{
 			result ^= ((((c & 0xdf)^obox64[(pos+7) & 0x3f]) & 0x3f) << obox64[pos & 0x3f]);
@@ -90,7 +90,7 @@ unsigned long long djbhash64 (const char *string)
 	register unsigned long long result = 5381;
 	for (pos=0; string[pos]; ++pos)
 	{
-		result = result * 33 ^ _tolower(string[pos]);
+		result = result * 33 ^ _tolower((int) string[pos]);
 	}
 	
 	return result;

@@ -63,7 +63,7 @@ public:
 					 {
 					 	if (! __THREADED) return;
 					 	int eno;
-			 			if (eno = pthread_rwlock_rdlock (rwlock))
+			 			if ((eno = pthread_rwlock_rdlock (rwlock)))
 			 			{
 							if (eno != EDEADLK)
 							{
@@ -82,7 +82,7 @@ public:
 					 {
 					 	if (! __THREADED) return;
 					 	int eno;
-			 			if (eno = pthread_rwlock_wrlock (rwlock))
+			 			if ((eno = pthread_rwlock_wrlock (rwlock)))
 			 			{
 							if (eno != EDEADLK)
 							{
@@ -98,7 +98,7 @@ public:
 					 {
 					 	int eno;
 					 	if (! __THREADED) return;
-			 			if (eno = pthread_rwlock_unlock (rwlock))
+			 			if ((eno = pthread_rwlock_unlock (rwlock)))
 						{
 							::printf ("unlock fail eno=%i %s\n",
 									  eno, strerror (eno));
@@ -151,7 +151,6 @@ public:
 					 /// \param secs Timeout in seconds.
 	inline bool		 trylockw (int secs = 0)
 					 {
-					 	int res;
 					 	if (! __THREADED) return true;
 					 	if (! secs)
 					 	{

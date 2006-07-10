@@ -191,8 +191,6 @@ int httpdfileshare::run (string &uri, string &postbody,
 						 value &inhdr, string &out, value &outhdr,
 						 value &env, tcpsocket &s)
 {
-	int resolveresult;
-	
 	// Weed out illegal URI elements
 	if ((uri.strstr ("//") > 0) || (uri.strstr ("/..") >= 0))
 	{

@@ -21,8 +21,8 @@ value *strutil::splitspace (const string &str)
 {
 	returnclass (value) res retain;
 	
-	int left=0;
-	int right=0;
+	unsigned int left=0;
+	unsigned int right=0;
 	
 	while ((left<str.strlen())&&(right<str.strlen()))
 	{
@@ -592,14 +592,14 @@ string *strutil::regexp (const string &src, const string &expr)
 // Takes an ASCII text consisting of only paragraphs with hard newlines
 // and adds soft newlines to wrap to a specified width.
 // ========================================================================
-string *strutil::wrap (const string &src, int width)
+string *strutil::wrap (const string &src, unsigned int width)
 {
 	returnclass (string) res retain;
 	
 	value lines;
 	value words;
-	int crsr;
-	int wd;
+	unsigned int crsr;
+	unsigned int wd;
 	
 	lines = strutil::split (src, '\n');
 	

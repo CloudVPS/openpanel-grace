@@ -108,8 +108,8 @@ int keypath::count (void) const
 void keypath::clear (void)
 {
 	if (! array) return;
-	int i;
-	for (i=0; i<acount; ++i)
+
+	for (unsigned i=0; i<acount; ++i)
 	{
 		delete array[i];
 		array[i] = NULL;
@@ -172,7 +172,7 @@ void keypath::up (void)
 bool keypath::existsin (value &val)
 {
 	visitor<value> probe (val);
-	int x;
+	unsigned int x;
 		
 	for (x=0; x<acount; ++x)
 	{
@@ -200,7 +200,7 @@ void keypath::begin (value &val, keypath &respos)
 	respos.clear();
 	cindex = 0;
 	
-	for (int i=0; i<acount; ++i)
+	for (unsigned int i=0; i<acount; ++i)
 	{
 		if ( (*(array[i])) == "*")
 		{
@@ -234,9 +234,6 @@ const value &keypath::get (void)
 // ========================================================================
 bool keypath::next (keypath &respos)
 {
-	int j;
-	
-	bool done = false;
 	while ((respos.count()) && (respos[-1] != "*"))
 	{
 		respos.up();
@@ -247,7 +244,7 @@ bool keypath::next (keypath &respos)
 	respos.up();
 	crsr->up();
 	
-	while (respos.count() < acount)
+	while ((unsigned int) respos.count() < acount)
 	{
 		if ( (*(array[respos.count()])) == "*")
 		{

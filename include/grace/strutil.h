@@ -134,7 +134,7 @@ public:
 						 /// \param str The original string.
 						 /// \param marg The right margin to apply.
 						 /// \return New copied object.
-	static string		*wrap (const string &str, int marg);
+	static string		*wrap (const string &str, unsigned int marg);
 	
 						 /// Create a copy of a text block that converts
 						 /// ASCII to escaped valid html data.

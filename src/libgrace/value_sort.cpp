@@ -79,7 +79,7 @@ int romanNumeralFromString (const string &str, int offs = 0)
 	int resultValue = 0;
 	int cursorValue;
 	char cursorChar;
-	int cursor;
+	unsigned int cursor;
 	
 	for (cursor=offs;
 		 (!isspace(str[cursor])) && (cursor<str.strlen());
@@ -513,10 +513,10 @@ void value::sort (sortmethod cmpare, const string &opt)
 	int hits = 1;
 	value *v;
 	
-	for (int x=0; (hits) && ((x+1)<arraysz); ++x)
+	for (unsigned int x=0; (hits) && ((x+1)<arraysz); ++x)
 	{
 		hits = 0;
-		for (int y=0; ((y+1)<arraysz); ++y)
+		for (unsigned int y=0; ((y+1)<arraysz); ++y)
 		{
 			if (cmpare (array[y], array[y+1], opt))
 			{

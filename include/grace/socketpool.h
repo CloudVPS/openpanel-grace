@@ -46,6 +46,7 @@ protected:
 class socketpoolhandler
 {
 public:
+	virtual				~socketpoolhandler (void);
 	virtual bool		 isvalid (tcpsocket &s, time_t last);
 	virtual void		 close (tcpsocket &s);
 	virtual bool		 open (tcpsocket &s);
@@ -60,6 +61,7 @@ public:
 						 	port = p;
 						 	timeout = to;
 						 }
+						~basicpoolhandler (void) {}
 	bool				 isvalid (tcpsocket &s, time_t last);
 	void				 close (tcpsocket &s);
 	bool				 open (tcpsocket &s);
@@ -85,7 +87,7 @@ protected:
 	poolsocket			*first, *last;
 	lock<bool>			 lck;
 	socketpoolhandler	*handler;
-	int					 count;
+	unsigned int		 count;
 	bool				 nativehandler;
 	unsigned int		 serial;
 };

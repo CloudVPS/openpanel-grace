@@ -191,7 +191,7 @@ value::value (value &v)
 	
 	// Iterate through the children and make copies as our own
 	
-	for (int i=0; i<v.arraysz; ++i)
+	for (unsigned int i=0; i<v.arraysz; ++i)
 	{
 		if (v.array[i])
 		{
@@ -239,7 +239,7 @@ value::~value (void)
 {
 	if (arraysz) // Infanticide
 	{
-		for (int i=0; i<arraysz; ++i)
+		for (unsigned int i=0; i<arraysz; ++i)
 		{
 			if (array[i]) delete array[i];
 			array[i] = NULL;
@@ -306,7 +306,7 @@ value &value::operator= (const value &v)
 				newval() = v[i];
 			}
 		}
-		if (arraysz != v.count())
+		if (arraysz != (unsigned int) v.count())
 		{
 			::printf ("FUCK!\n");
 		}
@@ -356,7 +356,7 @@ value &value::operator= (value *v)
 	
 	if (arraysz>0)
 	{
-		for (int i=0; i<arraysz; ++i)
+		for (unsigned int i=0; i<arraysz; ++i)
 		{
 			if (array[i]) delete array[i];
 		}
@@ -412,6 +412,13 @@ const string &value::sval (void) const
     
     // return the native string. No conversion can take place on
     // account of this being a const.
+    
+    string &S = (string &) s;
+    
+    if (itype == i_int)
+    {
+    	S.crop(); S.printf ("%i", t.ival);
+    }
 	return s;
 }
 
@@ -956,14 +963,16 @@ void value::rmval (unsigned int ki, const char *key, int pindex)
 		if (index<0) return;
 	}
 	
+	unsigned int uindex = index;
+	
 	if (arraysz) // yes
 	{
 		bool rearrange = false;
 		
 		// Skip through the array to find it
-		for (int i=(index<0 ? 0:index); i<arraysz; ++i)
+		for (unsigned int i = (unsigned int) (index<0 ? 0:index); i<arraysz; ++i)
 		{
-			if ((i==index)||(KEYMATCH(array[i])))
+			if ((i==uindex)||(KEYMATCH(array[i])))
 			{
 				value *crsr= array[i];
 				if ((i+1) < arraysz)
@@ -981,7 +990,7 @@ void value::rmval (unsigned int ki, const char *key, int pindex)
 		}
 		if (rearrange)
 		{
-			int i;
+			unsigned int i;
 			
 			for (i=ucount; i<arraysz; ++i)
 			{
@@ -1168,7 +1177,7 @@ value *value::filter (const statstring &label, const string &what) const
 {
 	returnclass (value) res retain;
 	
-	for (int i=0; i<arraysz; ++i)
+	for (unsigned int i=0; i<arraysz; ++i)
 	{
 		if ( (*array[i])[label].sval().globcmp (what) )
 		{
@@ -1189,7 +1198,7 @@ void value::clear (void)
 {
 	if (arraysz)
 	{
-		for (int i=0; i<arraysz; ++i)
+		for (unsigned int i=0; i<arraysz; ++i)
 		{
 			delete array[i];
 		}
@@ -1243,13 +1252,15 @@ value *value::cutleft (int pcnt)
 	if (! arraysz) return &res;
 	
 	int cnt = pcnt;
-	int i;
+	unsigned int i;
 	
 	if (cnt<0) cnt += arraysz;
 	if (cnt<0) return &res;
-	if (cnt>arraysz) cnt = arraysz;
 	
-	for (i=0; i<cnt; ++i)
+	unsigned int ucnt = cnt;
+	if (ucnt>arraysz) ucnt = arraysz;
+	
+	for (i=0; i<ucnt; ++i)
 	{
 		if (array[0]->id())
 		{
@@ -1272,13 +1283,15 @@ value *value::copyleft (int pcnt) const
 	if (! arraysz) return &res;
 	
 	int cnt = pcnt;
-	int i;
+	unsigned int i;
 	
 	if (cnt<0) cnt += arraysz;
 	if (cnt<0) return &res;
-	if (cnt>arraysz) cnt = arraysz;
+
+	unsigned int ucnt = cnt;
+	if (ucnt>arraysz) ucnt = arraysz;
 	
-	for (i=0; i<cnt; ++i)
+	for (i=0; i<ucnt; ++i)
 	{
 		if (array[i]->id())
 		{
@@ -1299,13 +1312,15 @@ value *value::cutright (int pcnt)
 	if (! arraysz) return &res;
 	
 	int cnt = pcnt;
-	int i;
+	unsigned int i;
 	
 	if (cnt<0) cnt += arraysz;
 	if (cnt<0) return &res;
-	if (cnt>arraysz) cnt = arraysz;
 	
-	for (i=0; i<cnt; ++i)
+	unsigned int ucnt = cnt;
+	if (ucnt>arraysz) ucnt = arraysz;
+	
+	for (i=0; i<ucnt; ++i)
 	{
 		if (array[arraysz-1]->id())
 		{
@@ -1328,13 +1343,15 @@ value *value::copyright (int pcnt) const
 	if (! arraysz) return &res;
 	
 	int cnt = pcnt;
-	int i;
+	unsigned int i;
 	
 	if (cnt<0) cnt += arraysz;
 	if (cnt<0) return &res;
-	if (cnt>arraysz) cnt = arraysz;
 	
-	for (i=0; i<cnt; ++i)
+	unsigned int ucnt = cnt;
+	if (ucnt>arraysz) ucnt = arraysz;
+	
+	for (i=0; i<ucnt; ++i)
 	{
 		if (array[(arraysz-1)-i]->id())
 		{
@@ -1353,7 +1370,7 @@ bool value::treecmp (const value &other) const
 	if (array)
 	{
 		if (arraysz != other.arraysz) return false;
-		for (int i=0; i<arraysz; ++i)
+		for (unsigned int i=0; i<arraysz; ++i)
 		{
 			if (array[i]->_name)
 			{
@@ -1362,7 +1379,7 @@ bool value::treecmp (const value &other) const
 			}
 			else
 			{
-				if (i >= other.count()) return false;
+				if (i >= (unsigned int) other.count()) return false;
 				if (! array[i]->treecmp (other[i])) return false;
 			}
 		}
@@ -1384,8 +1401,6 @@ time_t __parse_timestr (const string &dt)
 	string ent;
 	struct tm mytm;
 	
-    int year, month, mday, hour, min, sec;
-
     fm = dt;
     ent = fm.cutat ('-');
     mytm.tm_year = atoi (ent.str()) - 1900;

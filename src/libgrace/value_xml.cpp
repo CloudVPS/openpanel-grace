@@ -62,7 +62,7 @@ void value::fromxml (const string &xml, xmlschema *schema)
 	// Nuke what we have now
 	if (arraysz)
 	{
-		for (int i=0; i<arraysz; ++i)
+		for (unsigned int i=0; i<arraysz; ++i)
 		{
 			delete array[i];
 		}
@@ -856,7 +856,7 @@ void value::printxml (int indent, string &out, bool compact,
 
 			if (count())
 			{
-				if (ucount == count())
+				if (ucount == (unsigned int) count())
 				{
 					rtype = schema->resolvecontainerarrayclass (rtype);
 				}
@@ -915,7 +915,7 @@ void value::printxml (int indent, string &out, bool compact,
 
 			if (count())
 			{
-				if (ucount == count())
+				if (ucount == (unsigned int) count())
 				{
 					rtype = schema->resolvecontainerarrayclass (ptype);
 				}
@@ -989,7 +989,7 @@ void value::printxml (int indent, string &out, bool compact,
 				//::printf ("default: %i\n", itype);
 				if (ucount)
 				{
-					if (count() != ucount)
+					if ((unsigned int) count() != ucount)
 						rtype = t_dict;
 					else
 						rtype = t_array;
@@ -1012,7 +1012,7 @@ void value::printxml (int indent, string &out, bool compact,
 		containerenvelope = schema->resolvecontainerenvelope (rtype);
 		if (ucount && schema->isimplicitarray (rtype))
 		{
-			for (int p=0; p<ucount; ++p)
+			for (unsigned int p=0; p<ucount; ++p)
 			{
 				array[p]->printxml (indent, out, compact, schema, par,
 									ptype, pid);
@@ -1169,7 +1169,7 @@ void value::printxml (int indent, string &out, bool compact,
 					out.printf ("%s<%s>%s", _VIDENT, containerenvelope.str(), _VEOL);
 					if (ind>15) ind = 15;
 				}
-				for (int i=0; i<arraysz; ++i)
+				for (unsigned int i=0; i<arraysz; ++i)
 				{
 					array[i]->printxml (ind, out, compact,
 										schema, (value *) this,

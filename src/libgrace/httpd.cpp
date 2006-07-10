@@ -577,7 +577,7 @@ void httpdworker::run (void)
 					size_t sz = httpHeaders["Content-length"].uval();
 					
 					// It's not over size, is it?
-					if (sz > parent->maxpostsize())
+					if (sz > (unsigned int) parent->maxpostsize())
 					{
 						// tis? Whine!
 						s.printf ("HTTP/1.1 413 ENTITY TOO LARGE\r\n");
@@ -1237,7 +1237,7 @@ void pwfileauth::checkrecord (void)
 	if ((ti - lastcheck) > 10)
 	{
 		v = fs.getinfo (filename);
-		if (v["mtime"].uval() > lastmod)
+		if (v["mtime"].uval() > (unsigned int) lastmod)
 		{
 			loadfile ();
 			lastmod = v["mtime"].uval();

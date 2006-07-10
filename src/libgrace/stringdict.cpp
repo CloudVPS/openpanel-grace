@@ -23,7 +23,7 @@ const statstring &stringdict::get (unsigned int key)
 {
 	static statstring nil;
 	
-	if (key > byid.count()) return nil;
+	if (key > (unsigned int) byid.count()) return nil;
 	return byid[(int) key];
 }
 

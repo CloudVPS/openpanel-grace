@@ -565,7 +565,7 @@ bool validator::matchDataGreaterThan (const value &obj, int val)
 // ========================================================================
 bool validator::matchDataMinSize (const value &obj, int val)
 {
-	return (obj.sval().strlen() >= val);
+	return (obj.sval().strlen() >= (unsigned int) val);
 }
 
 // ========================================================================
@@ -575,7 +575,7 @@ bool validator::matchDataMinSize (const value &obj, int val)
 // ========================================================================
 bool validator::matchDataMaxSize (const value &obj, int val)
 {
-	return (obj.sval().strlen() <= val);
+	return (obj.sval().strlen() <= (unsigned int) val);
 }
 
 #define V_NOENCODE "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"\

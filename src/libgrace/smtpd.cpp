@@ -358,6 +358,9 @@ mainloop:
 								SENDERROR("Unrecognized command");
 							}
 							break;
+							
+						default:
+							throw (EX_SMTPD_PIGSFLY);
 					}
 				}
 			}
