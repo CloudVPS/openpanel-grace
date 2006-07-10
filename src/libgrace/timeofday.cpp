@@ -55,8 +55,6 @@ void timeofday::setTime( int 	stSeconds,
 	// our local time.
 	tzset();
 	
-	::printf( "--> Seconds differs west of GMT: %d\n", timezone );
-	
 	tm_time.tm_sec	=	stSeconds;
 	tm_time.tm_min	=	stMinutes;
 	tm_time.tm_hour	=	stHours;
@@ -102,8 +100,6 @@ void timeofday::waitUntil( const timeofday &destTime )
 
 	// First initialize the current time
 	
-	::printf( "^ Initialize current time\n" );
-	
 	this->init();
 	
 	while( true )
@@ -112,26 +108,17 @@ void timeofday::waitUntil( const timeofday &destTime )
 		// we should not wait anymore
 		if( *this >= destTime )
 		{
-			::printf( "^ Time has been reached" );
-			
 			return;
 		}
 			
 		TRemain 	= destTime - *this;
 		usecRemain 	= TRemain.getusec();
 		
-		::printf( "^ time to wait in usecs: %llu\n", TRemain.getusec() );
-		
 		// Sleep 10s or The last miliseconds
 		if( usecRemain > 10000000LL ) {
 			__musleep( 10000LL ); 
-			::printf( "^ Waiting 10 seconds\n" );
 		} else {
-			::printf( "Timestamp: %llu\n", this->getusec() );
-			::printf( "^ Waiting %llu usecs\n", 1000000LL - TRemain.getusec() / 1000LL  );
-			
 			__musleep( TRemain.getusec() / 1000LL );
-			::printf( "After last sleep.. \nTimestamp: %llu\n", this->getusec() );
 			return;
 		};
 			
