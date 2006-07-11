@@ -212,7 +212,11 @@ public:
 					 	file f;
 					 	
 					 	if (! f.openwrite (_vpath)) return false;
-					 	f.puts (_data);
+					 	if (! f.puts (_data))
+					 	{
+					 		f.close();
+					 		return false;
+					 	}
 					 	f.close();
 					 	return true;
 					 }

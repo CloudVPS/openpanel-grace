@@ -699,19 +699,19 @@ void value::fromxml (const string &xml, xmlschema *schema)
 // abusing a small template class abstracting a "printable" stream, be
 // it file or string object.
 // ========================================================================
-void value::savexml (const char *filename, bool compact,
+bool value::savexml (const char *filename, bool compact,
 					 xmlschema *schema) const
 {
 	string xml;
 	
 	xml = toxml (compact, schema);
-	fs.save (filename, xml);
+	return fs.save (filename, xml);
 }
 
 void value::savexml (const char *filename, bool compact,
 					 xmlschema &schema) const
 {
-	savexml (filename, compact, &schema);
+	return savexml (filename, compact, &schema);
 }
 
 extern const char *_VALUE_INDENT_TABS;

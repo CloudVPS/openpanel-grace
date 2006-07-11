@@ -1161,14 +1161,14 @@ public:
 					 /// \param fn File name to save.
 					 /// \param compact Set to value::compact or value::nocompact.
 					 /// \param schema XML schema to apply, NULL for none.
-	void			 savexml (const char *fn, bool compact=false,
+	bool			 savexml (const char *fn, bool compact=false,
 							  class xmlschema *schema=NULL) const;
 
 					 /// Save in XML format.
 					 /// \param fn File name to save.
 					 /// \param compact Set to value::compact or value::nocompact.
 					 /// \param schema XML schema to apply.
-	void			 savexml (const char *fn, bool compact,
+	bool			 savexml (const char *fn, bool compact,
 							  class xmlschema &schema) const;
 	
 					 /// Convert to string containing XML data.
