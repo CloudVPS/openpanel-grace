@@ -708,7 +708,7 @@ bool value::savexml (const char *filename, bool compact,
 	return fs.save (filename, xml);
 }
 
-void value::savexml (const char *filename, bool compact,
+bool value::savexml (const char *filename, bool compact,
 					 xmlschema &schema) const
 {
 	return savexml (filename, compact, &schema);
