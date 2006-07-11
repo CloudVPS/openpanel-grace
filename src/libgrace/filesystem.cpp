@@ -1123,5 +1123,35 @@ string *filesystem::findwrite (const char *pvol, const char *filename)
 	return &resolved;
 }
 
+bool filesystem::save (const string &_vpath, const string &_data,
+					   flag::savetype tp)
+{
+	if (tp == flag::normal) return save (_vpath, _data);
+	
+	string tmpnam;
+	string uuid = strutil::uuid();
+	file f;
+	
+	tmpnam = _vpath;
+	tmpnam.strcat (".");
+	tmpnam.strcat (uuid);
+	
+	if (! f.openwrite (tmpnam)) return false;
+	if (! f.puts (_data))
+	{
+		f.close();
+		return false;
+	}
+	f.close();
+	if (! fs.mv (tmpnam, _vpath))
+	{
+		fs.rm (tmpnam);
+		return false;
+	}
+	
+	return true;
+}
+
+
 // Global instance
 filesystem fs;

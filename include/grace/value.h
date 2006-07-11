@@ -9,6 +9,7 @@
 #include <grace/dictionary.h>
 #include <grace/stringdict.h>
 #include <grace/retain.h>
+#include <grace/flags.h>
 
 #include <grace/checksum.h>
 #include <stdlib.h>
@@ -1161,15 +1162,36 @@ public:
 					 /// \param fn File name to save.
 					 /// \param compact Set to value::compact or value::nocompact.
 					 /// \param schema XML schema to apply, NULL for none.
+					 /// \param tp Set to 'atomic' to write atomically using
+					 ///           a temporary file.
 	bool			 savexml (const char *fn, bool compact=false,
-							  class xmlschema *schema=NULL) const;
+							  class xmlschema *schema=NULL,
+							  flag::savetype tp = flag::normal) const;
 
+					
+					 /// Save in XML format.
+					 /// \param fn File name to save.
+					 /// \param compact Set to value::compact or value::nocompact.
+					 /// \param tp Set to 'atomic' to write atomically using
+					 ///           a temporary file.
+	bool			 savexml (const char *fn, bool compact,
+							  flag::savetype tp) const;
+							  
+					 /// Save in XML format.
+					 /// \param fn File name to save.
+					 /// \param tp Set to 'atomic' to write atomically using
+					 ///           a temporary file.
+	bool			 savexml (const char *fn, flag::savetype tp) const;
+	
 					 /// Save in XML format.
 					 /// \param fn File name to save.
 					 /// \param compact Set to value::compact or value::nocompact.
 					 /// \param schema XML schema to apply.
+					 /// \param tp Set to 'atomic' to write atomically using
+					 ///           a temporary file.
 	bool			 savexml (const char *fn, bool compact,
-							  class xmlschema &schema) const;
+							  class xmlschema &schema,
+							  flag::savetype tp = flag::normal) const;
 	
 					 /// Convert to string containing XML data.
 					 /// \param compact Set to value::compact or value::nocompact.

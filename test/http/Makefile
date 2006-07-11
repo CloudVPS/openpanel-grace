@@ -15,5 +15,5 @@ clean:
 
 SUFFIXES: .cpp .o
 .cpp.o:
-		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+		$(CXX) $(CXXFLAGS) -I"../../include" -c -g $<
 

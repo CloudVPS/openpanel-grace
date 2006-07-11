@@ -5,6 +5,7 @@
 #include <grace/str.h>
 #include <grace/strutil.h>
 #include <grace/file.h>
+#include <grace/flags.h>
 
 /// Filetypes used in directory entries.
 enum fsfiletype {
@@ -220,6 +221,9 @@ public:
 					 	f.close();
 					 	return true;
 					 }
+					 
+	bool			 save (const string &p, const string &d,
+						   flag::savetype tp);
 	
 					 /// Translate a relative/aliaspath to open a file for
 					 /// reading. Returns a string containing the translated

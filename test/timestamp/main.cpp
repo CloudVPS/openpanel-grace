@@ -46,7 +46,7 @@ int timestamptestApp::main (void)
 		tsa = kernel.time.now();
 		tsb = kernel.time.unow();
 		tsresult = tsb - tsa;
-		if (tresult.getusec() == 0)
+		if (tsresult.getusec() == 0)
 		{
 			fout.printf ("Failed operator -\n");
 			return 1;

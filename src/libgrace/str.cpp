@@ -1905,15 +1905,16 @@ string *string::encode64 (void) const
 	
 	unsigned int pos = 0;
 	unsigned int i;
-	unsigned int remains;
+	int remains;
 	char inbuf[3];
 	char outbuf[5];
 	
+	outbuf[0] = 0;
 	outbuf[4] = 0;
 	
 	while (true)
 	{
-		remains = strlen() - pos;
+		remains = (int) (strlen() - (int) pos);
 		if (remains <=0) break;
 		
 		for (i=0; i<3; ++i)
@@ -1933,7 +1934,7 @@ string *string::encode64 (void) const
 		
 		for (i=0; i<4; ++i)
 		{
-			if (i < (remains+1))
+			if (i < (unsigned int) (remains+1))
 			{
 				outbuf[i] = __B64TAB[outbuf[i]&63];
 			}

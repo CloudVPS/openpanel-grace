@@ -700,18 +700,28 @@ void value::fromxml (const string &xml, xmlschema *schema)
 // it file or string object.
 // ========================================================================
 bool value::savexml (const char *filename, bool compact,
-					 xmlschema *schema) const
+					 xmlschema *schema, flag::savetype tp) const
 {
 	string xml;
 	
 	xml = toxml (compact, schema);
-	return fs.save (filename, xml);
+	return fs.save (filename, xml, tp);
 }
 
 bool value::savexml (const char *filename, bool compact,
-					 xmlschema &schema) const
+					 xmlschema &schema, flag::savetype fl) const
 {
-	return savexml (filename, compact, &schema);
+	return savexml (filename, compact, &schema, fl);
+}
+
+bool value::savexml (const char *fn, bool compact, flag::savetype tp) const
+{
+	return savexml (fn, compact, NULL, tp);
+}
+
+bool value::savexml (const char *fn, flag::savetype tp) const
+{
+	return savexml (fn, false, NULL, tp);
 }
 
 extern const char *_VALUE_INDENT_TABS;
