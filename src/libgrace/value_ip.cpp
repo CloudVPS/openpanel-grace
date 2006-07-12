@@ -39,14 +39,19 @@ unsigned int str2ip (const string &str)
 	ret = 0;
 	spl = strutil::split (str, '.');
 	
-	if (spl.count() == 4)
+	if (spl.count() != 4) return 0;
+	
+	unsigned int one = spl[0].uval();
+	unsigned int two = spl[1].uval();
+	unsigned int three = spl[2].uval();
+	unsigned int four = spl[3].uval();
+	
+	if ( (one>255) || (two>255) || (three>255) || (four>255) )
 	{
-		ret = ((spl[0].ival() & 0xff) << 24) |
-			   ((spl[1].ival() & 0xff) << 16) |
-			   ((spl[2].ival() & 0xff) << 8) |
-			   (spl[3].ival() & 0xff);
+		return 0;
 	}
-	return ret;
+	
+	return (one << 24) | (two << 16) | (three << 8) | four;
 }
 
 // ========================================================================
