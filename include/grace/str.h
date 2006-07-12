@@ -410,6 +410,11 @@ public:
 					 /// \return Match result, \b true if positive.
 	bool			 globcmp (const string &str) const;
 
+					 /// Perform a regular expression match.
+					 /// \param str The expression.
+					 /// \return Match result, \b true if positive.
+	bool			 regcmp (const string &str) const;
+
 					 /// Perform a glob match against a wildcard.
 					 /// \param str The glob-style wildcard statement.
 					 /// \return Match result, \b true if positive.

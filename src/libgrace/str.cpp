@@ -9,6 +9,7 @@
 //      ^	^
 
 #include <grace/str.h>
+#include <grace/regexpression.h>
 
 #include <string.h>
 #include <unistd.h>
@@ -1349,6 +1350,12 @@ bool string::globcmp (const string &s) const
 bool string::globcmp (const char *s) const
 {
 	return wild_match ((char *) s, (char *) str());
+}
+
+bool string::regcmp (const string &s) const
+{
+	regexpression re (s);
+	return re.eval (str());
 }
 
 // ========================================================================
