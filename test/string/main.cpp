@@ -168,6 +168,25 @@ int stringtestApp::main (void)
 	tstr = tstr.trim ("\n\t ");
 	if(tstr != "HELLOW\nWORLD") FAIL("trim");
 
+	value rset;
+	rset["\""] = "&quot;";
+	rset["&"] = "&amp;";
+	rset["<"] = "&lt;";
+	
+	tstr = "Who are \"Kool & The Gang\" again? K&TG < NOTK!";
+	tstr.replace (rset);
+	
+	if (tstr != "Who are &quot;Kool &amp; The Gang&quot; again? "
+	            "K&amp;TG &lt; NOTK!") FAIL ("replace");
+	            
+	rset.clear();
+	rset["&quot;"] = "\"";
+	rset["&amp;"] = "&";
+	rset["&lt;"] = "<";
+	tstr.replace (rset);
+	
+	if (tstr != "Who are \"Kool & The Gang\" again? K&TG < NOTK!")
+		FAIL("replace2");
 	
 	return 0;
 }

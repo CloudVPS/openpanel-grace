@@ -696,6 +696,13 @@ public:
 					 ///         omitted.
 	void			 replace (const string &set, char with);
 	
+					 /// Do a complex character substitution.
+					 /// The input set is a value dict, with each key
+					 /// representing a sequence of characters in the
+					 /// string that should be replaced by the sequence
+					 /// in the entry's value.
+	void			 replace (const class value &set);
+	
 					 /// Find string sequence. 
 					 /// \return Sequence osition or \b -1 if not found.
 	inline int		 strchr (char c, int left=0) const

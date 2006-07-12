@@ -2206,6 +2206,39 @@ void string::replace (const string &set, char with)
 	}
 }
 
+void string::replace (const value &set)
+{
+	string res (strlen()+16);
+	
+	for (unsigned int i=0; i<size; ++i)
+	{
+		bool replaced = false;
+		foreach (node,set)
+		{
+			const string &from = node.id().sval();
+			const string &to = node.sval();
+			int ln = from.strlen();
+			
+			if (ln <= (size-i))
+			{
+				bool match = true;
+				for (int j=0; match && (j<ln); ++j)
+				{
+					if (data->v[i+j] != from[j]) match = false;
+				}
+				if (match)
+				{
+					res.strcat (to);
+					replaced = true;
+					i+= ln;
+				}
+			}
+		}
+		if (i<size) res.strcat (data->v[i]);
+	}
+	(*this) = res;
+}
+
 string *string::copyuntil (char c) const
 {
 	int pos;
