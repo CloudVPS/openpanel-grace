@@ -992,5 +992,67 @@ protected:
 	
 };
 
+class charmatch
+{
+public:
+					 charmatch (void)
+					 {
+					 	lenflag = 0;
+					 	replace = NULL;
+					 	memset (array, 0, 256 * sizeof (charmatch *));
+					 }
+					~charmatch (void)
+					 {
+					 	if (replace) delete replace;
+					 	for (int i=0; i<256; ++i)
+					 	{
+					 		if (array[i]) delete array[i];
+					 	}
+					 }
+					 
+	charmatch		*match (const char *str, int ln)
+					 {
+					 	if (lenflag) return this;
+					 	if (! ln) return NULL;
+					 	
+					 	charmatch *m = array[(int)str[0]];
+					 	if (m)
+					 	{
+				 			return m->match (str+1, ln-1);
+					 	}
+					 	return m;
+					 }
+					 
+	void			 addmatch (const char *seq, int pos,
+							  int ln, const string &rep)
+					 {
+					 	if (pos==ln)
+					 	{
+					 		replace = new string (rep);
+					 		lenflag = ln;
+					 		return;
+					 	}
+					 	
+					 	int c = seq[pos];
+					 	if (array[c] == NULL)
+					 	{
+					 		array[c] = new charmatch;
+					 	}
+					 	
+					 	array[c]->addmatch (seq, pos+1, ln, rep);
+					 }
+	
+	const string	&replacement (void)
+					 {
+					 	static string empty;
+					 	if (replace) return *replace;
+					 	return empty;
+					 }
+	
+	int				 lenflag;
+	charmatch		*array[256];
+	string			*replace;
+};	
+
 #endif
 #endif
