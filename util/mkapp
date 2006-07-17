@@ -45,7 +45,7 @@ rsrc="."
 if [ -d rsrc ]; then
   rsrc="rsrc"
 fi
-$ECHON "* Copying executable... $NHL"
+$ECHON "* Copying executable...$NHL"
 mkdir -p "$appname.app"
 mkdir -p "$appname.app/Contents/${ARCH}"
 if [ -f "$appname.exe" ]; then
