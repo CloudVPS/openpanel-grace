@@ -27,7 +27,7 @@
 // ========================================================================
 value::value (void)
 {
-	init();
+	init (true);
 }
 
 // ========================================================================
@@ -37,7 +37,7 @@ value::value (void)
 // ========================================================================
 value::value (const char *orig)
 {
-	init();
+	init (true);
 	(*this) = orig;
 }
 
@@ -226,8 +226,10 @@ value::value (const value &v)
 // Initializes a value as a copy of another value, destroying the
 // original.
 // ========================================================================
-value::value (value *v) : memory::retainable (v)
+value::value (value *v)
 {
+	init (true);
+	(*this) = v;
 }
 
 // ========================================================================
