@@ -263,6 +263,7 @@ value::~value (void)
 // ========================================================================
 value &value::operator= (const value &v)
 {
+	if (this == &v) return *this;
 	clear();
 	ucount = 0;	
 
