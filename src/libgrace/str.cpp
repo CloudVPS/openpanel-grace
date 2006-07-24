@@ -1380,7 +1380,7 @@ string *string::mid (int pos, int psz) const
 	if (!sz) sz = (size-pos);
 	if ((pos+sz) > (int) size) sz = (size-pos);
 	
-	string *res = new string;
+	string *res = new (memory::retainable::onstack) string;
 	res->alloc = GROW(sz+1+sizeof (refblock));
 	res->data = (refblock *) malloc ((size_t) res->alloc);
 	res->data->refcount = 0;
@@ -2145,7 +2145,7 @@ string *string::ltrim (const string &set)
 	if(! data) return NULL;
 	if(! set)  return NULL;
 	
-	returnclass (string) res retain;
+	string *res = NULL;
 		
 	for (unsigned int i=0; i<size; i++)
 	{		
@@ -2156,7 +2156,7 @@ string *string::ltrim (const string &set)
 		}
 	}
 	
-	return &res;
+	return res;
 }
 					 
 // ========================================================================
@@ -2170,7 +2170,7 @@ string *string::rtrim (const string &set)
 	if(! data) return NULL;
 	if(! set)  return NULL;
 	
-	returnclass (string) res retain;
+	string *res = NULL;
 		
 	for (int i=size-1; i>-1; i--)
 	{	
@@ -2181,7 +2181,7 @@ string *string::rtrim (const string &set)
 		}
 	}
 	
-	return &res;
+	return res;
 }
 
 // ========================================================================
