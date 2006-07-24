@@ -2,10 +2,6 @@
 
 memory::pool *__retain_ptr;
 
-void augh (void)
-{
-}
-
 namespace memory
 {
 	pool *getretain (void)
@@ -50,7 +46,7 @@ namespace memory
 		{
 			c = new sizepool;
 			c->next = NULL;
-			c->count = 32;
+			c->count = 16;
 			c->sz = rndsz;
 			c->blocks = (char *) calloc (16, rndsz);
 			
@@ -83,7 +79,9 @@ namespace memory
 		unsigned int oldcount = c->count;
 		unsigned int cc;
 		c->count = oldcount * 2;
-		c->blocks = (char *) realloc (c->blocks, c->count * rndsz);
+		::printf ("reallocing %08x to sz=%08x\n", c->blocks, c->count*c->sz);
+		c->blocks = (char *) realloc (c->blocks, c->count * c->sz);
+		::printf ("realloc'ed to %08x\n", c->blocks);
 		memset ((char *) c->blocks + oldcount * c->sz, 0, oldcount * c->sz);
 		for (cc=oldcount; cc < c->count; ++cc)
 		{
@@ -126,20 +124,6 @@ namespace memory
 	
 	size_t pool::getsize (void *ptr)
 	{
-		sizepool *c = pools;
-		while (c)
-		{
-			if ( ((char*)ptr) >= ((char*)c->blocks) )
-			{
-				if ( ((char*)ptr) < (((char*)c->blocks)+(c->sz * c->count)) )
-				{
-					break;
-				}
-			}
-			c = c->next;
-		}
-		if (!c) return 0;
-		
 		block *b = (block *) (((char*)ptr) - sizeof (block));
 		if (! b->pool) return b->status;
 		return b->pool->sz - sizeof (block);
@@ -147,19 +131,6 @@ namespace memory
 
 	bool pool::pooled (void *ptr)
 	{
-		sizepool *c = pools;
-		while (c)
-		{
-			if ( ((char*)ptr) >= ((char*)c->blocks) )
-			{
-				if ( ((char*)ptr) < (((char*)c->blocks)+(c->sz * c->count)) )
-				{
-					break;
-				}
-			}
-			c = c->next;
-		}
-		if (!c) return 0;
 		block *b = (block *) (((char*)ptr) - sizeof (block));
 		if (! b->pool) return false;
 		return true;
