@@ -52,7 +52,7 @@ namespace memory
 			
 			for (int i=0; i<16; ++i)
 			{
-				block *bl = (block *) c->blocks + (i*c->sz);
+				block *bl = (block *) (c->blocks + (i*c->sz));
 				bl->pool = c;
 			}
 			
@@ -82,12 +82,12 @@ namespace memory
 		c->blocks = (char *) realloc (c->blocks, c->count * c->sz);
 		for (cc=oldcount; cc < c->count; ++cc)
 		{
-			block *bl = (block *) c->blocks + (cc * c->sz);
+			block *bl = (block *) (c->blocks + (cc * c->sz));
 			bl->status = memory::free;
 			bl->pool = c;
 		}
 		
-		block *b = (block *) c->blocks + (oldcount * c->sz);
+		block *b = (block *) (c->blocks + (oldcount * c->sz));
 		b->status = wired;
 		c->lck.unlock();
 		
