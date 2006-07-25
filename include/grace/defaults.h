@@ -66,6 +66,23 @@ namespace defaults
 			parameter int chunksize defaultvalue (512 KB);
 		}
 	}
+	
+	/// Settings for retainable memory allocations.
+	namespace memory
+	{
+		/// Determines behavior of the pool allocator. In a given
+		/// situation, there should be no more than two allocations per
+		/// active thread (a retained return value that picks up another
+		/// retained return value). In the default setting, the allocator
+		/// will throw an exception if all blocks in a pool are used up.
+		/// The default pool size can keep about 200/300 blocks of the
+		/// currently implemented retainable objects (typical blocksize
+		/// of 24 or 32). If your application uses a massive amount of
+		/// active threads and you already determined that the system
+		/// does not leak retainables, you should consider changing this
+		/// default to false.
+		parameter bool leakprotection defaultvalue (true);
+	}
 }
 
 /// Tunable parameters

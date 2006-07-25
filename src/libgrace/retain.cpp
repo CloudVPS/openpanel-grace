@@ -1,4 +1,5 @@
 #include <grace/retain.h>
+#include <grace/defaults.h>
 
 memory::pool *__retain_ptr;
 
@@ -29,10 +30,42 @@ namespace memory
 		}
 		pools = NULL;
 	}
+	
+	sizepool *mkpool (unsigned int rndsz)
+	{
+		unsigned int count;
+		sizepool *c = new sizepool;
+		if (! c) return NULL;
+		
+		// For tiny sizes, allocate in 8K blocks. For medium, use 64K blocks.
+		// For larger objects, keep a count of 16.
+		if (rndsz < 512) count = 8192/rndsz;
+		else if (rndsz < 4096) count = 65536/rndsz;
+		else count = 16;
+		
+		c->next = NULL;
+		c->extend = NULL;
+		c->count = count;
+		c->sz = rndsz;
+		c->blocks = (char *) calloc (count, rndsz);
+		
+		for (unsigned int i=0; i<count; ++i)
+		{
+			block *bl = (block *) (c->blocks + (i*c->sz));
+			bl->pool = c;
+		}
+		
+		return c;
+	}
 
 	void *pool::alloc (size_t sz)
 	{
-		size_t rndsz = sz+sizeof(block);
+		// The requested size does not include the overhead for the
+		// block header. For efficiency purposes, we use a 64 bits
+		// boundary.
+		size_t rndsz = (sz+sizeof(block)+7) & 0xfffffff8;
+		
+		// First let's hunt for an existing primary size pool.
 		sizepool *c, *lastc;
 		c = lastc = pools;
 		while (c)
@@ -42,20 +75,13 @@ namespace memory
 			c = c->next;
 		}
 
+		// c is set if we found a pool with a matching blocksize.
+		// if not, we need to allocate it.
 		if (! c)
 		{
-			c = new sizepool;
-			c->next = NULL;
-			c->count = 16;
-			c->sz = rndsz;
-			c->blocks = (char *) calloc (16, rndsz);
-			
-			for (int i=0; i<16; ++i)
-			{
-				block *bl = (block *) (c->blocks + (i*c->sz));
-				bl->pool = c;
-			}
-			
+			c = mkpool (rndsz);
+			if (! c) return NULL;
+
 			block *b = (block *) c->blocks;
 			b->status = wired;
 			
@@ -64,37 +90,69 @@ namespace memory
 			return (void *) b->dt;
 		}
 		
+		// Set a lock on the current sizepool.
 		c->lck.lockw();
+		
+		// Look for a free block.
 		for (unsigned int i=0; i<c->count; ++i)
 		{
 			block *b = (block *) (c->blocks + (i * c->sz));
+			
+			// Are you free, Mr. Humphrey?
 			if (b->status == memory::free)
 			{
+				// Jay, we can stop looking. Claim the block and
+				// unlock the allocation pool.
 				b->status = wired;
 				b->pool = c;
 				c->lck.unlock();
 				return (void *) b->dt;
 			}
 		}
-		unsigned int oldcount = c->count;
-		unsigned int cc;
-		c->count = oldcount * 2;
-		::printf ("reallocing %08x to sz=%08x\n", c->blocks, c->count*c->sz);
-		c->blocks = (char *) realloc (c->blocks, c->count * c->sz);
-		::printf ("realloc'ed to %08x\n", c->blocks);
-		memset ((char *) c->blocks + oldcount * c->sz, 0, oldcount * c->sz);
-		for (cc=oldcount; cc < c->count; ++cc)
+		
+		// The initial pool is full. If leak protection is set in the
+		// defaults, this is the end of the line.
+		if (defaults::memory::leakprotection)
 		{
-			block *bl = (block *) (c->blocks + (cc * c->sz));
-			bl->status = memory::free;
-			bl->pool = c;
+			c->lck.unlock();
+			throw (EX_MEMORY_LEAK);
 		}
 		
-		block *b = (block *) (c->blocks + (oldcount * c->sz));
-		b->status = wired;
-		c->lck.unlock();
+		// Ok, the user actually _wants_ these massive amounts of
+		// retainable objects, we will use the extent pointer to
+		// create/access extension pools.
+		while (true)
+		{
+			sizepool *tc = c;
+			if (c->extend) c = c->extend;
+			else
+			{
+				c->extend = mkpool (rndsz);
+				c = c->extend;
+				if (! c)
+				{
+					tc->lck.unlock();
+					return NULL;
+				}
+			}
+			c->lck.lockw();
+			tc->lck.unlock();
+			
+			for (unsigned int i=0; i<c->count; ++i)
+			{
+				block *b = (block *) (c->blocks + (i * c->sz));
+				if (b->status == memory::free)
+				{
+					b->status = wired;
+					b->pool = c;
+					c->lck.unlock();
+					return (void *) b->dt;
+				}
+			}
+		}
 		
-		return b->dt;
+		// End never reached.
+		return NULL;
 	}
 	
 	void pool::free (void *ptr)

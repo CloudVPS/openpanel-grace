@@ -11,7 +11,8 @@
 enum memoryException
 {
 	EX_MEMORY_RETAIN_MISMATCH = 0xbf682be7,
-	EX_MEMORY_DEFUNCT_POINTER = 0xebb649e2
+	EX_MEMORY_DEFUNCT_POINTER = 0xebb649e2,
+	EX_MEMORY_LEAK            = 0xd9a0a49d
 };
 
 /// Namespace for custom memory management.
@@ -24,12 +25,17 @@ namespace memory
 		size_t			 sz; ///< Allocation size.
 		unsigned int	 count; ///< Blockcount.
 		char			*blocks; ///< Block data.
+		struct sizepool	*extend; ///< Extension node.
 		lock<bool>		 lck; ///< Thread lock.
 	};
 	
 	/// Status of a memory block.
 	enum blockstatus { free = 0, wired = 1 };
-	
+
+	/// Allocate a sizepool object.
+	/// \param sz The block size.
+	sizepool *mkpool (unsigned int sz);
+					
 	/// A memory block.
 	struct block
 	{
@@ -48,7 +54,7 @@ namespace memory
 						 
 						 /// Destructor.
 						~pool (void);
-					
+						
 						 /// Allocate a block.
 						 /// \param sz The object's size.
 						 /// \return Memory position.
