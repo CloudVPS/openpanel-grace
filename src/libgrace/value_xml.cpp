@@ -191,22 +191,19 @@ void value::fromxml (const string &xml, xmlschema *schema)
 				
 				foreach (prop, tag.properties)
 				{
-					if (prop._name != __id__)
+					attrname = prop._name;
+					if (hasvalueattribute && (attrname == __val__))
 					{
-						attrname = prop._name;
-						if (hasvalueattribute && (attrname == __val__))
-						{
-							(*this) = prop.sval();
-						}
-						else if (nsAware)
-						{
-							schema->nstransattr (nsCache, attrname, prop);
-							setattrib (attrname, prop.sval());
-						}
-						else
-						{	
-							setattrib (attrname, prop.sval());
-						}
+						(*this) = prop.sval();
+					}
+					else if (nsAware)
+					{
+						schema->nstransattr (nsCache, attrname, prop);
+						setattrib (attrname, prop.sval());
+					}
+					else
+					{	
+						setattrib (attrname, prop.sval());
 					}
 				}
 				treestack.push (this);
