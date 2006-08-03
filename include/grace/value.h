@@ -1266,7 +1266,7 @@ public:
 	
 					 /// Save to the SHOX object format.
 					 /// \param fname Filename to save.
-	void			 saveshox (const string &fname) const;
+	bool			 saveshox (const string &fname) const;
 	
 					 /// Convert from SHOX string data.
 					 /// \param shox The shox-encoded data.

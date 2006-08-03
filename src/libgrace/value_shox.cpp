@@ -32,11 +32,11 @@ void value::loadshox (const string &fname)
 // ========================================================================
 // METHOD ::saveshox
 // ========================================================================
-void value::saveshox (const string &fname) const
+bool value::saveshox (const string &fname) const
 {
 	string shox;
 	shox = toshox();
-	fs.save (fname, shox);
+	return fs.save (fname, shox);
 }
 
 // ========================================================================
