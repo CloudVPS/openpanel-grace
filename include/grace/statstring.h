@@ -193,6 +193,9 @@ public:
 						 statstring (statstring *str) : retainable (str)
 						 {
 						 }
+						 
+						 statstring (class value *);
+						 statstring (const class value &);
 					 
 					 	 /// Destructor. Remove reference from the
 					 	 /// global ref table.
@@ -251,6 +254,7 @@ public:
 						}
 						
 	statstring			&operator= (const class value &);
+	statstring			&operator= (class value *);
 	
 	inline statstring	&operator= (const statstring &str)
 						{
@@ -315,6 +319,9 @@ public:
 							}
 							return ((*str) == ref->str);
 						}
+						
+	bool				operator== (const class value &) const;
+	bool				operator!= (const class value &) const;
 						
 	inline bool			operator!= (const statstring &str) const
 						{

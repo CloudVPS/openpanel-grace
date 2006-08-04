@@ -312,6 +312,17 @@ void stringrefdb::linkref (stringref *ref)
 	}
 }
 
+statstring::statstring (value *orig)
+{
+	assign (orig->sval());
+	delete orig;
+}
+
+statstring::statstring (const value &orig)
+{
+	assign (orig.sval());
+}
+
 // ========================================================================
 // METHOD statstring::assign
 // -------------------------
@@ -380,6 +391,13 @@ statstring &statstring::operator= (const value &orig)
 	return *this;
 }
 
+statstring &statstring::operator= (value *orig)
+{
+	assign (orig->sval());
+	delete orig;
+	return *this;
+}
+
 void statstring::assign (const char *str, unsigned int k)
 {
 	if (ref)
@@ -410,4 +428,14 @@ void statstring::init (bool first)
 		if (ref) STRINGREF().unref (ref);
 		ref = NULL;
 	}
+}
+
+bool statstring::operator== (const value &v) const
+{
+	return ( (*this) == v.sval() );
+}
+
+bool statstring::operator!= (const value &v) const
+{
+	return ( (*this) != v.sval() );
 }
