@@ -88,6 +88,19 @@ filesystem::filesystem (void)
 	
 	if (! pathvol.exists ("library"))
 	{
+		if (fs.exists ("/Library"))
+		{
+			pathvol["library"].newval() = "/Library";
+		}
+		if (fs.exists ("/usr/share"))
+		{
+			pathvol["library"].newval() = "/usr/share";
+		}
+		if (fs.exists ("/usr/local/share"))
+		{
+			pathvol["library"].newval() = "/usr/local/share";
+		}
+		
 		string hlib;
 		foreach (home, pathvol["homes"])
 		{
@@ -97,7 +110,13 @@ filesystem::filesystem (void)
 		}
 		hlib.crop(0);
 		hlib.printf ("%s/.library", hom.str());
-		pathvol["library"].newval() = hlib;
+		if (! fs.exists (hlib))
+		{
+			hlib.crop(0);
+			hlib.printf ("%s/Library", hom.str());
+		}
+		if (fs.exists (hlib))
+			pathvol["library"].newval() = hlib;
 	}
 	
 	if (! pathvol.exists ("var"))
