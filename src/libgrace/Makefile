@@ -17,6 +17,7 @@ OBJ			= 	application.o \
 				httpd.o \
 				httpd_fileshare.o \
 				lock.o \
+				md5.o \
 				netdb.o \
 				process.o \
 				reg.o \
