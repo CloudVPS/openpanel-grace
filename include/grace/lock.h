@@ -161,6 +161,8 @@ public:
 						struct timespec ts;
 						ts.tv_sec = secs + ::time(NULL);
 						ts.tv_nsec = 0;
+						
+						int res;
 						if ((res = pthread_rwlock_timedwrlock (rwlock, &ts)))
 						{
 							if (res == ETIMEDOUT)
