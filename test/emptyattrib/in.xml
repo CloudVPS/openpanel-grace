@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testxml>
+  <node bold underline>
+    <node align="left">test</node>
+  </node>
+</testxml>

@@ -845,6 +845,8 @@ void value::printxml (int indent, string &out, bool compact,
 						
 								if (sv.strlen())
 									out.printf (" %s=\"%S\"", sn.str(), sv.str());
+								else
+									out.printf (" %s", sn.str());
 							}
 						}
 					}
@@ -1069,6 +1071,8 @@ void value::printxml (int indent, string &out, bool compact,
 			
 					if (sv.strlen())
 						out.printf (" %s=\"%S\"", sn.str(), sv.str());
+					else
+						out.printf (" %s", sn.str());
 				}
 			}
 		}

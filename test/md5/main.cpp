@@ -35,6 +35,11 @@ int md5testApp::main (void)
 	out = md5.hex();
 	fs.save ("out2.md5", out);
 	
+	string mysalt = "CDjtBsOC";
+	string mypw = "Iajtl0c";
+	out = md5.md5pw (mypw.cval(), mysalt.cval());
+	fout.writeln (out);
+	
 	return 0;
 }
 
