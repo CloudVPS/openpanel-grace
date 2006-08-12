@@ -340,3 +340,126 @@ string *md5checksum::hex (void)
 	
 	return &res;
 }
+
+void md5checksum::addencode (string &into, unsigned int v, int n)
+{
+	static char itoa64[] = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+						   "abcdefghijklmnopqrstuvwxyz";
+	
+	while (--n >= 0)
+	{
+		into.strcat (itoa64[v&0x3f]);
+		v >>= 6;
+	}
+}
+
+string *md5checksum::pw (void)
+{
+	returnclass (string) res retain;
+	
+	md5_byte_t digest[16];
+	finish (digest);
+	
+	unsigned int l;
+	
+	addencode (res, (digest[ 0]<<16) | (digest[ 6]<<8) | digest[12], 4);
+	addencode (res, (digest[ 1]<<16) | (digest[ 7]<<8) | digest[13], 4);
+	addencode (res, (digest[ 2]<<16) | (digest[ 8]<<8) | digest[14], 4);
+	addencode (res, (digest[ 3]<<16) | (digest[ 9]<<8) | digest[15], 4);
+	addencode (res, (digest[ 4]<<16) | (digest[10]<<8) | digest[ 5], 4);
+	addencode (res, digest[11], 2);
+	
+	return &res;
+}
+
+string *md5checksum::md5pw (const char *pw, const char *salt)
+{
+	returnclass (string) passwd retain;
+	
+	md5checksum ctx1;
+	unsigned long l;
+	int sl, pl;
+	unsigned int i;
+	string final;
+	static const char *sp, *ep;
+	static const char *magic = "$1$";
+	string tstr;
+	
+	sp = salt;
+	
+	if (! strncmp (sp, magic, 3)) sp += 3;
+	
+	for (ep=sp; *ep && *ep != '$' && ep < (sp+8); ep++) continue;
+	
+	sl = ep - sp;
+	
+	append (pw);
+	append (magic);
+	
+	tstr.strcpy (sp, sl);
+	append (tstr);
+	
+	ctx1.append (pw);
+	ctx1.append (tstr);
+	ctx1.append (pw);
+	
+	final = ctx1.checksum();
+	
+	for (pl = strlen(pw); pl>0; pl -= 16)
+	{
+		tstr.crop();
+		tstr.strcpy (final, (pl>16 ? 16 : pl));
+		append (tstr);
+	}
+	
+	for (i = strlen(pw); i; i>>=1)
+	{
+		tstr.crop();
+		if (i&1)
+		{
+			tstr.strcat (final[0]);
+			append (tstr);
+		}
+		else
+		{
+			tstr.strcat (pw[0]);
+			append (tstr);
+		}
+	}
+	
+	passwd = magic;
+	passwd.strcat (sp, sl);
+	passwd.strcat ('$');
+	
+	final = checksum();
+	
+	for (i=0; i<1000; ++i)
+	{
+		ctx1.init();
+		
+		if (i&1) ctx1.append (pw);
+		else ctx1.append (final);
+		
+		if (i%3)
+		{
+			tstr = sp;
+			tstr.crop (sl);
+			ctx1.append (tstr);
+		}
+		
+		if (i%7) append (pw);
+		{
+			ctx1.append (pw);
+		}
+		
+		if (i&1) ctx1.append (final);
+		else ctx1.append (pw);
+		
+		final = ctx1.checksum();
+	}
+	
+	tstr = ctx1.pw();
+	passwd.strcat (tstr);
+	
+	return &passwd;
+}

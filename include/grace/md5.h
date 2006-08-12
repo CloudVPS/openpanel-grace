@@ -21,7 +21,6 @@ public:
 	
 				 /// Add text to the data to be checksummed.
 	void		 append (const string &);
-	void		 append (const md5_byte_t *data, int sz);
 	
 				 /// Get the binary MD5 checksum.
 	string		*checksum (void);
@@ -29,8 +28,14 @@ public:
 				 /// Get the base64-encoded MD5 checksum.
 	string		*base64 (void);
 	
-				 /// Get the hex-encoded MD5 checksum.
+				 /// Get the MD5 checksum as a hexadecimal string.
 	string		*hex (void);
+	
+				 /// Get the MD5 checksum encoded using the passwd
+				 /// format.
+	string		*pw (void);
+	
+	string		*md5pw (const char *pw, const char *salt);
 
 protected:
 	md5_word_t	 count[2];
@@ -38,7 +43,9 @@ protected:
 	md5_byte_t	 buf[64];
 	
 	void		 process (const md5_byte_t *data);
+	void		 append (const md5_byte_t *data, int sz);
 	void		 finish (md5_byte_t digest[16]);
+	static void	 addencode (string &into, unsigned int v, int n);
 };
 
 #endif
