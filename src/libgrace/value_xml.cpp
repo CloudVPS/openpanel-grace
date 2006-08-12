@@ -737,9 +737,9 @@ void value::printxml (int indent, string &out, bool compact,
 {
 	string outstr, nm;
 	int ind;
-	statstring rtype;
-	statstring rid;
-	statstring __id__;
+	statstring rtype; // resolved type
+	statstring rid; // resolved id
+	statstring __id__; // resolved attribute name for id
 	bool indeximplied = false;
 	bool wascontainer = false;
 	bool wascontained = false;
@@ -798,7 +798,8 @@ void value::printxml (int indent, string &out, bool compact,
 		if (indent>=0) rid = schema->resolveidexport
 								(_name, impliedtype, ptype, pid);
 		
-		
+		// If the outer type is a container, we need to perform
+		// some special work here.
 		if ( ((indent<0) && schema->iscontainerclass (rtype)) ||
 		     (schema->iswrapcontainer (rtype)) )
 		{
@@ -813,7 +814,6 @@ void value::printxml (int indent, string &out, bool compact,
 			}
 			containervalueclass = schema->resolvecontainervalueclass (rtype);
 			containerwrapclass = schema->resolvecontainerwrapclass (rtype);
-			
 
 			if (ind<16) ind++;
 
