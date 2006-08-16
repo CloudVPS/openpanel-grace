@@ -236,9 +236,8 @@ public:
 			{
 				if (gidcache["bygid"].exists (gids))
 				{
-					gidcache.savexml ("gidcache.xml");
 					returnclass (value) gres retain;
-					gres = gidcache["byname"][gids];
+					gres = gidcache["bygid"][gids];
 					breaksection return &gres;
 				}
 			}
