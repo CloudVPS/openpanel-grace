@@ -233,7 +233,6 @@ public:
 					 	_argv = args;
 					 	_env = env;
 					 	init (args[0].sval(), withStdErr);
-					 	run ();
 					 }				
 					 
 					 /// Destructor.
