@@ -8,6 +8,7 @@ CVS
 *.app
 makeinclude
 platform.h
+.gdb_history
 
 syntax: regexp
 ^include/matrixssl/
