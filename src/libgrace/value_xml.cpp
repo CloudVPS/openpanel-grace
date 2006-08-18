@@ -76,6 +76,12 @@ void value::fromxml (const string &xml, xmlschema *schema)
 	arrayalloc = 0;
 	arraysz = 0;
 	
+	if (attrib)
+	{
+		delete attrib;
+		attrib = NULL;
+	}
+	
 	// Need a stack to keep loops/conditionals
 	stack<value> treestack;
 	value *crsr = this;
