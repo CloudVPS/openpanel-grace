@@ -400,6 +400,11 @@ statstring &statstring::operator= (value *orig)
 
 void statstring::assign (const char *str, unsigned int k)
 {
+	if (! str)
+	{
+		init();
+		return;
+	}
 	if (ref)
 	{
 		STRINGREF().unref (ref);
