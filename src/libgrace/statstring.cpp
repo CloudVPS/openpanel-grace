@@ -402,7 +402,7 @@ void statstring::assign (const char *str, unsigned int k)
 {
 	if (! str)
 	{
-		init();
+		init(false);
 		return;
 	}
 	if (ref)
