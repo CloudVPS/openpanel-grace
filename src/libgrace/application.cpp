@@ -9,6 +9,8 @@
 #include <grace/filesystem.h>
 #include <grace/xmlschema.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 extern char **environ;
 
@@ -90,6 +92,35 @@ void application::init (int Argc, char *Argv[])
 	{
 		tmp.printf ("tools:%s", appnam.str());
 		appath = fs.transr (tmp);
+	}
+
+	if (fs.exists (appath))
+	{
+		bool maybelink = true;
+		struct stat mst;
+		char linkbuffer[512];
+		
+		while (maybelink)
+		{
+			lstat (appath.str(), &mst);
+			if ( (mst.st_mode & S_IFMT) == S_IFLNK)
+			{
+				int t;
+				t = readlink (appath.str(), linkbuffer, 511);
+				linkbuffer[t] = linkbuffer[511] = 0;
+				
+				if (linkbuffer[0] == '/')
+				{
+					appath = linkbuffer;
+				}
+				else
+				{
+					appath = appath.cutatlast ('/');
+					appath.printf ("/%s", linkbuffer);
+				}
+			}
+			else maybelink = false;
+		}
 	}
 	
 	if (appnam.strchr ('/') >= 0)
