@@ -357,7 +357,12 @@ void statstring::assign (string *str)
 		STRINGREF().unref (ref);
 		ref = NULL;
 	}
-	
+
+	if (! str)
+	{
+		init (false);
+		return;
+	}
 	ref = STRINGREF().getref (str->str());
 	delete str;
 }
