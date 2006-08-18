@@ -850,10 +850,10 @@ value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 				if ((nam[0] == '.') && (!showhidden)) continue;
 				if ((nam.strstr (":<mime>") >= 0) && (!showhidden)) continue;
 				
-				if (paths.count()>1)
+				/*if (paths.count()>1)*/
 					fpath.printf ("%s/%s", path.str(), nam.str());
-				else
-					fpath = nam;
+				/*else
+					fpath = nam;*/
 								
 				if (! res.exists(nam))
 					res[nam]["path"] = fpath;
