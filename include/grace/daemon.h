@@ -25,16 +25,21 @@ public:
 					 logthread (class daemon *d) : thread ("logthread")
 					 {
 					 	app = d;
+					 	padding = 8;
 					 }
 					 /// Implementation.
 	virtual void	 run (void);
 					 /// Shuts down the thread.
 	void			 shutdown (void);
 	
+					 /// Set the width of the module part of a log line.
+	void			 setmodulewidth (int i) { padding = i; }
+	
 protected:
 	class daemon	*app; ///< Link to the parent daemon object.
 	conditional		 shutdownCondition; ///< Shutdown trigger.
 	conditional		 startupCondition; ///< Startup trigger.
+	int				 padding;
 };
 
 /// Namespace for log-related constants.
@@ -141,7 +146,12 @@ public:
 					 /// Do not spawn to background.
 					 /// This method flags the daemonize() method not to do
 					 /// the actual fork()s.
-	void			 setforeground (void); 
+	void			 setforeground (void);
+	
+	void			 setlogmodulewidth (int i)
+					 {
+					 	if (_log) _log->setmodulewidth (i);
+					 }
 								   
 	logtarget		*_logtargets; ///< Linked list of log targets
 

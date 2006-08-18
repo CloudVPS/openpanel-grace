@@ -396,7 +396,11 @@ void logthread::run (void)
 					int prio= ev[logproperty::priority];
 					string prioName;
 					string tstr;
+					string modName;
 					timestamp ti = kernel.time.now();
+					
+					modName = ev[logproperty::module].sval();
+					modName.pad (padding, ' ');
 					
 					if (prio & log::emergency) prioName = "EMERG";
 					else if (prio & log::alert) prioName = "ALERT";
@@ -411,7 +415,7 @@ void logthread::run (void)
 					
 					tf->f.printf ("%s %s [%s]: %s\n",
 								  tstr.str(),
-								  ev[logproperty::module].cval(),
+								  modName.str(),
 								  prioName.str(),
 								  ev[logproperty::text].cval());
 					
