@@ -251,9 +251,10 @@ public:
 					 }
 	inline string	&operator+= (string *str)
 					 {
-					 	string tmp;
-					 	tmp.retainvalue (str);
-					 	strcat (tmp);
+					 	if (! str) return *this;
+					 	
+					 	strcat (*str);
+					 	delete str;
 						return (*this);
 					 }
 	

@@ -582,8 +582,8 @@ void httpdworker::run (void)
 						// tis? Whine!
 						s.printf ("HTTP/1.1 413 ENTITY TOO LARGE\r\n");
 						s.printf ("Content-type: text/html\r\n\r\n");
-						s.printf ("<html><h1>POST object size too large</h1>"
-								  "</html>\n");
+						s.printf (errortext::httpd::html_body,
+								  errortext::httpd::html_413);
 						keepalive = false;
 						
 						// Whine upstream if needed
@@ -591,8 +591,7 @@ void httpdworker::run (void)
 						{
 							value ev;
 							string ertxt;
-							ertxt.printf ("Entity too large "
-										  "(content-size=%i)", sz);
+							ertxt.printf (errortext::httpd::toolarge, sz);
 							
 							ev("class") = "error";
 							ev["ip"] = s.peer_name;
@@ -623,12 +622,9 @@ void httpdworker::run (void)
 							if (parent->eventmask & HTTPD_ERROR)
 							{
 								value ev;
-								string ertxt;
-								ertxt.printf ("GET request with body data");
-								
 								ev("class") = "error";
 								ev["ip"] = s.peer_name;
-								ev["text"] = ertxt;
+								ev["text"] = errortext::httpd::getbody;
 								parent->eventhandle (ev);
 							}
 							break;
@@ -681,7 +677,8 @@ void httpdworker::run (void)
 				{
 					s.printf ("HTTP/1.1 500 UNKNOWN METHOD '%S'\r\n", cmd.str());
 					s.printf ("Content-type: text/html\r\n\r\n");
-					s.printf ("<html><h1>500 Unknown Method</h1></html>\n");
+					s.printf (errortext::httpd::html_body,
+							  errortext::httpd::html_500_method);
 					keepalive = false;
 					
 					// Tell the world if it cares
@@ -689,7 +686,7 @@ void httpdworker::run (void)
 					{
 						value ev;
 						string ertxt;
-						ertxt.printf ("Unknown method %S", cmd.str());
+						ertxt.printf (errortext::httpd::method, cmd.str());
 						
 						ev("class") = "error";
 						ev["ip"] = s.peer_name;
@@ -843,9 +840,8 @@ int httpdbasicauth::run (string &uri, string &postbody,
 		}
 		else
 		{
-			out.printf ("<html><body>"
-						"<H1>Please Authenticate</H1>"
-						"</body></html>\n");
+			out.printf (errortext::httpd::html_body,
+						errortext::httpd::html_401);
 		}
 		
 		// Whine to some log object if there's any that care
@@ -854,8 +850,7 @@ int httpdbasicauth::run (string &uri, string &postbody,
 			value outev;
 			string errtxt;
 			
-			errtxt.printf ("Authentication failed for user %S "
-						   "in realm \"%s\" (%S)",
+			errtxt.printf (errortext::httpd::authfail,
 						   username.str(), realm.str(), uri.str());
 			outev("class") = "error";
 			outev["ip"] = s.peer_name;
@@ -1052,10 +1047,7 @@ int httpdvhost::run (string &uri, string &postbody, value &inhdr,
 	}
 	else
 	{
-		out.printf ("<html><body><h1>404 Site Not Found</h1>"
-					"Either this server is misconfigured or the DNS entry "
-					"for %Z is not pointing the right way."
-					"</body></html>\n", host.str());
+		out.printf (errortext::httpd::html_404_vhost, host.str());
 	}
 
 	// Also whine to the errorlog, if it's there.
@@ -1064,8 +1056,7 @@ int httpdvhost::run (string &uri, string &postbody, value &inhdr,
 		value outev;
 		string errtxt;
 		
-		errtxt.printf ("Could not resolve request for host '%S'",
-					   host.str());
+		errtxt.printf (errortext::httpd::novhost, host.str());
 		outev("class") = "error";
 		outev["ip"] = s.peer_name;
 		outev["text"] = errtxt;
@@ -1351,8 +1342,8 @@ int serverpage::run (string &uri, string &postbody, value &inhdr,
 	res = execute (env, reqenv, out, outhdr);
 	if (res>0) return res;
 	
-	out = "<html><body><h1>Processing Error</h1>serverpage::run execution "
-		  "error.</body></html>";
+	out.crop();
+	out.printf (errortext::httpd::html_body, errortext::httpd::html_spage);
 	
 	return 500;
 }

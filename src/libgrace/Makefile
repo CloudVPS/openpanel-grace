@@ -67,7 +67,7 @@ install: all
 	./makeinstall
 
 depend:
-	@makedepend -I../../include -fMakefile.depend *.cpp 2>/dev/null
+	@makedepend -Y../../include -fMakefile.depend *.cpp 2>/dev/null
 
 clean:
 	rm -f *.o *.a

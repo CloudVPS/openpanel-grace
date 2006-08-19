@@ -245,4 +245,16 @@ namespace memory
 			::free (((char *)r) - sizeof (block));;
 		}
 	}
+	void retainable::destroyvalue (retainable *r)
+	{
+		if (! r) return;
+		if (retainpool().pooled (r))
+		{
+			retainpool().free (r);
+		}
+		else
+		{
+			::free (((char *)r) - sizeof (block));
+		}
+	}
 }

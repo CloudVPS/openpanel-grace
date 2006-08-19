@@ -304,8 +304,8 @@ mainloop:
 							}
 							else
 							{
-								s.printf ("500 Unrecognized command\r\n");
-								SENDERROR("Unrecognized command");
+								s.printf ("500 %s\r\n", errortext::smtpd::ucommand);
+								SENDERROR(errortext::smtpd::ucommand);
 							}
 							break;
 							
@@ -321,8 +321,8 @@ mainloop:
 							}
 							else
 							{
-								s.printf ("500 Unrecognized command\r\n");
-								SENDERROR("Unrecognized command");
+								s.printf ("500 %s\r\n", errortext::smtpd::ucommand);
+								SENDERROR(errortext::smtpd::ucommand);
 							}
 							break;
 							
@@ -354,8 +354,8 @@ mainloop:
 							}
 							else
 							{
-								s.printf ("500 Unrecognized command\r\n");
-								SENDERROR("Unrecognized command");
+								s.printf ("500 %s\r\n", errortext::smtpd::ucommand);
+								SENDERROR(errortext::smtpd::ucommand);
 							}
 							break;
 							
@@ -427,7 +427,7 @@ mainloop:
 		}
 		catch (...)
 		{
-			SENDERROR("Broken pipe");
+			SENDERROR(errortext::smtpd::pipe);
 			s.close();
 		}
 		

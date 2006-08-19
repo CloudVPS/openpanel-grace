@@ -118,7 +118,7 @@ bool tcpsocket::connect (
 	if (filno >= 0)
 	{
 		errcode = FERR_CONNECT2;
-		err = "Connecting twice on open socket";
+		err = errortext::sock::isconn;
 		return false;
 	}
 	
@@ -162,7 +162,7 @@ bool tcpsocket::connect (
 				filno = -1;
 				errcode = FERR_NOCONNECT;
 				err.crop (0);
-				err.printf ("TCP connection failed: %s", strerror (errno));
+				err.printf (errortext::sock::connfail, strerror (errno));
 				return false;
 			}
 		}
@@ -174,7 +174,7 @@ bool tcpsocket::connect (
 	else
 	{
 		errcode = FERR_NORSRC;
-		err = "Could not create a socket";
+		err = errortext::sock::create;
 		throw (EX_SOCK_CREATE);
 	}
 	
@@ -190,7 +190,7 @@ bool tcpsocket::connect (
 		{
 			errcode = FERR_CODEC;
 			err.crop();
-			err.printf ("Codec error: %s", codec->error().str());
+			err.printf (errortext::sock::codec, codec->error().str());
 			::close (filno);
 			filno = -1;
 			feof = true;
@@ -214,7 +214,7 @@ handshakes:
 				filno = -1;
 				feof = true;
 				errcode = FERR_CODEC;
-				err = "Codec handshake i/o error";
+				err = errortext::sock::chandshake;
 				return false;
 			}
 			szdone += sz;
@@ -233,7 +233,7 @@ handshakes:
 					filno = -1;
 					feof = true;
 					errcode = FERR_CODEC;
-					err = "Codec handshake return error";
+					err = errortext::sock::chandshake;
 					codec->reset();
 					return false;
 				}
@@ -245,7 +245,7 @@ handshakes:
 				{
 					errcode = FERR_CODEC;
 					err.crop(0);
-					err.printf ("Codec error: %s", codec->error().str());
+					err.printf (errortext::sock::codec, codec->error().str());
 					codec->reset();
 					return false;
 				}
@@ -280,7 +280,7 @@ bool tcpsocket::uconnect (const string &path)
 	if (filno<0)
 	{
 		errcode = FERR_NORSRC;
-		err = "Could not create a socket";
+		err = errortext::sock::create;
 		throw (EX_SOCK_CREATE);
 	}
 	
@@ -316,7 +316,7 @@ bool tcpsocket::uconnect (const string &path)
 		{
 			errcode = FERR_CODEC;
 			err.crop();
-			err.printf ("Codec error: %s", codec->error().str());
+			err.printf (errortext::sock::codec, codec->error().str());
 			::close (filno);
 			filno = -1;
 			feof = true;

@@ -6,6 +6,7 @@
 // ========================================================================
 #include <grace/smtp.h>
 #include <grace/system.h>
+#include <grace/defaults.h>
 
 // ========================================================================
 // CONSTRUCTOR
@@ -139,7 +140,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 	// ----------------------------------------------------------------------
 	if (! sock.connect (smtphost, smtpport))
 	{
-		err = "Connection failed";
+		err = errortext::smtp::connfail;
 		return false;
 	}
 	
@@ -151,7 +152,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		line = sock.gets();
 		if (line.toint() != 220)
 		{
-			err = "SMTP_START error: ";
+			err = errortext::smtp::start;
 			err.strcat (line);
 			sock.close();
 			return false;
@@ -167,7 +168,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		line = sock.gets();
 		if (line.toint() != 250)
 		{
-			err = "SMTP_HELO error: ";
+			err = errortext::smtp::helo;
 			err.strcat (line);
 			sock.close();
 			return false;
@@ -183,7 +184,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		line = sock.gets();
 		if (line.toint() != 250)
 		{
-			err = "SMTP_HELO error: ";
+			err = errortext::smtp::mailfrom;
 			err.strcat (line);
 			sock.close();
 			return false;
@@ -201,7 +202,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 			line = sock.gets();
 			if (line.toint() != 250)
 			{
-				err = "SMTP_RCPT error: ";
+				err = errortext::smtp::rcptto;
 				err.strcat (line);
 				sock.close();
 				return false;
@@ -217,7 +218,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		line = sock.gets();
 		if (line.toint() != 354)
 		{
-			err = "SMTP_DATA1 error: ";
+			err = errortext::smtp::data;
 			err.strcat (line);
 			sock.close();
 			return false;
@@ -258,7 +259,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		line = sock.gets();
 		if (line.toint() != 250)
 		{
-			err = "SMTP_DATA2 error: ";
+			err = errortext::smtp::deliver;
 			err.strcat (line);
 			sock.close();
 			return false;
@@ -277,7 +278,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		sock.close();
 		if (! transactionComplete)
 		{
-			err = "Connection closed";
+			err = errortext::smtp::connclose;
 			return false;
 		}
 	}

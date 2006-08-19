@@ -14,6 +14,7 @@
 #include <grace/value.h>
 #include <grace/regexpression.h>
 #include <grace/xmlschema.h>
+#include <grace/defaults.h>
 
 // ========================================================================
 // CONSTRUCTOR
@@ -71,7 +72,7 @@ bool validator::checkobject (const value &obj, const statstring &id,
 	
 	if (! schema.exists (id))
 	{
-		makeerror (error, 900, "Unknown rule-id", id.sval());
+		makeerror (error, 900, errortext::validator::rule_unknown, id.sval());
 		return false;
 	}
 	
@@ -84,7 +85,7 @@ bool validator::checkobject (const value &obj, const statstring &id,
 	
 	if (! error.strlen())
 	{
-		makeerror (error, 901, "Error matching rule", id.sval());
+		makeerror (error, 901, errortext::validator::rule_error, id.sval());
 	}
 	return false;
 }
@@ -118,7 +119,7 @@ bool validator::matchObject (const value &obj, const value &def, string &error)
 		return checkobject (obj, sdef, error);
 	}
 	
-	makeerror (error, 902, "Unknown matchtype", mtype);
+	makeerror (error, 902, errortext::validator::matchtype, mtype);
 	return false;
 }
 
@@ -131,7 +132,7 @@ bool validator::matchId (const value &obj, const value &def, string &error)
 {
 	if (! obj.id())
 	{
-		makeerror (error, 903, "match.id of an object with no id",
+		makeerror (error, 903, errortext::validator::matchid,
 				   obj.type().sval());
 		return false;
 	}
@@ -224,8 +225,8 @@ bool validator::matchMandatory (const value &obj, const value &def,
 						{
 							if (! error.strlen())
 							{
-								makeerror (error, 904, "Error matching "
-										   "depending mandatory",
+								makeerror (error, 904,
+										   errortext::validator::optmdep,
 										   e("key").sval());
 							}
 							return false;
@@ -234,8 +235,7 @@ bool validator::matchMandatory (const value &obj, const value &def,
 					return true;
 				}
 			}
-			makeerror (error, 914, "Error matching mandatory class member",
-					   matchid);
+			makeerror (error, 914, errortext::validator::mdep, matchid);
 			return false;
 		}
 		
@@ -243,7 +243,7 @@ bool validator::matchMandatory (const value &obj, const value &def,
 		else if (matchtype == "child") mattrib = false;
 		else
 		{
-			makeerror (error, 915, "Undefined matchtype", matchtype);
+			makeerror (error, 915, errortext::validator::matchtype, matchtype);
 			return false;
 		}
 		
@@ -255,8 +255,8 @@ bool validator::matchMandatory (const value &obj, const value &def,
 				{
 					if (! error.strlen())
 					{
-						makeerror (error, 904, "Error matching depending "
-								   "mandatory", e("key").sval());
+						makeerror (error, 904, errortext::validator::optmdep,
+								   e("key").sval());
 					}
 					return false;
 				}
@@ -275,12 +275,12 @@ bool validator::matchMandatory (const value &obj, const value &def,
 				{
 					if (mattrib)
 					{
-						makeerror (error, 905, "Missing mandatory attribute",
+						makeerror (error, 905, errortext::validator::mdep,
 								   matchid);
 					}
 					else
 					{
-						makeerror (error, 906, "Missing mandatory child",
+						makeerror (error, 906, errortext::validator::mattrdep,
 								   matchid);
 					}
 				}
@@ -357,7 +357,7 @@ bool validator::matchAttrib (const value &obj, const value &def, string &error)
 				}
 				else
 				{
-					makeerror (error, 907, "Unknown attribute",
+					makeerror (error, 907, errortext::validator::attr_unknown,
 							   node.id().sval());
 				}
 			}
@@ -414,7 +414,7 @@ bool validator::matchData (const value &obj, const value &def, string &error)
 		}
 		else
 		{
-			makeerror (error, 908, "Unknown match-type", mtype);
+			makeerror (error, 908, errortext::validator::matchtype, mtype);
 			return false;
 		}
 	}
@@ -426,7 +426,7 @@ bool validator::matchData (const value &obj, const value &def, string &error)
 	}
 	else
 	{
-		makeerror (error, 909, "Data match failed", obj.sval());
+		makeerror (error, 909, errortext::validator::nomatch, obj.sval());
 	}
 	return false;
 }
@@ -448,7 +448,7 @@ bool validator::matchHasIndex (const value &obj, const value &def,
 	}
 	else
 	{
-		makeerror (error, 910, "Expected child with index key");
+		makeerror (error, 910, errortext::validator::noindex);
 	}
 	
 	return false;
@@ -498,7 +498,7 @@ bool validator::matchType (const value &obj, const value &def, string &error)
 	
 	if (! tmap.exists (def.sval()))
 	{
-		makeerror (error, 912, "Unknown type constraint", def.sval());
+		makeerror (error, 912, errortext::validator::type_unknown, def.sval());
 		return false;
 	}
 	
@@ -511,7 +511,7 @@ bool validator::matchType (const value &obj, const value &def, string &error)
 	}
 	else
 	{
-		makeerror (error, 913, "Object has wrong type","");
+		makeerror (error, 913, errortext::validator::wrongtype,"");
 	}
 	return false;
 }

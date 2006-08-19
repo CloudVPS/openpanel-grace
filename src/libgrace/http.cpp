@@ -90,7 +90,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 		else
 		{
 			error.crop(0);
-			error.printf ("%s is not a valid url", url.str());
+			error.printf (errortext::http::invalidurl, url.str());
 			return NULL;
 		}
 	}
@@ -139,7 +139,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 		if (! _sock.uconnect (hostpart))
 		{
 			error.crop (0);
-			error.printf ("Could not connect to socket '%s'", hostpart.str());
+			error.printf (errortext::http::connect_usock, hostpart.str());
 			return NULL;
 		}
 	}
@@ -148,8 +148,8 @@ string *httpsocket::post (const string &url, const string &ctype,
 		if (! connectToHost (_proxyhost, _proxyport))
 		{
 			error.crop(0);
-			error.printf ("Could not connect to proxy at address: '%s' port %i",
-					hostpart.str(), port);
+			error.printf (errortext::http::connect_proxy,
+					      hostpart.str(), port);
 			return NULL;
 		}	
 	}
@@ -158,8 +158,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 		if (! connectToHost (hostpart, port))
 		{
 			error.crop(0);
-			error.printf ("Could not connect to '%s' port %i",
-					hostpart.str(), port);
+			error.printf (errortext::http::connect, hostpart.str(), port);
 			return NULL;
 		}
 	}
@@ -232,7 +231,7 @@ string *httpsocket::get (const string &url, value *hdr)
 		}
 		else
 		{
-			error.printf ("%s is not a valid url", url.str());
+			error.printf (errortext::http::invalidurl, url.str());
 			return NULL;
 		}
 	}
@@ -277,7 +276,7 @@ string *httpsocket::get (const string &url, value *hdr)
 		if (! _sock.uconnect (hostpart))
 		{
 			error.crop (0);
-			error.printf ("Could not connect to socket '%s'", hostpart.str());
+			error.printf (errortext::http::connect_usock, hostpart.str());
 			return NULL;
 		}
 	}
@@ -285,8 +284,8 @@ string *httpsocket::get (const string &url, value *hdr)
 	{
 		if (! connectToHost (_proxyhost, _proxyport))
 		{
-			error.printf ("Could not connect to proxy at address: '%s' port %i",
-					hostpart.str(), port);
+			error.printf (errortext::http::connect_proxy, _proxyhost.str(),
+						  _proxyport);
 			return NULL;
 		}	
 	}
@@ -294,7 +293,8 @@ string *httpsocket::get (const string &url, value *hdr)
 	{
 		if (! connectToHost (hostpart, port))
 		{
-			error = "Connection failed";
+			error.crop ();
+			error.printf (errortext::http::connect, hostpart.str(), port);
 			return NULL;
 		}
 	}
@@ -393,8 +393,8 @@ bool httpsocket::getChunked (string &into)
 			chunksz = ln.toint (16);
 			if (chunksz>defaults::lim::httpd::chunksize)
 			{
-				error = "Max chunksize ";
-				error.printf ("%i < %i", defaults::lim::httpd::chunksize, chunksz);
+				error.printf (errortext::http::chunksz, 
+							  defaults::lim::httpd::chunksize, chunksz);
 				throw (EX_HTTP_MAX_CHUNKSIZE);
 			}
 			if (chunksz>0)
@@ -445,8 +445,8 @@ bool httpsocket::getChunked (string &into)
 		// a failure per se.
 		if (! error.strlen())
 		{
-			error = "Connection broken ";
-			error.printf ("(%s)", _sock.error().str());
+			error.crop ();
+			error.printf (errortext::http::connbroken, _sock.error().str());
 			_sock.close();
 			_host.crop (0);
 			_port = 0;
@@ -491,7 +491,7 @@ bool httpsocket::getData (string &into, size_t contentLength)
 				}
 				else
 				{
-					error = "Connection timed out";
+					error = errortext::http::timeout;
 					return false;
 				}
 			}
@@ -504,7 +504,7 @@ bool httpsocket::getData (string &into, size_t contentLength)
 		}
 		if (bytesLeft>0)
 		{
-			error = "Premature end of connection";
+			error = errortext::http::prebroken;
 			return false;
 		}
 		return true;
@@ -557,7 +557,7 @@ string *httpsocket::getResult (value *hdr)
 				line.crop();
 				if (! _sock.waitforline (line, _timeout, 256))
 				{
-					error = "Connection timed out getting headers";
+					error = errortext::http::timeout;
 					status = 0;
 					_sock.close();
 					_host.crop(0);
@@ -612,7 +612,7 @@ string *httpsocket::getResult (value *hdr)
 				}
 				catch (...)
 				{
-					error = "Error getting chunked data";
+					error = errortext::http::chunk;
 					status = 0;
 					_sock.close ();
 					_host.crop (0);
@@ -633,7 +633,7 @@ string *httpsocket::getResult (value *hdr)
 	}
 	catch (...)
 	{
-		error = "Connection failure while getting headers";
+		error = errortext::http::prebroken;
 		status = 0;
 		_sock.close();
 		_host.crop(0);

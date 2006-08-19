@@ -38,7 +38,7 @@ void daemon::daemonize (void)
 {
 	if (! checkpid ())
 	{
-		ferr.printf ("%% Service %s already running\n", creator.str());
+		ferr.printf (errortext::daemon::running, creator.str());
 		exit (1);
 	}
 	
@@ -66,7 +66,7 @@ void daemon::daemonize (void)
 			break;
 		
 		case -1:
-			ferr.printf ("%% Could not fork\n");
+			ferr.printf (errortext::daemon::nofork);
 			exit (1);
 	}
 	exit (0);
@@ -140,7 +140,7 @@ void daemon::writepid (void)
 		tpath = fs.transw (path);
 		if (! tpath.strlen())
 		{
-			ferr.printf ("%% Could not write pid-file\n");
+			ferr.printf (errortext::daemon::writepid);
 			return;
 		}
 		if (!f.openwrite (tpath))
@@ -402,14 +402,24 @@ void logthread::run (void)
 					modName = ev[logproperty::module].sval();
 					modName.pad (padding, ' ');
 					
-					if (prio & log::emergency) prioName = "EMERG";
-					else if (prio & log::alert) prioName = "ALERT";
-					else if (prio & log::critical) prioName = "CRITC";
-					else if (prio & log::error) prioName = "ERROR";
-					else if (prio & log::warning) prioName = "WARN ";
-					else if (prio & log::info) prioName = "INFO ";
-					else if (prio & log::application) prioName = "APPL ";
-					else prioName = "DEBUG";
+					#define MPRIO(pname) \
+						else if (prio & log::pname) \
+							prioName = names::logprio::pname
+						
+					if (false) {}
+					MPRIO (emergency);
+					MPRIO (alert);
+					MPRIO (critical);
+					MPRIO (error);
+					MPRIO (warning);
+					MPRIO (info);
+					MPRIO (application);
+					else
+					{
+						prioName = names::logprio::debug;
+					}
+					
+					#undef MPRIO
 					
 					tstr = ti.format ("%b %e %H:%M:%S");
 					
@@ -424,16 +434,20 @@ void logthread::run (void)
 					msize = tf->maxsize ? tf->maxsize : (defaults::sz::logfile);
 					if (tf->f.pos() > msize)
 					{
-						string olda, oldb, oldc, oldd;
 						tf->f.close();
-						olda.printf ("%s.0", tf->target.str());
-						oldb.printf ("%s.1", tf->target.str());
-						oldc.printf ("%s.2", tf->target.str());
-						oldd.printf ("%s.3", tf->target.str());
-						fs.mv (oldc, oldd);
-						fs.mv (oldb, oldc);
-						fs.mv (olda, oldb);
-						fs.mv (tf->target, olda);
+						
+						int ii = defaults::lim::logrotate - 1;
+						
+						for (ii ; ii >= 0; --ii)
+						{
+							string oldfn, newfn;
+							
+							oldfn = tf->target;
+							if (ii) oldfn.printf (".%i", ii-1);
+							newfn.printf ("%s.%i", tf->target.str(), ii);
+							fs.mv (oldfn, newfn);
+						}
+						
 						tf->f.openappend (tf->target);
 					}
 				}

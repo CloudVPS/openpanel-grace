@@ -92,14 +92,7 @@ namespace memory
 	
 					 /// Basic constructor.
 					 retainable (void) {}
-					 
-					 /// Copy constructor. Does the magic
-					 /// containment stuff.
-					 retainable (retainable *r)
-					 {
-					 	retainvalue (r);
-					 }
-					 
+					 					 
 					 /// Virtual destructor.
 		virtual		~retainable (void) {}
 		
@@ -115,17 +108,11 @@ namespace memory
 					 /// Memory free for retained pointers.
 		void		 operator delete (void *v, pooltype r);
 					
-					 /// Base assignment operator.
-		retainable	&operator= (retainable *r)
-					 {
-					 	retainvalue (r);
-					 	return *this;
-					 }
-		
 	protected:
 					 /// Call this from any operator= or copy
 					 /// constructor methods.
 		void		 retainvalue (retainable *r);
+		void		 destroyvalue (retainable *r);
 		
 		virtual void init (bool first = true)
 					 {

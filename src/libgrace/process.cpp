@@ -1,5 +1,6 @@
 #include <grace/process.h>
 #include <grace/system.h>
+#include <grace/defaults.h>
 
 // ========================================================================
 // METHOD ::running
@@ -54,7 +55,7 @@ void process::serialize (void)
 // ========================================================================
 int process::main (void)
 {
-	::printf ("eek, unoverloaded process::main()\n");
+	::printf (errortext::process::nomain);
 	return 1;
 }
 

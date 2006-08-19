@@ -49,8 +49,7 @@ int httpdfiletypehandler::run (string &path, string &postbody, value &inhdr,
 	{
 		value ev;
 		string ertxt;
-		ertxt.printf ("Unoverloaded filetypehandler invoked for file %S",
-					  path.str());
+		ertxt.printf (errortext::httpd::ftype_base, path.str());
 		
 		ev("class") = "error";
 		ev["ip"] = s.peer_name;
@@ -195,15 +194,13 @@ int httpdfileshare::run (string &uri, string &postbody,
 	if ((uri.strstr ("//") > 0) || (uri.strstr ("/..") >= 0))
 	{
 		outhdr["Content-type"] = "text/html";
-		out.printf ("<html><body>"
-					"<H1>Illegal URI Requested</H1>"
-					"</body></html>");
+		out.printf (errortext::httpd::html_body, errortext::httpd::html_illuri);
 
 		if (parent->eventmask & HTTPD_ERROR)
 		{
 			value ev;
 			string ertxt;
-			ertxt.printf ("Illegal URI %S", uri.str());
+			ertxt.printf (errortext::httpd::illuri, uri.str());
 			
 			ev("class") = "error";
 			ev["ip"] = s.peer_name;
@@ -228,14 +225,13 @@ int httpdfileshare::run (string &uri, string &postbody,
 	     (realpath.strncmp (root, root.strlen()) != 0) )
 	{
 		outhdr["Content-type"] = "text/html";
-		out.printf ("<html><body><H1>Illegal URI Requested</H1>\n"
-					"</body></html>");
+		out.printf (errortext::httpd::html_body, errortext::httpd::html_illuri);
 					
 		if (parent->eventmask & HTTPD_ERROR)
 		{
 			value ev;
 			string ertxt;
-			ertxt.printf ("Illegal URI %S root=<%s> realpath=<%s>",
+			ertxt.printf (errortext::httpd::illuri_details,
 						  uri.str(), root.str(), realpath.str());
 			
 			ev("class") = "error";
@@ -262,7 +258,7 @@ int httpdfileshare::run (string &uri, string &postbody,
 			return -404;
 		}
 		outhdr["Content-type"] = "text/html";
-		out.printf ("<html><body><H1>404 Not Found</H1></body></html>\n");
+		out = errortext::httpd::html_404;
 		return 404;
 	}
 	

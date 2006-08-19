@@ -190,8 +190,9 @@ public:
 						 }
 						 
 						 /// Copy-constructor (retained).
-						 statstring (statstring *str) : retainable (str)
+						 statstring (statstring *str)
 						 {
+						 	retainvalue (str);
 						 }
 						 
 						 statstring (class value *);

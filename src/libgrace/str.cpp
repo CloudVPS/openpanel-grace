@@ -290,7 +290,7 @@ string::string (string *s) : retainable()
 	{
 		size = alloc = 0;
 		data = NULL;
-		delete s;
+		if (s) delete s;
 	}
 }
 

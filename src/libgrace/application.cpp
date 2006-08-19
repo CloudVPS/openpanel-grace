@@ -8,6 +8,7 @@
 #include <grace/application.h>
 #include <grace/filesystem.h>
 #include <grace/xmlschema.h>
+#include <grace/defaults.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -387,7 +388,7 @@ void application::init (int Argc, char *Argv[])
 // ==========================================================================
 int application::main (void)
 {
-	ferr.printf ("main() not overloaded\n");
+	ferr.printf (errortext::application::nomain);
 	return 1;
 }
 

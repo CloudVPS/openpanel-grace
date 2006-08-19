@@ -100,7 +100,7 @@ cgi::cgi (const char *appname) : application (appname)
 		if (clen > (defaults::lim::cgi::postsize))
 		{
 			headers["Content-type"] = "text/html";
-			buffer.printf ("<body>Size overflow</body>\n");
+			buffer.printf (errortext::cgi::errbody, errortext::cgi::size);
 			
 			sendpage();
 			throw (EX_CGI_EOF);
@@ -115,9 +115,7 @@ cgi::cgi (const char *appname) : application (appname)
 			catch (...) // End-of-File
 			{
 				headers["Content-type"] = "text/html";
-				buffer.printf ("<html><body bgcolor=white><h2>Error</h2>"
-							   "Unexpected End Of File parsing POST input"
-							   "</body></html>\n");
+				buffer.printf (errortext::cgi::errbody, errortext::cgi::eof);
 				
 				sendpage();
 				throw (EX_CGI_EOF);
@@ -163,8 +161,7 @@ cgi::cgi (const char *appname) : application (appname)
 					// This is where we complain for improper
 					// MIME data
 					headers["Content-type"] = "text/html";
-					buffer.printf ("<body>No boundary provided for "
-								   "multipart</body>\n");
+					buffer.printf (errortext::cgi::errbody, errortext::cgi::bound);
 					sendpage ();
 					throw (EX_CGI_POST_FORMAT);
 				}
@@ -433,9 +430,10 @@ string *cgitemplate::parse (const string &section, value &env)
 	
 	if (! tmpl.exists(section))
 	{
-		res.printf ("<html><body bgcolor=white><h2>Error</h2>"
-					   "Section '%s' not found."
-					   "</body></html>\n", section.str());
+		string errstr;
+		errstr.printf (errortext::cgi::section, section.str());
+		
+		res.printf (errortext::cgi::errbody, errstr.str());
 		return &res;
 	}
 	
@@ -498,11 +496,7 @@ rpccgi::rpccgi (const char *appname) : application (appname)
 			catch (...) // End-of-File
 			{
 				headers["Content-type"] = "text/html";
-				buffer.printf ("<html><body bgcolor=white>"
-							   "<h2>Error</h2>"
-							   "Unexpected End Of File parsing POST input"
-							   "</body></html>\n");
-				
+				buffer.printf (errortext::cgi::errbody, errortext::cgi::eof);
 				sendpage();
 				throw (EX_CGI_EOF);
 			}
@@ -521,9 +515,7 @@ rpccgi::rpccgi (const char *appname) : application (appname)
 	else
 	{
 		headers["Content-Type"] = "text/html";
-		buffer.printf ("<html><body bgcolor=white><h2>Error</h2>"
-					   "This program requires to be run as a CGI"
-					   "</body></html>\n");
+		buffer.printf (errortext::cgi::errbody, errortext::cgi::nocgi);
 		
 		sendpage();
 		exit (1);
@@ -564,7 +556,7 @@ rpccgi::~rpccgi (void)
 // ========================================================================
 int rpccgi::main (void)
 {
-	ferr.printf ("unoverloaded cgi::main!\n");
+	ferr.printf (errortext::cgi::nomain);
 	return 1;
 }
 

@@ -8,6 +8,7 @@
 #include <grace/xmlschema.h>
 #include <grace/validator.h>
 #include <grace/system.h>
+#include <grace/defaults.h>
 
 /// A class representing a chain of keys, or a complete path to an
 /// item in a larger tree of value objects.
@@ -184,7 +185,8 @@ public:
 		
 		if (! fs.exists (fn))
 		{
-			error = "Could not load schema";
+			error.crop ();
+			error.printf (errortext::configdb::noschema, fn.str());
 			return false;
 		}
 		cschema.load (fn);
@@ -193,7 +195,8 @@ public:
 		fn.printf ("schema:%s.validator.xml", cprefix.str());
 		if (! cval.load (fn))
 		{
-			error = "Could not load validator";
+			error.crop ();
+			error.printf (errortext::configdb::novalidator, fn.str());
 			return false;
 		}
 		
@@ -201,7 +204,8 @@ public:
 		fn.printf ("conf:%s.conf.xml", cprefix.str());
 		if (! fs.exists (fn))
 		{
-			error = "Could not load configuration";
+			error.crop ();
+			error.printf (errortext::configdb::noconf, fn.str());
 			return false;
 		}
 		ndb.loadxml (fn, cschema);
@@ -278,7 +282,7 @@ public:
 							   a->path.get()))
 				{
 					// Party pooper in the house.
-					err = "Error in new configuration";
+					err = errortext::configdb::errnew;
 					return false;
 				}
 			} while (a->path.next (p));
