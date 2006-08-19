@@ -33,8 +33,13 @@ int value_shoxtestApp::main (void)
 	v.saveshox ("out.shox");
 	
 	value vv;
-	v.loadshox ("out.shox");
-	v.savexml ("out.xml");
+	
+	vv.loadshox ("out.shox");
+	
+	fout.printf ("loaded\n");
+	//sleep (5);
+	vv.savexml ("out.xml");
+	vv["list"].savexml ("out2.xml");
 	
 	return 0;
 }

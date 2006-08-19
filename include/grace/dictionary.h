@@ -271,7 +271,7 @@ public:
 	unsigned int				 get (const statstring &);
 	
 								 /// Return the string for a numbered position.
-	const statstring			&get (unsigned int);
+	statstring					*get (unsigned int);
 	
 								 /// Return the number of strings in the dict.
 	unsigned int				 count (void);

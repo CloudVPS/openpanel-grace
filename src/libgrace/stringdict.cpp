@@ -13,18 +13,19 @@ unsigned int stringdict::get (const statstring &id)
 {
 	unsigned int cnt;
 	if (bystring.exists (id)) return bystring[id];
-	byid.add (new (memory::retainable::onstack) statstring (id));
+	byid.add (new statstring (id));
 	cnt = byid.count() -1;
 	bystring[id] = cnt;
 	return cnt;
 }
 
-const statstring &stringdict::get (unsigned int key)
+statstring *stringdict::get (unsigned int key)
 {
-	static statstring nil;
+	returnclass (statstring) res retain;
 	
-	if (key > (unsigned int) byid.count()) return nil;
-	return byid[(int) key];
+	if (key > (unsigned int) byid.count()) return &res;
+	res = byid[(int) key];
+	return &res;
 }
 
 unsigned int stringdict::count (void)

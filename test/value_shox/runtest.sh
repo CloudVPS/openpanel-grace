@@ -24,5 +24,9 @@ diff out.shox reference.shox >> test.log 2>&1 || {
   echo " failed (DIFF)"
   exit 1
 }
+diff out2.xml reference2.xml >> test.log 2>&1 || {
+  echo " failed (DIFF)"
+ exit 1
+}
 rm -f test.log out.xml out.shox
 echo " passed"

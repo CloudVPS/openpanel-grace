@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<void id="list">
+	<string>foo</string>
+	<string>bar</string>
+	<string>baz</string>
+</void>

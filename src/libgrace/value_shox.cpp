@@ -105,6 +105,7 @@ void value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 	unsigned int chcount;
 	unsigned int i;
 	value *crsr;
+	statstring tskey;
 	
 	// Read the type indicator.
 	if (! (offs = shox.binget8u (offs, dtype))) return;
@@ -130,7 +131,8 @@ void value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 			
 			// If the key is '0' we deserialize an object with no id,
 			// otherwise initialize it with the id looked up in the sdict.
-			if (ikey) crsr = &((*attrib)[sdict.get(ikey-1)]);
+			tskey = sdict.get (ikey-1);
+			if (ikey) crsr = &((*attrib)[tskey]);
 			else crsr = &(attrib->newval());
 			
 			// Recurse to read the data into the node.
@@ -153,7 +155,7 @@ void value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 			{
 				// Yes, find the actual string key
 				skey = sdict.get (ikey-1);
-				crsr = findchild (skey.id(), skey.str());
+				crsr = &((*this)[skey]); //findchild (skey.id(), skey.str());
 			}
 			else crsr = &(newval()); // No, unkeyed value.
 			
@@ -232,13 +234,15 @@ string *value::toshox (void) const
 	
 	string		 shoxdata;
 	stringdict	 shoxdict;
+	statstring	 tkey;
 	
 	printshox (shoxdata, shoxdict);
 	
 	offs = res.binputvint (offs, shoxdict.count());
 	for (unsigned int i=0; i<shoxdict.count(); ++i)
 	{
-		offs = res.binputvstr (offs, shoxdict.get (i));
+		tkey = shoxdict.get (i);
+		offs = res.binputvstr (offs, tkey);
 	}
 	
 	res.strcat (shoxdata);

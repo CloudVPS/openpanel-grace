@@ -387,7 +387,21 @@ void statstring::assign (const statstring &str)
 
 void statstring::assign (statstring *str)
 {
-	retainvalue (str);
+	if (ref)
+	{
+		STRINGREF().unref (ref);
+	}
+	
+	if (str->ref)
+	{
+		ref = str->ref;
+		str->ref = NULL;
+	}
+	else
+	{
+		ref = NULL;
+	}
+	delete str;
 }
 
 statstring &statstring::operator= (const value &orig)
