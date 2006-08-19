@@ -593,7 +593,10 @@ public:
 				 		return true;
 				 	}
 				 	if (! pthread_cond_wait (cond, mutex))
+				 	{
+				 		--queue;
 				 		result = true;
+				 	}
 				 	pthread_mutex_unlock (mutex);
 				 	return result;
 				 }
@@ -617,7 +620,10 @@ public:
 				 		return true;
 				 	}
 				 	if (! pthread_cond_timedwait (cond, mutex, &ts))
+				 	{
+				 		--queue;
 				 		result = true;
+				 	}
 				 	pthread_mutex_unlock (mutex);
 				 		
 				 	return result;
