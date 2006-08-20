@@ -6,6 +6,10 @@
 #include <grace/str.h>
 #include <grace/strutil.h>
 
+#define SMTPERR_CONNFAIL		0x70d8ea06
+#define SMTPERR_SERVERR			0x2f4a242c
+#define SMTPERR_BROKENPIPE		0x7c1286e5
+
 /// SMTP client class.
 /// Implements the SMTP protocol for sending email through a server.
 class smtpsocket
@@ -95,6 +99,9 @@ public:
 	
 					 /// Get the last reported error.
 	const string	&error (void);
+	
+					 /// Get the last reported error code.
+	int				 errorcode (void) { return erno; }
 
 					 /// Act on an SMTP transaction. Assumes all
 					 /// proper headers and properties have been set.
@@ -108,6 +115,7 @@ protected:
 	string			 hostname; ///< My hostname.
 	value			 headers; ///< Output headers.
 	string			 err; ///< Error data.
+	int				 erno; ///< Error code.
 };
 
 #endif

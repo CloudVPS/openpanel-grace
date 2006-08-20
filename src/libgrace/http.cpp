@@ -19,6 +19,7 @@ httpsocket::httpsocket (void)
 {
 	_keepalive = true;
 	status = 0;
+	errorcode = 0;
 	_timeout = 0;
 	_useproxy = false;
 }
@@ -72,6 +73,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 						  const string &body, value *hdr)
 {
 	error.crop (0);
+	errorcode = 0;
 	string re ("s#http://##");
 	status = 0;
 	bool unixdomain = false;
@@ -89,7 +91,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 		}
 		else
 		{
-			error.crop(0);
+			errorcode = HTERR_INVALIDURL;
 			error.printf (errortext::http::invalidurl, url.str());
 			return NULL;
 		}
@@ -138,6 +140,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 		
 		if (! _sock.uconnect (hostpart))
 		{
+			errorcode = HTERR_CONNECTFAIL;
 			error.crop (0);
 			error.printf (errortext::http::connect_usock, hostpart.str());
 			return NULL;
@@ -147,6 +150,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 	{
 		if (! connectToHost (_proxyhost, _proxyport))
 		{
+			errorcode = HTERR_CONNECTFAIL;
 			error.crop(0);
 			error.printf (errortext::http::connect_proxy,
 					      hostpart.str(), port);
@@ -157,6 +161,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 	{
 		if (! connectToHost (hostpart, port))
 		{
+			errorcode = HTERR_CONNECTFAIL;
 			error.crop(0);
 			error.printf (errortext::http::connect, hostpart.str(), port);
 			return NULL;
@@ -213,6 +218,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 // ========================================================================
 string *httpsocket::get (const string &url, value *hdr)
 {
+	errorcode = 0;
 	error.crop (0);
 	string re ("s#http://##");
 	status = 0;
@@ -231,6 +237,7 @@ string *httpsocket::get (const string &url, value *hdr)
 		}
 		else
 		{
+			errorcode = HTERR_INVALIDURL;
 			error.printf (errortext::http::invalidurl, url.str());
 			return NULL;
 		}
@@ -275,6 +282,7 @@ string *httpsocket::get (const string &url, value *hdr)
 		
 		if (! _sock.uconnect (hostpart))
 		{
+			errorcode = HTERR_CONNECTFAIL;
 			error.crop (0);
 			error.printf (errortext::http::connect_usock, hostpart.str());
 			return NULL;
@@ -284,6 +292,7 @@ string *httpsocket::get (const string &url, value *hdr)
 	{
 		if (! connectToHost (_proxyhost, _proxyport))
 		{
+			errorcode = HTERR_CONNECTFAIL;
 			error.printf (errortext::http::connect_proxy, _proxyhost.str(),
 						  _proxyport);
 			return NULL;
@@ -293,6 +302,7 @@ string *httpsocket::get (const string &url, value *hdr)
 	{
 		if (! connectToHost (hostpart, port))
 		{
+			errorcode = HTERR_CONNECTFAIL;
 			error.crop ();
 			error.printf (errortext::http::connect, hostpart.str(), port);
 			return NULL;
@@ -374,6 +384,7 @@ bool httpsocket::getChunked (string &into)
 	int todo;
 	string ln;
 	error.crop ();
+	errorcode = 0;
 	
 	if (! _host.strlen()) return false;
 	
@@ -422,12 +433,14 @@ bool httpsocket::getChunked (string &into)
 						}
 						else
 						{
+							errorcode = HTERR_TIMEOUT;
 							error = "Timeout";
 							return false;
 						}
 					}
 					if (! _sock.waitforline (ln, _timeout, 16))
 					{
+						errorcode = HTERR_TIMEOUT;
 						error = "Timeout";
 						return false;
 					}
@@ -445,7 +458,7 @@ bool httpsocket::getChunked (string &into)
 		// a failure per se.
 		if (! error.strlen())
 		{
-			error.crop ();
+			errorcode = HTERR_BROKENPIPE;
 			error.printf (errortext::http::connbroken, _sock.error().str());
 			_sock.close();
 			_host.crop (0);
@@ -491,6 +504,7 @@ bool httpsocket::getData (string &into, size_t contentLength)
 				}
 				else
 				{
+					errorcode = HTERR_TIMEOUT;
 					error = errortext::http::timeout;
 					return false;
 				}
@@ -504,6 +518,7 @@ bool httpsocket::getData (string &into, size_t contentLength)
 		}
 		if (bytesLeft>0)
 		{
+			errorcode = HTERR_BROKENPIPE;
 			error = errortext::http::prebroken;
 			return false;
 		}
@@ -557,6 +572,7 @@ string *httpsocket::getResult (value *hdr)
 				line.crop();
 				if (! _sock.waitforline (line, _timeout, 256))
 				{
+					errorcode = HTERR_TIMEOUT;
 					error = errortext::http::timeout;
 					status = 0;
 					_sock.close();
@@ -612,6 +628,7 @@ string *httpsocket::getResult (value *hdr)
 				}
 				catch (...)
 				{
+					errorcode = HTERR_PROTO;
 					error = errortext::http::chunk;
 					status = 0;
 					_sock.close ();
@@ -633,6 +650,7 @@ string *httpsocket::getResult (value *hdr)
 	}
 	catch (...)
 	{
+		errorcode = HTERR_BROKENPIPE;
 		error = errortext::http::prebroken;
 		status = 0;
 		_sock.close();

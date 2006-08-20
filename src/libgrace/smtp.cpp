@@ -19,6 +19,8 @@ smtpsocket::smtpsocket (void)
 	string myaddress;
 	uid_t myuid;
 	
+	erno = 0;
+	
 	setsmtphost ("localhost");
 	hostname = kernel.net.hostname();
 	myuid = kernel.userdb.getuid();
@@ -140,6 +142,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 	// ----------------------------------------------------------------------
 	if (! sock.connect (smtphost, smtpport))
 	{
+		erno = SMTPERR_CONNFAIL;
 		err = errortext::smtp::connfail;
 		return false;
 	}
@@ -152,6 +155,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		line = sock.gets();
 		if (line.toint() != 220)
 		{
+			erno = SMTPERR_SERVERR;
 			err = errortext::smtp::start;
 			err.strcat (line);
 			sock.close();
@@ -168,6 +172,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		line = sock.gets();
 		if (line.toint() != 250)
 		{
+			erno = SMTPERR_SERVERR;
 			err = errortext::smtp::helo;
 			err.strcat (line);
 			sock.close();
@@ -184,6 +189,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		line = sock.gets();
 		if (line.toint() != 250)
 		{
+			erno = SMTPERR_SERVERR;
 			err = errortext::smtp::mailfrom;
 			err.strcat (line);
 			sock.close();
@@ -202,6 +208,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 			line = sock.gets();
 			if (line.toint() != 250)
 			{
+				erno = SMTPERR_SERVERR;
 				err = errortext::smtp::rcptto;
 				err.strcat (line);
 				sock.close();
@@ -218,6 +225,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		line = sock.gets();
 		if (line.toint() != 354)
 		{
+			erno = SMTPERR_SERVERR;
 			err = errortext::smtp::data;
 			err.strcat (line);
 			sock.close();
@@ -259,6 +267,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		line = sock.gets();
 		if (line.toint() != 250)
 		{
+			erno = SMTPERR_SERVERR;
 			err = errortext::smtp::deliver;
 			err.strcat (line);
 			sock.close();
@@ -278,6 +287,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		sock.close();
 		if (! transactionComplete)
 		{
+			erno = SMTPERR_BROKENPIPE;
 			err = errortext::smtp::connclose;
 			return false;
 		}

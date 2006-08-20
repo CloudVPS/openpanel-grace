@@ -110,13 +110,13 @@ void value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 	// Read the type indicator.
 	if (! (offs = shox.binget8u (offs, dtype))) return;
 	
-	if (dtype & 0x80) // bit 7: object has custom class
+	if (dtype & SHOX_HAS_CLASSNAME) // bit 7: object has custom class
 	{
 		if (! (offs = shox.bingetvint (offs, ikey))) return;
 		_type = sdict.get(ikey-1);
 	}
 	
-	if (dtype & 0x40) // bit 6: object has attributes
+	if (dtype & SHOX_HAS_ATTRIB) // bit 6: object has attributes
 	{
 		// Create attributes if necessary
 		if (! attrib) attrib = new value;
@@ -141,7 +141,7 @@ void value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 		}
 	}
 	
-	if (dtype & 0x20) // bit 5: object has children
+	if (dtype & SHOX_HAS_CHILDREN) // bit 5: object has children
 	{
 		// Read the child count int.
 		if (! (offs = shox.bingetvint (offs, chcount))) return;
@@ -264,18 +264,18 @@ void value::printshox (string &outstr, stringdict &sdict) const
 	}
 	
 	unsigned char xtype = itype;
-	if (! value::isbuiltin (_type)) xtype |= 0x80;
-	if (attrib && attrib->count()) xtype |= 0x40;
-	if (arraysz) xtype |= 0x20;
+	if (! value::isbuiltin (_type)) xtype |= SHOX_HAS_CLASSNAME;
+	if (attrib && attrib->count()) xtype |= SHOX_HAS_ATTRIB;
+	if (arraysz) xtype |= SHOX_HAS_CHILDREN;
 	
 	outstr.binput8u (outstr.strlen(), xtype);
 	
-	if (xtype & 0x80)
+	if (xtype & SHOX_HAS_CLASSNAME)
 	{
 		outstr.binputvint (outstr.strlen(), sdict.get (_type) +1);
 	}
 	
-	if (xtype & 0x40)
+	if (xtype & SHOX_HAS_ATTRIB)
 	{
 		outstr.binputvint (outstr.strlen(), attrib->count());
 		
@@ -285,7 +285,7 @@ void value::printshox (string &outstr, stringdict &sdict) const
 		}
 	}
 	
-	if (xtype & 0x20)
+	if (xtype & SHOX_HAS_CHILDREN)
 	{
 		outstr.binputvint (outstr.strlen(), arraysz);
 		

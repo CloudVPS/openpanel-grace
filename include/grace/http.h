@@ -12,6 +12,12 @@ enum httpsocketException {
 	EX_HTTP_TIMEOUT			= 0xdfd565dd  ///< Timeout in HTTP client.
 };
 
+#define HTERR_INVALIDURL	0xbe6ca9fa
+#define HTERR_CONNECTFAIL	0x9704f181
+#define HTERR_TIMEOUT		0x931cc5a2
+#define HTERR_BROKENPIPE	0x91094a03
+#define HTERR_PROTO			0x93520a19
+
 /// HTTP client class.
 /// Implements the HTTP/1.1 standard POST and GET methods to submit data
 /// to a webserver and read the results. When posting, it can either be
@@ -104,6 +110,7 @@ public:
 
 	value		 postheaders; ///< Custom headers for POST/GET.
 	string		 error; ///< Error string storage.
+	int			 errorcode; ///< Error code.
 	int			 status; ///< HTTP status of last request.
 	
 				 /// Set HTTP keepalive.

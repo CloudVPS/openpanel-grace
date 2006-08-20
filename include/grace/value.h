@@ -1467,4 +1467,9 @@ unsigned int str2ip (const string &str);
 time_t __parse_timestr (const string &);
 string *__make_timestr (time_t);
 
+#define SHOX_HAS_CLASSNAME		0x80
+#define SHOX_HAS_ATTRIB			0x40
+#define SHOX_HAS_CHILDREN		0x20
+
+
 #endif
