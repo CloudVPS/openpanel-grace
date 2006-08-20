@@ -50,7 +50,13 @@ void *thread::dorun (void *param)
 		THREADLIST[mtid] = me->threadname;
 	}
 
-	(*me).run();
+	try
+	{
+		(*me).run();
+	}
+	catch (...)
+	{
+	}
 	
 	(*me).ipc.lockw();
 	(*me).ipc.o["running"] = false;
