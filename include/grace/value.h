@@ -1303,7 +1303,7 @@ public:
 					 /// Access attributes as a value object.
 	value			&attributes (void)
 					 {
-					 	if (! attrib) return *this;
+					 	if (! attrib) attrib = new value;
 					 	return *attrib;
 					 }
 					 
