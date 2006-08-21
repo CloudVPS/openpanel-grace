@@ -314,12 +314,14 @@ void stringrefdb::linkref (stringref *ref)
 
 statstring::statstring (value *orig)
 {
+	ref = NULL;
 	assign (orig->sval());
 	delete orig;
 }
 
 statstring::statstring (const value &orig)
 {
+	ref = NULL;
 	assign (orig.sval());
 }
 

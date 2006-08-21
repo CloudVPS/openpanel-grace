@@ -6,7 +6,7 @@ all: appinit.exe
 	mkapp appinit
 
 appinit.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o appinit.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+	$(CXX) $(LDFLAGS) -Wl,--export-dynamic -o appinit.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
 
 clean:
 	rm -f *.o *.exe
