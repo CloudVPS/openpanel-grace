@@ -998,8 +998,8 @@ string *filesystem::getresource (const string &p, const string &rsrc, const stri
 	pad = pp = p;
 
 	int cpos, spos;
-	cpos = path.strchr (':');
-	spos = path.strchr ('/');
+	cpos = pp.strchr (':');
+	spos = pp.strchr ('/');
 	
 	if ( (cpos>0) && ((spos<0)||(spos>cpos)) )
 	{
