@@ -192,6 +192,7 @@ public:
 						 /// Copy-constructor (retained).
 						 statstring (statstring *str)
 						 {
+						 	ref = NULL;
 						 	retainvalue (str);
 						 }
 						 
