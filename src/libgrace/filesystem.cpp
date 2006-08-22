@@ -678,8 +678,6 @@ bool filesystem::mv (const string &_src, const string &_dst)
 	
 	int cpos, spos;
 	
-	str = pwdize (_str);
-	
 	cpos = src.strchr (':');
 	spos = src.strchr ('/');
 	
