@@ -320,6 +320,16 @@ string::~string (void)
 	}
 }
 
+bool string::operator== (const value &val) const
+{
+	return eq (val.sval());
+}
+
+bool string::operator!= (const value &val) const
+{
+	return (! eq (val.sval()));
+}
+
 string &string::operator= (value &val)
 {
 	this->strcpy (val.sval());

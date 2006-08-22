@@ -170,6 +170,7 @@ public:
 					 {
 						return eq (str);
 					 }
+	bool			 operator== (const class value &) const;
 
 	inline bool		 operator== (const string &str) const
 					 {
@@ -236,6 +237,7 @@ public:
 	// Other operators
 	// --------------------------------------------------------------------
 
+	bool			 operator!= (const class value &v) const;
 	inline bool		 operator!= (const string &str) const
 					 {
 						return (! eq (str));
