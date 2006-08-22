@@ -235,11 +235,13 @@ public:
 					 	returnclass (string) res retain;
 						string vpath;
 						int pos;
+						int pos2;
 						 
 						 vpath = pwdize (_vpath);
 						
+						pos2 = vpath.strchr ('/');
 						if ((pos = vpath.strchr (':')) < 0) res = vpath;
-						else
+						else if ((pos2<0) || (pos2 > pos))
 						{
 							string vol, fil;
 							
@@ -248,6 +250,7 @@ public:
 							
 							res = findread (vol, fil);
 						}
+						else res = vpath;
 						return &res;
 					 }
 					 
@@ -261,11 +264,13 @@ public:
 					 	returnclass (string) res retain;
 						string vpath;
 						int pos;
+						int pos2;
 						 
 						vpath = pwdize (_vpath);
 						
+						pos2 = vpath.strchr ('/');
 						if ((pos = vpath.strchr (':')) < 0) res = vpath;
-						else
+						else if ((pos2<0) || (pos2 > pos))
 						{
 							string vol, fil;
 							
@@ -274,6 +279,7 @@ public:
 							
 							res = findwrite (vol, fil);
 						}
+						else res = vpath;
 						return &res;
 					 }
 	
