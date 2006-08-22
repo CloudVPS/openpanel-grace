@@ -979,6 +979,11 @@ void string::strcat (string *s)
 	delete s;
 }
 
+void string::strcat (const value &v)
+{
+	strcat (v.sval());
+}
+
 // ========================================================================
 // METHOD ::strcat
 // ---------------

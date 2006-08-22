@@ -354,6 +354,8 @@ public:
 					 /// data.
 	void			 strcat (double);
 	
+	void			 strcat (const class value &);
+	
 					 /// Add string data at the start.
 					 /// Inserts the data from the other string
 					 /// at the left side of the buffer.
