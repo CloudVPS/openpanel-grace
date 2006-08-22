@@ -176,6 +176,8 @@ public:
 					 {
 						return eq (str);
 					 }
+	bool			 operator== (const class statstring &) const;
+	bool			 operator!= (const class statstring &) const;
 	
 	// --------------------------------------------------------------------
 	// String assignment
@@ -225,6 +227,9 @@ public:
 					 	retainvalue (str);
 						return *this;
 					 }
+					 
+	string			&operator= (class statstring *str);
+	string			&operator= (const class statstring &str);
 					 
 	inline			 operator const char * (void) const
 					 {

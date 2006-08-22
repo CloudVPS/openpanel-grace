@@ -325,6 +325,16 @@ bool string::operator== (const value &val) const
 	return eq (val.sval());
 }
 
+bool string::operator== (const statstring &sstr) const
+{
+	return eq (sstr.sval());
+}
+
+bool string::operator!= (const statstring &sstr) const
+{
+	return (! eq (sstr.sval()));
+}
+
 bool string::operator!= (const value &val) const
 {
 	return (! eq (val.sval()));
@@ -334,6 +344,24 @@ string &string::operator= (value &val)
 {
 	this->strcpy (val.sval());
 	return (*this);
+}
+
+string &string::operator= (statstring *str)
+{
+	if (! str)
+	{
+		this->crop();
+		return *this;
+	}
+	this->strcpy (str->sval());
+	delete str;
+	return *this;
+}
+
+string &string::operator= (const statstring &str)
+{
+	this->strcpy (str);
+	return *this;
 }
 
 string &string::operator= (const value &val)
