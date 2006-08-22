@@ -56,7 +56,8 @@ public:
 						 /// the separator.
 						 /// \param str The string data.
 						 /// \param sep The separator sequence.
-	static value		*splitquoted (const string &str, char sep = 0);
+	static value		*splitquoted (const string &str, char sep = 0,
+									  bool forxml = false);
 	
 						 /// Split CSV-line string data into array.
 	static value		*splitcsv (const string &);

@@ -189,7 +189,7 @@ value *strutil::splitlines (const string &str)
 // to text between quotes and characters that are backspace-escaped, making
 // it suitable for parsing program statements.
 // ========================================================================
-value *strutil::splitquoted (const string &str, char s)
+value *strutil::splitquoted (const string &str, char s, bool forxml)
 {
 	returnclass (value) res retain;
 
@@ -208,7 +208,7 @@ value *strutil::splitquoted (const string &str, char s)
 		char c = str[right];
 		escaped = false;
 		
-		if (c == '\\')
+		if ( (!forxml) && (c == '\\') )
 		{
 			if ((right+1)<sz) ++right;
 			lastnspace = right;
@@ -229,7 +229,7 @@ value *strutil::splitquoted (const string &str, char s)
 			else
 			{
 				if ( (!s) && (isspace (c)) ) c = 0;
-				if ((c == '\"')||(c == '\''))
+				if ((c == '\"')||( (!forxml) && (c == '\'') ))
 				{
 					quot = c;
 				}
@@ -238,7 +238,7 @@ value *strutil::splitquoted (const string &str, char s)
 					while ( (left<lastnspace) && 
 							(isspace(str[left]))) ++left;
 					
-					if ((str[left] == '\"')||(str[left] == '\''))
+					if ((str[left] == '\"')||((!forxml)&&(str[left] == '\'')))
 					{
 						if ( (str[left] == str[lastnspace]) && 
 							 (lastnspace>left))
@@ -256,7 +256,8 @@ value *strutil::splitquoted (const string &str, char s)
 						string tmp;
 						
 						tmp = str.mid (left, (lastnspace+1) - left);
-						res.newval() = strutil::unescape (tmp);
+						if (! forxml) res.newval() = strutil::unescape (tmp);
+						else res.newval() = tmp;
 					}
 					left = right+1;
 				}
@@ -777,7 +778,7 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 	string propertyValue;
 	string firstValue;
 
-	tagAndProperties = strutil::splitquoted (tagBuf);
+	tagAndProperties = strutil::splitquoted (tagBuf, 0, true);
 	tagName = (*tagAndProperties)[0];
 
 	tag->type = tagName;
@@ -785,7 +786,7 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 	for (int arg=1; arg < (*tagAndProperties).count(); ++arg)
 	{
 		propertyPair = strutil::splitquoted
-			((*tagAndProperties)[arg].sval(),'=');
+			((*tagAndProperties)[arg].sval(), '=', true);
 		
 		propertyName = (*propertyPair)[0].sval();
 		propertyValue = (*propertyPair)[1].sval();
