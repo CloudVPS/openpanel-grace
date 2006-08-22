@@ -166,10 +166,14 @@ bool filesystem::exists (const string &_str)
 {
 	static struct stat st;
 	string str;
+	int cpos, spos;
 	
 	str = pwdize (_str);
 	
-	if (str.strchr (':') < 0)
+	cpos = str.strchr (':');
+	spos = str.strchr ('/');
+	
+	if ( (cpos<0) || ((spos>=0)&&(spos<cpos)) )
 	{
 		if (stat (str.str(), &st) == 0) return true;
 	}
@@ -202,7 +206,14 @@ bool filesystem::rm (const string &_str)
 	
 	str = pwdize (_str);
 	
-	if (str.strchr (':') < 0)
+	int cpos, spos;
+	
+	str = pwdize (_str);
+	
+	cpos = str.strchr (':');
+	spos = str.strchr ('/');
+	
+	if ( (cpos<0) || ((spos>=0)&&(spos<cpos)) )
 	{
 		if (unlink (str.str()))
 			return false;
@@ -236,9 +247,14 @@ bool filesystem::mkdir (const string &_str)
 {
 	string str;
 	
+	int cpos, spos;
+	
 	str = pwdize (_str);
 	
-	if (str.strchr (':') < 0)
+	cpos = str.strchr (':');
+	spos = str.strchr ('/');
+	
+	if ( (cpos<0) || ((spos>=0)&&(spos<cpos)) )
 	{
 		if (::mkdir (str.str(), 0777 - (0777 & _umask)) == 0)
 			return true;
@@ -660,7 +676,14 @@ bool filesystem::mv (const string &_src, const string &_dst)
 	src = pwdize (_src);
 	dst = pwdize (_dst);
 	
-	if (src.strchr (':') < 0) rsrc = src;
+	int cpos, spos;
+	
+	str = pwdize (_str);
+	
+	cpos = src.strchr (':');
+	spos = src.strchr ('/');
+	
+	if ( (cpos<0) || ((spos>=0)&&(spos<cpos)) ) rsrc = src;
 	else
 	{
 		string vol, fnam;
@@ -671,7 +694,10 @@ bool filesystem::mv (const string &_src, const string &_dst)
 		if (! rsrc.strlen()) return false;
 	}
 	
-	if (dst.strchr (':') < 0) rdst = dst;
+	cpos = dst.strchr (':');
+	spos = dst.strchr ('/');
+	
+	if ( (cpos<0) || ((spos>=0)&&(spos<cpos)) ) rdst = dst;
 	else
 	{
 		string vol, fnam;
@@ -814,17 +840,21 @@ value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 	
 	path = pwdize (path);
 	
-	if (path.strchr (':') >= 0)
+	int cpos, spos;
+	cpos = path.strchr (':');
+	spos = path.strchr ('/');
+	
+	if ( (cpos<0) || ((spos>=0)&&(spos<cpos)) )
+	{
+		paths.newval() = path;
+	}
+	else
 	{
 		value tmp;
 		
 		tmp = strutil::split (path, ':');
 		paths = getpaths (tmp[0]);
 		suffix = tmp[1];
-	}
-	else
-	{
-		paths.newval() = path;
 	}
 	
 	foreach (e, paths)
@@ -969,7 +999,11 @@ string *filesystem::getresource (const string &p, const string &rsrc, const stri
 	
 	pad = pp = p;
 
-	if (pp.strchr (':'))
+	int cpos, spos;
+	cpos = path.strchr (':');
+	spos = path.strchr ('/');
+	
+	if ( (cpos>0) && ((spos<0)||(spos>cpos)) )
 	{
 		string vol;
 		vol = pp.cutat (':');
