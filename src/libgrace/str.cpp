@@ -530,6 +530,44 @@ void string::printf_va (const char *_fmtx, va_list *ap)
 							else strcat ((char) *copy_p++);
 						}
 						goto CONTINUE;
+
+					case 'A':
+						copy_p = (unsigned char *) va_arg(*ap, char *);
+						if (!copy_p) copy_p = (unsigned char *) "(null)";
+						
+						while (*copy_p)
+						{
+							if ( (*copy_p == '&') )
+							{
+								strcat ("&amp;");
+								++copy_p;
+							}
+							else if ( (*copy_p == '<') )
+							{
+								strcat ("&lt;");
+								++copy_p;
+							}
+							else if ( (*copy_p == '>') )
+							{
+								strcat ("&gt;");
+								++copy_p;
+							}
+							else if ( (*copy_p == '\"') )
+							{
+								strcat ("&quot;");
+								++copy_p;
+							}
+							else if ((*copy_p < 32) || (*copy_p > 127))
+							{
+								strcat ("&#");
+								::sprintf ((char *) sprintf_out,
+										   "%i", (int) *copy_p++);
+								strcat ((char *) sprintf_out);
+								strcat (';');
+							}
+							else strcat ((char) *copy_p++);
+						}
+						goto CONTINUE;
 					
 					case 's':
 						sz = atoi ((const char *)copy+1);

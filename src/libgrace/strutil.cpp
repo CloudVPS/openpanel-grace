@@ -714,7 +714,23 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 	tag->hasdata = false;
 		
 	leftb = xml->strchr ('<', tag->crsr);
-	if (leftb>=0) rightb = xml->strchr ('>', leftb);
+	rightb = leftb+1;
+	
+	bool inquote = false;
+	if (leftb >=0) while (true)
+	{
+		if ((*xml)[rightb] == '\"') inquote = !inquote;
+		else if ((*xml)[rightb] == '>')
+		{
+			if (! inquote) break;
+		}
+		++rightb;
+		if (rightb == (int) xml->strlen())
+		{
+			rightb = -1;
+			break;
+		}
+	}
 		
 	if ( (leftb<0) || (rightb<0) )
 	{
@@ -722,7 +738,6 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 		return;
 	}
 	
-
 	++leftb;
 	tagBuf = xml->mid (leftb, rightb-leftb);
 
@@ -759,6 +774,7 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 	string searchStr;
 	string ncomp;
 	statstring propertyName;
+	string propertyValue;
 	string firstValue;
 
 	tagAndProperties = strutil::splitquoted (tagBuf);
@@ -772,6 +788,9 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 			((*tagAndProperties)[arg].sval(),'=');
 		
 		propertyName = (*propertyPair)[0].sval();
+		propertyValue = (*propertyPair)[1].sval();
+		propertyValue.unescapexml ();
+		
 		if (tag->properties.exists (propertyName))
 		{
 			if (! tag->properties[propertyName].count())
@@ -780,12 +799,11 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 				tag->properties.rmval (propertyName);
 				tag->properties[propertyName].newval() = firstValue;
 			}
-			tag->properties[propertyName].newval() =
-				(*propertyPair)[1].sval();
+			tag->properties[propertyName].newval() = propertyValue;
 		}
 		else
 		{
-			tag->properties[propertyName] = (*propertyPair)[1].sval();
+			tag->properties[propertyName] = propertyValue;
 		}
 
 		delete propertyPair;

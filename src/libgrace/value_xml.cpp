@@ -842,7 +842,7 @@ void value::printxml (int indent, string &out, bool compact,
 								{
 									sv = attr[j].sval();
 									if (sv.strlen())
-										out.printf (" %s=\"%S\"", sn.str(), sv.str());
+										out.printf (" %s=\"%A\"", sn.str(), sv.str());
 								}
 							}
 							else // single named attribute
@@ -850,7 +850,7 @@ void value::printxml (int indent, string &out, bool compact,
 								sv = attr.sval();
 						
 								if (sv.strlen())
-									out.printf (" %s=\"%S\"", sn.str(), sv.str());
+									out.printf (" %s=\"%A\"", sn.str(), sv.str());
 								else
 									out.printf (" %s", sn.str());
 							}
@@ -1040,7 +1040,7 @@ void value::printxml (int indent, string &out, bool compact,
 	
 	// Print id attribute if it's there
 	if ((!wascontainer) && (!wascontained) && rid)
-		out.printf (" %s=\"%S\"", __id__.str(), rid.str());
+		out.printf (" %s=\"%A\"", __id__.str(), rid.str());
 	
 	bool hadattr = false;
 	if (schema && (wascontainer || wascontained))
@@ -1068,7 +1068,7 @@ void value::printxml (int indent, string &out, bool compact,
 					{
 						sv = attr[j].sval();
 						if (sv.strlen())
-							out.printf (" %s=\"%S\"", sn.str(), sv.str());
+							out.printf (" %s=\"%A\"", sn.str(), sv.str());
 					}
 				}
 				else // single named attribute
@@ -1076,7 +1076,7 @@ void value::printxml (int indent, string &out, bool compact,
 					sv = attr.sval();
 			
 					if (sv.strlen())
-						out.printf (" %s=\"%S\"", sn.str(), sv.str());
+						out.printf (" %s=\"%A\"", sn.str(), sv.str());
 					else
 						out.printf (" %s", sn.str());
 				}
