@@ -14,7 +14,7 @@ thread::thread (void)
 	spawned = false;
 	finished = false;
 	__THREADED = true;
-	unprotected (ipc) { ipc["running"] = false; }
+	unprotected (isrunning) { isrunning = false; }
 	pthread_attr_init (&attr);
 }
 
@@ -24,7 +24,7 @@ thread::thread (const string &nm)
 	spawned = false;
 	finished = false;
 	__THREADED = true;
-	unprotected (ipc) { ipc["running"] = false; }
+	unprotected (isrunning) { isrunning = false; }
 	pthread_attr_init (&attr);
 }
 
@@ -38,9 +38,9 @@ void *thread::dorun (void *param)
 	pthread_sigmask (SIG_BLOCK, &sigs, NULL);
 	pthread_setcanceltype (PTHREAD_CANCEL_DISABLE, NULL);
 
-	(*me).ipc.lockw();
-	(*me).ipc.o["running"] = true;
-	(*me).ipc.unlock();
+	(*me).isrunning.lockw();
+	(*me).isrunning.o = true;
+	(*me).isrunning.unlock();
 
 	string mtid;
 	mtid.printf ("%08x", me);
@@ -58,9 +58,9 @@ void *thread::dorun (void *param)
 	{
 	}
 	
-	(*me).ipc.lockw();
-	(*me).ipc.o["running"] = false;
-	(*me).ipc.unlock();
+	(*me).isrunning.lockw();
+	(*me).isrunning.o = false;
+	(*me).isrunning.unlock();
 	(*me).finished = true;
 	
 	exclusivesection (THREADLIST)
@@ -104,9 +104,9 @@ bool thread::spawn (void)
 	}
 	bool result = false;
 
-	sharedsection (ipc)
+	sharedsection (isrunning)
 	{
-		if (! ipc["running"])
+		if (! isrunning)
 		{
 			if (pthread_create (&tid, &attr, thread::dorun, this))
 			{
@@ -130,67 +130,13 @@ bool thread::spawn (void)
 bool thread::runs (void)
 {
 	bool result;
-	sharedsection (ipc)
+	sharedsection (isrunning)
 	{
-		result = ipc["running"];
+		result = isrunning;
 	}
 	return result;
 }
 	
-// ========================================================================
-// METHOD thread::nextevent
-// ------------------------
-// Can be called from inside the thread to get the next event out of
-// the queue, or NULL if none are to be had.
-// ========================================================================
-value *thread::nextevent (void)
-{
-	returnclass (value) res retain;
-
-	exclusivesection (ipc)
-	{
-		if (! ipc["events"].count())
-		{
-			breaksection
-			{
-				return &res;
-			}
-		}
-		res = ipc["events"][0];
-		ipc["events"].rmindex (0);
-	}
-	return &res;
-}
-
-// ========================================================================
-// METHOD thread::waitevent
-// ------------------------
-// Can be called from inside the thread to get the next event out of
-// the queue, will sleep and wait indefinitely for one to arrive.
-// ========================================================================
-value *thread::waitevent (void)
-{
-	returnclass (value) res retain;
-	
-	exclusivesection (ipc)
-	{
-		while (! ipc["events"].count())
-		{
-			breaksection
-			{
-				if (! event.wait())
-				{
-					return &res;
-				}
-			}
-		}
-		res = ipc["events"][0];
-		ipc["events"].rmindex (0);
-	}
-
-	return &res;
-}
-
 // ========================================================================
 // METHOD threadgroup::gc
 // ----------------------

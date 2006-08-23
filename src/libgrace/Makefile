@@ -11,6 +11,7 @@ OBJ			= 	application.o \
 				daemon.o \
 				defaults.o \
 				dictionary.o \
+				eventq.o \
 				file.o \
 				filesystem.o \
 				http.o \

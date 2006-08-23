@@ -4,6 +4,7 @@
 #include <grace/str.h>
 #include <grace/value.h>
 #include <grace/lock.h>
+#include <grace/eventq.h>
 
 #include <pthread.h>
 #include <signal.h>
@@ -59,37 +60,78 @@ public:
 					 /// incoming events.
 					 /// \return The value object containing the event data,
 					 ///         which may be empty.
-	value			*nextevent (void);
+	value			*nextevent (void)
+					 {
+					 	return events.nextevent ();
+					 }
 
 					 /// Block waiting for an event on the queue.
 					 /// The run method can call this to wait for work.
 					 /// \return The value object containing the event data,
 					 ///         which should not be empty.
-	value			*waitevent (void);
+	value			*waitevent (void)
+					 {
+					 	return events.waitevent ();
+					 }
+					 
+					 /// Block waiting for an event on the queue, with
+					 /// timeout.
+					 /// The run method can call this to wait for work.
+					 /// \param timeout_msec The timeout in milliseconds.
+					 /// \return The value object containing the event data,
+					 ///         which should not be empty.
+	value			*waitevent (int timeout_msec)
+					 {
+					 	return events.waitevent (timeout_msec);
+					 }
 					 
 					 /// Send an event to the thread.
 					 /// Other threads can call this method to dispatch
-					 /// commands or other events.
+					 /// commands or other events. The receiving thread
+					 /// will get this value with a type() of "event".
 					 /// \param v The event data.
 	void			 sendevent (const value &v)
 					 {
-					 	exclusivesection (ipc)
-					 	{
-					 		ipc["events"].newval () = v;
-					 	}
-					 	event.signal ();
+					 	events.send (v);
+					 }
+					 
+					 /// Send an event without data to the thread.
+					 /// The receiving thread will get a value-object
+					 /// with a a type() set to your liking and a
+					 /// boolean value of 'true'.
+					 /// \param type The event-type.
+	void			 sendevent (const statstring &type)
+					 {
+					 	events.send (type);
+					 }
+					 
+					 /// Send an event without data to the thread.
+					 /// The receiving thread will get a value-object
+					 /// with a a type() set to your liking and a
+					 /// boolean value of 'true'.
+					 /// \param type The event-type.
+	void			 sendevent (const string &type)
+					 {
+					 	statstring tp = type;
+					 	events.send (tp);
+					 }
+					 
+					 /// Send an event without data to the thread.
+					 /// The receiving thread will get a value-object
+					 /// with a a type() set to your liking and the
+					 /// data from the value you supply.
+					 /// \param type The event-type.
+					 /// \param data The event data.
+	void			 sendevent (const statstring &type, const value &data)
+					 {
+					 	events.send (type, data);
 					 }
 					 
 					 /// Measure the queue size.
 					 /// \return Number of events in the queue.
 	int			 	 eventqueue (void)
 					 {
-					 	int result = 0;
-					 	sharedsection (ipc)
-						{
-						 	result = ipc["events"].count ();
-						}
-					 	return result;
+					 	return events.count();
 					 }
 
 					 /// Find out thread's unique id.
@@ -109,11 +151,9 @@ public:
 					 }
 	
 	bool			 finished; ///< True if the run method has finished.
-	lock<value>		 ipc; ///< Event queue.
-	conditional		 event; ///< Event trigger.
-	lock<value>		 data; ///< More internal storage.
+	string			 threadname; ///< Name of the thread.
 	
-	string			 threadname;
+					 /// Return a list of spawned thread objects.
 	static value	*getlist (void)
 					 {
 					 	returnclass (value) res retain;
@@ -129,6 +169,9 @@ protected:
 	pthread_attr_t	 attr; ///< POSIX thread attributes.
 	sched_param		 schedparam; ///< POSIX scheduling parameters.
 	bool			 spawned; ///< True if thread was spawned.
+	eventq			 events; ///< Event queue.
+	lock<bool>		 isrunning; ///< True if thread runs.
+	
 };
 
 /// Array group of threads.
