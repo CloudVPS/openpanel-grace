@@ -5,6 +5,11 @@
 
 #include <grace/str.h>
 
+enum arrayException
+{
+	EX_ARRAY_OUT_OF_BOUNDS = 0x924b1bd1
+};
+
 /// A template-implementation of a variable-size array
 /// Elements are stored as pointers to existing objects. Memory management
 /// for these objects is outside the scope of this class. Accessing the
@@ -31,6 +36,11 @@ public:
 					 /// destructors are called.
 					~array (void)
 					 {
+					 	if (_array && _count)
+					 	{
+					 		for (int i=0; i<_count; ++i)
+					 			delete _array[i];
+					 	}
 					 	if (_array) ::free (_array);
 					 }
 					 
@@ -66,6 +76,7 @@ public:
 					 /// 0...count().
 					 /// \param foo The object to add
 					 /// \param position The position to add it to.
+					 /// \throws EX_ARRAY_OUT_OF_BOUNDS
 	void			 insert (kind *foo, int position)
 					 {
 					 	if (position < 0) return;
@@ -74,7 +85,7 @@ public:
 					 		add (foo);
 					 		return;
 					 	}
-					 	if (position >= _count) return;
+					 	if (position >= _count) throw (EX_ARRAY_OUT_OF_BOUNDS);
 						if (! _arraysz)
 						{
 							_arraysz = 8;
@@ -104,12 +115,13 @@ public:
 					 /// Remove the node at a given position.
 					 /// \param _pos Array position, if negative measured
 					 ///             from the right.
+					 /// \throws EX_ARRAY_OUT_OF_BOUNDS
 	void			 remove (int _pos)
 					 {
 					 	int pos = _pos;
 					 	if (pos<0) pos = _count + pos;
-					 	if (pos<0) pos = 0;
-					 	if (pos >= _count) pos = _count-1;
+					 	if (pos<0) throw (EX_ARRAY_OUT_OF_BOUNDS);
+					 	if (pos >= _count) throw (EX_ARRAY_OUT_OF_BOUNDS);
 					 	delete _array[pos];
 					 	if ((pos+1) < _count)
 					 	{
@@ -118,6 +130,46 @@ public:
 						 			   sizeof (kind *));
 						}
 						_count--;
+					 }
+	
+					 /// Swap two elements in the array. This method
+					 /// does not accept negative offsets.
+					 /// \param a Position of the first element.
+					 /// \param b Position of the second element.
+					 /// \throws EX_ARRAY_OUT_OF_BOUNDS
+	void			 swap (int a, int b)
+					 {
+					 	if ((a<0) || (b<0)) throw (EX_ARRAY_OUT_OF_BOUNDS);
+						if ((a>=_count) || (b>=_count))
+							throw (EX_ARRAY_OUT_OF_BOUNDS);
+						
+						_swap (a, b);
+					 }
+					 
+					 /// Move an element to another position in the array,
+					 /// all other nodes will be shifted. This method does
+					 /// not accept negative offsets.
+	void			 move (int from, int to)
+					 {
+					 	if ((from<0)||(to<0)) throw (EX_ARRAY_OUT_OF_BOUNDS);
+					 	if ((from>=_count) || (to>=_count))
+					 		throw (EX_ARRAY_OUT_OF_BOUNDS);
+					 	if (from == to) return;
+					 	
+					 	int c = from;
+					 	while (c != to)
+					 	{
+					 		if (c < to)
+					 		{
+					 			_swap (c, c+1);
+					 			c++;
+					 		}
+					 		else
+					 		{
+					 			_swap (c, c-1);
+					 			c--;
+					 		}
+					 	}
 					 }
 					 
 					 /// Remove the last element of the array.
@@ -129,12 +181,13 @@ public:
 					 /// of the array being represented as -1).
 					 ///
 					 /// \param _pos Requested array position.
+					 /// \throws EX_ARRAY_OUT_OF_BOUNDS
 	kind			&operator[] (int _pos)
 					 {
 					 	int pos = _pos;
 					 	if (pos<0) pos = _count + pos;
-					 	if (pos<0) pos = 0;
-					 	if (pos >= _count) pos = _count-1;
+					 	if (pos<0) throw (EX_ARRAY_OUT_OF_BOUNDS);
+					 	if (pos >= _count) throw (EX_ARRAY_OUT_OF_BOUNDS);
 					 	return *(_array[pos]);
 					 }
 					 
@@ -146,6 +199,15 @@ protected:
 	kind			**_array; ///< The actual array (allocated using malloc)
 	int				 _count; ///< The number of active entries in the array
 	int				 _arraysz; ///< The allocated size of the array
+	
+					 /// Internal swap-method, assumes bounds checking
+					 /// already took place.
+	void			 _swap (int a, int b)
+					 {
+						kind *tmp = _array[a];
+						_array[a] = _array[b];
+						_array[b] = tmp;
+					 }
 };
 
 #endif
