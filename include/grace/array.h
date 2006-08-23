@@ -2,8 +2,7 @@
 #define _ARRAY_H 1
 
 #include <stdlib.h>
-
-#include <grace/str.h>
+#include <string.h>
 
 enum arrayException
 {
@@ -22,6 +21,11 @@ template<class kind>
 class array
 {
 public:
+					 struct arraynode
+					 {
+					 	bool dynamic;
+					 	kind *obj;
+					 };
 					 /// Default constructor.
 					 /// Leave the array unallocated, set all sizes
 					 /// to 0.
@@ -39,65 +43,79 @@ public:
 					 	if (_array && _count)
 					 	{
 					 		for (int i=0; i<_count; ++i)
-					 			delete _array[i];
+					 		{
+					 			if (_array[i].dynamic)
+						 			delete _array[i].obj;
+						 	}
 					 	}
 					 	if (_array) ::free (_array);
 					 }
 					 
+	void			 add (kind &element) { add (&element, false); }
+					 
 					 /// Add a new entry to the array.
 					 /// Grows the storage for the array as needed using
-					 /// power-of-two preallocation.
+					 /// power-of-two preallocation. If dynamic is true,
+					 /// the object will be deleted if its node is removed.
 					 ///
 					 /// \param element Pointer to the entry
-	void			 add (kind *element)
+	void			 add (kind *element, bool dynamic = true)
 					 {
 						if (! _arraysz)
 						{
 							_arraysz = 8;
-							_array = (kind **)
-								calloc (_arraysz, sizeof (kind *));
+							_array = (arraynode*)
+								calloc (_arraysz, sizeof (arraynode));
 							_count = 0;
 						}
 						if ( (_count+1) >= _arraysz)
 						{
 							_arraysz = _arraysz << 1;
-							_array = (kind **) realloc
-								(_array, _arraysz * sizeof (kind *));
+							_array = (arraynode *) realloc
+								(_array, _arraysz * sizeof (arraynode));
 						}
 						if ( (_count+1) < _arraysz)
 						{
-							_array[_count] = element;
+							_array[_count].obj = element;
+							_array[_count].dynamic = dynamic;
 							_count++;
 						}
 					 }
 	
+	void			 insert (kind &foo, int position)
+					 {
+					 	insert (&foo, position, false);
+					 }
+					 
 					 /// Insert a new element at a specific array position.
 					 /// This position must be within the range of
-					 /// 0...count().
+					 /// 0...count(). If dynamic is true, the object
+					 /// will be deleted if its node is removed.
 					 /// \param foo The object to add
 					 /// \param position The position to add it to.
+					 /// \param dynamic Flags auto-delete.
 					 /// \throws EX_ARRAY_OUT_OF_BOUNDS
-	void			 insert (kind *foo, int position)
+	void			 insert (kind *foo, int position, bool dynamic = true)
 					 {
-					 	if (position < 0) return;
+					 	if (position < 0) throw (EX_ARRAY_OUT_OF_BOUNDS);
 					 	if (position == _count)
 					 	{
-					 		add (foo);
+					 		add (foo, dynamic);
 					 		return;
 					 	}
 					 	if (position >= _count) throw (EX_ARRAY_OUT_OF_BOUNDS);
 						if (! _arraysz)
 						{
 							_arraysz = 8;
-							_array = (kind **)
-								calloc (_arraysz, sizeof (kind *));
+							_array = (arraynode*)
+								calloc (_arraysz, sizeof (arraynode));
 							_count = 0;
 						}
 						if ( (_count+1) >= _arraysz)
 						{
 							_arraysz = _arraysz << 1;
-							_array = (kind **) realloc
-								(_array, _arraysz * sizeof (kind *));
+							_array = (arraynode *) realloc
+								(_array, _arraysz * sizeof (arraynode));
 						}
 						if ( (_count+1) < _arraysz)
 						{
@@ -105,9 +123,10 @@ public:
 					 		{
 					 			::memmove (_array+position+1, _array+position,
 					 					   (_count - position) *
-					 					   sizeof (kind *));
+					 					   sizeof (arraynode));
 					 		}
-					 		_array[position] = foo;
+					 		_array[position].obj = foo;
+					 		_array[position].dynamic = dynamic;
 					 	}
 					 	_count++;
 					 }
@@ -122,12 +141,12 @@ public:
 					 	if (pos<0) pos = _count + pos;
 					 	if (pos<0) throw (EX_ARRAY_OUT_OF_BOUNDS);
 					 	if (pos >= _count) throw (EX_ARRAY_OUT_OF_BOUNDS);
-					 	delete _array[pos];
+					 	if (_array[pos].dynamic) delete _array[pos].obj;
 					 	if ((pos+1) < _count)
 					 	{
 						 	::memmove (_array+pos, _array+pos+1,
 						 			   (_arraysz - (pos+1)) *
-						 			   sizeof (kind *));
+						 			   sizeof (arraynode));
 						}
 						_count--;
 					 }
@@ -188,7 +207,7 @@ public:
 					 	if (pos<0) pos = _count + pos;
 					 	if (pos<0) throw (EX_ARRAY_OUT_OF_BOUNDS);
 					 	if (pos >= _count) throw (EX_ARRAY_OUT_OF_BOUNDS);
-					 	return *(_array[pos]);
+					 	return *(_array[pos].obj);
 					 }
 					 
 					 /// Item count.
@@ -196,7 +215,7 @@ public:
 	int				 count (void) { return _count; }
 
 protected:
-	kind			**_array; ///< The actual array (allocated using malloc)
+	arraynode		 *_array; ///< The actual array (allocated using malloc)
 	int				 _count; ///< The number of active entries in the array
 	int				 _arraysz; ///< The allocated size of the array
 	
@@ -204,9 +223,12 @@ protected:
 					 /// already took place.
 	void			 _swap (int a, int b)
 					 {
-						kind *tmp = _array[a];
-						_array[a] = _array[b];
-						_array[b] = tmp;
+						kind *tmp = _array[a].obj;
+						bool dyn = _array[a].dynamic;
+						_array[a].obj = _array[b].obj;
+						_array[a].dynamic = _array[b].dynamic;
+						_array[b].obj = tmp;
+						_array[b].dynamic = dyn;
 					 }
 };
 
