@@ -404,62 +404,56 @@ value &value::operator= (value *v)
 }
 
 // ========================================================================
-// METHOD ::sval (const and dynamic versions)
+// METHOD ::sval (dynamic versions)
 // ------------------------------------------
-// Returns the value as a string reference
+// Returns the value as a string reference.
 // ========================================================================
 const string &value::sval (void) const
-{
-	// if we're an array, return the string value of our first child
-    if (arraysz) return array[0]->sval();
-    
-    // return the native string. No conversion can take place on
-    // account of this being a const.
-    
-    string &S = (string &) s;
-    
-    if (itype == i_int)
-    {
-    	S.crop(); S.printf ("%i", t.ival);
-    }
-	return s;
-}
-
-const string &value::sval (void)
 {
 	// If we're an array, return the string cast of our first child	
 	if (arraysz) return array[0]->sval();
 	
 	// Ok we're a boring primary type. If we're not a string, use
 	// our embedded string object to store the converted results. This
-	// will not affect the 'true' type.
+	// will not affect the 'true' type. Note that this
+	// call technically violates its const-contract by manipulating the 
+	// 's' member to contain a string-representation of the value, if
+	// the itype is not i_string.
+	//
+	// This string representation is an internal affair of the class and
+	// its side-effects  do not harm the principal constness, the code
+	// the code 'owning' a value-object and passing it as const to another
+	// function does not find the object in a functionally altered state.
+    string &S = (string &) s;
+
 	switch (itype)
 	{
 		case i_string:
 			return s;
 			
 		case i_bool:
-			return s = t.ival ? "true" : "false";
+			S = t.ival ? "true" : "false";
+			return s;
 			
 		case i_int:
-			s.crop(); s.printf ("%i", t.ival);
+			S.crop(); S.printf ("%i", t.ival);
 			return s;
 			
 		case i_unsigned:
-			s.crop(); s.printf ("%u", t.uval);
+			S.crop(); S.printf ("%u", t.uval);
 			return s;
 			
 		case i_date:
-			s = __make_timestr (t.uval);
+			S = __make_timestr (t.uval);
 			return s;
 		
 		case i_double:
-			s.crop(); s.printf ("%f", t.dval);
+			S.crop(); S.printf ("%f", t.dval);
 			return s;
 		
 		case i_ipaddr:
-			s.crop();
-			s.printf ("%i.%i.%i.%i",
+			S.crop();
+			S.printf ("%i.%i.%i.%i",
 					  (t.uval & 0xff000000) >> 24,
 					  (t.uval & 0x00ff0000) >> 16,
 					  (t.uval & 0x0000ff00) >> 8,
@@ -467,22 +461,22 @@ const string &value::sval (void)
 			return s;
 
 		case i_currency:
-			s.crop();
-			printcurrency (s, t.lval);
+			S.crop();
+			printcurrency (S, t.lval);
 			return s;
 
 		case i_long:
-			s.crop(); s.printf ("%L", t.lval);
+			S.crop(); S.printf ("%L", t.lval);
 			return s;
 			
 		case i_ulong:
-			s.crop(); s.printf ("%U", t.ulval);
+			S.crop(); S.printf ("%U", t.ulval);
 			return s;
 	}	
 		
 	// Unknown datatype, treat as an empty string
 	
-	s = "";
+	S = "";
 	return s;
 }
 
@@ -493,70 +487,10 @@ const string &value::sval (void)
 // ========================================================================
 const char *value::cval (void) const
 {
-	if (arraysz) return array[0]->s.str();
-	return s.str();
+	if (arraysz) return array[0]->sval().str();
+	return sval().str();
 }
 
-const char *value::cval (void)
-{
-	// If it's a string, return a simple const pointer
-	
-	if (arraysz) return array[0]->cval();
-	switch (itype)
-	{
-		case i_string:
-			return s.str();
-	
-		case i_bool:	
-			return t.ival ? "true" : "false";
-
-		case i_int:
-			s.crop();
-			s.printf ("%i", t.ival);
-			return s.str();
-						
-		case i_ipaddr:
-			s.crop();
-			s.printf ("%i.%i.%i.%i",
-					  (t.uval & 0xff000000) >> 24,
-					  (t.uval & 0x00ff0000) >> 16,
-					  (t.uval & 0x0000ff00) >> 8,
-					  t.uval & 0x000000ff);
-			return s.str();
-			
-		case i_currency:
-			s.crop();
-			printcurrency (s, t.lval);
-			return s;
-
-		case i_date:
-			s = __make_timestr (t.uval);
-			return s.str();
-
-		case i_double:
-			s.crop();
-			s.printf ("%f", t.dval);
-			return s.str();
-
-		case i_unsigned:
-			s.crop();
-			s.printf ("%u", t.uval);
-			return s.str();
-			
-		case i_long:
-			s.crop();
-			s.printf ("%L", t.ival);
-			return s.str();
-			
-		case i_ulong:
-			s.crop();
-			s.printf ("%U", t.ulval);
-			return s.str();
-	}
-	
-	s = "";
-	return s.str();
-}
 
 // ========================================================================
 // METHOD ::ival

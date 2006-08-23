@@ -461,6 +461,15 @@ public:
 		if (_type == t_unset) _type= t_string;
 		return *this;
 	}
+
+	inline value	&operator= (statstring *str)
+	{
+		s = str->sval();
+		itype = i_string;
+		if (_type == t_unset) _type= t_string;
+		delete str;
+		return *this;
+	}
 	
 	/// Set the value as a fixed point decimal number with three digits
 	/// behind the decimal point.
@@ -584,11 +593,8 @@ public:
 		return sval().strncasecmp (st, sz);
 	}
 	
-						 /// Cast as string object.
+						 /// Cast as string object. 
 	const string		&sval (void) const;
-
-						 /// Cast as string object.
-	const string		&sval (void);
 
 						 /// Cast as c-string.
 	const char			*cval (void) const; 
@@ -598,9 +604,6 @@ public:
 						 {
 						 	return cval();
 						 }
-
-						 /// Cast as c-string.
-	const char			*cval (void);
 
 						 /// Cast as unsigned int.
 	unsigned int		 uval (void) const;
