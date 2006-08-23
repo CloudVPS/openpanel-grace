@@ -127,6 +127,21 @@ const string &timestamp::ctime (void)
 	return format ("%a %b %e %H:%M:%S %Y");
 }
 
+const string &timestamp::iso (void)
+{
+	return format ("%Y-%m-%dT%H:%M:%S");
+}
+
+const string &timestamp::iso (void) const
+{
+	return format ("%Y-%m-%dT%H:%M:%S");
+}
+
+const string &timestamp::isodate (void)
+{
+	return format ("%Y-%m-%d");
+}
+
 const string &timestamp::format (const string &formatstr) const
 {
 	if (stset && (stformat == formatstr)) return stval;
@@ -154,6 +169,47 @@ const string &timestamp::format (const string &formatstr)
 	stval = tmp;
 	
 	return stval;
+}
+
+void timestamp::iso (const string &isodate)
+{
+	string datepart;
+	string timepart;
+	string tzpart;
+	string in = isodate;
+	
+	if (in.strchr ('T') >= 0)
+	{
+		datepart = in.cutat ('T');
+		if (in.strchr ('Z') >= 0)
+		{
+			timepart = in.cutat ('Z');
+			tzpart = in;
+		}
+		else timepart = in;
+	}
+	else datepart = in;
+
+	if (datepart.strlen() != 10) return;
+	init ();
+	
+	tmval.tm_year = ::atoi (datepart.str()) - 1900;
+	tmval.tm_mon = ::atoi (datepart.str()+5) - 1;
+	tmval.tm_mday = ::atoi (datepart.str()+8);
+	
+	if (timepart.strlen() == 8)
+	{
+		tmval.tm_hour = ::atoi (timepart.str());
+		tmval.tm_min = ::atoi (timepart.str() + 3);
+		tmval.tm_sec = ::atoi (timepart.str() + 6);
+	}
+#ifdef HAVE_GMTOFF
+	tmval.tm_gmtoff = __system_local_timezone;
+#endif
+    timezone = __system_local_timezone;
+	tmset = true;
+	tvval.tv_sec = mktime (&tmval);
+	tvval.tv_usec = 0;
 }
 
 #define MONCMP(str,pa,pb) (((*str)==pa) && ( (*((str)+2)) == pb) )
@@ -186,7 +242,7 @@ void timestamp::ctime (const string &timestr)
 	tmval.tm_hour = ::atoi (tstr+12);
 	tmval.tm_min = ::atoi (tstr+15);
 	tmval.tm_sec = ::atoi (tstr+18);
-	tmval.tm_year = ::atoi (tstr+21);
+	tmval.tm_year = ::atoi (tstr+21) - 1900;
 #ifdef HAVE_GMTOFF
 	tmval.tm_gmtoff = __system_local_timezone;
 #endif

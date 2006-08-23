@@ -60,6 +60,18 @@ public:
 
 					 /// Convert to ctime() format.
 	const string	&ctime (void);
+	
+					 /// Convert to ISO (yyyy-mm-ddThh:mm:ss) format.
+	const string	&iso (void);
+
+					 /// Convert to ISO (yyyy-mm-ddThh:mm:ss) format.
+	const string	&iso (void) const;
+
+					 /// Convert to ISO (yyyy-mm-ddThh:mm:ss) format.
+	const string	&isodate (void);
+
+					 /// Convert to ISO (yyyy-mm-ddThh:mm:ss) format.
+	const string	&isodate (void) const;
 
 					 /// Convert to freeform string.
 	const string	&format (const string &) const;
@@ -99,6 +111,9 @@ public:
 	
 					 /// Set from a timeofday.
 	void 			 timeofday (timeval in);
+	
+					 /// Convert from an iso-date (+time)
+	void			 iso (const string &);
 	
 					 /// Set from a unix time structure.
 	void			 tm (const struct tm &);
