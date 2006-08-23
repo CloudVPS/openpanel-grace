@@ -725,7 +725,119 @@ public:
 						if (res) return (res - (char *) data->v);
 						return -1;
 					 }
-					 
+	
+					 /// Crop the string until the first occurence of
+					 /// a character. If none are found the string is
+					 /// left intact.
+					 /// \param c The character to look for
+	void			 cropat (char c)
+					 {
+					 	if (! size) return;
+					 	int isthere = strchr (c);
+					 	if (isthere<0) return;
+					 	crop (isthere);
+					 }
+
+					 /// Crop the string until the first occurence of
+					 /// a sequence. If none are found the string is
+					 /// left intact.
+					 /// \param c The character sequence to look for
+	void			 cropat (const char *c)
+					 {
+					 	if (! c) return;
+					 	if (! size) return;
+					 	int isthere = strstr (c);
+					 	if (isthere<0) return;
+					 	crop (isthere);
+					 }
+
+					 /// Crop the string until the last occurence of
+					 /// a character. If none are found the string is
+					 /// left intact.
+					 /// \param c The character to look for
+	void			 cropatlast (char c)
+					 {
+					 	if (! size) return;
+					 	int isthere, at;
+					 	isthere = at = strchr (c);
+					 	if (isthere<0) return;
+					 	while ( (isthere=strchr(c,at+1)) > 0 ) at = isthere;
+					 	crop (at);
+					 }
+
+					 /// Crop the string until the last occurence of
+					 /// a sequence. If none are found the string is
+					 /// left intact.
+					 /// \param c The character sequence to look for
+	void			 cropatlast (const char *c)
+					 {
+					 	if (! c) return;
+					 	if (! size) return;
+					 	int isthere, at;
+					 	isthere = at = strstr (c);
+					 	if (isthere<0) return;
+					 	while ( (isthere=strstr(c,at+1)) > 0 ) at = isthere;
+					 	crop (at);
+					 }
+	
+					 /// Crop the string to contain only the data to the
+					 /// right of the first occurence of a character.
+					 /// If the character is not found, the string is
+					 /// cropped to zero size.
+	void			 cropafter (char c)
+					 {
+					 	if (! size) return;
+					 	int isthere = strchr (c);
+					 	if (isthere<0) { crop(); return; }
+					 	++isthere;
+					 	crop (isthere - strlen());
+					 }
+	
+					 /// Crop the string to contain only the data to the
+					 /// right of the first occurence of a sequence.
+					 /// If the character is not found, the string is
+					 /// cropped to zero size.
+	void			 cropafter (const char *c)
+					 {
+					 	if (! c) return;
+					 	if (! size) return;
+					 	int isthere = strstr (c);
+					 	if (isthere<0) { crop(); return; }
+					 	++isthere;
+					 	crop (isthere - strlen());
+					 }
+
+					 /// Crop the string to contain only the data to the
+					 /// right of the last occurence of a character.
+					 /// If the character is not found, the string is
+					 /// cropped to zero size.
+	void			 cropafterlast (char c)
+					 {
+					 	if (! size) return;
+					 	int isthere, at;
+					 	isthere = at = strchr (c);
+					 	if (isthere<0) { crop(); return; }
+					 	while ( (isthere=strchr(c,at+1)) > 0 ) at = isthere;
+					 	++at;
+					 	crop (at - strlen());
+					 }
+
+					 /// Crop the string to contain only the data to the
+					 /// right of the last occurence of a sequence.
+					 /// If the character is not found, the string is
+					 /// cropped to zero size.
+	void			 cropafterlast (const char *c)
+					 {
+					 	if (! c) return;
+					 	if (! size) return;
+					 	int isthere, at;
+					 	isthere = at = strstr (c);
+					 	if (isthere<0) { crop(); return; }
+					 	while ( (isthere=strstr(c,at+1)) > 0 ) at = isthere;
+					 	++at;
+					 	crop (at - strlen());
+					 }
+	
 					 /// Split the string in two parts. Returns a new
 					 /// object containing the left half. The first
 					 /// occurence of a separator character is used
