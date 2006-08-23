@@ -65,7 +65,7 @@ value *eventq::waitevent (int timeout_msec)
 				}
 			}
 		}
-		res = ipc[0];
+		res = (const value &) ipc[0];
 		ipc.rmindex (0);
 	}
 	return &res;
@@ -87,7 +87,7 @@ value *eventq::waitevent (void)
 				}
 			}
 		}
-		res = ipc[0];
+		res = (const value &) ipc[0];
 		ipc.rmindex (0);
 	}
 	return &res;
@@ -95,5 +95,13 @@ value *eventq::waitevent (void)
 
 value *eventq::nextevent (void)
 {
+	returnclass (value) res retain;
 	
+	exclusivesection (ipc)
+	{
+		if (! ipc.count()) breaksection return &res;
+		res = (const value &) ipc[0];
+		ipc.rmindex (0);
+	}
+	return &res;
 }
