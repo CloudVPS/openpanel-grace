@@ -127,6 +127,12 @@ public:
 					 	events.send (type, data);
 					 }
 					 
+	void			 sendevent (const char *type)
+					 {
+					 	statstring tp = type;
+					 	events.send (tp);
+					 }
+					 
 					 /// Measure the queue size.
 					 /// \return Number of events in the queue.
 	int			 	 eventqueue (void)
@@ -214,6 +220,10 @@ public:
 					 /// Starts with the last thread in the array
 					 /// \param ev The event data.
 	void			 broadcastevent (const value &ev);
+	void			 broadcastevent (const string &tp);
+	void			 broadcastevent (const statstring &tp);
+	void			 broadcastevent (const char *tp);
+	void			 broadcastevent (const statstring &t, const value &ev);
 	
 					 /// Get a thread count.
 					 /// \return Number of threads in the array.

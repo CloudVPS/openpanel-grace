@@ -174,6 +174,43 @@ void threadgroup::broadcastevent (const value &ev)
 	}
 }
 
+void threadgroup::broadcastevent (const string &ev)
+{
+	gc ();
+	for (int idx=(cnt-1); idx>=0; --idx)
+	{
+	   array[idx]->sendevent (ev);
+	}
+}
+
+void threadgroup::broadcastevent (const statstring &ev)
+{
+	gc ();
+	for (int idx=(cnt-1); idx>=0; --idx)
+	{
+	   array[idx]->sendevent (ev);
+	}
+}
+
+void threadgroup::broadcastevent (const char *ev)
+{
+	gc ();
+	for (int idx=(cnt-1); idx>=0; --idx)
+	{
+	   array[idx]->sendevent (ev);
+	}
+}
+
+void threadgroup::broadcastevent (const statstring &tp, const value &ev)
+{
+	gc ();
+	for (int idx=(cnt-1); idx>=0; --idx)
+	{
+	   array[idx]->sendevent (tp, ev);
+	}
+}
+
+
 // ========================================================================
 // METHOD threadgroup::add
 // ========================================================================
