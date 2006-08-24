@@ -81,7 +81,7 @@ void timestamp::copy (const timestamp &orig)
 	
 	if (orig.tmset)
 	{
-		memcpy (&tmval, &(orig.tmval), sizeof (struct tm));
+		memmove (&tmval, &(orig.tmval), sizeof (struct tm));
 		tmset = true;
 	}
 	
@@ -343,7 +343,7 @@ void timestamp::timeofday (timeval in)
 void timestamp::tm (const struct tm &in)
 {
 	init();
-	memcpy (&tmval, &in, sizeof (struct tm));
+	memmove (&tmval, &in, sizeof (struct tm));
 	tmset = true;
 	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;

@@ -72,7 +72,7 @@ void termbuffer::on (void)
 	if (tcgetattr (fin.filno, &oldterm) < 0) return;
 	
 	// Create a copy of the attributes for the new setting.
-	memcpy (&newterm, &oldterm, sizeof (newterm));
+	memmove (&newterm, &oldterm, sizeof (newterm));
 	newterm.c_lflag = oldterm.c_lflag & ~ (ECHO | ICANON | ISIG);
 	newterm.c_cc[VMIN] = 1;
 	newterm.c_cc[VTIME] = 0;

@@ -987,7 +987,7 @@ void string::insert (const string &s)
 			memmove (data->v + newsize, data->v, oldsize);
 			
 		if (newsize)
-			memcpy (data->v, s.str(), newsize);
+			memmove (data->v, s.str(), newsize);
 			
 		data->v[size] = '\0';
 	}
@@ -1025,7 +1025,7 @@ void string::strcat (const string &s)
 			data = (refblock *) realloc (data, alloc);
 		}
 		
-		memcpy (data->v + oldsize, s.str(), s.strlen());
+		memmove (data->v + oldsize, s.str(), s.strlen());
 		data->v[size] = '\0';
 	}
 	else
@@ -1083,7 +1083,7 @@ void string::strcat (const char *s, size_t sz)
 			data->threadref = getref();
 		}
 	}
-	memcpy (data->v + oldsize, s, sz);
+	memmove (data->v + oldsize, s, sz);
 	data->v[size] = '\0';
 }
 
@@ -1127,7 +1127,7 @@ void string::strcat (const char *s)
 			alloc =  GROW(size+1+sizeof (refblock));
 			data = (refblock *) realloc (data, alloc);
 		}
-		memcpy (data->v + oldsize, s, size-oldsize);
+		memmove (data->v + oldsize, s, size-oldsize);
 		data->v[size] = '\0';
 	}
 	else
@@ -1248,7 +1248,7 @@ void string::strclone (const string &s)
 		data = (refblock *) malloc (alloc);
 		data->refcount = 0;
 		data->threadref = getref();
-		::memcpy (data->v, s.data->v, size+1);
+		::memmove (data->v, s.data->v, size+1);
 	}
 	else
 	{
@@ -1285,7 +1285,7 @@ void string::strcpy (const char *src, size_t sz)
 			data->threadref = getref();
 		}
 	}
-	::memcpy (data->v, src, sz);
+	::memmove (data->v, src, sz);
 	if (data->v[sz]) data->v[sz] = 0;
 }
 
@@ -1541,7 +1541,7 @@ void string::crop (int sz)
 	
 		if (sz<0)
 		{
-			memcpy (data->v, data->v + _sz, size - _sz);
+			memmove (data->v, data->v + _sz, size - _sz);
 		}
 		size = _sz;
 		data->v[size] = '\0';
@@ -1773,7 +1773,7 @@ size_t string::binputstr (size_t offset, const char *opcode,
 	crsr = binputopc (crsr, opcode);
 	crsr = binput32u (crsr, value.strlen());
 	if ((crsr+value.strlen()) > size) pad (crsr + value.strlen(), 0);
-	memcpy (data->v+crsr, value.str(), value.strlen());
+	memmove (data->v+crsr, value.str(), value.strlen());
 	crsr += value.strlen();
 	if (crsr > size) size = crsr;
 	return crsr;
@@ -1957,7 +1957,7 @@ size_t string::binputvstr (size_t offset, const string &str)
 	
 	if ((cr+slen)>size) pad (cr+slen, 0);
 	
-	::memcpy (data->v+cr, str.str(), slen);
+	::memmove (data->v+cr, str.str(), slen);
 	cr += slen;
 	return cr;
 }

@@ -144,9 +144,9 @@ char *regex_clause::parse (const char *iorig)
 			char *curResult = result;
 			char *curOrig = orig;
 			result = new char[newsz+1];
-			memcpy (result, orig, l);
-			memcpy (result+l, replace, rsz);
-			memcpy (result+l+rsz, orig+r, sz-r);
+			memmove (result, orig, l);
+			memmove (result+l, replace, rsz);
+			memmove (result+l+rsz, orig+r, sz-r);
 			result[newsz] = '\0';
 			orig = result;
 			if ( ( curResult != (char *) iorig ) &&

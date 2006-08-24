@@ -71,7 +71,7 @@ struct hostent *__grace_internal_gethostbyname (const char *name)
 			for (i=0; i<addr_count; ++i)
 			{
 				result->h_addr_list[i] = (char *) malloc ((size_t) reply->h_length);
-				::memcpy (result->h_addr_list[i], reply->h_addr_list[i], reply->h_length);
+				::memmove (result->h_addr_list[i], reply->h_addr_list[i], reply->h_length);
 			}
 			result->h_addr_list[i] = NULL;
 		}
@@ -138,8 +138,8 @@ bool tcpsocket::connect (
 			peer_name = host;
 			peer_port = port;
 			
-			memcpy (&bindaddr, myhostent->h_addr,
-					sizeof (struct in_addr));
+			memmove (&bindaddr, myhostent->h_addr,
+					 sizeof (struct in_addr));
 			
 			__grace_internal_freehostent (myhostent);
 			

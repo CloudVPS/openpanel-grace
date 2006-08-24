@@ -865,7 +865,7 @@ public:
 							data->v[0] = size = 0;
 							return &res;
 						}
-						memcpy (data->v, data->v + isthere+1, size - (isthere+1));
+						memmove (data->v, data->v + isthere+1, size - (isthere+1));
 						size -= (isthere+1);
 						data->v[size] = '\0';
 						return &res;
@@ -905,7 +905,7 @@ public:
 							data->v[0] = size = 0;
 							return &res;
 						}
-						memcpy (data->v, data->v + isthere+1, size - (isthere+1));
+						memmove (data->v, data->v + isthere+1, size - (isthere+1));
 						size -= (isthere+1);
 						data->v[size] = '\0';
 						return &res;
@@ -939,7 +939,7 @@ public:
 							data->v[0] = size = 0;
 							return &res;
 						}
-					 	memcpy (data->v, data->v + isthere+ssz, size - (isthere+ssz));
+					 	memmove (data->v, data->v + isthere+ssz, size - (isthere+ssz));
 					 	size -= (isthere+ssz);
 					 	data->v[size] = '\0';
 					 	return &res;
@@ -978,7 +978,7 @@ public:
 							return &res;
 						}
 						
-					 	memcpy (data->v, data->v + isthere+ssz, size - (isthere+ssz));
+					 	memmove (data->v, data->v + isthere+ssz, size - (isthere+ssz));
 					 	size -= (isthere+ssz);
 					 	data->v[size] = '\0';
 					 	return &res;

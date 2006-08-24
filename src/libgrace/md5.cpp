@@ -52,7 +52,7 @@ void md5checksum::append (const md5_byte_t *dt, int nbytes)
 	{
 		int copy = (offset + nbytes > 64 ? 64-offset : nbytes);
 		
-		memcpy (buf+offset, p, copy);
+		memmove (buf+offset, p, copy);
 		if (offset + copy < 64) return;
 		
 		p += copy;
@@ -67,7 +67,7 @@ void md5checksum::append (const md5_byte_t *dt, int nbytes)
 	}
 	
 	// Store the remainder in the buffer for the next round.
-	if (left) memcpy (buf, p, left);
+	if (left) memmove (buf, p, left);
 }
 
 // Lots of magic MD5 smoke
@@ -155,7 +155,7 @@ void md5checksum::process (const md5_byte_t *data)
 	}
 	else
 	{
-		memcpy (xbuf, data, 64);
+		memmove (xbuf, data, 64);
 		X = xbuf;
 	}
 

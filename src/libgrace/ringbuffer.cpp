@@ -104,12 +104,12 @@ void ringbuffer::add (const char *data, unsigned int sz)
 	toend = count - writecursor;
 	if (sz > toend)
 	{
-		memcpy (buffer+writecursor, data, toend);
-		memcpy (buffer, data + toend, sz - toend);
+		memmove (buffer+writecursor, data, toend);
+		memmove (buffer, data + toend, sz - toend);
 	}
 	else
 	{
-		memcpy (buffer+writecursor, data, sz);
+		memmove (buffer+writecursor, data, sz);
 	}
 	
 	writecursor = (writecursor + sz) % count;
@@ -315,7 +315,7 @@ void ringbuffer::copy (ringbuffer &orig)
 {
 	if (! buffer) init (count);
 
-	memcpy (buffer, orig.buffer, count);
+	memmove (buffer, orig.buffer, count);
 	readcursor = orig.readcursor;
 	writecursor = orig.writecursor;
 }

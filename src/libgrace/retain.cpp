@@ -237,7 +237,7 @@ namespace memory
 		{
 			return;
 		}
-		memcpy (this, r, mysz);
+		memmove (this, r, mysz);
 		if (retainpool().pooled(r))
 			retainpool().free (r);
 		else
