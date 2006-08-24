@@ -530,6 +530,7 @@ tcpsocket &tcpsocket::operator= (tcpsocket *s)
 // ========================================================================
 tcplistener::tcplistener (int port)
 {
+	listening = false;
 	listento (port);
 }
 
