@@ -168,6 +168,9 @@ string::string (const char *s) : retainable()
 	}
 }
 
+// ========================================================================
+// CONSTRUCTOR
+// ========================================================================
 string::string (const unsigned char *ss)
 {
 	const char *s = (const char *) ss;
@@ -320,6 +323,9 @@ string::~string (void)
 	}
 }
 
+// ========================================================================
+// METHOD ::operator==
+// ========================================================================
 bool string::operator== (const value &val) const
 {
 	return eq (val.sval());
@@ -330,6 +336,9 @@ bool string::operator== (const statstring &sstr) const
 	return eq (sstr.sval());
 }
 
+// ========================================================================
+// METHOD ::operator!=
+// ========================================================================
 bool string::operator!= (const statstring &sstr) const
 {
 	return (! eq (sstr.sval()));
@@ -340,6 +349,9 @@ bool string::operator!= (const value &val) const
 	return (! eq (val.sval()));
 }
 
+// ========================================================================
+// METHOD ::operator=
+// ========================================================================
 string &string::operator= (value &val)
 {
 	this->strcpy (val.sval());
@@ -370,6 +382,9 @@ string &string::operator= (const value &val)
 	return (*this);
 }
 
+// ========================================================================
+// METHOD ::operator+=
+// ========================================================================
 string &string::operator+= (value &val)
 {
 	this->strcat (val.sval());
@@ -670,6 +685,9 @@ void string::escape (void)
 	}
 }
 
+// ========================================================================
+// METHOD ::escapexml
+// ========================================================================
 void string::escapexml (void)
 {
 	unsigned char c;
@@ -719,6 +737,9 @@ void string::escapexml (void)
 // Macro converts a hex digit to its value.
 #define fromhex(a) (((a-'0'<10) ? (a-'0') : (tolower(a)-'a'))&15)
 
+// ========================================================================
+// METHOD ::unescapexml
+// ========================================================================
 void string::unescapexml (void)
 {
 	char c;
@@ -1433,6 +1454,9 @@ bool string::globcmp (const char *s) const
 	return wild_match ((char *) s, (char *) str());
 }
 
+// ========================================================================
+// METHOD ::regcmp
+// ========================================================================
 bool string::regcmp (const string &s) const
 {
 	regexpression re (s);
@@ -1779,6 +1803,9 @@ size_t string::binputstr (size_t offset, const char *opcode,
 	return crsr;
 }
 
+// ========================================================================
+// METHOD ::binget8
+// ========================================================================
 size_t string::binget8 (size_t offset, char &into) const
 {
 	if ((offset+1)>size) return 0;
@@ -1786,6 +1813,9 @@ size_t string::binget8 (size_t offset, char &into) const
 	return offset+1;
 }
 
+// ========================================================================
+// METHOD ::binget8u
+// ========================================================================
 size_t string::binget8u (size_t offset, unsigned char &into) const
 {
 	if ((offset+1)>size) return 0;
@@ -1793,6 +1823,9 @@ size_t string::binget8u (size_t offset, unsigned char &into) const
 	return offset+1;
 }
 
+// ========================================================================
+// METHOD ::binget16
+// ========================================================================
 size_t string::binget16 (size_t offset, short &into) const
 {
 	if ((offset+2) > size) return 0;
@@ -1800,6 +1833,9 @@ size_t string::binget16 (size_t offset, short &into) const
 	return offset+2;
 }
 
+// ========================================================================
+// METHOD ::binget16u
+// ========================================================================
 size_t string::binget16u (size_t offset, unsigned short &into) const
 {
 	if ((offset+2) > size) return 0;
@@ -1807,6 +1843,9 @@ size_t string::binget16u (size_t offset, unsigned short &into) const
 	return offset+2;
 }
 
+// ========================================================================
+// METHOD ::binget32
+// ========================================================================
 size_t string::binget32 (size_t offset, int &into) const
 {
 	if ((offset+4) > size) return 0;
@@ -1815,6 +1854,9 @@ size_t string::binget32 (size_t offset, int &into) const
 	return offset+4;
 }
 
+// ========================================================================
+// METHOD ::binget32u
+// ========================================================================
 size_t string::binget32u (size_t offset, unsigned int &into) const
 {
 	if ((offset+4) > size) return 0;
@@ -1823,6 +1865,9 @@ size_t string::binget32u (size_t offset, unsigned int &into) const
 	return offset+4;
 }
 
+// ========================================================================
+// METHOD ::binget64
+// ========================================================================
 size_t string::binget64 (size_t offset, long long &into) const
 {
 	if (offset+8 > size) return 0;
@@ -1833,6 +1878,9 @@ size_t string::binget64 (size_t offset, long long &into) const
 	return offset+8;
 }
 
+// ========================================================================
+// METHOD ::binget64u
+// ========================================================================
 size_t string::binget64u (size_t offset, unsigned long long &into) const
 {
 	if (offset+8 > size) return 0;
@@ -1847,6 +1895,9 @@ size_t string::binget64u (size_t offset, unsigned long long &into) const
 	return offset+8;
 }
 
+// ========================================================================
+// METHOD ::binputvint
+// ========================================================================
 size_t string::binputvint (size_t offset, unsigned int val)
 {
 	size_t vintsz;
@@ -1889,6 +1940,9 @@ size_t string::binputvint (size_t offset, unsigned int val)
 	return crsr;
 }
 
+// ========================================================================
+// METHOD ::bingetvint
+// ========================================================================
 size_t string::bingetvint (size_t offset, unsigned int &val) const
 {
 	if (offset > size) return 0;
@@ -1922,6 +1976,9 @@ size_t string::bingetvint (size_t offset, unsigned int &val) const
 	return 0;
 }
 
+// ========================================================================
+// METHOD ::binputieee
+// ========================================================================
 size_t string::binputieee (size_t offset, double dat)
 {
 	double net;
@@ -1934,6 +1991,9 @@ size_t string::binputieee (size_t offset, double dat)
 	return offset+8;
 }
 
+// ========================================================================
+// METHOD ::bingetieee
+// ========================================================================
 size_t string::bingetieee (size_t offset, double &dat) const
 {
 	if (! data) return 0;
@@ -1947,6 +2007,9 @@ size_t string::bingetieee (size_t offset, double &dat) const
 	return offset+8;
 }
 
+// ========================================================================
+// METHOD ::binputvstr
+// ========================================================================
 size_t string::binputvstr (size_t offset, const string &str)
 {
 	size_t cr;
@@ -1962,6 +2025,9 @@ size_t string::binputvstr (size_t offset, const string &str)
 	return cr;
 }
 
+// ========================================================================
+// METHOD ::bingetvstr
+// ========================================================================
 size_t string::bingetvstr (size_t offset, string &into) const
 {
 	if (! data) return 0;
@@ -2316,6 +2382,9 @@ void string::replace (const value &set)
 	(*this) = res;
 }
 
+// ========================================================================
+// METHOD ::copyuntil
+// ========================================================================
 string *string::copyuntil (char c) const
 {
 	int pos;
@@ -2334,6 +2403,9 @@ string *string::copyuntil (const string &s) const
 	return left (pos);
 }
 
+// ========================================================================
+// METHOD ::copyuntillast
+// ========================================================================
 string *string::copyuntillast (char c) const
 {
 	int pos;
@@ -2369,6 +2441,9 @@ string *string::copyuntillast (const string &s) const
 }
 
 
+// ========================================================================
+// METHOD ::copyafter
+// ========================================================================
 string *string::copyafter (char c) const
 {
 	int pos;
@@ -2387,6 +2462,9 @@ string *string::copyafter (const string &s) const
 	return mid (pos+1);
 }
 
+// ========================================================================
+// METHOD ::copyafterlast
+// ========================================================================
 string *string::copyafterlast (char c) const
 {
 	int pos;
@@ -2421,6 +2499,9 @@ string *string::copyafterlast (const string &s) const
 	return mid (pos+1);
 }
 
+// ========================================================================
+// METHOD ::cutafter
+// ========================================================================
 string *string::cutafter (const string &s)
 {
 	int pos;
@@ -2451,6 +2532,9 @@ string *string::cutafter (char c)
 	return res;
 }
 
+// ========================================================================
+// METHOD ::cutafterlast
+// ========================================================================
 string *string::cutafterlast (const string &s)
 {
 	string *res;
@@ -2529,6 +2613,9 @@ void string::chomp (void)
 	(*this) = mid (left, (right-left));
 }
 
+// ========================================================================
+// METHOD ::init
+// ========================================================================
 void string::init (bool first)
 {
 	if (first)
