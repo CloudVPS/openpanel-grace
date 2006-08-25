@@ -1564,7 +1564,7 @@ void string::crop (int sz)
 	
 		if (sz<0)
 		{
-			memmove (data->v, data->v + _sz, size - _sz);
+			memmove (data->v, data->v + (size - _sz), _sz);
 		}
 		size = _sz;
 		data->v[size] = '\0';

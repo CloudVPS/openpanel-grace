@@ -803,7 +803,7 @@ public:
 					 	if (! size) return;
 					 	int isthere = strstr (c);
 					 	if (isthere<0) { crop(); return; }
-					 	++isthere;
+					 	isthere += ::strlen (c);
 					 	crop (isthere - strlen());
 					 }
 
@@ -834,7 +834,7 @@ public:
 					 	isthere = at = strstr (c);
 					 	if (isthere<0) { crop(); return; }
 					 	while ( (isthere=strstr(c,at+1)) > 0 ) at = isthere;
-					 	++at;
+					 	at += ::strlen (c);
 					 	crop (at - strlen());
 					 }
 	
