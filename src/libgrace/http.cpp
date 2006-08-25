@@ -406,7 +406,7 @@ bool httpsocket::getChunked (string &into)
 			{
 				error.printf (errortext::http::chunksz, 
 							  defaults::lim::httpd::chunksize, chunksz);
-				throw (EX_HTTP_MAX_CHUNKSIZE);
+				throw (httpMaxChunksizeException());
 			}
 			if (chunksz>0)
 			{

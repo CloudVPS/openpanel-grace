@@ -103,7 +103,7 @@ cgi::cgi (const char *appname) : application (appname)
 			buffer.printf (errortext::cgi::errbody, errortext::cgi::size);
 			
 			sendpage();
-			throw (EX_CGI_EOF);
+			throw (cgiEndOfFileException());
 		}
 		
 		if (clen) // There's data to be read
@@ -118,7 +118,7 @@ cgi::cgi (const char *appname) : application (appname)
 				buffer.printf (errortext::cgi::errbody, errortext::cgi::eof);
 				
 				sendpage();
-				throw (EX_CGI_EOF);
+				throw (cgiEndOfFileException());
 			}
 
 			// Parse the content-type to see how the information is
@@ -163,7 +163,7 @@ cgi::cgi (const char *appname) : application (appname)
 					headers["Content-type"] = "text/html";
 					buffer.printf (errortext::cgi::errbody, errortext::cgi::bound);
 					sendpage ();
-					throw (EX_CGI_POST_FORMAT);
+					throw (cgiPostFormatException());
 				}
 				
 				buf = buf.mid (bound.strlen()+2);
@@ -498,7 +498,7 @@ rpccgi::rpccgi (const char *appname) : application (appname)
 				headers["Content-type"] = "text/html";
 				buffer.printf (errortext::cgi::errbody, errortext::cgi::eof);
 				sendpage();
-				throw (EX_CGI_EOF);
+				throw (cgiEndOfFileException());
 			}
 			
 			if (v["Content-type"] == "text/w3rpc")

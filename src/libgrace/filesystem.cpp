@@ -527,7 +527,7 @@ bool filesystem::cp (const string &from, const string &to)
 		{
 			buf = fin.read (8192);
 		}
-		catch (...)
+		catch (exception e)
 		{
 			break;
 		}
@@ -544,7 +544,7 @@ bool filesystem::cp (const string &from, const string &to)
 					return false;
 				}
 			}
-			catch (...)
+			catch (exception e)
 			{
 				fin.close();
 				fout.close();

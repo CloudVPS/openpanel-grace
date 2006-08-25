@@ -1,6 +1,7 @@
 #ifndef _LOCK_H
 #define _LOCK_H 1
 
+#include <grace/exception.h>
 #include <pthread.h>
 #include <grace/platform.h>
 //#include <grace/system.h>
@@ -17,9 +18,7 @@ enum locktype {
 	lockWrite ///< Write lock.
 };
 
-enum lockExceptions {
-	exLockError ///< Generic locking exception.
-};
+THROWS_EXCEPTION (lockException, 0x61e33d33, "Error locking");
 
 inline void __musleep (int ms)
 {

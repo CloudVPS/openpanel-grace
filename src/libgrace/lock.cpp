@@ -18,7 +18,7 @@ void lockbase::lockr (void)
 		{
 			::printf ("lockr fail eno=%i %s\n",
 					  eno, strerror (eno));
-			throw (exLockError);
+			throw (lockException());
 		}
 	}
 }
@@ -36,7 +36,7 @@ void lockbase::lockw (void)
 		{
 			::printf ("lockw fail eno=%i %s\n",
 					  eno, strerror (eno));
-			throw (exLockError);
+			throw (lockException());
 		}
 	}
 }
@@ -126,7 +126,7 @@ void lockbase::unlock (void)
 	{
 		::printf ("unlock fail eno=%i %s\n",
 				  eno, strerror (eno));
-		throw (exLockError);
+		throw (lockException());
 	}
 }
 

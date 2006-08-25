@@ -563,13 +563,13 @@ string *file::gets (int maxlinesize)
 	{
 		errcode = FERR_EOF;
 		err = "Called file::gets() while at end-of-file";
-		throw (EX_FILE_EOF);
+		throw (endOfFileException());
 	}
 	if (filno<0)
 	{
 		errcode = FERR_NOTOPEN;
 		err = "Called file::gets() while file was not open";
-		throw (EX_FILE_NOTOPEN);
+		throw (fileNotOpenException());
 	}
 
 	while (buffer.room() && (! buffer.hasline()))
@@ -600,18 +600,18 @@ string *file::gets (int maxlinesize)
 					errcode = FERR_CODEC;
 					err.crop(0);
 					err.printf (errortext::file::codecerr, codec->error().str());
-					throw (EX_FILE_CODEC);
+					throw (fileCodecException());
 				}
 				try
 				{
 					codec->fetchinput (buffer);
 				}
-				catch (...)
+				catch (exception e)
 				{
 					errcode = FERR_CODEC;
 					err.crop(0);
 					err.printf (errortext::file::codecinexc);
-					throw (EX_FILE_CODEC);
+					throw (fileCodecException());
 				}
 			}
 			else
@@ -620,12 +620,12 @@ string *file::gets (int maxlinesize)
 				{
 					buffer.add (buf, sz);
 				}
-				catch (...)
+				catch (exception e)
 				{
 					__file_breakme();
 					err.crop(0);
 					err.printf (errortext::file::ringexc);
-					throw (EX_FILE_ERR_READ);
+					throw (fileReadException());
 				}
 				if (sz == 365) __file_breakme();
 			}
@@ -666,13 +666,13 @@ bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 	{
 		errcode = FERR_EOF;
 		err = errortext::file::eof;
-		throw (EX_FILE_EOF);
+		throw (endOfFileException());
 	}
 	if (filno<0)
 	{
 		errcode = FERR_NOTOPEN;
 		err = errortext::file::notopen;
-		throw (EX_FILE_NOTOPEN);
+		throw (fileNotOpenException());
 	}
 	
 	unsigned int room = buffer.room();
@@ -715,12 +715,12 @@ bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 					buffer.add (buf, ssz);
 				}
 			}
-			catch (...)
+			catch (exception e)
 			{
 				errcode = FERR_BUFFER;
 				err.crop (0);
 				err.printf (errortext::file::bufexc);
-				throw (EX_FILE_ERR_READ);
+				throw (fileReadException());
 			}
 		}
 		else
@@ -744,12 +744,12 @@ bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 							buffer.add (buf, ssz);
 						}
 					}
-					catch (...)
+					catch (exception e)
 					{
 						errcode = FERR_BUFFER;
 						err.crop (0);
 						err.printf (errortext::file::bufexc);
-						throw (EX_FILE_ERR_READ);
+						throw (fileReadException());
 					}
 				}
 			}
@@ -810,13 +810,13 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 	{
 		errcode = FERR_EOF;
 		err = errortext::file::eof;
-		throw (EX_FILE_EOF);
+		throw (endOfFileException());
 	}
 	if (filno<0)
 	{
 		errcode = FERR_NOTOPEN;
 		err = errortext::file::notopen;
-		throw (EX_FILE_NOTOPEN);
+		throw (fileNotOpenException());
 	}
 	
 	if (buffer.room() < 8) return 0;
@@ -868,12 +868,12 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 				buffer.add (buf, ssz);
 			}
 		}
-		catch (...)
+		catch (exception e)
 		{
 			errcode = FERR_BUFFER;
 			err.crop (0);
 			err.printf (errortext::file::bufexc);
-			throw (EX_FILE_ERR_READ);
+			throw (fileReadException());
 		}
 		return ssz;
 	}
@@ -896,13 +896,13 @@ string *file::read (size_t sz)
 	{
 		errcode = FERR_EOF;
 		err = errortext::file::eof;
-		throw (EX_FILE_EOF);
+		throw (endOfFileException());
 	}
 	if (filno<0)
 	{
 		errcode = FERR_NOTOPEN;
 		err = errortext::file::notopen;
-		throw (EX_FILE_NOTOPEN);
+		throw (fileNotOpenException());
 	}
 	
 	int ssz;
@@ -941,12 +941,12 @@ string *file::read (size_t sz)
 					buffer.add (buf, ssz);
 				}
 			}
-			catch (...)
+			catch (exception e)
 			{
 				errcode = FERR_IO;
 				err.crop(0);
 				err.printf (errortext::file::bufexc);
-				throw (EX_FILE_ERR_READ);
+				throw (fileReadException());
 			}
 		}
 		else
@@ -965,7 +965,7 @@ string *file::read (size_t sz, int timeout_ms)
 	{
 		errcode = FERR_EOF;
 		err = errortext::file::eof;
-		throw (EX_FILE_EOF);
+		throw (endOfFileException());
 	}
 
 	if (buffer.backlog() >= sz)
@@ -1010,7 +1010,7 @@ string *file::read (size_t sz, int timeout_ms)
 				errcode = FERR_IO;
 				err.crop(0);
 				err.printf (errortext::file::codecflush);
-				throw (EX_FILE_ERR_READ);
+				throw (fileReadException());
 			}
 		}
 	}
@@ -1071,12 +1071,12 @@ string *file::read (size_t sz, int timeout_ms)
 				buffer.add (buf, ssz);
 			}
 		}
-		catch (...)
+		catch (exception e)
 		{
 			errcode = FERR_BUFFER;
 			err.crop(0);
 			err.printf (errortext::file::bufexc);
-			throw (EX_FILE_ERR_READ);
+			throw (fileReadException());
 		}
 		if (! buffer.backlog())
 		{

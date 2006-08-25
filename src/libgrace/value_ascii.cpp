@@ -37,7 +37,7 @@ void value::load (const char *fname)
 	}
 	catch (...)
 	{
-		throw EX_VALUE_FILE_NOTFOUND;
+		throw (valueFileNotFoundException());
 	}
 	
 }
@@ -193,7 +193,7 @@ void value::load (const char *fname, file &f)
 		// If the stack is not empty, the file was fscked. Whine.
 		if (treestack.count())
 		{
-			throw (EX_VALUE_ERR_PARSE);
+			throw (valueParsingException());
 		}
 	}
 }

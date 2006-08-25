@@ -4,12 +4,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-/// Stack related exceptions.
-enum stackException
-{
-	exStackUnderFlow, /// Stack pull on empty stack.
-	exOutOfMemory /// Ran out of juice.
-};
+THROWS_EXCEPTION (stackUnderflowException, 0x8a5cd8e8, "Stack underflow");
+THROWS_EXCEPTION (stackOutOfMemoryException, 0xbe960a43, "Stack out of memory");
 
 /// A generic stack.
 /// Template class for keeping a stack of objects.
@@ -36,7 +32,7 @@ public:
 					}
 					if (array) ::free (array);
 					array = NULL;
-					throw (exStackUnderFlow);
+					throw (stackUnderflowException());
 				 }
 				 
 	inline void	 push (kind *k)
@@ -44,14 +40,14 @@ public:
 				 	if (! array)
 					{
 						array = (kind **) malloc (4 * sizeof (kind *));
-						if (! array) throw (exOutOfMemory);
+						if (! array) throw (stackOutOfMemoryException());
 						asz = 4;
 					}
 					if (cnt+1 > asz)
 					{
 						asz *= 2;
 						array = (kind **) realloc (array, asz * sizeof (kind *));
-						if (! array) throw (exOutOfMemory);
+						if (! array) throw (stackOutOfMemoryException());
 					}
 					array[cnt++] = k;
 				 }

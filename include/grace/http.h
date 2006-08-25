@@ -6,11 +6,8 @@
 #include <grace/str.h>
 #include <grace/strutil.h>
 
-/// Exceptions related to the httpsocket class.
-enum httpsocketException {
-	EX_HTTP_MAX_CHUNKSIZE	= 0xbe08728d, ///< HTTP 1.1 chunking overflow.
-	EX_HTTP_TIMEOUT			= 0xdfd565dd  ///< Timeout in HTTP client.
-};
+THROWS_EXCEPTION (httpMaxChunksizeException, 0xa9584697, "Max chunk-size exceeded");
+THROWS_EXCEPTION (httpTimeoutException, 0xc2d289ae, "Timeout in HTTP");
 
 #define HTERR_INVALIDURL	0xbe6ca9fa
 #define HTERR_CONNECTFAIL	0x9704f181

@@ -1,6 +1,7 @@
 #ifndef _FILE_H
 #define _FILE_H 1
 
+#include <grace/exception.h>
 #include <grace/str.h>
 #include <grace/exception.h>
 #include <grace/ringbuffer.h>
@@ -78,16 +79,11 @@ protected:
 #define FERR_NOCONNECT	0x395e2cbb
 #define FERR_NORSRC		0x2babc890
 
-
-
-/// Exceptions thrown by some methods
-enum fileException {
-   EX_FILE_EOF			= 0xd7cb816c, ///< End of file reached.
-   EX_FILE_NOTOPEN		= 0xa8ad0571, ///< Operation on a file that is not open
-   EX_FILE_ERR_READ		= 0x8f197127, ///< Read error.
-   EX_FILE_ERR_WRITE	= 0x9a5c7415, ///< Write error.
-   EX_FILE_CODEC		= 0xfa558768  ///< Codec-related exception.
-};
+THROWS_EXCEPTION (endOfFileException, 0x3793883d, "End of file");
+THROWS_EXCEPTION (fileNotOpenException, 0x42b59ac6, "File not open");
+THROWS_EXCEPTION (fileReadException, 0x68d261fc, "Read error");
+THROWS_EXCEPTION (fileWriteException, 0x0f278828, "Write error");
+THROWS_EXCEPTION (fileCodecException, 0x0fd7598b, "Codec exception");
 
 /// An input/output channel.
 class file
@@ -129,10 +125,10 @@ public:
 				 /// Read a string terminated by a newline.
 				 /// \param maxlinesize Set maximum size of a line.
 				 /// \return New string object with data.
-				 /// \throw EX_FILE_EOF End of file reached.
-				 /// \throw EX_FILE_NOTOPEN File is not open.
-				 /// \throw EX_FILE_CODEC Codec failure.
-				 /// \throw EX_FILE_ERR_READ File read error.
+				 /// \throw endOfFileException End of file reached.
+				 /// \throw fileNotOpenException File is not open.
+				 /// \throw fileCodecException Codec failure.
+				 /// \throw fileReadException File read error.
 				 /// \throw EX_SSL_BUFFER_SNAFU Error in sslcodec buffer.
 				 /// \throw EX_SSL_PROTOCOL_ERROR Error in sslcodec protocol.
 				 /// \throw EX_SSL_CLIENT_ALERT Unhandled sslcodec client alert.
@@ -143,9 +139,9 @@ public:
 				 /// \param timeout_ms Timeout in milliseconds.
 				 /// \param maxlinesize Maximum size of a line.
 				 /// \return Status, \b false in case of a timeout condition.
-				 /// \throw EX_FILE_EOF End of file reached.
-				 /// \throw EX_FILE_NOTOPEN File not open.
-				 /// \throw EX_FILE_ERR_READ File read error.
+				 /// \throw endOfFileException End of file reached.
+				 /// \throw fileNotOpenException File not open.
+				 /// \throw fileReadException File read error.
 				 /// \throw EX_SSL_BUFFER_SNAFU Error in sslcodec buffer.
 				 /// \throw EX_SSL_PROTOCOL_ERROR Error in sslcodec protocol.
 				 /// \throw EX_SSL_CLIENT_ALERT Unhandled sslcodec client alert.
@@ -166,9 +162,9 @@ public:
 				 /// \param sz Number of bytes to read.
 				 /// \param tmout Timeout in milliseconds.
 				 /// \return Number of bytes read.
-				 /// \throw EX_FILE_EOF End of file reached.
-				 /// \throw EX_FILE_NOTOPEN File not open.
-				 /// \throw EX_FILE_ERR_READ File read error.
+				 /// \throw endOfFileException End of file reached.
+				 /// \throw fileNotOpenException File not open.
+				 /// \throw fileReadException File read error.
 				 /// \throw EX_SSL_BUFFER_SNAFU Error in sslcodec buffer.
 				 /// \throw EX_SSL_PROTOCOL_ERROR Error in sslcodec protocol.
 				 /// \throw EX_SSL_CLIENT_ALERT Unhandled sslcodec client alert.
@@ -177,9 +173,9 @@ public:
 				 /// Blocking read. Returns a string object with the data.
 				 /// \param sz Number of bytes to read.
 				 /// \return New string object.
-				 /// \throw EX_FILE_EOF End of file reached.
-				 /// \throw EX_FILE_NOTOPEN File not open.
-				 /// \throw EX_FILE_ERR_READ File read error.
+				 /// \throw endOfFileException End of file reached.
+				 /// \throw fileNotOpenException File not open.
+				 /// \throw fileReadException File read error.
 				 /// \throw EX_SSL_BUFFER_SNAFU Error in sslcodec buffer.
 				 /// \throw EX_SSL_PROTOCOL_ERROR Error in sslcodec protocol.
 				 /// \throw EX_SSL_CLIENT_ALERT Unhandled sslcodec client alert.
@@ -189,9 +185,9 @@ public:
 				 /// \param sz Number of bytes to read.
 				 /// \param timeout_ms Timeout in milliseconds.
 				 /// \return New string object.
-				 /// \throw EX_FILE_EOF End of file reached.
-				 /// \throw EX_FILE_NOTOPEN File not open.
-				 /// \throw EX_FILE_ERR_READ File read error.
+				 /// \throw endOfFileException End of file reached.
+				 /// \throw fileNotOpenException File not open.
+				 /// \throw fileReadException File read error.
 				 /// \throw EX_SSL_BUFFER_SNAFU Error in sslcodec buffer.
 				 /// \throw EX_SSL_PROTOCOL_ERROR Error in sslcodec protocol.
 				 /// \throw EX_SSL_CLIENT_ALERT Unhandled sslcodec client alert.

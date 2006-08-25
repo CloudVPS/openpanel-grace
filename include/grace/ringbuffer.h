@@ -1,10 +1,9 @@
 #ifndef _RINGBUFFER_H
 #define _RINGBUFFER_H 1
 
-/// Exceptions for the ringbuffer class.
-enum ringbufferException {
-	EX_RINGBUF_OVERFLOW = 0x850b71a5 ///< Overflow error.
-};
+#include <grace/exception.h>
+
+THROWS_EXCEPTION (bufferOverflowException, 0x826ec972, "Ring buffer overflow");
 
 /// Circular buffer for byte streams.
 /// Implements a cyclical buffer with a maximum size.

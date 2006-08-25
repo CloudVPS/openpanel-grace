@@ -847,9 +847,7 @@ protected:
 //                    gruntwork.
 // ------------------------------------------------------------------------
 
-enum httpdworkerException {
-	EX_HTWORKER_CMD		= 0x94b8f56e ///< Error in command phase.
-};
+THROWS_EXCEPTION (httpdWorkerException, 0xda322857, "Error in worker");
 
 /// Worker thread handling an http connection.
 class httpdworker : public groupthread

@@ -7,14 +7,12 @@
 #include <grace/lock.h>
 #include <stdlib.h>
 
-/// Exceptions thrown by memory::retainable.
-enum memoryException
-{
-	EX_MEMORY_RETAIN_MISMATCH = 0xbf682be7,
-	EX_MEMORY_DEFUNCT_POINTER = 0xebb649e2,
-	EX_MEMORY_LEAK            = 0xd9a0a49d
-};
-
+THROWS_EXCEPTION (memoryMismatchException, 0x2d7c1121, "Mismatch in retainable");
+THROWS_EXCEPTION (memoryInvalidAddressException, 0x396c43d0, "Invalid address pointer");
+THROWS_EXCEPTION (memoryLeakException, 0x28b8afca, "Possible memory leak "
+				  "detected, set defaults::memory::leakprotection to false "
+				  "if you know what you are doing");
+				  
 /// Namespace for custom memory management.
 namespace memory
 {
