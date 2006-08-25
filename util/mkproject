@@ -22,10 +22,10 @@ fi
 APPCNAME=`echo "$APPNAME" | sed -e "s/ //g" | tr A-Z a-z`
 
 if [ -z "$APPDOMAIN" ]; then
-  echo -n "Domain [nl.madscience.unregistred.apps]: "
+  echo -n "Domain [nl.madscience.unregistered.apps]: "
   read APPDOMAIN
   if [ -z "$APPDOMAIN" ]; then
-    APPDOMAIN=nl.madscience.unregistred.apps
+    APPDOMAIN=nl.madscience.unregistered.apps
   fi
 fi
 
