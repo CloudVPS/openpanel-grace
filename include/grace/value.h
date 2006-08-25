@@ -83,12 +83,8 @@ enum itypes {
   i_currency ///< fixed point currency
 };
 
-/// Exceptions raised by the value class.
-enum valueException {
-	EX_VALUE_FILE_NOTFOUND	= 0xc1eb726d, ///< Attempted to load a non-existing file.
-	EX_VALUE_ERR_PARSE 		= 0x9712c89b ///< Error parsing data.
-};
-
+THROWS_EXCEPTION (valueFileNotFoundException, 0x3faddb29, "File not found");
+THROWS_EXCEPTION (valueParsingException, 0x04e281a4, "Error parsing file");
 
 typedef bool (*sortmethod) (value *, value *, const string &);
 

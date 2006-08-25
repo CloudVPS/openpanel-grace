@@ -6,12 +6,8 @@
 #include <grace/lock.h>
 #include <grace/system.h>
 
-/// Socket-related exceptions.
-enum socketException
-{
-	EX_SOCK_GENERIC	= 0xd45d3573, ///< Generic socket error.
-	EX_SOCK_CREATE	= 0xf0c48c37  ///< Error creating a socket.
-};
+THROWS_EXCEPTION (socketException, 0x300356ed, "Generic socket exception");
+THROWS_EXCEPTION (socketCreateException, 0x18a6e054, "Could not create socket");
 
 /// A tcp connection class.
 /// Implements blocking and non-blocking interaction with another host
@@ -46,13 +42,13 @@ public:
 				 /// \param host Hostname or dotted quad to connect to.
 				 /// \param hport TCP port to use.
 				 /// \return Status, \b true if connection succeeded.
-				 /// \throw EX_SOCK_CREATE Error creating a BSD socket.
+				 /// \throw socketCreateException Error creating a BSD socket.
 				 /// \throw EX_SSL_INIT Error initializing sslclientcodec.
 	bool		 connect (const string &host, int hport);
 	
 				 /// Connect to a Unix Domain socket.
 				 /// \return Status, \b true if connection succeeded.
-				 /// \throw EX_SOCK_CREATE Error creating a BSD socket.
+				 /// \throw socketCreateException Error creating a BSD socket.
 				 /// \throw EX_SSL_INIT Error initializing sslclientcodec.
 	bool		 uconnect (const string &);
 
@@ -170,7 +166,7 @@ class tcplistener
 public:
 				 /// Constructor.
 				 /// \param port TCP port to listen to.
-				 /// \throw EX_SOCK_CREATE Error creating a BSD socket.
+				 /// \throw socketCreateException Error creating a BSD socket.
 				 tcplistener (int port);
 				 
 				 /// Constructor.
@@ -189,17 +185,17 @@ public:
 
 				 /// Start listening on a TCP port.
 				 /// \param port The TCP port.
-				 /// \throw EX_SOCK_CREATE Error creating a BSD socket.
+				 /// \throw socketCreateException Error creating a BSD socket.
 	void		 listento (int port);
 	
 				 /// Start listening on a Unix socket.
 				 /// \param path The Unix path.
-				 /// \throw EX_SOCK_CREATE Error creating a BSD socket.
+				 /// \throw socketCreateException Error creating a BSD socket.
 	void		 listento (const string &path);
 	
 				 /// Wait for a new connection.
 				 /// \return Pointer to a new tcpsocket bound to the connection.
-				 /// \throw EX_SOCK_CREATE Error creating a BSD socket.
+				 /// \throw socketCreateAcception Error creating a BSD socket.
 	tcpsocket	*accept (void);
 	
 				 /// Wait for a new connection.

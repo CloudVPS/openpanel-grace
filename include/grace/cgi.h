@@ -1,16 +1,14 @@
 #ifndef _CGI_H
 #define _CGI_H 1
 
+#include <grace/exception.h>
 #include <grace/str.h>
 #include <grace/application.h>
 #include <grace/xmlschema.h>
 #include <grace/dictionary.h>
 
-/// Exceptions thrown by the cgi class.
-enum cgiException {
-	EX_CGI_EOF				= 0xd2c169d6,///< Unexpected end-of-file
-	EX_CGI_POST_FORMAT		= 0x811956ca ///< Error in format of posted data.
-};
+THROWS_EXCEPTION (cgiEndOfFileException, 0x38366020, "CGI End of File");
+THROWS_EXCEPTION (cgiPostFormatException, 0x252748a5, "CGI Post Format Error");
 
 //typedef dictionary<xmlschema> schemadict;
 

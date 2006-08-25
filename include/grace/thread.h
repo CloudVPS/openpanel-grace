@@ -11,11 +11,8 @@
 
 extern bool __THREADED;
 
-/// Thread related exceptions.
-enum threadException {
-	EX_THREAD_CREATE		= 0xd40398bb, ///< Error creating thread.
-	EX_THREAD_INVALID_INDEX = 0xd079dc79  ///< Wrong index threadgroup array.
-};
+THROWS_EXCEPTION (threadCreateException, 0x203ae251, "Could not create thread");
+THROWS_EXCEPTION (threadGroupIndexException, 0x32083076, "Invalid group index");
 
 extern lock<value> THREADLIST;
 
@@ -32,7 +29,7 @@ public:
 					 }
 					 
 					 /// Start the thread (alias for spawn).
-					 /// \throw threadException Error creating a thread.
+					 /// \throw threadCreateException Error creating a thread.
 	inline void		 start (void)
 					 {
 					 	spawn();
@@ -48,7 +45,7 @@ public:
 	static void		*dorun (void *param);
 					 
 					 /// Spawn the thread in the background.
-					 /// \throw threadException Error creating a thread.
+					 /// \throw threadCreateException Error creating a thread.
 	bool			 spawn (void);
 	
 					 /// Check thread's running status.
@@ -208,11 +205,11 @@ public:
 					 /// Array access operator.
 					 /// \param idx The index number.
 					 /// \return Reference to object at index.
-					 /// \throw threadException Index was out of bounds.
+					 /// \throw threadGroupIndexException Index was out of bounds.
 	inline groupthread &operator[] (int idx)
 					 {
-						if (idx<0) throw (EX_THREAD_INVALID_INDEX);
-						if (idx>cnt) throw (EX_THREAD_INVALID_INDEX);
+						if (idx<0) throw (threadGroupIndexException());
+						if (idx>cnt) throw (threadGroupIndexException());
 						return *(array[idx]);
 					 }
 					 

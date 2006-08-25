@@ -1,6 +1,7 @@
 #ifndef _CMDTOKEN_H
 #define _CMDTOKEN_H 1
 
+#include <grace/exception.h>
 #include <grace/value.h>
 #include <grace/str.h>
 #include <grace/strutil.h>
@@ -18,11 +19,9 @@ typedef enum {
 	rootToken ///< Implements a script.
 } tokentype;
 
-/// Exceptions related to scriptparser / cmdtoken objects.
-enum scriptpaserExcetion {
-	EX_SCRIPT_ERR_SYNTAX		= 0xd12955b9, ///< Syntax error
-	EX_SCRIPT_ERR_UNBALANCED	= 0xd0a261fe ///< Unbalanced conditionals
-};
+THROWS_EXCEPTION (scriptSyntaxException, 0x168f4a6b, "Syntax Error");
+THROWS_EXCEPTION (scriptUnbalancedConditionException, 0xd472acfa,
+				  "Unbalanced condition");
 
 /// A command unit in a script.
 /// Base class for all scriptparser functionality.

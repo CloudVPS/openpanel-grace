@@ -256,18 +256,18 @@ void scriptparser::build (const string &src)
 				
 				incaseof ("@endswitch") :
 					if ( (! cc->parent) || (cc->parent == this) )
-						throw (EX_SCRIPT_ERR_UNBALANCED);
+						throw (scriptUnbalancedConditionException());
 					
 					if (cc->type == caseToken)
 					{
 						if ( (! cc->parent) || (cc->parent == this) )
-							throw (EX_SCRIPT_ERR_UNBALANCED);
+							throw (scriptUnbalancedConditionException());
 							
 						cc = cc->parent;
 					}
 					if (cc->type != switchToken)
 					{
-						throw (EX_SCRIPT_ERR_UNBALANCED);
+						throw (scriptUnbalancedConditionException());
 					}
 					break;
 				
@@ -275,13 +275,13 @@ void scriptparser::build (const string &src)
 					if (cc->type == caseToken)
 					{
 						if ( (! cc->parent) || (cc->parent == this) )
-							throw (EX_SCRIPT_ERR_UNBALANCED);
+							throw (scriptUnbalancedConditionException());
 						
 						cc = cc->parent;
 					}
 					if (cc->type != switchToken)
 					{
-						throw (EX_SCRIPT_ERR_UNBALANCED);
+						throw (scriptUnbalancedConditionException());
 					}
 					
 					cc = new cmdtoken_case (args, cc);
@@ -303,22 +303,22 @@ void scriptparser::build (const string &src)
 				
 				incaseof ("@else") :
 					if ( (! cc->parent) || (cc->parent == this) )
-						throw (EX_SCRIPT_ERR_UNBALANCED);
+						throw (scriptUnbalancedConditionException());
 					
 					cc = cc->parent;
 					if (cc->type != condToken)
-						throw (EX_SCRIPT_ERR_UNBALANCED);
+						throw (scriptUnbalancedConditionException());
 					
 					cc = new cmdtoken (nopToken, cc);
 					break;
 					
 				incaseof ("@endif") :
 					if ( (! cc->parent) || (cc->parent == this) )
-						throw (EX_SCRIPT_ERR_UNBALANCED);
+						throw (scriptUnbalancedConditionException());
 	
 					cc = cc->parent;
 					if ((cc->type != condToken) || (! cc->parent))
-						throw (EX_SCRIPT_ERR_UNBALANCED);
+						throw (scriptUnbalancedConditionException());
 	
 					cc = cc->parent;
 					break;

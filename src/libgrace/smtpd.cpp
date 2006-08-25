@@ -30,7 +30,7 @@ void smtpd::listento (int port)
 {
 	if (listenport)
 	{
-		throw (EX_SMTPD_LISTENPORT);
+		throw (smtpdListenPortException());
 	}
 	
 	lsock.listento (port);
@@ -361,7 +361,7 @@ mainloop:
 							break;
 							
 						default:
-							throw (EX_SMTPD_PIGSFLY);
+							throw (smtpdPigsFlyException());
 					}
 				}
 			}

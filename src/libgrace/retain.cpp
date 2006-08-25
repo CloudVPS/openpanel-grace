@@ -115,7 +115,7 @@ namespace memory
 		if (defaults::memory::leakprotection)
 		{
 			c->lck.unlock();
-			throw (EX_MEMORY_LEAK);
+			throw (memoryLeakException());
 		}
 		
 		// Ok, the user actually _wants_ these massive amounts of
@@ -174,7 +174,7 @@ namespace memory
 		}
 		if (!c)
 		{
-			throw (EX_MEMORY_DEFUNCT_POINTER);
+			throw (memoryInvalidAddressException());
 		}
 #endif
 		b->status = memory::free;

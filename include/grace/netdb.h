@@ -3,10 +3,7 @@
 
 #include <grace/value.h>
 
-/// NetDB-related exceptions.
-enum netdbException {
-	EX_NETDB_BAD_ADDRESS = 0xf005831a /// Badly formed address exception.
-};
+THROWS_EXCEPTION (badAddressException, 0x08058e57, "Invalid address format");
 
 /// Resolver utility class.
 class netdb

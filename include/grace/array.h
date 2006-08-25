@@ -1,13 +1,11 @@
 #ifndef _ARRAY_H
 #define _ARRAY_H 1
 
+#include <grace/exception.h>
 #include <stdlib.h>
 #include <string.h>
 
-enum arrayException
-{
-	EX_ARRAY_OUT_OF_BOUNDS = 0x924b1bd1
-};
+THROWS_EXCEPTION (arrayOutOfBoundsException, 0xa0990a04, "Array out of bounds");
 
 /// A template-implementation of a variable-size array
 /// Elements are stored as pointers to existing objects. Memory management
@@ -94,16 +92,19 @@ public:
 					 /// \param foo The object to add
 					 /// \param position The position to add it to.
 					 /// \param dynamic Flags auto-delete.
-					 /// \throws EX_ARRAY_OUT_OF_BOUNDS
+					 /// \throws arrayOutOfBoundsException
 	void			 insert (kind *foo, int position, bool dynamic = true)
 					 {
-					 	if (position < 0) throw (EX_ARRAY_OUT_OF_BOUNDS);
+					 	if (position < 0) throw (arrayOutOfBoundsException());
 					 	if (position == _count)
 					 	{
 					 		add (foo, dynamic);
 					 		return;
 					 	}
-					 	if (position >= _count) throw (EX_ARRAY_OUT_OF_BOUNDS);
+					 	if (position >= _count)
+					 	{
+					 		throw (arrayOutOfBoundsException());
+					 	}
 						if (! _arraysz)
 						{
 							_arraysz = 8;
@@ -134,13 +135,13 @@ public:
 					 /// Remove the node at a given position.
 					 /// \param _pos Array position, if negative measured
 					 ///             from the right.
-					 /// \throws EX_ARRAY_OUT_OF_BOUNDS
+					 /// \throws arrayOutOfBoundsException
 	void			 remove (int _pos)
 					 {
 					 	int pos = _pos;
 					 	if (pos<0) pos = _count + pos;
-					 	if (pos<0) throw (EX_ARRAY_OUT_OF_BOUNDS);
-					 	if (pos >= _count) throw (EX_ARRAY_OUT_OF_BOUNDS);
+					 	if (pos<0) throw (arrayOutOfBoundsException());
+					 	if (pos >= _count) throw (arrayOutOfBoundsException());
 					 	if (_array[pos].dynamic) delete _array[pos].obj;
 					 	if ((pos+1) < _count)
 					 	{
@@ -155,12 +156,12 @@ public:
 					 /// does not accept negative offsets.
 					 /// \param a Position of the first element.
 					 /// \param b Position of the second element.
-					 /// \throws EX_ARRAY_OUT_OF_BOUNDS
+					 /// \throws arrayOutOfBoundsException
 	void			 swap (int a, int b)
 					 {
-					 	if ((a<0) || (b<0)) throw (EX_ARRAY_OUT_OF_BOUNDS);
+					 	if ((a<0) || (b<0)) throw (arrayOutOfBoundsException());
 						if ((a>=_count) || (b>=_count))
-							throw (EX_ARRAY_OUT_OF_BOUNDS);
+							throw (arrayOutOfBoundsException());
 						
 						_swap (a, b);
 					 }
@@ -170,9 +171,14 @@ public:
 					 /// not accept negative offsets.
 	void			 move (int from, int to)
 					 {
-					 	if ((from<0)||(to<0)) throw (EX_ARRAY_OUT_OF_BOUNDS);
+					 	if ((from<0)||(to<0))
+					 	{
+					 		throw (arrayOutOfBoundsException());
+					 	}
 					 	if ((from>=_count) || (to>=_count))
-					 		throw (EX_ARRAY_OUT_OF_BOUNDS);
+					 	{
+					 		throw (arrayOutOfBoundsException());
+					 	}
 					 	if (from == to) return;
 					 	
 					 	int c = from;
@@ -200,13 +206,13 @@ public:
 					 /// of the array being represented as -1).
 					 ///
 					 /// \param _pos Requested array position.
-					 /// \throws EX_ARRAY_OUT_OF_BOUNDS
+					 /// \throws arrayOutOfBoundsException
 	kind			&operator[] (int _pos)
 					 {
 					 	int pos = _pos;
 					 	if (pos<0) pos = _count + pos;
-					 	if (pos<0) throw (EX_ARRAY_OUT_OF_BOUNDS);
-					 	if (pos >= _count) throw (EX_ARRAY_OUT_OF_BOUNDS);
+					 	if (pos<0) throw (arrayOutOfBoundsException());
+					 	if (pos >= _count) throw (arrayOutOfBoundsException());
 					 	return *(_array[pos].obj);
 					 }
 					 
