@@ -1347,13 +1347,13 @@ int string::strstr (const string &substr, int offs) const
 // ========================================================================
 int string::strcmp (const char *s) const
 {
-	if (! data)
+	if ((! data)||(! data->v))
 	{
 		if (s && *s) return -1;
 		return 0;
 	}
 	if (! s ) return -1;
-		
+	
 	return ::strcmp (data->v, s);
 }
 
@@ -1509,7 +1509,7 @@ void string::crop (int sz)
 	
 	if (sz == 0)
 	{
-		if (! data) return;
+		if ((! data)||(! data->v)) return;
 		
 		if (data->refcount)
 		{
@@ -1563,7 +1563,7 @@ void string::crop (int sz)
 // ========================================================================
 void string::pad (int sz, char p)
 {
-	if (!data) strcat (p);
+	if ((! data)||(! data->v)) strcat (p);
 	if (sz<0) return;
 	
 	docopyonwrite();
@@ -1892,7 +1892,7 @@ size_t string::binputvint (size_t offset, unsigned int val)
 size_t string::bingetvint (size_t offset, unsigned int &val) const
 {
 	if (offset > size) return 0;
-	if (! data) return 0;
+	if ((! data)||(! data->v)) return 0;
 	
 	val = 0;
 	
@@ -1936,7 +1936,7 @@ size_t string::binputieee (size_t offset, double dat)
 
 size_t string::bingetieee (size_t offset, double &dat) const
 {
-	if (! data) return 0;
+	if ((! data)||(! data->v)) return 0;
 	double net;
 	if ((offset+8)>size) return 0;
 	for (int i=0; i<8; ++i)
@@ -1964,7 +1964,7 @@ size_t string::binputvstr (size_t offset, const string &str)
 
 size_t string::bingetvstr (size_t offset, string &into) const
 {
-	if (! data) return 0;
+	if ((! data)||(! data->v)) return 0;
 	size_t crsr;
 	unsigned int strsz;
 	
@@ -2107,7 +2107,7 @@ string *string::decode64 (void) const
 // ========================================================================
 int string::toint (int base) const
 {
-	if (! data) return 0;
+	if ((! data)||(! data->v)) return 0;
 	char *end;
 	return ::strtol (str(), &end, base);
 }
@@ -2119,7 +2119,7 @@ int string::toint (int base) const
 // ========================================================================
 bool string::validate (const string &set) const
 {
-	if (! data) return true;
+	if ((! data)||(! data->v)) return true;
 	if (! set) return true;
 	
 	for (unsigned int i=0; i<size; ++i)
@@ -2137,7 +2137,7 @@ bool string::validate (const string &set) const
 // ========================================================================
 string *string::filter (const string &set)
 {
-	if (! data) return NULL;
+	if ((! data)||(! data->v)) return NULL;
 	if (! set) return NULL;
 	
 	returnclass (string) res retain;
@@ -2160,7 +2160,7 @@ string *string::filter (const string &set)
 // ========================================================================
 string *string::stripchar  (char stripchar)
 {
-	if (! data) return NULL;
+	if ((! data)||(! data->v)) return NULL;
 	
 	returnclass (string) res retain;
 	
@@ -2180,7 +2180,7 @@ string *string::stripchar  (char stripchar)
 // ========================================================================	
 string *string::stripchars	(const string &stripset)
 {
-	if (! data) return NULL;
+	if ((! data)||(! data->v)) return NULL;
 	if (! stripset) return NULL;
 	
 	returnclass (string) res retain;
@@ -2204,7 +2204,7 @@ string *string::stripchars	(const string &stripset)
 // ========================================================================	
 string *string::trim (const string &set)
 {
-	if(! data) return NULL;
+	if((! data)||(! data->v)) return NULL;
 	if(! set)  return NULL;
 
 	returnclass (string) res retain;
@@ -2223,7 +2223,7 @@ string *string::trim (const string &set)
 // ========================================================================	
 string *string::ltrim (const string &set)
 {
-	if(! data) return NULL;
+	if((! data)||(! data->v)) return NULL;
 	if(! set)  return NULL;
 	
 	returnclass (string) res retain;
@@ -2248,7 +2248,7 @@ string *string::ltrim (const string &set)
 // ========================================================================	
 string *string::rtrim (const string &set)
 {
-	if(! data) return NULL;
+	if((! data)||(! data->v)) return NULL;
 	if(! set)  return NULL;
 	
 	returnclass (string) res retain;
@@ -2273,7 +2273,7 @@ string *string::rtrim (const string &set)
 // ========================================================================
 void string::replace (const string &set, char with)
 {
-	if (! data) return;
+	if ((! data)||(! data->v)) return;
 	if (! set) return;
 	
 	docopyonwrite();
@@ -2507,7 +2507,7 @@ void string::chomp (void)
 	int left = 0;
 	int right = size-1;
 	
-	if (! data) return;
+	if ((! data)||(! data->v)) return;
 	if (! size) return;
 	
 	while ((left<right)&&(isspace (data->v[left]))) left++;
