@@ -312,6 +312,9 @@ void stringrefdb::linkref (stringref *ref)
 	}
 }
 
+// ========================================================================
+// CONSTRUCTOR statstring
+// ========================================================================
 statstring::statstring (value *orig)
 {
 	ref = NULL;
@@ -319,6 +322,9 @@ statstring::statstring (value *orig)
 	delete orig;
 }
 
+// ========================================================================
+// CONSTRUCTOR statstring
+// ========================================================================
 statstring::statstring (const value &orig)
 {
 	ref = NULL;
@@ -406,19 +412,6 @@ void statstring::assign (statstring *str)
 	delete str;
 }
 
-statstring &statstring::operator= (const value &orig)
-{
-	assign (orig.sval());
-	return *this;
-}
-
-statstring &statstring::operator= (value *orig)
-{
-	assign (orig->sval());
-	delete orig;
-	return *this;
-}
-
 void statstring::assign (const char *str, unsigned int k)
 {
 	if (! str)
@@ -446,6 +439,25 @@ void statstring::assign (unsigned int k)
 	ref = STRINGREF().getref ("",k);
 }
 
+// ========================================================================
+// METHOD ::operator=
+// ========================================================================
+statstring &statstring::operator= (const value &orig)
+{
+	assign (orig.sval());
+	return *this;
+}
+
+statstring &statstring::operator= (value *orig)
+{
+	assign (orig->sval());
+	delete orig;
+	return *this;
+}
+
+// ========================================================================
+// METHOD ::init
+// ========================================================================
 void statstring::init (bool first)
 {
 	if (first) ref = NULL;
@@ -456,6 +468,9 @@ void statstring::init (bool first)
 	}
 }
 
+// ========================================================================
+// METHOD ::operator==
+// ========================================================================
 bool statstring::operator== (const value &v) const
 {
 	return ( (*this) == v.sval() );

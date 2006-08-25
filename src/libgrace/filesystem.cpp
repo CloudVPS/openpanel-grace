@@ -559,12 +559,18 @@ bool filesystem::cp (const string &from, const string &to)
 	return true;
 }
 
+// ========================================================================
+// METHOD ::chmod
+// ========================================================================
 bool filesystem::chmod (const string &path, int perms)
 {
 	if (::chmod (path.str(), perms)) return false;
 	return true;
 }
 
+// ========================================================================
+// METHOD ::chgrp
+// ========================================================================
 bool filesystem::chgrp (const string &path, const string &gr)
 {
 	string resolved;
@@ -1174,6 +1180,9 @@ string *filesystem::findwrite (const char *pvol, const char *filename)
 	return &resolved;
 }
 
+// ========================================================================
+// METHOD ::save
+// ========================================================================
 bool filesystem::save (const string &_vpath, const string &_data,
 					   flag::savetype tp)
 {

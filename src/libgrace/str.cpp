@@ -1113,7 +1113,6 @@ void string::strcat (const char *s, size_t sz)
 // ---------------
 // A c-string variation for c-strings with an unknown size.
 // ========================================================================
-
 void string::strcat (const char *s)
 {
 	bool testOne = false;
@@ -1672,6 +1671,9 @@ size_t string::binput64 (size_t offset, long long val)
 	return crsr;
 }
 
+// ========================================================================
+// METHOD ::binput64u
+// ========================================================================
 size_t string::binput64u (size_t offset, unsigned long long val)
 {
 	return binput64 (offset, (long long) val);

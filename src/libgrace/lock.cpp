@@ -223,6 +223,9 @@ void lockbase::lockw (void)
 	}
 }
 
+// ========================================================================
+// METHOD ::unlock
+// ========================================================================
 void lockbase::unlock (void)
 {
 	if (! __THREADED) return;
@@ -261,6 +264,9 @@ void lockbase::unlock (void)
 	pthread_mutex_unlock (mutex);
 }
 
+// ========================================================================
+// METHOD ::trylockr
+// ========================================================================
 bool lockbase::trylockr (int secs)
 {
 	if (! __THREADED) return true;
@@ -291,6 +297,9 @@ bool lockbase::trylockr (int secs)
 	return false;
 }
 
+// ========================================================================
+// METHOD ::trylockw
+// ========================================================================
 bool lockbase::trylockw (int secs)
 {
 	if (! __THREADED) return true;
@@ -332,6 +341,7 @@ bool lockbase::trylockw (int secs)
 }
 
 #endif
+////////////////////////////////////////////////////////////// GENERIC ////
 
 // ========================================================================
 // CONSTRUCTOR conditional

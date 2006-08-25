@@ -25,7 +25,6 @@ const char *___SPC = "                                                          
 // -------------
 // Loads the value's data from a file.
 // ========================================================================
-
 void value::load (const char *fname)
 {
 	file f;
@@ -198,6 +197,9 @@ void value::load (const char *fname, file &f)
 	}
 }
 
+// ========================================================================
+// METHOD ::decode
+// ========================================================================
 void value::decode (string &f)
 {
 	stack<value> treestack;
@@ -308,7 +310,6 @@ void value::decode (string &f)
 // -------------
 // Stores the value's data in a file.
 // ========================================================================
-
 void value::save (const string &fname, bool compact) const
 {
 	file f;
@@ -327,6 +328,9 @@ void value::save (file &f, bool compact) const
 	f.close ();
 }
 
+// ========================================================================
+// METHOD ::encode
+// ========================================================================
 string *value::encode (bool compact) const
 {
 	returnclass (string) res retain;
@@ -345,7 +349,6 @@ string *value::encode (bool compact) const
 // --------------
 // Formats and idents a human-readable printout of the value's data.
 // ========================================================================
-
 void value::print (int indent, file &out, bool compact) const
 {
 	string outstr;
@@ -440,6 +443,9 @@ void value::print (int indent, file &out, bool compact) const
 	}
 }
 
+// ========================================================================
+// METHOD ::printstr
+// ========================================================================
 void value::printstr (int indent, string &out, bool compact) const
 {
 	string outstr;
@@ -532,4 +538,3 @@ void value::printstr (int indent, string &out, bool compact) const
 			out.strcat (outstr.str());
 	}
 }
-

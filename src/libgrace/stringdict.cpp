@@ -1,14 +1,23 @@
 #include <grace/dictionary.h>
 #include <grace/stringdict.h>
 
+// ========================================================================
+// CONSTRUCTOR stringdict
+// ========================================================================
 stringdict::stringdict (void)
 {
 }
 
+// ========================================================================
+// DESTRUCTOR stringdict
+// ========================================================================
 stringdict::~stringdict (void)
 {
 }
 
+// ========================================================================
+// METHOD ::get
+// ========================================================================
 unsigned int stringdict::get (const statstring &id)
 {
 	unsigned int cnt;
@@ -28,6 +37,9 @@ statstring *stringdict::get (unsigned int key)
 	return &res;
 }
 
+// ========================================================================
+// METHOD ::count
+// ========================================================================
 unsigned int stringdict::count (void)
 {
 	return bystring.count();

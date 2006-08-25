@@ -337,6 +337,9 @@ void scriptparser::build (const string &src)
 	}
 }
 
+// ========================================================================
+// METHOD cmdtoken_switch::run
+// ========================================================================
 void cmdtoken_switch::run (value &v, string &buf)
 {
 	cmdtoken_case *c = (cmdtoken_case *) child;
@@ -354,6 +357,9 @@ void cmdtoken_switch::run (value &v, string &buf)
 	}
 }
 
+// ========================================================================
+// METHOD cmdtoken_case::run
+// ========================================================================
 void cmdtoken_case::run (value &v, string &buf)
 {
 	cmdtoken *c = child;

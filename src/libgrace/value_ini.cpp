@@ -10,7 +10,6 @@
 //
 //    myvalue[sectionName][parameterName]
 // =======================================================================
-
 bool value::loadini (const string &filename)
 {
 	file f;
@@ -100,7 +99,6 @@ bool value::loadini (const string &filename)
 //   </dict>
 // </dict>
 // =======================================================================
-
 bool value::loadinitree (const string &filename)
 {
 	file f;
@@ -179,7 +177,6 @@ bool value::loadinitree (const string &filename)
 // two elements. The first element is the parameter name, the second
 // is its value.
 // =======================================================================
-
 value *value::iniparse (const string &line)
 {
 	string nam;

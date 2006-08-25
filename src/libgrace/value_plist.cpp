@@ -19,6 +19,9 @@
 #include <stdio.h>
 #include <string.h>
 
+// ========================================================================
+// METHOD ::toplist
+// ========================================================================
 string *value::toplist (bool compact)
 {
 	xmlschema schema ("schema:com.apple.plist.schema.xml");
@@ -26,6 +29,9 @@ string *value::toplist (bool compact)
 	return toxml (compact,schema);
 }
 
+// ========================================================================
+// METHOD ::saveplist
+// ========================================================================
 void value::saveplist (const char *filename, bool compact)
 {
 	xmlschema schema ("schema:com.apple.plist.schema.xml");
@@ -33,12 +39,18 @@ void value::saveplist (const char *filename, bool compact)
 	savexml (filename, compact, schema);
 }
 
+// ========================================================================
+// METHOD ::fromplist
+// ========================================================================
 void value::fromplist (const string &xml)
 {
 	xmlschema schema ("schema:com.apple.plist.schema.xml");
 	fromxml (xml, schema);
 }
 
+// ========================================================================
+// METHOD ::loadplist
+// ========================================================================
 void value::loadplist (const string &filename)
 {
 	xmlschema schema ("schema:com.apple.plist.schema.xml");

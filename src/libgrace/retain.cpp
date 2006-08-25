@@ -5,6 +5,10 @@ memory::pool *__retain_ptr;
 
 namespace memory
 {
+	
+	// ====================================================================
+	// FUNCTION getretain
+	// ====================================================================
 	pool *getretain (void)
 	{
 		static memory::pool *p = new memory::pool;
@@ -12,11 +16,17 @@ namespace memory
 		return p;
 	}
 
+	// ====================================================================
+	// CONSTRUCTOR pool
+	// ====================================================================
 	pool::pool (void)
 	{
 		pools = NULL;
 	}
 
+	// ====================================================================
+	// DESTRUCTOR pool
+	// ====================================================================
 	pool::~pool (void)
 	{
 		sizepool *c, *nc;
@@ -31,6 +41,9 @@ namespace memory
 		pools = NULL;
 	}
 	
+	// ====================================================================
+	// FUNCTION mkpool
+	// ====================================================================
 	sizepool *mkpool (unsigned int rndsz)
 	{
 		unsigned int count;
@@ -58,6 +71,9 @@ namespace memory
 		return c;
 	}
 
+	// ====================================================================
+	// METHOD ::alloc
+	// ====================================================================
 	void *pool::alloc (size_t sz)
 	{
 		// The requested size does not include the overhead for the
@@ -155,6 +171,9 @@ namespace memory
 		return NULL;
 	}
 	
+	// ====================================================================
+	// METHOD ::free
+	// ====================================================================
 	void pool::free (void *ptr)
 	{
 		block *b = (block *) (((char*)ptr) - sizeof (block));
@@ -180,6 +199,9 @@ namespace memory
 		b->status = memory::free;
 	}
 	
+	// ====================================================================
+	// METHOD ::getsize
+	// ====================================================================
 	size_t pool::getsize (void *ptr)
 	{
 		block *b = (block *) (((char*)ptr) - sizeof (block));
@@ -187,6 +209,9 @@ namespace memory
 		return b->pool->sz - sizeof (block);
 	}
 
+	// ====================================================================
+	// METHOD ::pooled
+	// ====================================================================
 	bool pool::pooled (void *ptr)
 	{
 		block *b = (block *) (((char*)ptr) - sizeof (block));
@@ -194,6 +219,9 @@ namespace memory
 		return true;
 	}
 
+	// ====================================================================
+	// METHOD ::operator new
+	// ====================================================================
 	void *retainable::operator new (size_t sz)
 	{
 		block *b = (block *) malloc (sz + sizeof (block));
@@ -202,6 +230,9 @@ namespace memory
 		return b->dt;
 	}
 
+	// ====================================================================
+	// METHOD ::operator delete
+	// ====================================================================
 	void retainable::operator delete (void *v)
 	{
 		block *b = (block *) ((char *) v - sizeof (block));
@@ -214,17 +245,26 @@ namespace memory
 		::free (((char *)v)-sizeof (block));
 	}
 	
+	// ====================================================================
+	// METHOD ::operator new
+	// ====================================================================
 	void *retainable::operator new (size_t sz, pooltype r)
 	{
 		void *res = retainpool().alloc (sz);
 		return res;
 	}
 	
+	// ====================================================================
+	// METHOD ::operator delete
+	// ====================================================================
 	void retainable::operator delete (void *v, pooltype r)
 	{
 		retainpool().free (v);
 	}
 	
+	// ====================================================================
+	// CONSTRUCTOR retainable
+	// ====================================================================
 	void retainable::retainvalue (retainable *r)
 	{
 		if (! r)
@@ -245,6 +285,9 @@ namespace memory
 			::free (((char *)r) - sizeof (block));;
 		}
 	}
+	// ====================================================================
+	// DESTRUCTOR retainable
+	// ====================================================================
 	void retainable::destroyvalue (retainable *r)
 	{
 		if (! r) return;

@@ -136,6 +136,9 @@ void md5checksum::append (const md5_byte_t *dt, int nbytes)
 #define T63 0x2ad7d2bb
 #define T64 0xeb86d391
 
+// ========================================================================
+// METHOD ::process
+// ========================================================================
 void md5checksum::process (const md5_byte_t *data)
 {
 	md5_word_t a = abcd[0];
@@ -284,6 +287,9 @@ void md5checksum::process (const md5_byte_t *data)
 	abcd[3] += d;
 }
 
+// ========================================================================
+// METHOD ::finish
+// ========================================================================
 void md5checksum::finish (md5_byte_t digest[16])
 {
     static const md5_byte_t pad[64] = {
@@ -309,6 +315,9 @@ void md5checksum::finish (md5_byte_t digest[16])
 	}
 }
 
+// ========================================================================
+// METHOD ::checksum
+// ========================================================================
 string *md5checksum::checksum (void)
 {
 	returnclass (string) res retain;
@@ -320,12 +329,18 @@ string *md5checksum::checksum (void)
 	return &res;
 }
 
+// ========================================================================
+// METHOD ::base64
+// ========================================================================
 string *md5checksum::base64 (void)
 {
 	string tmp = checksum();
 	return tmp.encode64();
 }
 
+// ========================================================================
+// METHOD ::hex
+// ========================================================================
 string *md5checksum::hex (void)
 {
 	returnclass (string) res retain;
@@ -341,6 +356,9 @@ string *md5checksum::hex (void)
 	return &res;
 }
 
+// ========================================================================
+// METHOD ::addencode
+// ========================================================================
 void md5checksum::addencode (string &into, unsigned int v, int n)
 {
 	static char itoa64[] = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -353,6 +371,9 @@ void md5checksum::addencode (string &into, unsigned int v, int n)
 	}
 }
 
+// ========================================================================
+// METHOD ::pw
+// ========================================================================
 string *md5checksum::pw (void)
 {
 	returnclass (string) res retain;
@@ -372,6 +393,9 @@ string *md5checksum::pw (void)
 	return &res;
 }
 
+// ========================================================================
+// METHOD ::md5pw
+// ========================================================================
 string *md5checksum::md5pw (const char *pw, const char *salt)
 {
 	returnclass (string) passwd retain;

@@ -524,6 +524,9 @@ int value::ival (void) const
 	return 0;
 }
 
+// ========================================================================
+// METHOD ::uval
+// ========================================================================
 unsigned int value::uval (void) const
 {
 	if (arraysz) return ((*this)[0].uval());
@@ -573,6 +576,9 @@ double value::dval (void) const
 	return 0.0;
 }
 
+// ========================================================================
+// METHOD ::lval
+// ========================================================================
 long long value::lval (void) const
 {
 	if (arraysz) return ((*this)[0].lval());
@@ -592,6 +598,9 @@ long long value::lval (void) const
 	return 0;
 };
 
+// ========================================================================
+// METHOD ::ulval
+// ========================================================================
 unsigned long long value::ulval (void) const
 {
 	if (arraysz) return ((*this)[0].ulval());
@@ -613,7 +622,9 @@ unsigned long long value::ulval (void) const
 	return 0;
 };
 
-
+// ========================================================================
+// METHOD ::bval
+// ========================================================================
 bool value::bval (void) const
 {
 	if (arraysz) return true;
@@ -1097,19 +1108,28 @@ const char *value::name (void) const
 	return _name ? _name.str() : "";
 }
 
+// ========================================================================
+// METHOD ::label
+// ========================================================================
 const statstring &value::label (void) const
 {
 	return _name;
 }
 
+// ========================================================================
+// METHOD ::id
+// ========================================================================
 const statstring &value::id (void) const
 {
 	return _name;
 }
 
 const char ___SPC[] = "                                                                                                                                ";
-
 const char *_VALUE_INDENT_TABS="\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
+
+// ========================================================================
+// METHOD ::filter
+// ========================================================================
 value *value::filter (const statstring &label, const string &what) const
 {
 	returnclass (value) res retain;
@@ -1131,6 +1151,9 @@ value *value::filter (const statstring &label, const string &what) const
 	return &res;
 }
 
+// ========================================================================
+// METHOD ::clear
+// ========================================================================
 void value::clear (void)
 {
 	if (arraysz)
@@ -1158,6 +1181,9 @@ void value::clear (void)
 	}
 }
 
+// ========================================================================
+// METHOD ::alloc
+// ========================================================================
 void value::alloc (unsigned int count)
 {
 	unsigned int wanted = 4;
@@ -1181,6 +1207,9 @@ void value::alloc (unsigned int count)
 	}
 }
 
+// ========================================================================
+// METHOD ::cutleft
+// ========================================================================
 value *value::cutleft (int pcnt)
 {
 	returnclass (value) res retain;
@@ -1212,6 +1241,9 @@ value *value::cutleft (int pcnt)
 	return &res;
 }
 
+// ========================================================================
+// METHOD ::copyleft
+// ========================================================================
 value *value::copyleft (int pcnt) const
 {
 	returnclass (value) res retain;
@@ -1242,6 +1274,9 @@ value *value::copyleft (int pcnt) const
 	return &res;
 }
 
+// ========================================================================
+// METHOD ::cutright
+// ========================================================================
 value *value::cutright (int pcnt)
 {
 	returnclass (value) res retain;
@@ -1272,6 +1307,9 @@ value *value::cutright (int pcnt)
 	return &res;
 }
 
+// ========================================================================
+// METHOD ::copyright
+// ========================================================================
 value *value::copyright (int pcnt) const
 {
 	returnclass (value) res retain;
@@ -1302,6 +1340,9 @@ value *value::copyright (int pcnt) const
 	return &res;
 }
 
+// ========================================================================
+// METHOD ::treecmp
+// ========================================================================
 bool value::treecmp (const value &other) const
 {
 	if (array)
@@ -1332,6 +1373,9 @@ bool value::treecmp (const value &other) const
 	return ((value &)(*this) == (value &)other);
 }
 
+// ========================================================================
+// FUNCTION __parse_timestr
+// ========================================================================
 time_t __parse_timestr (const string &dt)
 {
 	string fm;
@@ -1354,6 +1398,9 @@ time_t __parse_timestr (const string &dt)
     return mktime (&mytm);
 }
 
+// ========================================================================
+// METHOD __make_timestr
+// ========================================================================
 string *__make_timestr (time_t ti)
 {
 	struct tm mytm;
@@ -1375,6 +1422,9 @@ string *__make_timestr (time_t ti)
 	return res;
 }
 
+// ========================================================================
+// METHOD ::assign
+// ========================================================================
 void value::assign (const currency &c)
 {
 	t.lval = c.value();
@@ -1390,6 +1440,9 @@ void value::assign (currency *c)
 	if (_type == t_unset) _type = t_currency;
 }
 
+// ========================================================================
+// METHOD ::isbuiltin
+// ========================================================================
 bool value::isbuiltin (const statstring &type)
 {
 	static value tplist;
@@ -1419,6 +1472,9 @@ bool value::isbuiltin (const statstring &type)
 	return tplist.exists (type);
 }
 
+// ========================================================================
+// METHOD ::init
+// ========================================================================
 void value::init (bool first)
 {
 	if (first)

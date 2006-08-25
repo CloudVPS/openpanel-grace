@@ -7,7 +7,9 @@
 
 #include <grace/thread.h>
 
-
+// ========================================================================
+// CONSTRUCTOR thread
+// ========================================================================
 thread::thread (void)
 {
 	threadname = "thread";
@@ -28,6 +30,9 @@ thread::thread (const string &nm)
 	pthread_attr_init (&attr);
 }
 
+// ========================================================================
+// METHOD ::dorun
+// ========================================================================
 void *thread::dorun (void *param)
 {
 	thread *me = (thread *) param;
@@ -209,7 +214,6 @@ void threadgroup::broadcastevent (const statstring &tp, const value &ev)
 	   array[idx]->sendevent (tp, ev);
 	}
 }
-
 
 // ========================================================================
 // METHOD threadgroup::add

@@ -18,6 +18,9 @@
 #include <stdio.h>
 #include <string.h>
 
+// ========================================================================
+// FUNCTION ip2str
+// ========================================================================
 string *ip2str (unsigned int ipaddr)
 {
 	string *s = new string;
@@ -31,6 +34,9 @@ string *ip2str (unsigned int ipaddr)
 	return s;
 }
 
+// ========================================================================
+// FUNCTION str2ip
+// ========================================================================
 unsigned int str2ip (const string &str)
 {
 	value spl;

@@ -6,6 +6,9 @@
 #include <string.h>
 #include <grace/str.h>
 
+// ========================================================================
+// CONSTRUCTOR regex_statement
+// ========================================================================
 regex_statement::regex_statement (const char *stm)
 {
 	int err;
@@ -20,26 +23,41 @@ regex_statement::regex_statement (const char *stm)
 	}
 }
 
+// ========================================================================
+// DESTRUCTOR regex_statement
+// ========================================================================
 regex_statement::~regex_statement (void)
 {
 	regfree (&preg);
 }
 
+// ========================================================================
+// METHOD ::eval
+// ========================================================================
 bool regex_statement::eval (const char *str)
 {
 	return ((regexec (&preg, str, 1, &pmatch[0], 0) == 0));
 }
 
+// ========================================================================
+// METHOD ::left
+// ========================================================================
 int regex_statement::left (void)
 {
 	return (int) pmatch[0].rm_so;
 }
 
+// ========================================================================
+// METHOD ::right
+// ========================================================================
 int regex_statement::right (void)
 {
 	return (int) pmatch[0].rm_eo;
 }
 
+// ========================================================================
+// CONSTRUCTOR regex_clause
+// ========================================================================
 regex_clause::regex_clause (const char *expr)
 {
 	replace = NULL;
@@ -118,12 +136,18 @@ regex_clause::regex_clause (const char *expr)
 	delete[] ex;
 }
 
+// ========================================================================
+// DESTRUCTOR regex_clause
+// ========================================================================
 regex_clause::~regex_clause (void)
 {
 	if (st) delete st;
 	if (replace) delete[] replace;
 }
 
+// ========================================================================
+// METHOD ::parse
+// ========================================================================
 char *regex_clause::parse (const char *iorig)
 {
 	char *orig = (char *) iorig;
@@ -191,11 +215,17 @@ char *regex_clause::parse (const char *iorig)
 	return result;
 }
 
+// ========================================================================
+// METHOD ::eval
+// ========================================================================
 bool regex_clause::eval (const char *orig)
 {
 	return st->eval (orig);
 }
 
+// ========================================================================
+// METHOD ::skipto
+// ========================================================================
 char *regex_clause::skipto (char *orig)
 {
 	if (! orig) return NULL;
@@ -212,6 +242,9 @@ char *regex_clause::skipto (char *orig)
 	return result;
 }
 
+// ========================================================================
+// METHOD ::skipover
+// ========================================================================
 char *regex_clause::skipover (char *orig)
 {
 	if (! orig) return NULL;
@@ -228,6 +261,9 @@ char *regex_clause::skipover (char *orig)
 	return result;
 }
 
+// ========================================================================
+// METHOD ::cutat
+// ========================================================================
 char *regex_clause::cutat (char *orig)
 {
 	if (! orig) return NULL;
@@ -241,6 +277,9 @@ char *regex_clause::cutat (char *orig)
 	return orig;
 }
 
+// ========================================================================
+// CONSTRUCTOR regexpression
+// ========================================================================
 regexpression::regexpression (const string &statement)
 {
 	count = 0;
@@ -278,12 +317,18 @@ regexpression::regexpression (const string &statement)
 	delete[] tmp;
 }
 
+// ========================================================================
+// DESTRUCTOR regexpression
+// ========================================================================
 regexpression::~regexpression (void)
 {
 	for (int i=0; i<count; ++i) delete array[i];
 	if (array) free (array);
 }
 
+// ========================================================================
+// METHOD ::parse
+// ========================================================================
 string *regexpression::parse (const string &orig)
 {
 	char *res = (char *) orig.str();
@@ -306,29 +351,44 @@ string *regexpression::parse (const string &orig)
 	return result;
 }
 
+// ========================================================================
+// METHOD ::eval
+// ========================================================================
 bool regexpression::eval (const char *orig)
 {
 	return (FirstMatch (orig) != NULL);
 }
 
+// ========================================================================
+// METHOD ::skipto
+// ========================================================================
 char *regexpression::skipto (char *orig)
 {
 	regex_clause *r = FirstMatch (orig);
 	return r ? r->skipto (orig) : orig;
 }
 
+// ========================================================================
+// METHOD ::skipover
+// ========================================================================
 char *regexpression::skipover (char *orig)
 {
 	regex_clause *r = FirstMatch (orig);
 	return r ? r->skipover (orig) : orig;
 }
 
+// ========================================================================
+// METHOD ::cutat
+// ========================================================================
 char *regexpression::cutat (char *orig)
 {
 	regex_clause *r = FirstMatch (orig);
 	return r ? r->cutat (orig) : orig;
 }
 
+// ========================================================================
+// METHOD ::Add
+// ========================================================================
 void regexpression::Add (regex_clause *r)
 {
 	if (! array)
@@ -343,6 +403,9 @@ void regexpression::Add (regex_clause *r)
 	array[count++] = r;
 }
 
+// ========================================================================
+// METHOD ::FirstMatch
+// ========================================================================
 regex_clause *regexpression::FirstMatch (const char *str)
 {
 	for (int i=0; i<count; ++i)
@@ -350,35 +413,3 @@ regex_clause *regexpression::FirstMatch (const char *str)
 	
 	return NULL;
 }
-
-#ifdef TEST
-
-/* TESTING CODE ----------------------------------------------------------------- */
-
-int main (int argc, char *argv[])
-{
-	if (argc<2)
-	{
-		fprintf (stderr, "Usage: %s <expression>\n", argv[0]);
-		return 1;
-	}
-	regexpression expr(argv[1]);
-	
-	while (!feof (stdin))
-	{
-		char *buf = new char[256];
-		*buf = 0;
-		fgets (buf, 255, stdin);
-		if (*buf)
-		{
-			buf[strlen(buf)-1] = '\0';
-			buf = expr.parse (buf);
-			printf ("%s\n", buf); fflush (stdout);
-		}
-		delete[] buf;
-	}
-}
-
-/*-------------------------------------------------------------------------------*/
-
-#endif

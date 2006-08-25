@@ -15,8 +15,10 @@
 #undef tolower					/* don't want previous version. */
 #define tolower(x) lower_tab[x]
 
-int
-_wild_match (u_char * mask, u_char * string)
+// ========================================================================
+// FUNCTION _wild_match
+// ========================================================================
+int _wild_match (u_char * mask, u_char * string)
 {
 	register u_char *m = mask, *n = string, *ma = NULL, *na = NULL;
 	int             just = 0;
@@ -120,20 +122,27 @@ _wild_match (u_char * mask, u_char * string)
 	}
 }
 
-int
-match (char *pattern, char *string)
+// ========================================================================
+// FUNCTION match
+// ========================================================================
+int match (char *pattern, char *string)
 {
 /* -1 on false >= 0 on true */
 	return ((_wild_match ((unsigned char *) pattern, (unsigned char *) string) >= 0) ? 1 : 0);
 }
 
-int
-wild_match (char *pattern, char *str)
+// ========================================================================
+// FUNCTION wild_match
+// ========================================================================
+int wild_match (char *pattern, char *str)
 {
 	/* assuming a -1 return of false */
 	return _wild_match ((unsigned char *) pattern, (unsigned char *) str) + 1;
 }
 
+// ========================================================================
+// FUNCTION wild_match_end
+// ========================================================================
 int wild_match_end (char *pattern, char *str)
 {
 	if ((pattern)&&(str))

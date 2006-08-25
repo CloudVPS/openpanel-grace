@@ -1067,34 +1067,55 @@ int httpdvhost::run (string &uri, string &postbody, value &inhdr,
 	return 404;
 }
 
+// ========================================================================
+// CONSTRUCTOR httpdauthenticator
+// ========================================================================
 httpdauthenticator::httpdauthenticator (void)
 {
 }
 
+// ========================================================================
+// DESTRUCTOR httpdauthenticator
+// ========================================================================
 httpdauthenticator::~httpdauthenticator (void)
 {
 }
 
+// ========================================================================
+// METHOD ::authenticate
+// ========================================================================
 bool httpdauthenticator::authenticate (const string &u, const string &p)
 {
 	return false;
 }
 
+// ========================================================================
+// METHOD ::getuser
+// ========================================================================
 value *httpdauthenticator::getuser (const string &u)
 {
 	returnclass (value) result retain;
 	return &result;
 }
 
+// ========================================================================
+// CONSTRUCTOR valueauth
+// ========================================================================
 valueauth::valueauth (const value &db) : httpdauthenticator ()
 {
 	userdb = db;
 }
 
+// ========================================================================
+// DESTRUCTOR valueauth
+// ========================================================================
 valueauth::~valueauth (void)
 {
 }
 
+// ========================================================================
+// METHOD ::authenticate
+// ========================================================================
 bool valueauth::authenticate (const string &username, const string &passwd)
 {
 	bool checkedcrypted = false;
@@ -1115,6 +1136,9 @@ bool valueauth::authenticate (const string &username, const string &passwd)
 	return authenticated;
 }
 
+// ========================================================================
+// METHOD ::getuser
+// ========================================================================
 value *valueauth::getuser (const string &username)
 {
 	returnclass (value) res retain;
@@ -1126,6 +1150,9 @@ value *valueauth::getuser (const string &username)
 	return &res;
 }
 
+// ========================================================================
+// CONSTRUCTOR pwfileauth
+// ========================================================================
 pwfileauth::pwfileauth (const string &fname) : httpdauthenticator ()
 {
 	filename = fname;
@@ -1217,10 +1244,16 @@ pwfileauth::pwfileauth (const string &fname,
 	fieldnames.newval() = fieldSix;
 }
 
+// ========================================================================
+// DESTRUCTOR valueauth
+// ========================================================================
 pwfileauth::~pwfileauth (void)
 {
 }
 
+// ========================================================================
+// METHOD ::checkrecord
+// ========================================================================
 void pwfileauth::checkrecord (void)
 {
 	time_t ti = kernel.time.now();
@@ -1237,6 +1270,9 @@ void pwfileauth::checkrecord (void)
 	}
 }
 
+// ========================================================================
+// METHOD ::loadfile
+// ========================================================================
 void pwfileauth::loadfile (void)
 {
 	file f;
@@ -1273,6 +1309,9 @@ void pwfileauth::loadfile (void)
 	lck.unlock();
 }
 
+// ========================================================================
+// METHOD ::authenticate
+// ========================================================================
 bool pwfileauth::authenticate (const string &u, const string &pw)
 {
 	bool res;
@@ -1289,6 +1328,9 @@ bool pwfileauth::authenticate (const string &u, const string &pw)
 	return res;
 }
 
+// ========================================================================
+// METHOD ::getuser
+// ========================================================================
 value *pwfileauth::getuser (const string &u)
 {
 	returnclass (value) res retain;
@@ -1307,15 +1349,24 @@ value *pwfileauth::getuser (const string &u)
 	return &res;
 }
 
+// ========================================================================
+// COSNTRUCTOR serverpage
+// ========================================================================
 serverpage::serverpage (httpd &pparent, const string &uri)
 	: httpdobject (pparent, uri)
 {
 }
 
+// ========================================================================
+// DESTRUCTOR serverpage
+// ========================================================================
 serverpage::~serverpage (void)
 {
 }
 
+// ========================================================================
+// METHOD ::run
+// ========================================================================
 int serverpage::run (string &uri, string &postbody, value &inhdr,
 					 string &out, value &outhdr, value &env, tcpsocket &s)
 {
@@ -1348,6 +1399,9 @@ int serverpage::run (string &uri, string &postbody, value &inhdr,
 	return 500;
 }
 
+// ========================================================================
+// METHOD ::execute
+// ========================================================================
 int serverpage::execute (value &env, value &argv, string &out, value &outhdr)
 {
 	// Useless method in base class.

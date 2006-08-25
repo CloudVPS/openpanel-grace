@@ -53,6 +53,9 @@ value *netdb::gethostbyname (const string &name)
 	return netdb::converthostentry (he);
 }
 
+// ========================================================================
+// METHOD ::gethostbyaddr
+// ========================================================================
 value *netdb::gethostbyaddr (const string &addr)
 {
 	struct hostent *he;
@@ -74,6 +77,9 @@ value *netdb::gethostbyaddr (const string &addr)
 	return netdb::converthostentry (he);
 }
 
+// ========================================================================
+// METHOD ::converthostentry
+// ========================================================================
 value *netdb::converthostentry (struct hostent *he)
 {
 	returnclass (value) res retain;

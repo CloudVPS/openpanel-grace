@@ -9,11 +9,17 @@
 int __system_local_timezone = 0;
 bool __system_timezone_set = false;
 
+// ========================================================================
+// CONSTRUCTOR timestamp
+// ========================================================================
 timestamp::timestamp (void)
 {
 	init();
 }
 
+// ========================================================================
+// CONSTRUCTOR timestamp
+// ========================================================================
 timestamp::timestamp (const timestamp &orig)
 {
 	copy (orig);
@@ -39,6 +45,9 @@ timestamp::timestamp (timeval orig)
 	tvval.tv_usec = orig.tv_usec;
 }
 
+// ========================================================================
+// METHOD ::init
+// ========================================================================
 void timestamp::init (void)
 {
 	tmval.tm_sec = tmval.tm_min = tmval.tm_hour =
@@ -72,6 +81,9 @@ void timestamp::init (void)
 	}
 }
 
+// ========================================================================
+// METHOD ::copy
+// ========================================================================
 void timestamp::copy (const timestamp &orig)
 {
 	init();
@@ -93,11 +105,17 @@ void timestamp::copy (const timestamp &orig)
 	}
 }
 
+// ========================================================================
+// METHOD ::unixtime
+// ========================================================================
 time_t timestamp::unixtime (void) const
 {
 	return (tvval.tv_sec);
 }
 
+// ========================================================================
+// METHOD ::tm
+// ========================================================================
 const struct tm &timestamp::tm (void) const
 {
 	if (tmset) return tmval;
@@ -107,6 +125,9 @@ const struct tm &timestamp::tm (void) const
 	return tmval;
 }
 
+// ========================================================================
+// METHOD ::rfc822
+// ========================================================================
 const string &timestamp::rfc822 (void)
 {
 	return format ("%a, %d %b %Y %H:%M:%S %z");
@@ -117,6 +138,9 @@ const string &timestamp::rfc822 (void) const
 	return format ("%a, %d %b %Y %H:%M:%S %z");
 }
 
+// ========================================================================
+// METHOD ::ctime
+// ========================================================================
 const string &timestamp::ctime (void) const
 {
 	return format ("%a %b %e %H:%M:%S %Y");
@@ -127,6 +151,9 @@ const string &timestamp::ctime (void)
 	return format ("%a %b %e %H:%M:%S %Y");
 }
 
+// ========================================================================
+// METHOD ::iso
+// ========================================================================
 const string &timestamp::iso (void)
 {
 	return format ("%Y-%m-%dT%H:%M:%S");
@@ -137,11 +164,17 @@ const string &timestamp::iso (void) const
 	return format ("%Y-%m-%dT%H:%M:%S");
 }
 
+// ========================================================================
+// METHOD ::isodate
+// ========================================================================
 const string &timestamp::isodate (void)
 {
 	return format ("%Y-%m-%d");
 }
 
+// ========================================================================
+// METHOD ::format
+// ========================================================================
 const string &timestamp::format (const string &formatstr) const
 {
 	if (stset && (stformat == formatstr)) return stval;
@@ -171,6 +204,9 @@ const string &timestamp::format (const string &formatstr)
 	return stval;
 }
 
+// ========================================================================
+// METHOD ::iso
+// ========================================================================
 void timestamp::iso (const string &isodate)
 {
 	string datepart;
@@ -214,6 +250,9 @@ void timestamp::iso (const string &isodate)
 
 #define MONCMP(str,pa,pb) (((*str)==pa) && ( (*((str)+2)) == pb) )
 
+// ========================================================================
+// METHOD ::ctime
+// ========================================================================
 void timestamp::ctime (const string &timestr)
 {
     //            1  1  1  2
@@ -252,6 +291,9 @@ void timestamp::ctime (const string &timestr)
 	tvval.tv_usec = 0;
 }
 
+// ========================================================================
+// METHOD ::rfc822
+// ========================================================================
 void timestamp::rfc822 (const string &timestr)
 {
 	value splt;
@@ -327,6 +369,9 @@ void timestamp::rfc822 (const string &timestr)
 	tvval.tv_usec = 0;
 }
 
+// ========================================================================
+// METHOD ::unxtime
+// ========================================================================
 void timestamp::unixtime (time_t in)
 {
 	init();
@@ -334,12 +379,18 @@ void timestamp::unixtime (time_t in)
 	tvval.tv_usec = 0;
 }
 
+// ========================================================================
+// METHOD ::timeofday
+// ========================================================================
 void timestamp::timeofday (timeval in)
 {
 	init();
 	tvval 	= in;
 }
 
+// ========================================================================
+// METHOD ::tm
+// ========================================================================
 void timestamp::tm (const struct tm &in)
 {
 	init();
@@ -354,7 +405,10 @@ void timestamp::tm (const struct tm *in)
 	tm (*in);
 }
 
-timestamp &timestamp::operator += (time_t add)
+// ========================================================================
+// METHOD ::operator+=
+// ========================================================================
+timestamp &timestamp::operator+= (time_t add)
 {
 	time_t now;
 	now = tvval.tv_sec;
@@ -363,7 +417,7 @@ timestamp &timestamp::operator += (time_t add)
 	return *this;
 }
 
-timestamp &timestamp::operator += (timeval add)
+timestamp &timestamp::operator+= (timeval add)
 {
 	unsigned long long current;
 	unsigned long long given;
@@ -386,8 +440,10 @@ timestamp &timestamp::operator += (timeval add)
 	return *this;
 }
 
-
-timestamp &timestamp::operator -= (time_t sub)
+// ========================================================================
+// METHOD ::operator-=
+// ========================================================================
+timestamp &timestamp::operator-= (time_t sub)
 {
 	time_t now;
 	now = tvval.tv_sec;
@@ -396,8 +452,7 @@ timestamp &timestamp::operator -= (time_t sub)
 	return *this;
 }
 
-
-timestamp &timestamp::operator -= (timeval sub)
+timestamp &timestamp::operator-= (timeval sub)
 {	
 	unsigned long long current;
 	unsigned long long given;
@@ -420,7 +475,9 @@ timestamp &timestamp::operator -= (timeval sub)
 	return *this;
 }
 
-
+// ========================================================================
+// METHOD ::operator-
+// ========================================================================
 timeval timestamp::operator- (const timestamp &theother) const
 {
 	unsigned long long 	current;
@@ -447,6 +504,9 @@ timeval timestamp::operator- (const timestamp &theother) const
 	return nTime;
 }
 
+// ========================================================================
+// METHOD ::operator+
+// ========================================================================
 timeval timestamp::operator+ (const timestamp &theother) const
 {
 	unsigned long long current;
@@ -469,6 +529,9 @@ timeval timestamp::operator+ (const timestamp &theother) const
 	return nTime;
 }
 
+// ========================================================================
+// METHOD ::operator-
+// ========================================================================
 timestamp *timestamp::operator- (time_t sub) const
 {
 	timestamp *res = new timestamp (*this);
@@ -483,6 +546,9 @@ timestamp *timestamp::operator- (timeval sub) const
 	return res;
 }
 
+// ========================================================================
+// METHOD ::delta
+// ========================================================================
 int timestamp::delta (const timestamp &other, intervaltype ikind) const
 {
 	if (ikind > 0)
@@ -525,6 +591,9 @@ int timestamp::delta (const timestamp &other, intervaltype ikind) const
 	return 0;
 }
 
+// ========================================================================
+// METHOD ::interval
+// ========================================================================
 time_t timestamp::interval (int iv, intervaltype ikind)
 {
 	if (ikind>0) return (ikind * iv);

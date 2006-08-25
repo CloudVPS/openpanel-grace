@@ -25,7 +25,6 @@ const char __HEXTAB[] = "0123456789abcdef";
 // -----------
 // Creates an unbound file object
 // ========================================================================
-
 file::file (void)
 	: buffer (defaults::sz::file::ringbuffer)
 {
@@ -41,7 +40,6 @@ file::file (void)
 // ----------
 // Closes the file socket if there was one open
 // ========================================================================
-
 file::~file (void)
 {
 	if (filno>=0) ::close (filno);
@@ -57,7 +55,6 @@ file::~file (void)
 // ------------
 // Returns true if the end-of-file marker has been reached
 // ========================================================================
-
 bool file::eof (void)
 {
 	return (feof);
@@ -69,7 +66,6 @@ bool file::eof (void)
 // Opens a filesystem object for reading. The path argument understands
 // GRACE paths.
 // ========================================================================
-
 bool file::openread (const string &path)
 {
 	buffer.flush();
@@ -99,7 +95,6 @@ bool file::openread (const string &path)
 // Binds the object to an operating system filedescriptor. This is used
 // to initialize the fin object in the application class.
 // ========================================================================
-
 bool file::openread (int fid)
 {
 	buffer.flush();
@@ -122,7 +117,6 @@ bool file::openread (int fid)
 // Opens a filesystem object for writing. The path argument understands
 // GRACE paths.
 // ========================================================================
-
 bool file::openwrite (const string &path, int mode)
 {
 	buffer.flush();
@@ -162,6 +156,9 @@ bool file::openwrite (const string &path, int mode)
 	return true;
 }
 
+// ========================================================================
+// METHOD ::openappend
+// ========================================================================
 bool file::openappend (const string &path, int mode)
 {
 	buffer.flush();
@@ -177,6 +174,9 @@ bool file::openappend (const string &path, int mode)
 	return true;
 }
 
+// ========================================================================
+// METHOD ::pos
+// ========================================================================
 off_t file::pos (void)
 {
 	if (filno<0) return 0;
@@ -223,7 +223,6 @@ bool file::openwrite (int fid)
 // --------------
 // Releases access to any open operating system filesystem objects.
 // ========================================================================
-
 void file::close (void)
 {
 	if (codec)
@@ -238,6 +237,9 @@ void file::close (void)
 	feof = true;
 }
 
+// ========================================================================
+// METHOD ::writeln
+// ========================================================================
 bool file::writeln (const string &str)
 {
 	if (puts (str.str(), str.strlen()))
@@ -252,12 +254,14 @@ bool file::writeln (const string &str)
 // -------------
 // Writes a literal string to the file.
 // ========================================================================
-
 bool file::puts (const string &str)
 {
 	return puts (str.str(), str.strlen());
 }
 
+// ========================================================================
+// METHOD ::tryputs
+// ========================================================================
 int file::tryputs (const char *str, size_t sz, unsigned int timeout_ms)
 {
 	if (feof) return -1;
@@ -333,6 +337,9 @@ int file::tryputs (const char *str, size_t sz, unsigned int timeout_ms)
 	return szdone;
 }
 
+// ========================================================================
+// METHOD ::puts
+// ========================================================================
 bool file::puts (const char *str, size_t sz)
 {
 	if (feof) return false;
@@ -400,7 +407,6 @@ bool file::puts (const char *str, size_t sz)
 // ---------------
 // Writes a formatted string to the file.
 // ========================================================================
-
 bool file::printf (const char *fmtx, ...)
 {
 	va_list ap;
@@ -552,11 +558,6 @@ CONTINUE:;
 // -------------
 // Reads a string from the file up to a newline.
 // ========================================================================
-
-void __file_breakme (void)
-{
-}
-
 string *file::gets (int maxlinesize)
 {
 	if (feof)
@@ -622,12 +623,10 @@ string *file::gets (int maxlinesize)
 				}
 				catch (exception e)
 				{
-					__file_breakme();
 					err.crop(0);
 					err.printf (errortext::file::ringexc);
 					throw (fileReadException());
 				}
-				if (sz == 365) __file_breakme();
 			}
 		}
 		else
@@ -659,7 +658,6 @@ string *file::gets (int maxlinesize)
 // found in the buffer (which will also be copied into the string
 // argument).
 // ========================================================================
-
 bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 {
 	if (feof)
@@ -780,6 +778,9 @@ bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 	return false;
 }
 
+// ========================================================================
+// METHOD ::readuntil
+// ========================================================================
 bool file::readuntil (string &into, const char *watchfor, unsigned int sz, int timeout_ms)
 {
 	unsigned int endposition;
@@ -804,6 +805,9 @@ bool file::readuntil (string &into, const char *watchfor, unsigned int sz, int t
 	return false;
 }
 
+// ========================================================================
+// METHOD ::readbuffer
+// ========================================================================
 int file::readbuffer (size_t sz, unsigned int timeout_ms)
 {
 	if (feof)
@@ -889,7 +893,6 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 // --------------
 // Read an indicated amount of bytes from the file.
 // ========================================================================
-
 string *file::read (size_t sz)
 {
 	if (feof && (! buffer.backlog()))
@@ -1087,56 +1090,92 @@ string *file::read (size_t sz, int timeout_ms)
 	return buffer.read (sz);
 }
 
+// ========================================================================
+// CONSTRUCTOR iocodec
+// ========================================================================
 iocodec::iocodec (void)
 {
 	refcnt = 1;
 }
 
+// ========================================================================
+// DESTRUCTOR iocodec
+// ========================================================================
 iocodec::~iocodec (void)
 {
 }
 
+// ========================================================================
+// METHOD ::setup
+// ========================================================================
 bool iocodec::setup (void)
 {
 	return false;
 }
 
+// ========================================================================
+// METHOD ::reset
+// ========================================================================
 void iocodec::reset (void)
 {
 }
 
+// ========================================================================
+// METHOD ::addinput
+// ========================================================================
 bool iocodec::addinput (const char *dt, size_t sz)
 {
 	return false;
 	
 }
 
+// ========================================================================
+// METHOD ::addoutput
+// ========================================================================
 bool iocodec::addoutput (const char *dt, size_t sz)
 {
 	return false;
 }
 
+// ========================================================================
+// METHOD ::addclose
+// ========================================================================
 void iocodec::addclose (void)
 {
 }
 
+// ========================================================================
+// METHOD ::fetchinput
+// ========================================================================
 void iocodec::fetchinput (ringbuffer &into)
 {
 }
 
+// ========================================================================
+// METHOD ::peekoutput
+// ========================================================================
 void iocodec::peekoutput (string &into)
 {
 }
 
+// ========================================================================
+// METHOD ::doneoutput
+// ========================================================================
 void iocodec::doneoutput (unsigned int sz)
 {
 }
 
+// ========================================================================
+// METHOD ::canoutput
+// ========================================================================
 bool iocodec::canoutput (unsigned int sz)
 {
 	return false;
 }
 
+// ========================================================================
+// METHOD ::error
+// ========================================================================
 const string &iocodec::error (void)
 {
 	return err;
