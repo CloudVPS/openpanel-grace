@@ -7,6 +7,7 @@ const unsigned char obox[32] = {1,27,5,17,3,19,12,4,18,11,26,25,22,2,15,6,24,
 
 unsigned int checksum (const char *string)
 {
+	if (! string) return 0;
 	register int len,pos;
 	register char c;
 	len = strlen (string);
