@@ -1286,7 +1286,7 @@ void string::strcpy (const char *src, size_t sz)
 		}
 	}
 	::memmove (data->v, src, sz);
-	if (data->v[sz]) data->v[sz] = 0;
+	data->v[sz] = 0;
 }
 
 // ========================================================================
