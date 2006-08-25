@@ -602,6 +602,7 @@ void tcplistener::listento (int port)
 // ========================================================================
 tcplistener::tcplistener (const string &path)
 {
+	listening = false;
 	listento (path);
 }
 
