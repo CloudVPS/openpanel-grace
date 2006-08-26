@@ -69,7 +69,7 @@ currency::currency (const class value &orig)
 currency::currency (class value *orig)
 {
 	val = orig->getcurrency();
-	delete orig;
+	destroyvalue (orig);
 }
 
 // ========================================================================

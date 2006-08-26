@@ -16,6 +16,7 @@
 #include <grace/stack.h>
 #include <grace/strutil.h>
 #include <grace/filesystem.h>
+#include <grace/valuable.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -233,6 +234,26 @@ value::value (value *v)
 }
 
 // ========================================================================
+// COPY CONSTRUCTOR
+// ========================================================================
+value::value (valuable &v)
+{
+	// First do a default null-initialization
+	init ();
+	v.tovalue (*this);
+}
+
+// ========================================================================
+// COPY CONSTRUCTOR
+// ========================================================================
+value::value (valuable *v)
+{
+	init ();
+	v->tovalue (*this);
+	delete v;
+}
+
+// ========================================================================
 // DESTRUCTOR
 // ----------
 // Releases claimed memory
@@ -256,6 +277,23 @@ value::~value (void)
 	if (attrib) delete attrib;
 	// In death, we do not need a name.
 }
+
+// ========================================================================
+// METHOD ::operator=
+// ========================================================================
+value &value::operator= (valuable &other)
+{
+	other.tovalue (*this);
+	return *this;
+}
+
+value &value::operator= (valuable *other)
+{
+	other->tovalue (*this);
+	delete other;
+	return *this;
+}
+
 // ========================================================================
 // METHOD ::operator=
 // ------------------

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dict>
+	<string id="name">John</string>
+	<string id="email">john@doe.org</string>
+	<integer id="level">15</integer>
+</dict>

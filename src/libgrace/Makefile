@@ -39,6 +39,7 @@ OBJ			= 	application.o \
 				timeofday.o \
 				timestamp.o \
 				tolower.o \
+				valuable.o \
 				value.o \
 				value_ascii.o \
 				value_ini.o \

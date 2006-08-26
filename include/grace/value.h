@@ -154,6 +154,12 @@ public:
 					 /// Copy-constructor (from string).
 					 value (const char *);
 					 
+					 /// Copy-constructor (from a valuable)
+					 value (class valuable &);
+					 
+					 /// Copy-constructor (from a retained valuable)
+					 value (class valuable *);
+					 
 					 /// Destructor.
 					~value (void);
 	
@@ -327,6 +333,8 @@ public:
 	
 	value	&operator= (const value &v);
 	value	&operator= (value *v);
+	value	&operator= (class valuable &);
+	value	&operator= (class valuable *);
 
 	/// Cast as bool.
 	inline			 operator bool (void) const
