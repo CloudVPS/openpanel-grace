@@ -25,6 +25,7 @@ int gdbmtestApp::main (void)
 	gdbmfile dbf;
 	dbf.setencoding (dbfile::shox);
 	if (! dbf.open ("mydb")) FAIL ("could not open db");
+	
 	dbf.db["pi"]["class"] = "weenie";
 	dbf.db["pi"]["email"] = "pi@test.panelsix.com";
 	dbf.db["peter"]["class"] = "wanker";
