@@ -160,6 +160,12 @@ public:
 					 /// Copy-constructor (from a retained valuable)
 					 value (class valuable *);
 					 
+					 /// Copy-constructor (from a string)
+					 value (const string &s);
+					 
+					 /// Copy-constructor (from a retained string)
+					 value (string *s);
+					 
 					 /// Destructor.
 					~value (void);
 	

@@ -5,6 +5,7 @@
 
 #include <grace/str.h>
 #include <grace/statstring.h>
+#include <grace/exception.h>
 
 /// A container. Keeps a pointer to a generic object, used in the
 /// dictionary class.
@@ -18,8 +19,16 @@ public:
 
 	void			*ent; ///< Pointer to the entry.
 	statstring		 id; ///< Key of this object.
+	bool			 dynamic; ///< True if the pointer should be deleted.
 	dictionaryEntry	*lower, *higher; ///< Hashtree pointers.
 };
+
+THROWS_EXCEPTION
+(
+	dictIndexOutOfBoundsException,
+	0x1bef3ab0,
+	"Dictionary array index out of range"
+);
 
 typedef class dictionaryEntry *dictPtr;
 
@@ -36,15 +45,24 @@ public:
 					 }
 					~dictionary (void)
 					 {
+					 	clear ();
+					 }
+
+	void			 clear (void)
+					 {
 						for (int i=0; i<_count; ++i)
 						{
-							if (_array[i]) delete (kind *) _array[i]->ent;
+							if (_array[i])
+							{
+								if (_array[i]->dynamic)
+									delete (kind *) _array[i]->ent;
+							}
 						}
 						free (_array);
 						_count = _arraysz = 0;
 						_array = NULL;
 					 }
-					
+					 
 					 /// Array access.
 					 /// Looks up an entry by key.
 					 /// \param st The entry's key.
@@ -83,15 +101,15 @@ public:
 					 }
 					 
 					 /// Array access.
-					 /// Looks up an entry by numeric key.
-					 /// \param key The entry's key (hash value only).
+					 /// Looks up an entry by array index.
+					 /// \param idnex The entry's index.).
 					 /// \return Reference to the object.
-	kind			&operator[] (unsigned int key)
+	kind			&operator[] (int index)
 					 {
-						dictionaryEntry *de;
-						
-						de = demand (key);
-						return *((kind *) de->ent);
+					 	if ((! _array)||(index < 0)||(index >= _count))
+					 		throw (dictIndexOutOfBoundsException());
+					 	
+					 	return *((kind *) _array[index]->ent);
 					 }
 					 
 					 /// Associate an object with a key.
@@ -100,9 +118,18 @@ public:
 	void			 set (const statstring &id, kind *to)
 					 {
 					 	dictionaryEntry *de = demand (id, false);
+					 	if (de->ent && de->dynamic) delete (kind *) de->ent;
 					 	de->ent = to;
+					 	de->dynamic = true;
 					 }
-					 
+	
+	void			 set (const statstring &id, kind &to)
+					 {
+					 	dictionaryEntry *de = demand (id, false);
+					 	if (de->ent && de->dynamic) delete de->ent;
+					 	de->ent = &to;
+					 	de->dynamic = false;
+					 }
 					 /// Check the dictionary for a key.
 					 /// \param s The key.
 					 /// \return Result, \b true if the key is in the dictionary.
@@ -167,6 +194,7 @@ dictionaryEntry 	*newentry (const statstring &id, bool alloc=true)
 							_array[_count] = new dictionaryEntry(id);
 							_array[_count]->ent = alloc ? new kind : NULL;
 							_array[_count]->id = id;
+							_array[_count]->dynamic = alloc ? true : false;
 							_count++;
 						}
 						return _array[_count-1];
@@ -181,7 +209,7 @@ dictionaryEntry 	*demand (const statstring &s, bool alloc=true)
 					 {
 						if (_count == 0)
 						{
-							return newentry (s);
+							return newentry (s, alloc);
 						}
 						dictionaryEntry *crsr = _array[0];
 						while (crsr)
