@@ -49,7 +49,8 @@ bool dbrecord::exists (const statstring &k)
 // ========================================================================
 dbrecord &dbrecord::operator[] (const char *c)
 {
-	return (*this)[(const statstring &)c];
+	statstring t = c;
+	return (*this)[t];
 }
 
 dbrecord &dbrecord::operator[] (const statstring &k)
