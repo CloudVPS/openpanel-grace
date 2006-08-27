@@ -382,7 +382,7 @@ void statstring::assign (const statstring &str)
 		STRINGREF().unref (ref);
 	}
 	
-	if (str.ref)
+	if ((&str) && (str.ref))
 	{
 		STRINGREF().cpref (str.ref);
 		ref = str.ref;
