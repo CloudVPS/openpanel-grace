@@ -131,6 +131,7 @@ string::string (void) : retainable()
 
 string::string (unsigned int sz) : retainable()
 {
+	data = NULL;
 	size = 0;
 	alloc = sz + sizeof (refblock);
 	data = (refblock *) malloc ((size_t) alloc);
@@ -145,6 +146,7 @@ string::string (unsigned int sz) : retainable()
 // ========================================================================
 string::string (const char *s) : retainable()
 {
+	data = NULL;
 	// Verify that the supplied pointer is valid
 	
 	if (s != NULL)
@@ -173,6 +175,7 @@ string::string (const char *s) : retainable()
 // ========================================================================
 string::string (const unsigned char *ss)
 {
+	data = NULL;
 	const char *s = (const char *) ss;
 	// Verify that the supplied pointer is valid
 	
@@ -205,6 +208,7 @@ string::string (const unsigned char *ss)
 // ========================================================================
 string::string (const string &s) : retainable()
 {
+	data = NULL;
 	// Verify the string is not empty
 	size = 0;
 	alloc = 0;

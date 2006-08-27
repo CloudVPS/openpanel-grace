@@ -1113,7 +1113,7 @@ public:
 	void			 chomp (void);
 	
 					 /// Initialization (retainable)
-	virtual void	 init (bool first);
+	virtual void	 init (bool first=true);
 
 protected:
 	unsigned int	 size; ///< Size of the string data.
