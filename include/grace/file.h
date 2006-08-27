@@ -34,7 +34,7 @@ public:
 					 /// Add new output data to be processed.
 					 /// \param dt Data block.
 					 /// \param sz Data size.
-	virtual bool	 addoutput (const char *, size_t);
+	virtual bool	 addoutput (const char *db, size_t sz);
 
 					 /// Add codec-specific data to handle
 					 /// a 'link will close' handshake, if needed.

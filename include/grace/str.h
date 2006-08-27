@@ -127,6 +127,7 @@ public:
 	// of the string.
 	// --------------------------------------------------------------------
 	
+					 //@{
 					 /// Array access.
 					 /// Out-of-range indices return a '\0'.
 					 /// \param n Position. Use negative for position from the right.
@@ -160,12 +161,15 @@ public:
 					 	
 						return data->v[n];
 					 }
+					 //@}
 					 	
 	
 	// --------------------------------------------------------------------
 	// Various string compare methods
 	// --------------------------------------------------------------------
 
+					 //@{
+					 /// Equality operator.
 	inline bool		 operator== (const char *str) const
 					 {
 						return eq (str);
@@ -178,11 +182,14 @@ public:
 					 }
 	bool			 operator== (const class statstring &) const;
 	bool			 operator!= (const class statstring &) const;
+					 //@}
 	
 	// --------------------------------------------------------------------
 	// String assignment
 	// --------------------------------------------------------------------
 
+					 //@{
+					 /// Assignment operator.
 	inline string	&operator= (const string &str)
 					 {
 						if (*this != str)
@@ -231,13 +238,6 @@ public:
 	string			&operator= (class statstring *str);
 	string			&operator= (const class statstring &str);
 					 
-	inline			 operator const char * (void) const
-					 {
-					 	if (data)
-							return data->v;
-						return (const char *) "";
-					 }
-	
 	// --------------------------------------------------------------------
 	// Other operators
 	// --------------------------------------------------------------------
@@ -251,6 +251,10 @@ public:
 					 {
 					 	return (! eq (str));
 					 }
+					 //@}
+					 
+					 //@{
+					 /// Operator for appending.
 	inline string	&operator+= (const string &str)
 					 {
 						strcat (str);
@@ -279,11 +283,20 @@ public:
 						s->strcat (str);
 						return s;
 					 }
+					 //@}
 					 
 					 /// Bool cast. Returns false if the string is empty.
 					 operator bool (void) const
 					 {
 					 	return size ? true : false;
+					 }
+	
+					 /// Cast to c-string.
+	inline			 operator const char * (void) const
+					 {
+					 	if (data)
+							return data->v;
+						return (const char *) "";
 					 }
 	
 	// --------------------------------------------------------------------
@@ -446,23 +459,17 @@ public:
 	// Binary stream utility methods
 	// --------------------------------------------------------------------
 	
+					 //@{
 					 /// Add binary data.
 	size_t			 binput64  (size_t offset, long long val);
 	size_t			 binput64u (size_t offset, unsigned long long val);
 	
-					 /// Add binary data.
 	size_t			 binput32u (size_t offset, unsigned int val);
-					 /// Add binary data.
 	size_t			 binput32  (size_t offset, int);
-					 /// Add binary data.
 	size_t			 binput32o (size_t offset, const char *offs);
-					 /// Add binary data.
 	size_t			 binput16u (size_t offset, unsigned short val);
-					 /// Add binary data.
 	size_t			 binput16  (size_t offset, short);
-					 /// Add binary data.
 	size_t			 binput8u  (size_t offset, unsigned char val);
-					 /// Add binary data.
 	size_t			 binput8   (size_t offset, char);
 	
 	size_t			 binget8   (size_t offset, char &) const;
@@ -473,6 +480,7 @@ public:
 	size_t			 binget32u (size_t offset, unsigned int &) const;
 	size_t			 binget64  (size_t offset, long long &) const;
 	size_t			 binget64u (size_t offset, unsigned long long &) const;
+					 // @}
 	
 					 /// Add a CXML opcode.
 	size_t			 binputopc (size_t offset, const char *opcode);

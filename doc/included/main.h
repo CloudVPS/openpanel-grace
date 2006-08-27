@@ -61,4 +61,5 @@ with other programs.
   - exclusivesection (lockedobject) {...}, sharedsection (lockedobject) {...},
     breaksection {...} and unprotected (lockedobject) {...} all need a
     \link lock<kind> lock \endlink object.
+
 */

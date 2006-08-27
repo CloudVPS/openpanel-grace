@@ -196,7 +196,10 @@ public:
 						 	retainvalue (str);
 						 }
 						 
+						 /// Copy-constructor (from retained value).
 						 statstring (class value *);
+						 
+						 /// Copy-constructor (from value)
 						 statstring (const class value &);
 					 
 					 	 /// Destructor. Remove reference from the
@@ -229,6 +232,7 @@ public:
 						 /// Assign to a retained statstring.
 	void				 assign (statstring *);
 	
+						 /// Determine length of the string.
 	inline unsigned int	 strlen (void) const
 						 {
 						 	if (! ref) return 0;
@@ -249,6 +253,8 @@ public:
 						 	return ref->id;
 						 }
 						 
+						 //@{
+						 /// Assignment operator.
 	inline statstring	&operator= (unsigned int i)
 						{
 							assign (i);
@@ -281,7 +287,10 @@ public:
 							assign (str);
 							return *this;
 						}
+						//@}
 						
+						//@{
+						/// Equality operator.
 	inline bool			operator== (const statstring &str) const
 						{
 							if (key() != str.key()) return false;
@@ -364,6 +373,7 @@ public:
 							}
 							return !((*str) == ref->str);
 						}
+						//@}
 						
 						/// Const string cast.
 	inline				operator const string & (void) const

@@ -439,12 +439,15 @@ protected:
 class cliutil
 {
 public:
+	//@{
+	/// Internal handling method for the cli class.
 	static void splitwords (const string &src, int atpos, value &into);
 	static void expandword (const string &part, const value &options,
 							string &into);
 	static void displayoptions (termbuffer &tb, const value &options);
 	static void parsedeclaration (const string &, string &, value &);
 	static void sethelp (const string &, const string &, value &);
+	//@}
 };
 
 /// A vt100 command line interface and command parser module.
@@ -498,24 +501,33 @@ public:
 	class cmdhandler
 	{
 	public:
+						 /// Constructor.
+						 /// \param ppath The path of the command.
+						 /// \param m The method to call.
 						 cmdhandler (const statstring &ppath, hmethod m)
 						 {
 						 	path = ppath;
 						 	method = m;
 						 	next = prev = NULL;
 						 }
+						 
+						 /// Destructor.
 						~cmdhandler (void)
 						 {
 						 }
 						 
+						 /// Calls the method.
+						 /// \param x The class-instance for the callback.
+						 /// \param argv Arguments for the call.
 		int				 runcmd (ctlclass *x, const value &argv)
 						 {
 						 	return (x->*method) (argv);
 						 }
 						 
-		cmdhandler		*next, *prev;
-		statstring		 path;
-		hmethod			 method;
+						 //@{ Linked list pointers.
+		cmdhandler		*next, *prev; //@}
+		statstring		 path; ///< The 'path' of the command.
+		hmethod			 method; ///< The method to call.
 	};
 	
 	/// Constructor.
@@ -746,7 +758,7 @@ public:
 	}
 	
 	/// Keyhandler for the ^Z command.
-	/// \param ki The pressed key.
+	/// \param key The pressed key.
 	/// \param tb The termbuffer.
 	int uphandler (int key, termbuffer &tb)
 	{
@@ -755,7 +767,7 @@ public:
 	}
 	
 	/// Keyhandler for tab expansion and the question mark key.
-	/// \param ki The pressed key, either '\t', '?' or 0, which is
+	/// \param ki The pressed key, either '\\t', '?' or 0, which is
 	///           a special trigger to fully expand any abbreviated
 	///           words to their full syntax tree equivalent.
 	/// \param tb The termbuffer.

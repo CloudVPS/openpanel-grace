@@ -19,11 +19,17 @@ template<class kind>
 class array
 {
 public:
+					 /// Internal storage for an array node.
 					 struct arraynode
 					 {
-					 	bool dynamic;
+					 	/// If true, the array should delete the object
+					 	/// if the node is removed.
+					 	bool dynamic; 
+					 	
+					 	/// Pointer to the object.
 					 	kind *obj;
 					 };
+					 
 					 /// Default constructor.
 					 /// Leave the array unallocated, set all sizes
 					 /// to 0.
@@ -49,6 +55,12 @@ public:
 					 	if (_array) ::free (_array);
 					 }
 					 
+					 /// Add a non-dynamic entry to the array. Grows the
+					 /// storage for the array as needed using power-of-two
+					 /// preallocation.
+					 /// \param element The elemnt-reference to add. Deleting
+					 ///                this element before the array will
+					 ///                lead to nasty behavior.
 	void			 add (kind &element) { add (&element, false); }
 					 
 					 /// Add a new entry to the array.
@@ -80,6 +92,12 @@ public:
 						}
 					 }
 	
+					 /// Insert a reference at a specific array position.
+					 /// This position must be within the range of
+					 /// 0...count().
+					 /// \param foo The referenced object to insert.
+					 /// \param position The position to insert at.
+					 /// \throw arrayOutOfBoundsException
 	void			 insert (kind &foo, int position)
 					 {
 					 	insert (&foo, position, false);
@@ -92,7 +110,7 @@ public:
 					 /// \param foo The object to add
 					 /// \param position The position to add it to.
 					 /// \param dynamic Flags auto-delete.
-					 /// \throws arrayOutOfBoundsException
+					 /// \throw arrayOutOfBoundsException
 	void			 insert (kind *foo, int position, bool dynamic = true)
 					 {
 					 	if (position < 0) throw (arrayOutOfBoundsException());

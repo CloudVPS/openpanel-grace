@@ -40,13 +40,18 @@ public:
 					 /// Destructor.
 					~currency (void);
 	
-	currency		&operator= (long long); ///< Assignment.
-	currency		&operator= (const currency &);///< Assignment.
-	currency		&operator= (currency *);///< Assignment (retained).
-	currency		&operator= (const class value &); ///< Assignment.
-	currency		&operator= (class value *); ///< Assignment (retained).
-	currency		&operator= (double); ///< Assignment.
+					 //@{
+					 /// Assignment.
+	currency		&operator= (long long); 
+	currency		&operator= (const currency &);
+	currency		&operator= (currency *);
+	currency		&operator= (const class value &);
+	currency		&operator= (class value *);
+	currency		&operator= (double);
+					 //@}
 	
+					 //@{
+					 /// Mathematical operator overload.
 	long long		 operator+ (long long) const;
 	long long		 operator+ (const currency &) const;
 	
@@ -78,10 +83,13 @@ public:
 	long long		 operator/ (double) const;
 	long long		 operator/ (const currency &) const;
 	long long		 operator/ (long long) const;
+					 //@}
 	
 					 /// Cast to 64 bits fixed point with 3 decimals.
 					 operator long long (void) { return val; }
 	
+					 //@{
+					 /// Comparison operator overload.
 	bool			 operator== (const currency &) const;
 	bool			 operator== (long long) const;
 	bool			 operator!= (const currency &) const;
@@ -94,6 +102,7 @@ public:
 	bool			 operator>  (long long) const;
 	bool			 operator>= (const currency &) const;
 	bool			 operator>= (long long) const;
+					 //@}
 
 					 /// Convert to string. Prints with two
 					 /// digits behind the decimal point, rounded

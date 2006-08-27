@@ -22,25 +22,41 @@
 class process
 {
 public:
-					 /// Constructor.
+					 /// Constructor. Will spawn the actual process,
+					 /// so object creation should be followed by a
+					 /// call to process::run().
 					 /// \param name Process title.
-					 /// \param withStdErr If true, stderr will also be
-					 ///                   intercepted.
+					 /// \param withStdErr If true, stderr will be intercepted.
 					 process (const string &name = "noname",
 					 		  bool withStdErr = false)
 					 {
 					 	init (name, withStdErr);
 					 }
+					 
+					 /// Constructor. Will spawn the actual process,
+					 /// so object creation should be followed by a
+					 /// call to process::run().
+					 /// \param name Process title.
+					 /// \param v Process arguments.
+					 /// \param withStdErr If true, stderr will be intercepted.
 					 process (const string &name, const value &v,
 					 		  bool withStdErr)
 					 {
 					 	data = v;
 					 	init (name, withStdErr);
 					 }
+					 
+					 /// Constructor for an 'empty' process.
+					 /// You need to call process::init() manually
+					 /// before you can call process::run().
 					 process (bool nostart)
 					 {
 					 }
 	
+					 /// Init the process structure and perform the
+					 /// fork().
+					 /// \param name The process title.
+					 /// \param withStdErr The stderr flag.
 	void			 init (const string &name, bool withStdErr)
 					 {
 						 _pid = -1;
@@ -84,6 +100,9 @@ public:
 							_running = true;
 						 }
 					 }
+					 
+					 /// Destructor.
+					 /// Will kill the child process.
 	virtual			~process (void)
 					 {
 						 if (running())
@@ -103,6 +122,8 @@ public:
 					 /// \param sig The signal to be sent.
 	void			 kill (int sig);
 	
+					 /// This method must be called after creating your
+					 /// process to 
 	void			 run (void)
 					 {
 					 	if (!_pid)

@@ -1,3 +1,9 @@
+// ========================================================================
+// eventq.cpp: GRACE event queue for thread communication.
+//
+// (C) Copyright 2006 Pim van Riezen <pi@madscience.nl>
+//                    Madscience Labs, Rotterdam 
+// ========================================================================
 #include <grace/eventq.h>
 
 // ========================================================================

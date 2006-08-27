@@ -32,11 +32,14 @@ extern bool __THREADED;
 
 #ifdef PTHREAD_HAVE_RWLOCK
 
-/// A thread lock.
-/// Allows mixed readers/writers.
+/// A base class for a thread lock (for pthread implementations with native
+/// rwlocks).
+/// Allows mixed readers/writers. The template lock<kind> class should
+/// normally be used to wrap a lock around a specific object.
 class lockbase
 {
 public:
+					 /// Constructor. Sets up pthread data.
 					 lockbase (void)
 					 {
 						attr = new pthread_rwlockattr_t;
@@ -45,6 +48,8 @@ public:
 						pthread_rwlockattr_init (attr);
 						pthread_rwlock_init (rwlock, NULL);
 					 }
+					 
+					 /// Destructor. Frees pthread objects.
 					~lockbase (void)
 					 {
 			 			pthread_rwlock_destroy (rwlock);
@@ -87,6 +92,7 @@ protected:
 	pthread_rwlock_t		*rwlock;
 };
 
+/// Lock template class. Use this to guard your objects.
 template<class kind>
 class lock : public lockbase
 {
@@ -103,11 +109,14 @@ public:
 #define LOCK_READYWRITE     0x04
 #define LOCK_WRITEPREWRITE  0x05
 
-/// A thread lock.
-/// Allows mixed readers/writers.
+/// A base class for a thread lock (for pthread implementations without native
+/// rwlocks).
+/// Allows mixed readers/writers. The template lock<kind> class should
+/// normally be used to wrap a lock around a specific object.
 class lockbase
 {
 public:
+					 /// Constructor.
 					 lockbase (void)
 					 {
 					 	locks = NULL;
@@ -124,6 +133,8 @@ public:
 						status = LOCK_NONE;
 						numlocks = 0;
 					 }
+					 
+					 /// Destructor.
 					~lockbase (void)
 					 {
 					 	pthread_mutex_destroy (mutex); delete mutex;
@@ -225,6 +236,7 @@ protected:
 	int						 numlocks;
 };
 
+/// Lock template class. Use this to guard your objects.
 template<class kind>
 class lock : public lockbase
 {

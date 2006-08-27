@@ -30,20 +30,25 @@ namespace defaults
 	/// Internal size parameters
 	namespace sz
 	{
-		/// Default maximum size of a file::log logfile.
+		/// \var int defaults::sz::logfile
+		/// Default maximum size of a file::log logfile [2 MB].
 		parameter int logfile defaultvalue (2 MB);
-		
+
+		/// \namespace defaults::sz::file		
 		/// Buffer settings for objects derived from file.
 		namespace file
 		{
-			/// Default size of an i/o read buffer.
+			/// \var int defaults::sz::file::readbuf
+			/// Default size of an i/o read buffer [8 KB].
 			parameter int readbuf defaultvalue (8 KB);
 			
-			/// Default size of an i/o write buffer.
+			/// \var int defaults::sz::file::writebuf
+			/// Default size of an i/o write buffer [8 KB].
 			parameter int writebuf defaultvalue (8 KB);
 			
+			/// \var int defaults::sz::file::ringbuffer
 			/// Default size of the ringbuffer for
-			/// reading lines.
+			/// reading lines [16 KB].
 			parameter int ringbuffer defaultvalue (16 KB);
 		}
 	}
@@ -51,23 +56,27 @@ namespace defaults
 	/// External data limits
 	namespace lim
 	{
-		/// Number of backup-files kept for log-rotation.
+		/// \var int defaults::lim::logrotate
+		/// Number of backup-files kept for log-rotation [4].
 		parameter int logrotate defaultvalue (4);
 
 		/// Maximum post size handled by CGI objects.
 		namespace cgi
 		{
-			/// Maximum post size.
+			/// \var int defaults::lim::cgi::postsize
+			/// Maximum post size [8 MB].
 			parameter int postsize defaultvalue (8 MB);
 		}
 		
 		/// Data limits for httpd
 		namespace httpd
 		{
-			/// Maximum post size
+			/// \var int defaults::lim::httpd::postsize
+			/// Maximum post size [2 MB].
 			parameter int postsize defaultvalue (2 MB);
 			
-			/// Maximum size of a chunked encoding block.
+			/// \var int defaults::lim::httpd::chunksize
+			/// Maximum size of a chunked encoding block [512 KB].
 			parameter int chunksize defaultvalue (512 KB);
 		}
 	}
@@ -75,6 +84,7 @@ namespace defaults
 	/// Settings for retainable memory allocations.
 	namespace memory
 	{
+		/// \var bool defaults::memory::leakprotection
 		/// Determines behavior of the pool allocator. In a given
 		/// situation, there should be no more than two allocations per
 		/// active thread (a retained return value that picks up another
@@ -85,7 +95,7 @@ namespace defaults
 		/// of 24 or 32). If your application uses a massive amount of
 		/// active threads and you already determined that the system
 		/// does not leak retainables, you should consider changing this
-		/// default to false.
+		/// default to false. [true].
 		parameter bool leakprotection defaultvalue (true);
 	}
 }
@@ -99,27 +109,31 @@ namespace tune
 		/// Behaviour of the main thread.
 		namespace mainthread
 		{
-			/// Number of seconds to idle between event polling.
+			/// \var int tune::httpd::mainthread::idle
+			/// Number of seconds to idle between event polling [5].
 			parameter int idle defaultvalue (5);
 		}
 		
 		/// Keepalive behaviour.
 		namespace keepalive
 		{
+			/// \var int tune::httpd::keepalive::trigger
 			/// The keepalive trigger. If the maximum number of threads
 			/// divided by this parameter exceeds the number of active
-			/// threads, keepalive should not be honored.
+			/// threads, keepalive should not be honored [2].
 			parameter int trigger defaultvalue (2);
 		}
 		
 		/// Worker thread deallocation strategy.
 		namespace wkthread
 		{
-			/// Number of rounds to keep a thread alone.
+			/// \var int tune::httpd::wkthread::minrounds
+			/// Number of rounds to keep a thread alone [5].
 			parameter int minrounds defaultvalue (5);
 			
+			/// \var int tune::httpd::wkthread::minoverhead
 			/// Minimum headroom space before we should consider
-			/// trimming threads.
+			/// trimming threads [2].
 			parameter int minoverhead defaultvalue (2);
 		}
 	}
@@ -127,7 +141,8 @@ namespace tune
 	/// TCP listening options.
 	namespace tcplistener
 	{
-		/// Maximum backlog.
+		/// \var int tune::tcplistener::backlog
+		/// Maximum backlog [32].
 		parameter int backlog defaultvalue (32);
 	}	
 	
@@ -137,18 +152,21 @@ namespace tune
 		/// Behaviour of the main thread.
 		namespace mainthread
 		{
-			/// Number of seconds to idle between event polling.
+			/// \var int tune::smtpd::mainthread::idle
+			/// Number of seconds to idle between event polling [5].
 			parameter int idle defaultvalue (5);
 		}
 		
 		/// Worker thread deallocation strategy.
 		namespace wkthread
 		{
-			/// Number of rounds to keep a thread alone.
+			/// \var int tune::smtpd::wkthread::minrounds
+			/// Number of rounds to keep a thread alone [5].
 			parameter int minrounds defaultvalue (5);
 
+			/// \var int tune::smtpd::wkthread::minoverhead
 			/// Minimum headroom space before we should consider
-			/// trimming threads.
+			/// trimming threads [2].
 			parameter int minoverhead defaultvalue (2);
 		}
 	}

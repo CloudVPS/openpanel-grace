@@ -71,105 +71,169 @@ protected:
 class cmdtoken_data : public cmdtoken
 {
 public:
+					 /// Constructor.
+					 /// \param dat The data.
+					 /// \param p The parent token (NULL for no parent)
 					 cmdtoken_data (const string &dat, cmdtoken *p = NULL)
 						 : cmdtoken (dataToken, p)
 					 {
 						 data = strutil::split (dat, '$');
 					 }
+					 
+					 /// Destructor.
 	virtual			~cmdtoken_data (void) 
 					 {
 						 deltree();
 					 }
-	virtual void	 run (value &, string &);
+					 
+					 /// Run method.
+					 /// \param env The environment.
+					 /// \param into The output buffer.
+	virtual void	 run (value &env, string &into);
 
 protected:
-	value			 data;
+	value			 data; ///< Internal storage for the data.
 };
 
-/// A token representing a @loop instruction.
+/// A token representing a \@loop instruction.
 class cmdtoken_loop : public cmdtoken
 {
 public:
+					 /// Constructor.
+					 /// \param lv The loop-variable.
+					 /// \param p The parent.
 					 cmdtoken_loop (const string &lv, cmdtoken *p = NULL) : cmdtoken (loopToken, p)
 					 {
 						 loopvar = lv;
 					 }
+					 
+					 /// Destructor.
 	virtual			~cmdtoken_loop (void)
 					 {
 						 deltree();
 					 }
-	virtual void	 run (value &, string &);
+					 
+					 /// Run method.
+					 /// \param env The environment.
+					 /// \param into The output buffer.
+	virtual void	 run (value &env, string &into);
 					 
 protected:
-	string			 loopvar;
+	string			 loopvar; ///< The loop variable.
 };
 
 /// A token representing the @if instruction.
 class cmdtoken_if : public cmdtoken
 {
 public:
+					 /// Constructor.
+					 /// \param stm The conditional statement.
+					 /// \param p The parent.
 					 cmdtoken_if (const string &stm, cmdtoken *p = NULL)
 						: cmdtoken (condToken, p)
 					 {
 						 condition = strutil::splitquoted (stm, ' ');
 					 }
+					 
+					 /// Destructor.
 	virtual			~cmdtoken_if (void)
 					 {
 						 deltree();
 					 }
-	virtual void	 run (value &, string &);
+
+					 /// Run method.
+					 /// \param env The environment.
+					 /// \param into The output buffer.
+	virtual void	 run (value &env, string &into);
 
 protected:
-	value			 condition;
+	value			 condition; ///< Storage for the conditional statement.
 };
 
-/// A token representing the @case instruction.
+/// A token representing the \@case instruction.
 class cmdtoken_case : public cmdtoken
 {
 public:
+					 /// Constructor.
+					 /// \param _content The case label.
+					 /// \param p The parent token.
 					 cmdtoken_case (const string &_content,
 					 				cmdtoken *p = NULL)
 					 	: cmdtoken (caseToken, p)
 					 {
 					 	caselabel = _content;
 					 }
+					 
+					 /// Destructor.
 	virtual			~cmdtoken_case (void)
 					 {
 					 	deltree();
 					 }
-	virtual void	 run (value &, string &);
+
+					 /// Run method.
+					 /// \param env The environment.
+					 /// \param into The output buffer.
+	virtual void	 run (value &env, string &into);
 	
-	string			 caselabel;
+	string			 caselabel; ///< The case label.
 };
 
-/// A token representing the @switch instruction
+/// A token representing the \@switch instruction
 class cmdtoken_switch : public cmdtoken
 {
 public:
+					 /// Constructor.
+					 /// \param _content The variable name to switch on.
+					 /// \param p The parent token.
 					 cmdtoken_switch (const string &_content,
 					 				  cmdtoken *p = NULL)
 					 	: cmdtoken (switchToken, p)
 					 {
 					 	switchkey = _content;
 					 }
+					 
+					 /// Destructor.
 	virtual			~cmdtoken_switch (void)
 					 {
 					 	deltree();
 					 }
-	virtual void	 run (value &, string &);
+
+					 /// Run method.
+					 /// \param env The environment.
+					 /// \param into The output buffer.
+	virtual void	 run (value &env, string &into);
 
 protected:
-	statstring		 switchkey;
+	statstring		 switchkey; ///< The switch label.
 };
 
+/// Internal parsing method for data that is already split on the
+/// '$'-character.
 string *cmdtoken_parsedata (value &, value &);
-string *cmdtoken_parsestring (value &v, const string &s);
-string *cmdtoken_parseval (value &, const string &);
 
-/// A token representing the @set instruction
+/// Split a string on the '$' character and run it through the
+/// cmdtoken_parsedata() function.
+string *cmdtoken_parsestring (value &v, const string &s);
+
+/// Parse the 'variable' part of a string, normally enclosed by two
+/// '$'-characters. It loads the value out of the environment, taking
+/// a number of formatting hints:
+/// - "#varnam" will yield env["varnam"] parsed as an integer
+/// - "/varnam" will yield a quote-escaped version of the variable.
+/// - "`varnam" will yield env[env["varnam"]].
+/// - "^varnam" will yield a html-escaped version.
+/// - "varnam::sub" will yield env["varnam"]["sub"].
+/// \param env The environment.
+/// \param stm The statement, as found between '$'-characters.
+string *cmdtoken_parseval (value &env, const string &stm);
+
+/// A token representing the \@set instruction
 class cmdtoken_set : public cmdtoken
 {
 public:
+					 /// Constructor. Parses the statement into a
+					 /// name and value part.
+					 /// \param _content The data of the \@set statement.
 					 cmdtoken_set (const string &_content,
 								   cmdtoken *p = NULL)
 						 : cmdtoken (setToken, p)
@@ -182,10 +246,17 @@ public:
 						 operand = tmp[1];
 						 right = tmp[2];
 					 }
+					 
+					 /// Destructor.
+					 
 	virtual			~cmdtoken_set (void)
 					 {
 						 deltree();
 					 }
+					 
+					 /// Run-method.
+					 /// \param env The variable environment.
+					 /// \param buffer The output buffer.
 	virtual void	 run (value &env, string &buffer)
 					 {
 						 value xright;
@@ -238,7 +309,10 @@ protected:
 class scriptparser : public cmdtoken
 {
 public:
+					 /// Constructor.
 					 scriptparser (void) : cmdtoken (rootToken) {}
+					 
+					 /// Destructor.
 	virtual			~scriptparser (void)
 					 {
 						 deltree();
@@ -260,9 +334,11 @@ public:
 	void			 build (const string &dat);
 
 protected:
-	value			 labels;
+	value			 labels; ///< Mapping between labels and statement offset.
 };
 
+/// Convenience-typedef, some parts of the library refer to the root
+/// scriptparser class as 'cmdtoken_root'.
 typedef scriptparser cmdtoken_root;
 
 #endif

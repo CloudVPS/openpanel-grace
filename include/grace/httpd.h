@@ -187,7 +187,7 @@ public:
 					 /// \param purimatch Match criterium for the request URI
 					 /// \param rootdir The shared root directory.
 					 httpdfileshare (class httpd &pparent,
-					 				 const string &ppurimatch,
+					 				 const string &purimatch,
 					 				 const string &rootdir);
 					~httpdfileshare (void);
 	
@@ -488,6 +488,9 @@ protected:
 class httpdvhost : public httpdobject
 {
 public:
+					 /// Constructor.
+					 /// \param pparent Parent httpd.
+					 /// \param phostdb The vhosts database.
 					 httpdvhost (class httpd &pparent,
 					 			 const value &phostdb);
 					~httpdvhost (void);
@@ -506,7 +509,7 @@ public:
 						  value &env, tcpsocket &s);
 
 protected:
-	value			 hostdb;
+	value			 hostdb; ///< Internal vhosts database.
 };
 
 
@@ -597,6 +600,8 @@ public:
 						 		ferror.o.openappend (errorlog);
 						 	}
 						 }
+						 
+						 /// Destructor.
 						~httpdlogger (void)
 						 {
 						 }
