@@ -291,7 +291,10 @@ string::string (string *s) : retainable()
 {
 	if (s && s->strlen())
 	{
-		retainvalue (s);
+		size = s->size;
+		alloc = s->alloc;
+		data = s->data;
+		destroyvalue (s);
 	}
 	else
 	{
