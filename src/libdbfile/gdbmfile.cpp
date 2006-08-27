@@ -1,5 +1,5 @@
 // ========================================================================
-// gdbmfile.cpp: GRACE/libdbfile GDBM database file access library.
+// gdbmfile.cpp: Implementation of dbfile using GDBM.
 //
 // (C) Copyright 2006 Pim van Riezen <pi@openpanel.com>
 //                    PanelSix V.O.F., Rotterdam

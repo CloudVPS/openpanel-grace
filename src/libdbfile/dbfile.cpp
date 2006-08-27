@@ -1,5 +1,5 @@
 // ========================================================================
-// dbfile.cpp: GRACE/libdbfile generic database file access library.
+// dbfile.cpp: GRACE/libdbfile database file access library.
 //
 // (C) Copyright 2006 Pim van Riezen <pi@openpanel.com>
 //                    PanelSix V.O.F., Rotterdam

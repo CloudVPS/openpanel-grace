@@ -9,13 +9,6 @@
 
 THROWS_EXCEPTION
 (
-	dbfileAccessException,
-	0x4032e187,
-	"Error accessing db file"
-);
-	
-THROWS_EXCEPTION
-(
 	dbfileNotOpenException,
 	0x774801d4,
 	"Db file not open"
@@ -67,6 +60,12 @@ class dbrecord : public valuable
 friend class dbfile;
 friend class visitor<dbrecord>;
 public:
+							 /// Default constructor.
+							 /// This constructor should never be called;
+							 /// a dbrecord needs a parent.
+							 /// \throw dbrecordUninitializedException
+							 ///        Didn't I just tell you never to use
+							 ///        the default constructor?
 							 dbrecord (void)
 							 {
 							 	throw (dbrecordUninitializedException());
@@ -92,12 +91,14 @@ public:
 	bool					 exists (const statstring &k);
 	
 	
+							 //@{
 							 /// Access a child node or member data.
 							 /// A child node will be automatically created
 							 /// by querying the owning dbfile for an
 							 /// object 
 	dbrecord				&operator[] (const statstring &k);
 	dbrecord				&operator[] (const char *);
+							 //@}
 	
 							 /// Convenience operator for assigning from
 							 /// a value. This should also cover strings,
@@ -112,31 +113,25 @@ public:
 							 /// string.
 	dbrecord				&operator= (string *o) { value v = o; fromvalue (v); }
 
+							 //@{
 							 /// Convenience access to underlying value.
 	const string			&sval (void) { return v.sval(); }
-							 /// Convenience access to underlying value.
 	const char				*cval (void) { return v.cval(); }
-							 /// Convenience access to underlying value.
 	int						 ival (void) { return v.ival(); }
-							 /// Convenience access to underlying value.
 	unsigned int			 uval (void) { return v.uval(); }
-							 /// Convenience access to underlying value.
 	long long				 lval (void) { return v.lval(); }
-							 /// Convenience access to underlying value.
 	unsigned long long		 ulval (void) { return v.ulval(); }
-							 /// Convenience access to underlying value.
 	bool					 bval (void) { return v.bval(); }
+							 //@}
 
-							 /// Casting operator to primary type.	
+							 //@{
+							 /// Casting operators to primary type.	
 							 operator int (void) { return ival(); }
-							 /// Casting operator to primary type.	
 							 operator unsigned int (void) { return uval(); }
-							 /// Casting operator to primary type.	
 							 operator long long (void) { return lval(); }
-							 /// Casting operator to primary type.	
 							 operator unsigned long long (void) { return ulval(); }
-							 /// Casting operator to primary type.	
 							 operator bool (void) { return bval(); }
+							 //@}
 
 							 /// Return the object's key.
 	const statstring		&id (void) { return _id; }
@@ -156,11 +151,19 @@ protected:
 							 
 							 /// Deserialize ourselves from a value.
 							 ///\param outof The source object.
+							 /// \throw dbrecordAssignDuringLoopException 
+							 ///        Method was called during a foreach()
+							 ///		loop which is not allowed.
+							 /// \throw dbrecordAssignRootException
+							 ///		Method was called on the root record.
 	void					 fromvalue (const value &outof);
 	
 							 /// Remove a record (root) or member
 							 /// value (child).
 							 /// \param key The key of the record/member.
+							 /// \throw dbrecordAssignDuringLoopException 
+							 ///        Method was called during a foreach()
+							 ///		loop which is not allowed.
 	void					 rmval (const statstring &key);
 
 							 /// Implementation for the visitor protocol,
@@ -172,6 +175,7 @@ protected:
 
 public:
 	value					 v; ///< Loaded/cached value.
+	
 							 /// This flag is set to true if the record
 							 /// was changed. The dbfile::commit() method
 							 /// inspects this flag to determine which
@@ -206,13 +210,27 @@ public:
 							attriblist = 0xb2cac808, ///< Encode as quoted attribute-list
 							courierdb = 0x6ab760c8 ///< Encode as courierdb
 						 };
-
+						
+						 /// Default constructor.
 						 dbfile (void);
+						 
+						 /// Virtual destructor.
 	virtual				~dbfile (void);
 	
-	dbrecord			 db;
+	dbrecord			 db; ///< The root record.
+	
+						 /// Commit all outstanding changes to the database
+						 /// layer.
 	bool				 commit (void);
+	
+						 /// Remove a record.
+						 /// \param key The id of the record to remove.
 	bool				 rmval (const statstring &key);
+	
+						 /// Set the encoding type for data within a
+						 /// record.
+						 /// \param t The encoding type.
+						 /// \param isep An optional separator character.
 	void				 setencoding (enctype t, char isep=',')
 						 {
 						 	encoding = t;
@@ -220,20 +238,62 @@ public:
 						 }
 
 protected:
+						 /// Check with the database layer if the file
+						 /// has a record with a provided id.
+						 /// \param id The id to look for.
 	virtual bool		 recordexists (const statstring &id);
+	
+						 /// Get the string-encoded record from the
+						 /// database layer.
+						 /// \param id The id of the record.
 	virtual string		*getrecord (const statstring &id);
+	
+						 /// Create or update a record in the database
+						 /// file.
+						 /// \param id The id of the record to change.
+						 /// \param data The string-encoded data.
 	virtual bool		 setrecord (const statstring &id, const string &data,
 									bool create=true);
+									
+						 /// Remove a record from the database file.
+						 /// \param id The id of the record to remove.
 	virtual bool		 removerecord (const statstring &id);
+	
+						 /// Initiate a loop over all records in the file.
+						 /// This method should set up the 'db' rootnode
+						 /// with its 'inloop' flag. Its 'loopref' pointer
+						 /// should be used to point at a custom object
+						 /// you may need to save state between iterations.
+						 /// After initialization, the contents of the
+						 /// first database record should be stored in
+						 /// db.v and db._id. 
+						 /// \return True if the first record was
+						 ///         succesfully loaded.
 	virtual bool		 startloop (void);
+	
+						 /// Takes the state information stored in the db
+						 /// member and uses it to read the next record
+						 /// from the database file. If there is no next
+						 /// record, all loop-related information inside
+						 /// db (db.inloop, db.loopref) should be cleared.
+						 /// \return True if the next record was succesfully
+						 ///         loaded into db.
 	virtual bool		 nextloop (void);
 
-	void				 encode (string &, value &v);
-	void				 decode (const string &, value &);
+						 /// Encodes a value-object to a string using the
+						 /// requested coding method.
+						 /// \param s The destination string.
+						 /// \param v The source value.
+	void				 encode (string &s, value &v);
 	
-	bool				 dbopen;
-	enctype				 encoding;
-	char				 sep;
+						 /// Ddecodes a string object into a value.
+						 /// \param s The source string.
+						 /// \param v The destination value.
+	void				 decode (const string &s, value &v);
+	
+	bool				 dbopen; ///< True if the database file is open.
+	enctype				 encoding; ///< Selected encoding type.
+	char				 sep; ///< Optional encoding-related separator.
 };
 
 #endif
