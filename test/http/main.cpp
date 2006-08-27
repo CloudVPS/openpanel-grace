@@ -2,6 +2,8 @@
 #include <grace/http.h>
 #include <grace/httpd.h>
 
+extern "C" void grace_init (void) { __THREADED = true; puts ("grace_init!"); }
+
 class httpApp : public application
 {
 public:
