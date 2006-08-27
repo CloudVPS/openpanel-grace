@@ -1,23 +1,14 @@
 #!/bin/sh
-root="n"
-if [ "$UID" = "0" ]; then
-  root="y"
+if [ ! -f configure.paths ]; then
+  echo "No configure.paths found, please run ./configure" >&2
+  exit 1
 fi
-if [ -z "$UID" ]; then
-  iam=`whoami`
-  if [ "$iam" = "root" ]; then
-    root="y"
-  fi
-fi
-if [ "$root" = "y" ]; then
-  path_bin=/usr/bin
-  path_lib=/usr/lib
-  path_include=/usr/include
-else
-  path_bin=$HOME/.bin
-  path_lib=$HOME/.lib
-  path_include=$HOME/.include
-fi
+
+. configure.paths
+
+path_bin="$CONFIG_BINPATH"
+path_lib="$CONFIG_LIBPATH"
+path_include="$CONFIG_INCLUDEPATH"
 
 if [ ! -d $path_bin ]; then
   mkdir $path_bin

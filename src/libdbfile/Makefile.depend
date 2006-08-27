@@ -1,0 +1,25 @@
+# DO NOT DELETE
+
+dbfile.o: ../../include/dbfile/dbfile.h ../../include/grace/str.h
+dbfile.o: ../../include/grace/value.h ../../include/grace/statstring.h
+dbfile.o: ../../include/grace/checksum.h ../../include/grace/lock.h
+dbfile.o: ../../include/grace/exception.h ../../include/grace/platform.h
+dbfile.o: ../../include/grace/case.h ../../include/grace/file.h
+dbfile.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
+dbfile.o: ../../include/grace/stack.h ../../include/grace/currency.h
+dbfile.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+dbfile.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+dbfile.o: ../../include/grace/flags.h ../../include/grace/reg.h
+dbfile.o: ../../include/grace/valuable.h ../../include/grace/strutil.h
+dbfile.o: ../../include/grace/regexpression.h
+gdbmfile.o: ../../include/dbfile/gdbmfile.h ../../include/dbfile/dbfile.h
+gdbmfile.o: ../../include/grace/str.h ../../include/grace/value.h
+gdbmfile.o: ../../include/grace/statstring.h ../../include/grace/checksum.h
+gdbmfile.o: ../../include/grace/lock.h ../../include/grace/exception.h
+gdbmfile.o: ../../include/grace/platform.h ../../include/grace/case.h
+gdbmfile.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
+gdbmfile.o: ../../include/grace/visitor.h ../../include/grace/stack.h
+gdbmfile.o: ../../include/grace/currency.h ../../include/grace/retain.h
+gdbmfile.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+gdbmfile.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+gdbmfile.o: ../../include/grace/reg.h ../../include/grace/valuable.h

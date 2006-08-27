@@ -69,6 +69,7 @@ install: all
 	./makeinstall
 
 depend:
+	@echo -n > Makefile.depend
 	@makedepend -Y../../include -fMakefile.depend *.cpp 2>/dev/null
 
 clean:

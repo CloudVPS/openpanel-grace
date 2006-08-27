@@ -3,3 +3,4 @@ ranlib
 shared
 libdl
 libmysqlclient
+libcrypt
