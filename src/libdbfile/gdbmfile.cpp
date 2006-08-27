@@ -160,6 +160,7 @@ bool gdbmfile::nextloop (void)
 			gdbm_free_datum (d);
 			::free (db.loopref);
 			db.loopref = NULL;
+			db.inloop = false;
 			return false;
 		}
 		
@@ -176,5 +177,6 @@ bool gdbmfile::nextloop (void)
 
 	::free (db.loopref);
 	db.loopref = NULL;
+	db.inloop = false;
 	return false;
 }
