@@ -65,7 +65,7 @@ all: ../../include/grace/platform.h $(OBJ)
 	$(AR) ../../lib/libgrace.a $(OBJ)
 	$(RANLIB) ../../lib/libgrace.a
 
-install: all
+install:
 	./makeinstall
 
 depend:
