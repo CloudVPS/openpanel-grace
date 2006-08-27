@@ -27,7 +27,7 @@ Usage: $0 [--quiet]             Quiet mode [-q]
        $S [--exec-prefix p]     Set executable install-prefix
        $S [--lib-prefix p]      Set library install-prefix
        $S [--conf-prefix p]     Set configuration install-prefix
-       $S [--include-prefix p]  Set include-files install-refix
+       $S [--include-prefix p]  Set include-files install-prefix
 EOF
   exit 1
 }
