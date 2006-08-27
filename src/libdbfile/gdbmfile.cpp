@@ -1,5 +1,14 @@
+// ========================================================================
+// gdbmfile.cpp: GRACE/libdbfile GDBM database file access library.
+//
+// (C) Copyright 2006 Pim van Riezen <pi@openpanel.com>
+//                    PanelSix V.O.F., Rotterdam
+// ========================================================================
 #include <dbfile/gdbmfile.h>
 
+// ========================================================================
+// FUNCTION gdbm_datum_from_string
+// ========================================================================
 datum gdbm_datum_from_string (const string &s)
 {
 	datum d;
@@ -9,6 +18,9 @@ datum gdbm_datum_from_string (const string &s)
 	return d;
 }
 
+// ========================================================================
+// FUNCTION gdbm_datum_to_string
+// ========================================================================
 void gdbm_datum_to_string (datum &d, string &s)
 {
 	if (! d.dptr) return;
@@ -18,6 +30,9 @@ void gdbm_datum_to_string (datum &d, string &s)
 	d.dsize = 0;
 }
 
+// ========================================================================
+// FUNCTION gdbm_free_datum
+// ========================================================================
 void gdbm_free_datum (datum &d)
 {
 	if (! d.dptr) return;
@@ -26,6 +41,9 @@ void gdbm_free_datum (datum &d)
 	d.dsize = 0;
 }
 
+// ========================================================================
+// METHOD ::open
+// ========================================================================
 bool gdbmfile::open (const string &dbfile)
 {
 	dbopen = false;
@@ -34,6 +52,9 @@ bool gdbmfile::open (const string &dbfile)
 	return (dbopen = true);
 }
 
+// ========================================================================
+// METHOD ::close
+// ========================================================================
 void gdbmfile::close (void)
 {
 	if (f) gdbm_close (f);
@@ -41,6 +62,9 @@ void gdbmfile::close (void)
 	dbopen = false;
 }
 
+// ========================================================================
+// METHOD ::recordexists
+// ========================================================================
 bool gdbmfile::recordexists (const statstring &id)
 {
 	int ret;
@@ -51,6 +75,9 @@ bool gdbmfile::recordexists (const statstring &id)
 	return ret ? true : false;
 }
 
+// ========================================================================
+// METHOD ::getrecord
+// ========================================================================
 string *gdbmfile::getrecord (const statstring &id)
 {
 	if (! dbopen) throw (dbfileNotOpenException());
@@ -64,6 +91,9 @@ string *gdbmfile::getrecord (const statstring &id)
 	return &res;
 }
 
+// ========================================================================
+// METHOD ::setrecord
+// ========================================================================
 bool gdbmfile::setrecord (const statstring &id,
 						  const string &data,
 						  bool create)
@@ -90,6 +120,9 @@ bool gdbmfile::setrecord (const statstring &id,
 	return false;
 }
 
+// ========================================================================
+// METHOD ::removerecord
+// ========================================================================
 bool gdbmfile::removerecord (const statstring &id)
 {
 	if (! dbopen) throw (dbfileNotOpenException());
@@ -103,6 +136,9 @@ bool gdbmfile::removerecord (const statstring &id)
 	return (r == 0);
 }
 
+// ========================================================================
+// METHOD ::startloop
+// ========================================================================
 bool gdbmfile::startloop (void)
 {
 	if (! dbopen) throw (dbfileNotOpenException());
@@ -142,6 +178,9 @@ bool gdbmfile::startloop (void)
 	return false;
 }
 
+// ========================================================================
+// METHOD ::nextloop
+// ========================================================================
 bool gdbmfile::nextloop (void)
 {
 	if (! dbopen) throw (dbfileNotOpenException());

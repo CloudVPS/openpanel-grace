@@ -1,12 +1,24 @@
+// ========================================================================
+// dbfile.cpp: GRACE/libdbfile generic database file access library.
+//
+// (C) Copyright 2006 Pim van Riezen <pi@openpanel.com>
+//                    PanelSix V.O.F., Rotterdam
+// ========================================================================
 #include <dbfile/dbfile.h>
 #include <grace/strutil.h>
 
+// ========================================================================
+// CONSTRUCTOR dbrecord
+// ========================================================================
 dbrecord::dbrecord (dbfile *iowner)
 {
 	init (true);
 	owner = iowner;
 }
 
+// ========================================================================
+// CONSTRUCTOR dbrecord
+// ========================================================================
 dbrecord::dbrecord (dbfile *iowner, dbrecord *iparent, const statstring &k)
 {
 	init (true);
@@ -15,10 +27,16 @@ dbrecord::dbrecord (dbfile *iowner, dbrecord *iparent, const statstring &k)
 	_id = k;
 }
 
+// ========================================================================
+// DESTRUCTOR dbrecord
+// ========================================================================
 dbrecord::~dbrecord (void)
 {
 }
 
+// ========================================================================
+// METHOD ::exists
+// ========================================================================
 bool dbrecord::exists (const statstring &k)
 {
 	if (! owner) throw (dbrecordMemoryCorruption());
@@ -26,6 +44,9 @@ bool dbrecord::exists (const statstring &k)
 	return owner->recordexists (k);
 }
 
+// ========================================================================
+// METHOD ::operator[]
+// ========================================================================
 dbrecord &dbrecord::operator[] (const char *c)
 {
 	return (*this)[(const statstring &)c];
@@ -97,6 +118,9 @@ dbrecord &dbrecord::operator[] (const statstring &k)
 	return *r;
 }
 
+// ========================================================================
+// METHOD ::rmval
+// ========================================================================
 void dbrecord::rmval (const statstring &k)
 {
 	if (inloop)
@@ -110,6 +134,9 @@ void dbrecord::rmval (const statstring &k)
 	changed = true;
 }
 
+// ========================================================================
+// METHOD ::fromvalue
+// ========================================================================
 void dbrecord::fromvalue (const value &o)
 {
 	if (inloop)
@@ -135,11 +162,17 @@ void dbrecord::fromvalue (const value &o)
 	}
 }
 
+// ========================================================================
+// METHOD ::tovalue
+// ========================================================================
 void dbrecord::tovalue (value &into)
 {
 	into = v;
 }
 
+// ========================================================================
+// METHOD ::init
+// ========================================================================
 void dbrecord::init (bool first)
 {
 	if (! first)
@@ -157,6 +190,9 @@ void dbrecord::init (bool first)
 	}
 }
 
+// ========================================================================
+// CONSTRUCTOR dbfile
+// ========================================================================
 dbfile::dbfile (void) : db (this)
 {
 	dbopen = false;
@@ -164,10 +200,16 @@ dbfile::dbfile (void) : db (this)
 	sep = ',';
 }
 
+// ========================================================================
+// DESTRUCTOR dbfile
+// ========================================================================
 dbfile::~dbfile (void)
 {
 }
 
+// ========================================================================
+// METHOD ::commit
+// ========================================================================
 bool dbfile::commit (void)
 {
 	for (int i=0; i<db.children.count(); ++i)
@@ -193,6 +235,9 @@ bool dbfile::commit (void)
 	return true;
 }
 
+// ========================================================================
+// METHOD ::rmval
+// ========================================================================
 bool dbfile::rmval (const statstring &id)
 {
 	if (! removerecord (id)) return false;
@@ -200,36 +245,57 @@ bool dbfile::rmval (const statstring &id)
 	return true;
 }
 
+// ========================================================================
+// METHOD ::recordexists
+// ========================================================================
 bool dbfile::recordexists (const statstring &id)
 {
 	return false;
 }
 
+// ========================================================================
+// METHOD ::getrecord
+// ========================================================================
 string *dbfile::getrecord (const statstring &id)
 {
 	return NULL;
 }
 
+// ========================================================================
+// METHOD ::setrecord
+// ========================================================================
 bool dbfile::setrecord (const statstring &id, const string &s, bool c)
 {
 	return false;
 }
 
+// ========================================================================
+// METHOD ::removerecord
+// ========================================================================
 bool dbfile::removerecord (const statstring &id)
 {
 	return false;
 }
 
+// ========================================================================
+// METHOD ::startloop
+// ========================================================================
 bool dbfile::startloop (void)
 {
 	return false;
 }
 
+// ========================================================================
+// METHOD ::nextloop
+// ========================================================================
 bool dbfile::nextloop (void)
 {
 	return false;
 }
 
+// ========================================================================
+// METHOD ::visitchild
+// ========================================================================
 dbrecord *dbrecord::visitchild (int pos)
 {
 	if (! pos)
@@ -245,6 +311,9 @@ dbrecord *dbrecord::visitchild (int pos)
 	return this;
 }
 
+// ========================================================================
+// METHOD ::encode
+// ========================================================================
 void dbfile::encode (string &into, value &v)
 {
 	into.crop ();
@@ -276,6 +345,9 @@ void dbfile::encode (string &into, value &v)
 	}
 }
 
+// ========================================================================
+// METHOD ::decode
+// ========================================================================
 void dbfile::decode (const string &outof, value &v)
 {
 	value tmp;
