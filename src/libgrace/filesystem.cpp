@@ -351,8 +351,8 @@ value *filesystem::getinfo (const string &_path)
 				result["type"] = fsUnknown; break;
 		}
 		result["mode"] = (unsigned int) st.st_mode & 07777;
-		result["fuid"] = (unsigned int) st.st_uid;
-		result["fgid"] = (unsigned int) st.st_gid;
+		result["uid"] = (unsigned int) st.st_uid;
+		result["gid"] = (unsigned int) st.st_gid;
 		
 		value tmpv;
 
