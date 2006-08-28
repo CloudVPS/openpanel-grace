@@ -273,7 +273,8 @@ public:
 					 
 					 /// Main run method for the thread.
 	virtual void	 run (void);
-					 
+	
+	lock<value>		 data; ///< Misc. storage.
 protected:
 	threadgroup		*group;	///< Link to parent group.
 };

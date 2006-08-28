@@ -235,7 +235,23 @@ public:
 						 {
 						 	encoding = t;
 						 	sep = isep;
+						 	db.children.clear ();
 						 }
+						 
+						 /// Set the maximum size of the cache. The class
+						 /// currently uses a somewhat naive implementation
+						 /// for clearing the cache: If the number of
+						 /// cached entries exceeds the maximum size, the
+						 /// entire cache is invalidated, without any
+						 /// due consideration for uncommitted records.
+						 /// For this reason, the number is set to 0 by
+						 /// default (cache entries never expire).
+						 /// \param i The new maximum size (0 for no limits).
+	void				 setcachesize (unsigned int i) { maxcache = i; }
+	
+						 /// Clear the cache explicitly (will also remove
+						 /// any uncommitted records).
+	void				 clearcache (void) { db.children.clear(); }
 
 protected:
 						 /// Check with the database layer if the file
@@ -294,6 +310,7 @@ protected:
 	bool				 dbopen; ///< True if the database file is open.
 	enctype				 encoding; ///< Selected encoding type.
 	char				 sep; ///< Optional encoding-related separator.
+	unsigned int		 maxcache; ///< Maximum size of the cache.
 };
 
 #endif

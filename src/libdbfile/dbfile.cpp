@@ -100,6 +100,12 @@ dbrecord &dbrecord::operator[] (const statstring &k)
 	// return that if so.
 	if (children.exists (k)) return children[k];
 	
+	// Clear the cache if we're over the maximum cache size.
+	if (owner->maxcache && (children.count() >= owner->maxcache))
+	{
+		children.clear();
+	}
+	
 	// Bummer, we'll create it a new.
 	r = new dbrecord (owner, this, k);
 	
@@ -199,6 +205,7 @@ dbfile::dbfile (void) : db (this)
 	dbopen = false;
 	encoding = attriblist;
 	sep = ',';
+	maxcache = 0;
 }
 
 // ========================================================================
