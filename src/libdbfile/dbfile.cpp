@@ -306,6 +306,8 @@ bool dbfile::nextloop (void)
 // ========================================================================
 dbrecord *dbrecord::visitchild (int pos)
 {
+	if (pos<0) return NULL;
+	
 	if (! pos)
 	{
 		if (! owner->startloop ())

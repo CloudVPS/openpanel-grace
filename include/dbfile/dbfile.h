@@ -136,6 +136,11 @@ public:
 							 /// Return the object's key.
 	const statstring		&id (void) { return _id; }
 
+							 /// Implementation for the visitor protocol,
+							 /// allows foreach() to work its magic
+							 /// on a root node.
+	dbrecord				*visitchild (int pos);
+
 protected:
 							 /// Serialize ourselves into a value.
 							 /// \param into The destination object.
@@ -165,11 +170,6 @@ protected:
 							 ///        Method was called during a foreach()
 							 ///		loop which is not allowed.
 	void					 rmval (const statstring &key);
-
-							 /// Implementation for the visitor protocol,
-							 /// allows foreach() to work its magic
-							 /// on a root node.
-	dbrecord				*visitchild (int pos);
 							 
 	virtual void			 init (bool first);
 

@@ -1385,9 +1385,9 @@ public:
 					 /// Access method for the visitor protocol.
 	value			*visitchild (int index) const
 					 {
-					 	unsigned int pindex = (index<0) ? -index : index;
+					 	if (index<0) return NULL;
 					 	if (!arraysz) return NULL;
-					 	if (pindex >= arraysz) return NULL;
+					 	if (index >= arraysz) return NULL;
 					 	return array[(index<0) ? arraysz-index : index];
 					 }
 
