@@ -124,6 +124,8 @@ bool naturalLabelSort (value *, value *, const string &);
 class value : public memory::retainable
 {
 friend class visitor<value>;
+friend class iterator<value,value>;
+friend class iterator<const value,const value>;
 friend class visitor<const value>;
 friend class validator;
 public:
@@ -1375,6 +1377,20 @@ public:
 					 /// Compare two value objects on a tree level.
 	bool			 treecmp (const value &other) const;
 
+					 /// Access method for the visitor protocol.
+	value			*visitchild (const statstring &id) const
+					 {
+					 	return havechild (id.key(), id.str());
+					 }
+					 /// Access method for the visitor protocol.
+	value			*visitchild (int index) const
+					 {
+					 	unsigned int pindex = (index<0) ? -index : index;
+					 	if (!arraysz) return NULL;
+					 	if (pindex >= arraysz) return NULL;
+					 	return array[(index<0) ? arraysz-index : index];
+					 }
+
 protected:
 					 /// Parse a line from an ini-file.
 	value			*iniparse (const string &);
@@ -1457,19 +1473,8 @@ protected:
 	value			*getposition (unsigned int);
 					 /// Access method for the visitor protocol.
 	value			*getposition (unsigned int) const;
-						 /// Access method for the visitor protocol.
-	value			*visitchild (const statstring &id) const
-					 {
-					 	return havechild (id.key(), id.str());
-					 }
-					 /// Access method for the visitor protocol.
-	value			*visitchild (int index) const
-					 {
-					 	unsigned int pindex = (index<0) ? -index : index;
-					 	if (!arraysz) return NULL;
-					 	if (pindex >= arraysz) return NULL;
-					 	return array[(index<0) ? arraysz-index : index];
-					 }
+	
+public:
 					 
 	void			 init (bool first=true);
 };

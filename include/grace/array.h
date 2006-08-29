@@ -237,6 +237,15 @@ public:
 					 /// Item count.
 					 /// Returns the number of entries in the array.
 	int				 count (void) { return _count; }
+	
+	kind			*visitchild (int _pos)
+					 {
+					 	int pos = _pos;
+					 	if (pos<0) pos = _count + pos;
+					 	if (pos<0) return NULL;
+					 	if (pos >= _count) return NULL;
+					 	return (_array[pos].obj);
+					 }
 
 protected:
 	arraynode		 *_array; ///< The actual array (allocated using malloc)

@@ -4,6 +4,7 @@
 #include <grace/str.h>
 #include <grace/statstring.h>
 #include <grace/stack.h>
+#include <grace/iterator.h>
 
 /// Introspection class.
 /// Any class that implements the visitor interface can be accessed
@@ -150,11 +151,21 @@ protected:
 	stack<kind> stk; //< Object stack.
 };
 
+/*
 #define foreach(iterator,object) \
     for (struct __foreachstr { bool __forfirst; visitor<typeof(object)> __foreachv; } __foreachctx = { true, object }; \
     __foreachctx.__forfirst && __foreachctx.__foreachv.first() || __foreachctx.__foreachv.next(); \
     __foreachctx.__forfirst = false) \
         for (bool __flipme=true; __flipme;) \
             for (typeof(object) &iterator = __foreachctx.__foreachv.obj(); __flipme; __flipme = false)
+*/
+
+#define foreach(viterator,object) \
+    for (struct __foreachstr { bool __forfirst; iterator<typeof(object),typeof(*(object.visitchild(0)))> __foreachv; } __foreachctx = { true, object }; \
+    __foreachctx.__forfirst && __foreachctx.__foreachv.first() || __foreachctx.__foreachv.next(); \
+    __foreachctx.__forfirst = false) \
+        for (bool __flipme=true; __flipme;) \
+            for (typeof(*(object.visitchild(0))) &viterator = __foreachctx.__foreachv.obj(); __flipme; __flipme = false)
     
+  
 #endif

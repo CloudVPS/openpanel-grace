@@ -112,6 +112,14 @@ public:
 					 	return *((kind *) _array[index]->ent);
 					 }
 					 
+	kind			*visitchild (int index)
+					 {
+					 	if ((! _array)||(index < 0)||(index >= _count))
+					 		return NULL;
+					 	
+					 	return ((kind *) _array[index]->ent);
+					 }
+					 
 					 /// Associate an object with a key.
 					 /// \param id The key for the object.
 					 /// \param to Pointer to the object.
