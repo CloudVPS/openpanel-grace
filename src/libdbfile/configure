@@ -694,6 +694,22 @@ fi
 saypass "$GDBMINC"
 LIBGDBM="-L${GDBMINC}/../lib -lgdbm"
 # ---------------------------------------------------------------------------
+# Figure out path to DB4 include
+# ---------------------------------------------------------------------------
+
+saypending "looking for db4/db.h include"
+for loc in /usr/include /usr/local/include /opt/include /sw/include /opt/local/include $HOME/include; do
+  if [ -f "$loc/db4/db.h" ]; then
+    DB4INC="$loc"
+  fi
+done
+if [ -z "$DB4INC" ]; then
+  sayfail "failed"
+  exit 1
+fi
+saypass "$DB4INC"
+LIBDB4="-L${DB4INC}/../lib -ldb-4"
+# ---------------------------------------------------------------------------
 # Create the makeinclude file
 # ---------------------------------------------------------------------------
 
@@ -708,11 +724,11 @@ COMPILER = $COMPILER
 COMPILERFLAGS = $COMPILERFLAGS
 CXX = $CXX
 CXXFLAGS = $CXXFLAGS
-INCLUDES = -I$GDBMINC
+INCLUDES = -I$GDBMINC -I$DB4INC
 LD = $LD
 LDFLAGS = $LDFLAGS $LIBDL_LDFLAGS
 LDL = $LIBDL
-LIBS = $LIBPTHREAD $LIBDL $LIBSOCKET $LIBNSL $LIBCRYPT $LIBGDBM
+LIBS = $LIBPTHREAD $LIBDL $LIBSOCKET $LIBNSL $LIBCRYPT $LIBGDBM $LIBDB4
 LPTHREAD = $LIBPTHREAD
 LSOCKET = $LIBSOCKET $LIBNSL
 RANLIB = $RANLIB

@@ -6,3 +6,4 @@ libdl
 libsocket
 libcrypt
 gdbm
+db4

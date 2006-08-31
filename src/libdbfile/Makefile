@@ -1,6 +1,6 @@
 include makeinclude
 
-OBJ			= 	dbfile.o gdbmfile.o
+OBJ			= 	dbfile.o gdbmfile.o db4file.o
 
 AR = ar cr
 
