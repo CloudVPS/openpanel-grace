@@ -122,6 +122,7 @@ namespace memory
 				b->status = wired;
 				b->pool = c;
 				c->lck.unlock();
+				::printf ("<retain> alloc %08x\n", b->dt);
 				return (void *) b->dt;
 			}
 		}
@@ -162,6 +163,7 @@ namespace memory
 					b->status = wired;
 					b->pool = c;
 					c->lck.unlock();
+					::printf ("<retain> alloc %08x\n", b->dt);
 					return (void *) b->dt;
 				}
 			}
@@ -176,6 +178,7 @@ namespace memory
 	// ====================================================================
 	void pool::free (void *ptr)
 	{
+		::printf ("<retain> free %08x\n", ptr);
 		block *b = (block *) (((char*)ptr) - sizeof (block));
 		
 #ifdef PARANOID_MEMORY_CHECKS

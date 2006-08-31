@@ -230,8 +230,8 @@ public:
 					 		crop (0);
 					 		return *this;
 					 	}
-					 	
-					 	retainvalue (str);
+					 	strcpy (*str);
+					 	delete str;
 						return *this;
 					 }
 					 
