@@ -47,7 +47,7 @@ void gdbm_free_datum (datum &d)
 bool gdbmfile::open (const string &dbfile)
 {
 	dbopen = false;
-	f = gdbm_open ((char *) dbfile.str(), 512, GDBM_WRITER, 0666, NULL);
+	f = gdbm_open ((char *) dbfile.str(), 512, GDBM_WRCREAT, 0666, NULL);
 	if (! f) return false;
 	return (dbopen = true);
 }
