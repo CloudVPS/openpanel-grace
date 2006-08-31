@@ -1,7 +1,14 @@
 #include <grace/retain.h>
 #include <grace/defaults.h>
+#include <grace/file.h>
+#include <signal.h>
 
 memory::pool *__retain_ptr;
+
+void poolsighandler (int sig)
+{
+	__retain_ptr->dump ("memory.dump");
+}
 
 namespace memory
 {
@@ -21,6 +28,7 @@ namespace memory
 	// ====================================================================
 	pool::pool (void)
 	{
+		signal (SIGUSR2, poolsighandler);
 		pools = NULL;
 	}
 
@@ -197,6 +205,61 @@ namespace memory
 		}
 #endif
 		b->status = memory::free;
+	}
+	
+	void pool::dump (const char *where)
+	{
+		file into;
+		into.openwrite (where);
+		sizepool *c = pools;
+		sizepool *nc, *nnc = NULL;
+
+		if (c) c->lck.lockr();
+
+		while (c)
+		{
+			into.printf ("sizepool %i\n", c->sz);
+			// Look for a free block.
+			for (unsigned int i=0; i<c->count; ++i)
+			{
+				block *b = (block *) (c->blocks + (i * c->sz));
+				
+				// Are you free, Mr. Humphrey?
+				if (b->status != memory::free)
+				{
+					into.printf ("  alloc %u\n", i);
+				}
+			}
+			
+			nc = c->extend;
+			if (nc) nc->lck.lockr();
+			c->lck.unlock();
+			
+			while (nc)
+			{
+				into.printf ("extension pool %i\n", nc->sz);
+				for (unsigned int i=0; i<nc->count; ++i)
+				{
+					block *b = (block *) (nc->blocks + (i * c->sz));
+					
+					// Are you free, Mr. Humphrey?
+					if (b->status != memory::free)
+					{
+						into.printf ("  alloc %u\n", i);
+					}
+				}
+				nnc = nc->extend;
+				if (nnc) nnc->lck.lockr();
+				nc->lck.unlock();
+				nc = nnc;
+			}
+			
+			nc = c->next;
+			if (nc) nc->lck.lockr();
+			c->lck.unlock();
+			c = c->next;
+		}
+		into.close ();
 	}
 	
 	// ====================================================================

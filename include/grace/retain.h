@@ -12,6 +12,8 @@ THROWS_EXCEPTION (memoryInvalidAddressException, 0x396c43d0, "Invalid address po
 THROWS_EXCEPTION (memoryLeakException, 0x28b8afca, "Possible memory leak "
 				  "detected, set defaults::memory::leakprotection to false "
 				  "if you know what you are doing");
+
+void poolsighandler (int);
 				  
 /// Namespace for custom memory management.
 namespace memory
@@ -69,6 +71,9 @@ namespace memory
 						 /// Determine if an allocation was pooled.
 						 /// \param ptr Pointer to the block's data.
 		bool			 pooled (void *ptr);
+		
+						 /// Create a debugging dump.
+		void			 dump (const char *);
 	
 	protected:
 		sizepool		*pools; ///< Linked list of sizepools.
