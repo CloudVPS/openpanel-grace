@@ -232,6 +232,9 @@ public:
 						 /// Assign to a retained statstring.
 	void				 assign (statstring *);
 	
+						 /// Clear the data.
+	void				 clear (void) { init (false); }
+	
 						 /// Determine length of the string.
 	inline unsigned int	 strlen (void) const
 						 {
