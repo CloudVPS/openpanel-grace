@@ -161,11 +161,12 @@ protected:
 */
 
 #define foreach(viterator,object) \
-    for (struct __foreachstr { bool __forfirst; iterator<typeof(object),typeof(*(object.visitchild(-1)))> __foreachv; } __foreachctx = { true, object }; \
-    __foreachctx.__forfirst && __foreachctx.__foreachv.first() || __foreachctx.__foreachv.next(); \
+    for (struct __foreachstr { bool __forfirst; bool __continuefor; iterator<typeof(object),typeof(*(object.visitchild(-1)))> __foreachv; } __foreachctx = { true, true, object }; \
+    __foreachctx.__continuefor && (__foreachctx.__forfirst && __foreachctx.__foreachv.first() || __foreachctx.__foreachv.next()); \
     __foreachctx.__forfirst = false) \
         for (bool __flipme=true; __flipme;) \
-            for (typeof(*(object.visitchild(-1))) &viterator = __foreachctx.__foreachv.obj(); __flipme; __flipme = false)
+            for (typeof(*(object.visitchild(-1))) &viterator = __foreachctx.__foreachv.obj(); __flipme; __flipme = false) \
+            	for (__foreachctx.__continuefor = false; ! __foreachctx.__continuefor; __foreachctx.__continuefor = true)
     
   
 #endif
