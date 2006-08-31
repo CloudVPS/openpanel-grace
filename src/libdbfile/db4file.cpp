@@ -206,3 +206,12 @@ bool db4file::nextloop (void)
 	decode (enc, db.v);
 	return true;
 }
+
+// ========================================================================
+// METHOD ::filesync
+// ========================================================================
+bool db4file::filesync (void)
+{
+	if (! dbopen) throw (dbfileNotOpenException());
+	return (f->sync(f, 0) == 0);
+}

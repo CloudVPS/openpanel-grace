@@ -240,7 +240,8 @@ bool dbfile::commit (void)
 		db.children[i].create = false;
 		db.children[i].members.clear();
 	}
-	return true;
+	
+	return filesync();
 }
 
 // ========================================================================
@@ -297,6 +298,14 @@ bool dbfile::startloop (void)
 // METHOD ::nextloop
 // ========================================================================
 bool dbfile::nextloop (void)
+{
+	return false;
+}
+
+// ========================================================================
+// METHOD ::filesync
+// ========================================================================
+bool dbfile::filesync (void)
 {
 	return false;
 }

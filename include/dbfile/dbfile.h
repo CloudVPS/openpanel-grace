@@ -295,6 +295,10 @@ protected:
 						 /// \return True if the next record was succesfully
 						 ///         loaded into db.
 	virtual bool		 nextloop (void);
+	
+						 /// Tells the database layer to write any and all
+						 /// changes irrevocably to disk.
+	virtual bool		 filesync (void);
 
 						 /// Encodes a value-object to a string using the
 						 /// requested coding method.

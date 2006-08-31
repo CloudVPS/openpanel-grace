@@ -219,3 +219,11 @@ bool gdbmfile::nextloop (void)
 	db.inloop = false;
 	return false;
 }
+
+// ========================================================================
+// METHOD ::filesync
+// ========================================================================
+bool dbfile::filesync (void)
+{
+	return true;
+}
