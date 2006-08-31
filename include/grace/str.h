@@ -573,6 +573,10 @@ public:
 					 /// Reallocates the buffer storage to minimum size.
 	void			 crop (void);
 	
+					 /// Alias to align naming with class value. Calls
+					 /// crop().
+	void			 clear (void) { crop (); }
+	
 					 /// Crop the buffer to a set size.
 					 /// \param sz Desired maximum size. If negative, keep the rightmost part of the original.
 	void			 crop (int sz);
