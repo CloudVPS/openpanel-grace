@@ -9,7 +9,7 @@
 // ========================================================================
 // FUNCTION gdbm_datum_from_string
 // ========================================================================
-datum gdbm_datum_from_string (const string &s)
+static datum gdbm_datum_from_string (const string &s)
 {
 	datum d;
 	d.dsize = s.strlen();
@@ -21,7 +21,7 @@ datum gdbm_datum_from_string (const string &s)
 // ========================================================================
 // FUNCTION gdbm_datum_to_string
 // ========================================================================
-void gdbm_datum_to_string (datum &d, string &s)
+static void gdbm_datum_to_string (datum &d, string &s)
 {
 	if (! d.dptr) return;
 	s.strcpy (d.dptr, d.dsize);
@@ -33,7 +33,7 @@ void gdbm_datum_to_string (datum &d, string &s)
 // ========================================================================
 // FUNCTION gdbm_free_datum
 // ========================================================================
-void gdbm_free_datum (datum &d)
+static void gdbm_free_datum (datum &d)
 {
 	if (! d.dptr) return;
 	::free (d.dptr);
