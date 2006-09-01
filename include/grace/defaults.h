@@ -107,8 +107,10 @@ namespace defaults
 		parameter memoryalertcallback leakcallback defaultvalue (NULL);
 	}
 	
+	/// Settings for the xml parser.
 	namespace xml
 	{
+		/// Should the parser shriek on unbalanced tags?
 		parameter bool strictbalance defaultvalue (true);
 	}
 }
