@@ -1221,23 +1221,38 @@ public:
 					 /// Convert from string with XML data.
 					 /// \param d The XML text data.
 					 /// \param s The schema to use for parsing. NULL for none.
-	void			 fromxml (const string &d, class xmlschema *s = NULL);
+	bool			 fromxml (const string &d, class xmlschema *s = NULL,
+							  string *err = NULL);
+
+	bool			 fromxml (const string &d, string &err)
+					 {
+					 	return fromxml (d, NULL, &err);
+					 }
 
 					 /// Convert from string with XML data.
 					 /// \param d The XML text data.
 					 /// \param s The schema to use for parsing.
-	void			 fromxml (const string &d, class xmlschema &s);
+	bool			 fromxml (const string &d, class xmlschema &s);
 	
 					 /// Load from an XML file.
 					 /// \param path The file name.
 					 /// \param s The schema to be used for parsing.
-	void			 loadxml (const string &path, class xmlschema &s);
+	bool			 loadxml (const string &path, class xmlschema &s);
 
 					 /// Load from an XML file.
 					 /// \param path The file name.
 					 /// \param s The schema to be used for parsing. NULL for none.
-	void			 loadxml (const string &path, class xmlschema *s = NULL);
-	 
+	bool			 loadxml (const string &path, class xmlschema *s = NULL,
+							  string *err = NULL);
+	
+	bool			 loadxml (const string &path, string &err)
+					 {
+					 	return loadxml (path, NULL, &err);
+					 }
+					 
+	bool			 loadxml (const string &p, class xmlschema &s, string &er);
+	bool			 fromxml (const string &p, class xmlschema &s, string &er);
+					 
 					 /// Convert from CXML.
 					 /// Uses a binary storage format comparable to the
 					 /// Apple/NeXT serialized plist. Requires a schema

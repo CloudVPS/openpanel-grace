@@ -106,6 +106,11 @@ namespace defaults
 		/// will look for this callback. [NULL].
 		parameter memoryalertcallback leakcallback defaultvalue (NULL);
 	}
+	
+	namespace xml
+	{
+		parameter bool strictbalance defaultvalue (true);
+	}
 }
 
 /// Tunable parameters

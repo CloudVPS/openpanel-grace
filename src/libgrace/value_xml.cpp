@@ -24,19 +24,33 @@
 // ----------------
 // Open an xml-file and translate it.
 // ========================================================================
-void value::loadxml (const string &path, xmlschema &schema)
+bool value::loadxml (const string &path, xmlschema &schema)
 {
-	loadxml (path, &schema);
+	return loadxml (path, &schema);
 }
 
-void value::loadxml (const string &path, xmlschema *schema)
+bool value::loadxml (const string &path, xmlschema *schema, string *err)
 {
 	string xml;
 	
 	xml = fs.load (path);
-	if (! xml.strlen()) return;
+	if (! xml.strlen())
+	{
+		if (err) err->strcpy ("Could not load file");
+		return false;
+	}
 	
-	fromxml (xml, schema);	
+	return fromxml (xml, schema, err);	
+}
+
+bool value::loadxml (const string &path, xmlschema &s, string &err)
+{
+	return loadxml (path, &s, &err);
+}
+
+bool value::fromxml (const string &xml, xmlschema &s, string &err)
+{
+	return fromxml (xml, &s, &err);
 }
 
 // ========================================================================
@@ -45,12 +59,12 @@ void value::loadxml (const string &path, xmlschema *schema)
 // Uses strutil::xmlreadtag() liberally to parse XML data in the plist-
 // format and using it to fill our tree.
 // ========================================================================
-void value::fromxml (const string &xml, xmlschema &schema)
+bool value::fromxml (const string &xml, xmlschema &schema)
 {
-	fromxml (xml, &schema);
+	return fromxml (xml, &schema);
 }
 
-void value::fromxml (const string &xml, xmlschema *schema)
+bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 {
 	string xmlsource;
 	statstring __id__;
@@ -120,6 +134,15 @@ void value::fromxml (const string &xml, xmlschema *schema)
 			bool dealingwithcontainervalue = false;
 			// xmlreadtag digs pointers for extra speed
 			strutil::xmlreadtag (&tag,&xmlsource);
+			
+			if (tag.errorcond)
+			{
+				if (err)
+				{
+					err->printf ("line %i: %s", tag.line, tag.errorstr.str());
+				}
+				return false;
+			}
 			
 			tagtype = tag.type;
 			
@@ -688,8 +711,11 @@ void value::fromxml (const string &xml, xmlschema *schema)
 	}
 	if (treestack.count())
 	{
+		if (err) err->strcpy ("Unexpected end of file");
+		return false;
 		//throw (exUnexpectedEndOfFile);
 	}
+	return true;
 }
 
 // ========================================================================

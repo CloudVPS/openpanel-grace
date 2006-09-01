@@ -410,6 +410,10 @@ public:
 					 /// Find a string sequence.
 					 /// \return Sequence position or -1.
 	int				 strstr (const string &, int offset=0) const;
+	
+					 /// Count the number of occurences of a character
+					 /// in the string (optionally up to a given position).
+	int				 countchr (char c, int endpos=0) const;
 					 
 	// --------------------------------------------------------------------
 	// Comparison methods
