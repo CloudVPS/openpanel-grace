@@ -223,7 +223,7 @@ bool gdbmfile::nextloop (void)
 // ========================================================================
 // METHOD ::filesync
 // ========================================================================
-bool dbfile::filesync (void)
+bool gdbmfile::filesync (void)
 {
 	return true;
 }
