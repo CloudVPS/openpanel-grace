@@ -10,6 +10,7 @@
 #include <grace/statstring.h>
 #include <grace/cmdtoken.h>
 #include <grace/system.h>
+#include <grace/defaults.h>
 
 // ========================================================================
 // STATIC METHOD ::splitspace
@@ -713,10 +714,12 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 	tag->eof = false;
     tag->haschildren = false;
 	tag->hasdata = false;
-		
+	
+	// find the opening of the next tag.
 	leftb = xml->strchr ('<', tag->crsr);
 	rightb = leftb+1;
 	
+	// Find the end of the tag.
 	bool inquote = false;
 	if (leftb >=0) while (true)
 	{
@@ -735,6 +738,12 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 		
 	if ( (leftb<0) || (rightb<0) )
 	{
+		if (rightb<0)
+		{
+			tag->errorcond = true;
+			tag->errorstr = "Unclosed XML tag at end of stream";
+			tag->line = xml->countchr ('\n', leftb) +1;
+		}
 		tag->eof = true;
 		return;
 	}
@@ -832,7 +841,7 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 		{
 			ncomp = xml->mid (ntag+2, tagName.strlen());
 			
-			if (ncomp == tagName)
+			if ( (! defaults::xml::strictbalance) || (ncomp == tagName) )
 			{
 				if (ntag - (tag->crsr))
 				{
@@ -847,18 +856,11 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 			}
 			else
 			{
-				tag->hasdata = true;
-				ntag = xml->strstr (searchStr, tag->crsr);
-				if (ntag > tag->crsr)
-				{
-					tag->data = xml->mid (tag->crsr, ntag - (tag->crsr));
-					tag->data.unescapexml();
-					tag->crsr = ntag;
-					tag->closed = true;
-					ntag = xml->strchr ('>', ntag);
-					if (ntag>0) tag->crsr = ntag+1;
-				}
-				else tag->data = "";
+				tag->eof = true;
+				tag->errorcond = true;
+				tag->errorstr = "Unbalanced closing tag";
+				tag->line = xml->countchr ('\n', ntag) +1;
+				return;
 			}
 			tag->haschildren = false;
 		}

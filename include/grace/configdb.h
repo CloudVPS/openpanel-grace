@@ -181,6 +181,7 @@ public:
 	bool load (const string &cprefix, string &error)
 	{
 		string fn;
+		string lerr;
 		fn.printf ("schema:%s.schema.xml", cprefix.str());
 		
 		if (! fs.exists (fn))
@@ -208,7 +209,13 @@ public:
 			error.printf (errortext::configdb::noconf, fn.str());
 			return false;
 		}
-		ndb.loadxml (fn, cschema);
+		
+		if (! ndb.loadxml (fn, cschema, lerr))
+		{
+			error.crop ();
+			error.printf ("File %s: %s", fn.str(), lerr.str());
+			return false;
+		}
 		
 		if (! cval.check (ndb, error)) return false;
 		

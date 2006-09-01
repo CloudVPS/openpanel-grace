@@ -18,7 +18,8 @@ public:
 				xmltag (void)
 				{
 					crsr = 0;
-					closed = eof = false;
+					closed = eof = errorcond = false;
+					line = 0;
 				}
 
 	statstring	type; //< Tag type.
@@ -29,6 +30,9 @@ public:
 	bool		haschildren; //< True if object has children.
 	bool		hasdata; //< True if object has data.
 	int			crsr; //< Cursor position.
+	int			line;
+	bool		errorcond;
+	string		errorstr;
 };
 
 /// String utility class.

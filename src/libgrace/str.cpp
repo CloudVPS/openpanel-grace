@@ -2639,3 +2639,15 @@ void string::init (bool first)
 	}
 }
 
+// ========================================================================
+// METHOD ::countchr
+// ========================================================================
+int string::countchr (char c, int endpos) const
+{
+	if (! data) return 0;
+	int res = 0;
+	int end = endpos ? endpos : size;
+	
+	for (int i=0; i < end; ++i) if (data->v[i] == c) ++res;
+	return res;
+}

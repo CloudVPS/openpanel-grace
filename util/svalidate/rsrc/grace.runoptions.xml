@@ -1,0 +1,8 @@
+<grace.runoptions>
+  <grace.option id="-v">
+    <grace.long>--verbose</grace.long>
+  </grace.option>
+  <grace.option id="--verbose">
+    <grace.argc>0</grace.argc>
+  </grace.option>
+</grace.runoptions>
