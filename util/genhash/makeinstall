@@ -1,0 +1,18 @@
+#!/bin/sh
+if [ ! -f ../../src/libgrace/configure.paths ]; then
+  echo "No configure.paths found, please run ./configure in src/libgrace" >&2
+  exit 1
+fi
+
+. ../../src/libgrace/configure.paths
+
+path_bin="$CONFIG_BINPATH"
+path_lib="$CONFIG_LIBPATH"
+path_include="$CONFIG_INCLUDEPATH"
+
+if [ ! -d "$path_bin" ]; then
+  mkdir "$path_bin"
+fi
+#!/bin/sh
+echo "Installing in $path_bin"
+cp -pr genhash genhash.app "$path_bin"/

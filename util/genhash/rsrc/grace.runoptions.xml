@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grace.runoptions>
+  <grace.option id="-h">
+    <grace.long>--help</grace.long>
+  </grace.option>
+  <grace.option id="-t">
+    <grace.long>--hash-type</grace.long>
+  </grace.option>
+  <grace.option id="--hash-type">
+    <grace.argc>1</grace.argc>
+    <grace.default>grace</grace.default>
+    <grace.help>Hash type: grace,grace64,djb64</grace.help>
+  </grace.option>
+</grace.runoptions>
