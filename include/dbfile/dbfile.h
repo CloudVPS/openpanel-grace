@@ -208,7 +208,8 @@ public:
 							flat = 0x7c3c444d, ///< Encode flat string
 							shox = 0x5c2445b4, ///< Encode as SHoX
 							attriblist = 0xb2cac808, ///< Encode as quoted attribute-list
-							courierdb = 0x6ab760c8 ///< Encode as courierdb
+							courierdb = 0x6ab760c8, ///< Encode as courierdb
+							valuelist = 0x19aa5836 ///< Encode right-hand values as list
 						 };
 						
 						 /// Default constructor.
