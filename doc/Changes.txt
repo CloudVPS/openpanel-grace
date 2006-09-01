@@ -1,4 +1,42 @@
-0.8.13     In production                              <pi@madscience.nl>
+0.8.13     In production                           <grace@openpanel.com>
+
+           * Added perthread<kind> template class to wrap the behavior of
+             keeping thread-local copies of instances of a class.
+
+           * Improved resolving of the location of the application bundle
+             directory.
+
+           * Executables will look for a function called grace_init and
+             call this before creating the main application object, allowing
+             you to override default settings for the runtime at the
+             earliest opportunity.
+
+           * Moved lots of default limits and sizes into a static tree
+             of global namespaces/variables that can be altered at
+             runtime.
+
+           * Added 'Serialized Hierarchical Object eXchange' (SHOX)
+             as a method for storing varlue objects in a compact binary
+             format that is endian-safe.
+
+           * Improved behavior of value objects in const context that
+             are cast to a string.
+
+           * Improved handling of escaped data inside XML attributes.
+
+           * Migrated inter-thread event messaging to a specialty
+             class eventq.
+
+           * Improved usability of the array and dictionary templates.
+
+           * Added an exception base class, making it easier to catch
+             targeted exceptions.
+
+           * Added sub-project libdbfile for accessing database files
+             through an easy interface.
+
+           * Added a template iterator class to improve the foreach
+             macro.
 
            * Added VT100 terminal emulation for keyboard input,
              including classes to set up a fully fledged assistive
@@ -63,9 +101,6 @@
            * Added timeofday class for microsecond measurements and
              higher precision 'wait until' functionality. Submitted by
              <danny@illogic.nl>.
-             
-           * Exceptions now map to a 32 bits hash of the exception name,
-             making it possible to resolve them in a global handler.
              
            * Improved handling of PHP serialized arrays.
 
