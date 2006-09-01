@@ -103,15 +103,15 @@ public:
 							 /// Convenience operator for assigning from
 							 /// a value. This should also cover strings,
 							 /// integers and the likes.
-	dbrecord				&operator= (const value &o) { fromvalue (o); }
+	dbrecord				&operator= (const value &o) { fromvalue (o); return *this; }
 	
 							 /// Assignment operator for a retainable
 							 /// value.
-	dbrecord				&operator= (value *o) { fromvalue (o); }
+	dbrecord				&operator= (value *o) { fromvalue (o); return *this; }
 	
 							 /// Assignment operator for a retainable
 							 /// string.
-	dbrecord				&operator= (string *o) { value v = o; fromvalue (v); }
+	dbrecord				&operator= (string *o) { value v = o; fromvalue (v); return *this; }
 
 							 //@{
 							 /// Convenience access to underlying value.
