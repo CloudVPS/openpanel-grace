@@ -210,7 +210,7 @@ public:
 			return false;
 		}
 		
-		if (! ndb.loadxml (fn, cschema, lerr)
+		if (! ndb.loadxml (fn, cschema, lerr))
 		{
 			error.crop ();
 			error.printf ("File %s: %s", fn.str(), lerr.str());
