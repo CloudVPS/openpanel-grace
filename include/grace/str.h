@@ -726,7 +726,7 @@ public:
 	void			 replace (const class value &set);
 	
 					 /// Find string sequence. 
-					 /// \return Sequence osition or \b -1 if not found.
+					 /// \return Sequence position or \b -1 if not found.
 	inline int		 strchr (char c, int left=0) const
 					 {
 					 	if (left<0) return -1;
