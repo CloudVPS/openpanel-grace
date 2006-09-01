@@ -21,9 +21,6 @@ Pending issues for GRACE:
   - Make room to the left of the object's allocation pointer to keep track
     of metadata, initially the object's size and type.
 
-  class tcpsocket: [status: BEFORE 1.0]
-  - Add support for timeouts
-
   class query: [status: BEFORE 1.0]
   - A new class that defines complex matching criteria
 
@@ -31,14 +28,14 @@ Pending issues for GRACE:
   - Add support for the query class 
   - Consider integrating table definitions with xmlschema
   
-  class directory: [status: UNSURE]
+  class directory: [status: UNSURE, partially met by libdbfile]
   - A new class abstracting access to any structural outside-of-program
     data stores
   - Optionally overlay several data stores in the same way the filesystem
     class does with files
   
-  configure-files have been handedited after tina generation:
-  - update tina with our changes
-  - re-generate configure-files
-  - possibly remove configure-files from repository as they are
+  configure-files have been hand-edited after tina generation:
+  - Update tina with our changes
+  - Re-generate configure-files
+  - Possibly remove configure-files from repository as they are
     generated
