@@ -24,6 +24,9 @@
 #define MB *(1024*1024)
 #define GB *(1024*1024*1024)
 
+/// Callback type for memory leak protection.
+typedef void (*memoryalertcallback)(void);
+
 /// Arbitrary settings that need some choice of default.
 namespace defaults
 {
@@ -97,6 +100,11 @@ namespace defaults
 		/// does not leak retainables, you should consider changing this
 		/// default to false. [true].
 		parameter bool leakprotection defaultvalue (true);
+		
+		/// \var memoryalertcallback defaults::memory::leakcallback
+		/// If the leakprotection is turned off, the memory handler
+		/// will look for this callback. [NULL].
+		parameter memoryalertcallback leakcallback defaultvalue (NULL);
 	}
 }
 

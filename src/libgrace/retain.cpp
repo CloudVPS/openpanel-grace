@@ -141,6 +141,10 @@ namespace memory
 			c->lck.unlock();
 			throw (memoryLeakException());
 		}
+		if (defaults::memory::leakcallback)
+		{
+			defaults::memory::leakcallback();
+		}
 		
 		// Ok, the user actually _wants_ these massive amounts of
 		// retainable objects, we will use the extent pointer to

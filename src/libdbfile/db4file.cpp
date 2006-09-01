@@ -1,7 +1,8 @@
 // ========================================================================
 // db4file.cpp: Implementation of dbfile using Berkeley DB4.
 //
-// (C) Copyright 2006 Pim van Riezen <pi@openpanel.com>/Peter van Dijk <peter@openpanel.com>
+// (C) Copyright 2006 Pim van Riezen <pi@openpanel.com>
+//					  Peter van Dijk <peter@openpanel.com>
 //                    PanelSix V.O.F., Rotterdam
 // ========================================================================
 #include <dbfile/db4file.h>
