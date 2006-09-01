@@ -7,6 +7,9 @@ all: svalidate.exe
 	cp ../../schemas/grace.validator.validator.xml rsrc
 	mkapp svalidate
 
+install:
+	./makeinstall
+
 svalidate.exe: $(OBJ)
 	$(LD) $(LDFLAGS) -o svalidate.exe $(OBJ) $(LIBS) ../../lib/libgrace.a
 
