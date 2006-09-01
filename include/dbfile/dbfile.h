@@ -103,15 +103,15 @@ public:
 							 /// Convenience operator for assigning from
 							 /// a value. This should also cover strings,
 							 /// integers and the likes.
-	dbrecord				&operator= (const value &o) { fromvalue (o); }
+	dbrecord				&operator= (const value &o) { fromvalue (o); return *this; }
 	
 							 /// Assignment operator for a retainable
 							 /// value.
-	dbrecord				&operator= (value *o) { fromvalue (o); }
+	dbrecord				&operator= (value *o) { fromvalue (o); return *this; }
 	
 							 /// Assignment operator for a retainable
 							 /// string.
-	dbrecord				&operator= (string *o) { value v = o; fromvalue (v); }
+	dbrecord				&operator= (string *o) { value v = o; fromvalue (v); return *this; }
 
 							 //@{
 							 /// Convenience access to underlying value.
@@ -208,7 +208,8 @@ public:
 							flat = 0x7c3c444d, ///< Encode flat string
 							shox = 0x5c2445b4, ///< Encode as SHoX
 							attriblist = 0xb2cac808, ///< Encode as quoted attribute-list
-							courierdb = 0x6ab760c8 ///< Encode as courierdb
+							courierdb = 0x6ab760c8, ///< Encode as courierdb
+							valuelist = 0x19aa5836 ///< Encode right-hand values as list
 						 };
 						
 						 /// Default constructor.

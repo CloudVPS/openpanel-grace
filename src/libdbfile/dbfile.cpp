@@ -350,6 +350,14 @@ void dbfile::encode (string &into, value &v)
 			}
 			break;
 		
+		case valuelist:
+			foreach (node, v)
+			{
+				if (into) into.strcat (sep);
+				into.printf ("%s", node.cval());
+			}
+			break;
+			
 		case courierdb:
 			foreach (node, v)
 			{
@@ -379,7 +387,8 @@ void dbfile::decode (const string &outof, value &v)
 			v.fromshox (outof);
 			break;
 		
-		case attriblist:
+		case attriblist: // fallthrough to valuelist
+		case valuelist:
 			v = strutil::splitquoted (outof, sep);
 			break;
 		

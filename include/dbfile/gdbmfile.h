@@ -39,6 +39,7 @@ protected:
 	virtual bool		 removerecord (const statstring &id);
 	virtual bool		 startloop (void);
 	virtual bool		 nextloop (void);
+	virtual bool		 filesync (void);
 						 //@}
 	
 };
