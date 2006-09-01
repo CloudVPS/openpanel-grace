@@ -51,7 +51,12 @@ bool db4file::open (const string &dbfile)
 		f=NULL;
 		return false;
 	}
+	// bloody bloody why not change the bloody name of the bloody call then!
+#if DB_VERSION_MINOR > 0
 	if ( 0 != f->open(f, NULL, dbfile.str(), NULL, DB_HASH, DB_CREATE, 0666))
+#else
+	if ( 0 != f->open(f, dbfile.str(), NULL, DB_HASH, DB_CREATE, 0666))
+#endif
 	{	
 		f->close(f, 0);
 		f=NULL;
