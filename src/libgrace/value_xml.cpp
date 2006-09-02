@@ -61,7 +61,7 @@ bool value::fromxml (const string &xml, xmlschema &s, string &err)
 // ========================================================================
 bool value::fromxml (const string &xml, xmlschema &schema)
 {
-	return fromxml (xml, &schema);
+	return fromxml (xml, &schema, NULL);
 }
 
 bool value::fromxml (const string &xml, xmlschema *schema, string *err)

@@ -12,6 +12,7 @@
 #include <grace/application.h>
 #include <grace/thread.h>
 #include <grace/lock.h>
+#include <grace/system.h>
 
 /// Background log message dispatcher.
 /// A thread object that is part of the daemon class, routing log messages
@@ -110,6 +111,8 @@ public:
 					 	_log = NULL;
 					 	_logtargets = NULL;
 					 	daemonized = false;
+					 	tuid = 0;
+					 	tgid = 0;
 					 }
 					 
 					 /// Destructor.
@@ -148,6 +151,17 @@ public:
 					 /// the actual fork()s.
 	void			 setforeground (void);
 	
+	bool			 settargetuser (const string &uname)
+					 {
+					 	value pw = kernel.userdb.getpwnam (uname);
+					 	if (! pw) return false;
+					 	tuid = pw["uid"].uval();
+					 	tgid = pw["gid"].uval();
+					 	return true;
+					 }
+	
+					 /// Set the desired width of the 'module' part of
+					 /// a log line in log::file logs.
 	void			 setlogmodulewidth (int i)
 					 {
 					 	if (_log) _log->setmodulewidth (i);
@@ -161,6 +175,8 @@ protected:
 	bool			 _foreground; ///< If true, daemonize will not fork.
 	class logthread	*_log; ///< The logthread.
 	bool			 daemonized; ///< True if daemonize() was called.
+	uid_t			 tuid; ///< Target userid after daemonize().
+	gid_t			 tgid; ///< Target groupid after daemonize().
 };
 
 #endif
