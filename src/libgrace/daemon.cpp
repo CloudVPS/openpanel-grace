@@ -192,7 +192,7 @@ void daemon::log (log::priority prio, const string &modulename,
 	logText.printf_va (fmt, &ap);
 	va_end (ap);
 	
-	if ((! daemonized) || (_foreground && (prio = log::critical)))
+	if ((! daemonized) || (_foreground && (prio == log::critical)))
 	{
 		ferr.printf ("%s: %s\n", modulename.str(), logText.str());
 		
