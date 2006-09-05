@@ -192,15 +192,19 @@ void daemon::log (log::priority prio, const string &modulename,
 	logText.printf_va (fmt, &ap);
 	va_end (ap);
 	
-	if (! daemonized)
+	if ((! daemonized) || (_foreground && (prio = log::critical)))
 	{
 		ferr.printf ("%s: %s\n", modulename.str(), logText.str());
-		backlog.newval();
-		backlog[-1][logproperty::module] = modulename;
-		backlog[-1][logproperty::text] = logText;
-		backlog[-1][logproperty::priority] = prio;
-		dq = true;
-		return;
+		
+		if (! daemonized)
+		{
+			backlog.newval();
+			backlog[-1][logproperty::module] = modulename;
+			backlog[-1][logproperty::text] = logText;
+			backlog[-1][logproperty::priority] = prio;
+			dq = true;
+			return;
+		}
 	}
 	
 	logmutex.lockw();
