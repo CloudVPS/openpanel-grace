@@ -344,7 +344,7 @@ bool xmlschema::wouldneedprecedents (const statstring &forclass)
 const string &xmlschema::resolvetype (const statstring &forclass)
 {
 	if (schema.exists (forclass)) return schema[forclass][key::xml_type].sval();
-	return forclass;
+	return forclass.sval();
 }
 
 // ========================================================================
@@ -358,9 +358,9 @@ const string &xmlschema::resolvetypeattrib (const statstring &forclass,
 {
 	visitor<const value> probe (schema);
 	
-	if (! probe.enter (forclass)) return t_string;
-	if (! probe.enter (key::xml_attributes)) return t_string;
-	if (! probe.enter (withlabel)) return t_string;
+	if (! probe.enter (forclass)) return t_string.sval();
+	if (! probe.enter (key::xml_attributes)) return t_string.sval();
+	if (! probe.enter (withlabel)) return t_string.sval();
 	return probe.obj()[key::xml_type].sval();
 }
 
