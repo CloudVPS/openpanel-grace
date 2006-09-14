@@ -2227,6 +2227,19 @@ string *string::filter (const string &set)
 	return &res;
 }
 
+
+// ========================================================================
+// METHOD ::striplf
+// ---------------
+// Return a subset of the string, copying only the characters that do not
+// match a linefeed
+// ========================================================================
+string *string::striplf (void)
+{
+	return this->rtrim ("\n\r");
+}
+
+
 // ========================================================================
 // METHOD ::stripchar
 // ---------------

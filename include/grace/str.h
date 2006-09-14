@@ -192,7 +192,7 @@ public:
 					 /// Assignment operator.
 	inline string	&operator= (const string &str)
 					 {
-						if (*this != str)
+						if (this != &str)
 						{
 							this->strcpy (str);
 						}
@@ -327,7 +327,8 @@ public:
 
 					 /// Remove trailing newline.
 					 /// Takes away a trailing \\n or \\r\\n sequence.
-	void			 striplf (void);
+					 /// \return new string without trailing linefeed
+	string			*striplf (void);
 
 	// --------------------------------------------------------------------
 	// Libc memorial methods
