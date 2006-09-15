@@ -378,14 +378,6 @@ public:
 						}
 						//@}
 						
-						/// Const string cast.
-	inline				operator const string & (void) const
-						{
-							static string empty;
-							if (! ref) return empty;
-							return ref->str;
-						}
-						
 						/// Bool cast.
 						/// Returns false if there's no reference.
 	inline				operator bool (void) const

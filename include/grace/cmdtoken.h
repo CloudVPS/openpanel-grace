@@ -95,7 +95,7 @@ protected:
 	value			 data; ///< Internal storage for the data.
 };
 
-/// A token representing a \@loop instruction.
+/// A token representing a 'loop' instruction.
 class cmdtoken_loop : public cmdtoken
 {
 public:
@@ -122,7 +122,7 @@ protected:
 	string			 loopvar; ///< The loop variable.
 };
 
-/// A token representing the @if instruction.
+/// A token representing the 'if' instruction.
 class cmdtoken_if : public cmdtoken
 {
 public:
@@ -150,7 +150,7 @@ protected:
 	value			 condition; ///< Storage for the conditional statement.
 };
 
-/// A token representing the \@case instruction.
+/// A token representing the 'case' instruction.
 class cmdtoken_case : public cmdtoken
 {
 public:
@@ -178,7 +178,7 @@ public:
 	string			 caselabel; ///< The case label.
 };
 
-/// A token representing the \@switch instruction
+/// A token representing the 'switch' instruction
 class cmdtoken_switch : public cmdtoken
 {
 public:
@@ -227,7 +227,7 @@ string *cmdtoken_parsestring (value &v, const string &s);
 /// \param stm The statement, as found between '$'-characters.
 string *cmdtoken_parseval (value &env, const string &stm);
 
-/// A token representing the \@set instruction
+/// A token representing the 'set' instruction
 class cmdtoken_set : public cmdtoken
 {
 public:
@@ -248,7 +248,6 @@ public:
 					 }
 					 
 					 /// Destructor.
-					 
 	virtual			~cmdtoken_set (void)
 					 {
 						 deltree();

@@ -1,5 +1,8 @@
 0.8.13     In production                           <grace@openpanel.com>
 
+           * Added leak detection to the management of memory involving
+             temporary objects.
+
            * Added perthread<kind> template class to wrap the behavior of
              keeping thread-local copies of instances of a class.
 
@@ -33,7 +36,8 @@
              targeted exceptions.
 
            * Added sub-project libdbfile for accessing database files
-             through an easy interface.
+             through an easy interface. Currently supports gdbm and
+             berkeleydb version 4.
 
            * Added a template iterator class to improve the foreach
              macro.

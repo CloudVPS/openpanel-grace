@@ -257,7 +257,15 @@ regexpression.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
 regexpression.o: ../../include/grace/reg.h
 retain.o: ../../include/grace/retain.h ../../include/grace/lock.h
 retain.o: ../../include/grace/exception.h ../../include/grace/platform.h
-retain.o: ../../include/grace/defaults.h
+retain.o: ../../include/grace/defaults.h ../../include/grace/file.h
+retain.o: ../../include/grace/str.h ../../include/grace/value.h
+retain.o: ../../include/grace/statstring.h ../../include/grace/checksum.h
+retain.o: ../../include/grace/case.h ../../include/grace/visitor.h
+retain.o: ../../include/grace/stack.h ../../include/grace/iterator.h
+retain.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+retain.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+retain.o: ../../include/grace/flags.h ../../include/grace/reg.h
+retain.o: ../../include/grace/ringbuffer.h
 ringbuffer.o: ../../include/grace/ringbuffer.h
 ringbuffer.o: ../../include/grace/exception.h ../../include/grace/str.h
 ringbuffer.o: ../../include/grace/value.h ../../include/grace/statstring.h
@@ -355,7 +363,7 @@ strutil.o: ../../include/grace/dictionary.h ../../include/grace/array.h
 strutil.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
 strutil.o: ../../include/grace/reg.h ../../include/grace/regexpression.h
 strutil.o: ../../include/grace/cmdtoken.h ../../include/grace/system.h
-strutil.o: ../../include/grace/timestamp.h
+strutil.o: ../../include/grace/timestamp.h ../../include/grace/defaults.h
 system.o: ../../include/grace/system.h ../../include/grace/value.h
 system.o: ../../include/grace/statstring.h ../../include/grace/str.h
 system.o: ../../include/grace/reg.h ../../include/grace/retain.h

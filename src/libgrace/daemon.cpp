@@ -44,11 +44,12 @@ void daemon::daemonize (void)
 	
 	daemonized = true;
 	
-	if (_foreground)
-	{
-		writepid();
-		return;
-	}
+	if (_foreground) writepid ();
+	
+	if (tgid) setregid (tgid, tgid);
+	if (tuid) setreuid (tuid, tuid);
+	
+	if (_foreground) return;
 	
 	switch (fork())
 	{
@@ -57,7 +58,7 @@ void daemon::daemonize (void)
 			switch (fork())
 			{
 				case 0:
-					writepid();
+					writepid ();
 					return;
 				
 				case -1:
@@ -191,15 +192,19 @@ void daemon::log (log::priority prio, const string &modulename,
 	logText.printf_va (fmt, &ap);
 	va_end (ap);
 	
-	if (! daemonized)
+	if ((! daemonized) || (_foreground && (prio == log::critical)))
 	{
 		ferr.printf ("%s: %s\n", modulename.str(), logText.str());
-		backlog.newval();
-		backlog[-1][logproperty::module] = modulename;
-		backlog[-1][logproperty::text] = logText;
-		backlog[-1][logproperty::priority] = prio;
-		dq = true;
-		return;
+		
+		if (! daemonized)
+		{
+			backlog.newval();
+			backlog[-1][logproperty::module] = modulename;
+			backlog[-1][logproperty::text] = logText;
+			backlog[-1][logproperty::priority] = prio;
+			dq = true;
+			return;
+		}
 	}
 	
 	logmutex.lockw();
