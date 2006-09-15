@@ -38,10 +38,13 @@ public:
 	string		*md5pw (const char *pw, const char *salt);
 
 protected:
+				 /// Finalize the md5 process
+	void		 finalize (void);
 	md5_word_t	 count[2];
 	md5_word_t	 abcd[4];
 	md5_byte_t	 buf[64];
 	
+	bool		 finalized;	
 	void		 process (const md5_byte_t *data);
 	void		 append (const md5_byte_t *data, int sz);
 	void		 finish (md5_byte_t digest[16]);
