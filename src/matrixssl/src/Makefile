@@ -2,7 +2,7 @@
 #	Makefile for MatrixSSL library
 #	Builds optimized shared library by default.
 #	See comments below for building a debug library.
-#	Copyright (c) PeerSec Networks, 2002-2005. All Rights Reserved.
+#	Copyright (c) PeerSec Networks, 2002-2006. All Rights Reserved.
 #
 
 CC      = gcc
@@ -44,7 +44,7 @@ OBJECTS	= \
 #	tcsh:	setenv MATRIXSSL_DEBUG 1
 #			unsetenv MATRIXSSL_DEBUG
 #
-MATRIXSSL_DEBUG = 1
+#MATRIXSSL_DEBUG = 1
 ifdef MATRIXSSL_DEBUG
 DFLAGS	= -g -Wall -Winline -Wdisabled-optimization -DDEBUG
 STRIP	= test
@@ -68,9 +68,9 @@ endif
 #
 #	Compile options
 #
-SHARED	= -shared
+SHARED	= -shared 
 CFLAGS  = $(DFLAGS) -DLINUX -I./
-LDFLAGS = -lc -lpthread
+LDFLAGS += -lc -lpthread
 
 #
 #	Override variables for compilation on Mac OS X (Darwin)
@@ -80,7 +80,7 @@ CC	= cc
 SO	= .dylib
 SHARED	= -dynamiclib
 CFLAGS += -DOSX -isystem -I/usr/include
-LDFLAGS = -flat_namespace -install_name @executable_path/../src/$(LIBRARY)
+LDFLAGS += -flat_namespace -install_name @executable_path/../src/$(LIBRARY)
 STRIP = test
 endif
 
@@ -94,7 +94,7 @@ endif
 
 all: compile
 
-compile: $(OBJECTS) $(STATIC)
+compile: $(OBJECTS) $(LIBRARY) $(STATIC)
 
 #
 # Manual dependencies
@@ -111,7 +111,7 @@ pki/*.o: matrixInternal.h matrixConfig.h Makefile \
 # Build the library
 #
 $(LIBRARY): $(OBJECTS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) $(SHARED) -o $@ $^ $(LDFLAGS)
 	$(STRIP) $(LIBRARY)
 
 #
@@ -120,6 +120,7 @@ $(LIBRARY): $(OBJECTS)
 $(STATIC): $(OBJECTS)
 	$(AR) -rcuv $@ $^
 	$(RANLIB) $@
+
 
 #
 #	Clean up all generated files

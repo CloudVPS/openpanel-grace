@@ -1,11 +1,11 @@
 /*
  *	rsa.c
- *	Release $Name:  $
+ *	Release $Name: MATRIXSSL_1_8_1_OPEN $
  *
  *	RSA crypto
  */
 /*
- *	Copyright (c) PeerSec Networks, 2002-2005. All Rights Reserved.
+ *	Copyright (c) PeerSec Networks, 2002-2006. All Rights Reserved.
  *	The latest version of this code is available at http://www.matrixssl.org
  *
  *	This software is open source; you can redistribute it and/or modify
@@ -209,7 +209,7 @@ static int32 sslPadRSA(unsigned char *in, int32 inlen, unsigned char *out,
 	c = out;
 	*c = 0x00;
 	c++;
-	*c = cryptType;
+	*c = (unsigned char)cryptType;
 	c++;
 	if (cryptType == RSA_PUBLIC) {
 		while (randomLen-- > 0) {
@@ -260,8 +260,8 @@ int32 matrixRsaEncryptPub(psPool_t *pool, sslRsaKey_t *key,
 	if (sslPadRSA(in, inlen, out, size, RSA_PRIVATE) < 0) {
 		return -1;
 	}
-	if (ssl_rsa_crypt(pool, out, size, out, &outlen, key, RSA_PUBLIC) < 0 ||
-			outlen != size) {
+	if (ssl_rsa_crypt(pool, out, size, out, (uint32*)&outlen, key,
+			RSA_PUBLIC) < 0 || outlen != size) {
 		return -1;
 	}
 	return size;
@@ -352,8 +352,8 @@ int32 matrixRsaDecryptPriv(psPool_t *pool, sslRsaKey_t *key,
 		return -1;
 	}
 	ptLen = inlen;
-	if (ssl_rsa_crypt(pool, in, inlen, in, &ptLen, key, RSA_PRIVATE) < 0 || 
-			ptLen != inlen) {
+	if (ssl_rsa_crypt(pool, in, inlen, in, (uint32*)&ptLen, key,
+			RSA_PRIVATE) < 0 || ptLen != inlen) {
 		return -1;
 	}
 	ptLen = sslUnpadRSA(in, inlen, out, outlen, RSA_PRIVATE);
@@ -361,7 +361,9 @@ int32 matrixRsaDecryptPriv(psPool_t *pool, sslRsaKey_t *key,
 	return ptLen;
 }
 
+/******************************************************************************/
 /*
+	Called by client as normal part of signature validation from server cert.
 	Called by the server if authenticating client in CertificateVerify
 */
 int32 matrixRsaDecryptPub(psPool_t *pool, sslRsaKey_t *key, 
@@ -374,8 +376,8 @@ int32 matrixRsaDecryptPub(psPool_t *pool, sslRsaKey_t *key,
 		return -1;
 	}
 	ptLen = inlen;
-	if (ssl_rsa_crypt(pool, in, inlen, in, &ptLen, key, RSA_PUBLIC) < 0 ||
-			ptLen != inlen) {
+	if (ssl_rsa_crypt(pool, in, inlen, in, (uint32*)&ptLen, key,
+			RSA_PUBLIC) < 0 || ptLen != inlen) {
 		return -1;
 	}
 	ptLen = sslUnpadRSA(in, inlen, out, outlen, RSA_PUBLIC);

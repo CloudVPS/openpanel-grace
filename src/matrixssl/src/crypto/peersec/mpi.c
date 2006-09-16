@@ -1,11 +1,11 @@
 /*	
  *	mpi.c
- *	Release $Name:  $
+ *	Release $Name: MATRIXSSL_1_8_1_OPEN $
  *
  *	multiple-precision integer library
  */
 /*
- *	Copyright (c) PeerSec Networks, 2002-2005. All Rights Reserved.
+ *	Copyright (c) PeerSec Networks, 2002-2006. All Rights Reserved.
  *	The latest version of this code is available at http://www.matrixssl.org
  *
  *	This software is open source; you can redistribute it and/or modify
@@ -31,6 +31,8 @@
 
 #include "../cryptoLayer.h"
 #include <stdarg.h>
+
+#ifndef USE_MPI2
 
 static int32 mp_exptmod_fast (psPool_t *pool, mp_int * G, mp_int * X,
 				mp_int * P, mp_int * Y, int32 redmode);
@@ -86,7 +88,17 @@ int32 _mp_init_multi(psPool_t *pool, mp_int *mp0, mp_int *mp1, mp_int *mp2,
 {
 	mp_err	res		= MP_OKAY;		/* Assume ok until proven otherwise */
 	int32		n		= 0;			/* Number of ok inits */
-	mp_int	*tempArray[9] = {mp0, mp1, mp2, mp3, mp4, mp5, mp6, mp7, NULL};
+	mp_int	*tempArray[9];
+	
+	tempArray[0] = mp0;
+	tempArray[1] = mp1;
+	tempArray[2] = mp2;
+	tempArray[3] = mp3;
+	tempArray[4] = mp4;
+	tempArray[5] = mp5;
+	tempArray[6] = mp6;
+	tempArray[7] = mp7;
+	tempArray[8] = NULL;
 
 	while (tempArray[n] != NULL) {
 		if (mp_init(pool, tempArray[n]) != MP_OKAY) {
@@ -210,8 +222,17 @@ void _mp_clear_multi(mp_int *mp0, mp_int *mp1, mp_int *mp2, mp_int *mp3,
 				  mp_int *mp4, mp_int *mp5, mp_int *mp6, mp_int *mp7)
 {
 	int32		n		= 0;		/* Number of ok inits */
-
-	mp_int	*tempArray[9] = {mp0, mp1, mp2, mp3, mp4, mp5, mp6, mp7, NULL};
+	mp_int	*tempArray[9];
+	
+	tempArray[0] = mp0;
+	tempArray[1] = mp1;
+	tempArray[2] = mp2;
+	tempArray[3] = mp3;
+	tempArray[4] = mp4;
+	tempArray[5] = mp5;
+	tempArray[6] = mp6;
+	tempArray[7] = mp7;
+	tempArray[8] = NULL;
 
 	for (n = 0; tempArray[n] != NULL; n++) {
 		mp_clear(tempArray[n]);
@@ -3113,7 +3134,7 @@ int32 s_mp_add (mp_int * a, mp_int * b, mp_int * c)
 #ifdef USE_SMALL_WORD
 /*
 	FUTURE - this is never needed, SLOW or not, because RSA exponents are
-	always odd. 
+	always odd.
 */
 int32 mp_invmod(psPool_t *pool, mp_int * a, mp_int * b, mp_int * c)
 {
@@ -3496,5 +3517,155 @@ int32 mp_shrink (mp_int * a)
 	return MP_OKAY;
 }
 
+/* single digit subtraction */
+int32 mp_sub_d (mp_int * a, mp_digit b, mp_int * c)
+{
+	mp_digit *tmpa, *tmpc, mu;
+	int32       res, ix, oldused;
+
+	/* grow c as required */
+	if (c->alloc < a->used + 1) {
+		if ((res = mp_grow(c, a->used + 1)) != MP_OKAY) {
+			return res;
+		}
+	}
+
+	/* if a is negative just do an unsigned
+	* addition [with fudged signs]
+	*/
+	if (a->sign == MP_NEG) {
+		a->sign = MP_ZPOS;
+		res     = mp_add_d(a, b, c);
+		a->sign = c->sign = MP_NEG;
+		return res;
+	}
+
+	/* setup regs */
+	oldused = c->used;
+	tmpa    = a->dp;
+	tmpc    = c->dp;
+
+	/* if a <= b simply fix the single digit */
+	if ((a->used == 1 && a->dp[0] <= b) || a->used == 0) {
+		if (a->used == 1) {
+			*tmpc++ = b - *tmpa;
+		} else {
+			*tmpc++ = b;
+		}
+		ix      = 1;
+
+		/* negative/1digit */
+		c->sign = MP_NEG;
+		c->used = 1;
+	} else {
+		/* positive/size */
+		c->sign = MP_ZPOS;
+		c->used = a->used;
+
+		/* subtract first digit */
+		*tmpc    = *tmpa++ - b;
+		mu       = *tmpc >> (sizeof(mp_digit) * CHAR_BIT - 1);
+		*tmpc++ &= MP_MASK;
+
+		/* handle rest of the digits */
+		for (ix = 1; ix < a->used; ix++) {
+			*tmpc    = *tmpa++ - mu;
+			mu       = *tmpc >> (sizeof(mp_digit) * CHAR_BIT - 1);
+			*tmpc++ &= MP_MASK;
+		}
+	}
+
+	/* zero excess digits */
+	while (ix++ < oldused) {
+		*tmpc++ = 0;
+	}
+	mp_clamp(c);
+	return MP_OKAY;
+}
+
+/* single digit addition */
+int32 mp_add_d (mp_int * a, mp_digit b, mp_int * c)
+{
+	int32     res, ix, oldused;
+	mp_digit *tmpa, *tmpc, mu;
+
+	/* grow c as required */
+	if (c->alloc < a->used + 1) {
+		if ((res = mp_grow(c, a->used + 1)) != MP_OKAY) {
+			return res;
+		}
+	}
+
+	/* if a is negative and |a| >= b, call c = |a| - b */
+	if (a->sign == MP_NEG && (a->used > 1 || a->dp[0] >= b)) {
+		/* temporarily fix sign of a */
+		a->sign = MP_ZPOS;
+
+		/* c = |a| - b */
+		res = mp_sub_d(a, b, c);
+
+		/* fix sign  */
+		a->sign = c->sign = MP_NEG;
+		return res;
+	}
+
+	/* old number of used digits in c */
+	oldused = c->used;
+
+	/* sign always positive */
+	c->sign = MP_ZPOS;
+
+	/* source alias */
+	tmpa    = a->dp;
+
+	/* destination alias */
+	tmpc    = c->dp;
+
+	/* if a is positive */
+	if (a->sign == MP_ZPOS) {
+		/* add digit, after this we're propagating the carry */
+		*tmpc   = *tmpa++ + b;
+		mu      = *tmpc >> DIGIT_BIT;
+		*tmpc++ &= MP_MASK;
+
+		/* now handle rest of the digits */
+		for (ix = 1; ix < a->used; ix++) {
+			*tmpc   = *tmpa++ + mu;
+			mu      = *tmpc >> DIGIT_BIT;
+			*tmpc++ &= MP_MASK;
+		}
+		/* set final carry */
+		ix++;
+		*tmpc++  = mu;
+
+		/* setup size */
+		c->used = a->used + 1;
+	} else {
+		/* a was negative and |a| < b */
+		c->used  = 1;
+
+		/* the result is a single digit */
+		if (a->used == 1) {
+			*tmpc++  =  b - a->dp[0];
+		} else {
+			*tmpc++  =  b;
+		}
+
+		/* setup count so the clearing of oldused
+		* can fall through correctly
+		*/
+		ix       = 1;
+	}
+
+	/* now zero to oldused */
+	while (ix++ < oldused) {
+		*tmpc++ = 0;
+	}
+	mp_clamp(c);
+	return MP_OKAY;
+}
+
+
 /******************************************************************************/
 
+#endif /* USE_MPI2 */

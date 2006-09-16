@@ -1,11 +1,11 @@
 /*	
  *	mpi.h
- *	Release $Name:  $
+ *	Release $Name: MATRIXSSL_1_8_1_OPEN $
  *
  *	multiple-precision integer library
  */
 /*
- *	Copyright (c) PeerSec Networks, 2002-2005. All Rights Reserved.
+ *	Copyright (c) PeerSec Networks, 2002-2006. All Rights Reserved.
  *	The latest version of this code is available at http://www.matrixssl.org
  *
  *	This software is open source; you can redistribute it and/or modify
@@ -236,6 +236,8 @@ extern int32 mp_init_size(psPool_t *pool, mp_int *a, int32 size);
 #define mp_iseven(a) (((a)->used > 0 && (((a)->dp[0] & 1) == 0)) ? MP_YES : MP_NO)
 #define mp_isodd(a)  (((a)->used > 0 && (((a)->dp[0] & 1) == 1)) ? MP_YES : MP_NO)
 
+extern int32 mp_add_d (mp_int * a, mp_digit b, mp_int * c);
+extern int32 mp_sub_d (mp_int * a, mp_digit b, mp_int * c);
 /*
 	set to zero
  */
@@ -409,6 +411,7 @@ extern int32 mp_montgomery_reduce(mp_int *a, mp_int *m, mp_digit mp);
 /*
 	d = a**b (mod c)
  */
+/* TODO - we never define this */
 extern int32 mp_exptmod(psPool_t *pool, mp_int *a, mp_int *b, mp_int *c, mp_int *d);
 
 /******************************************************************************/
@@ -474,6 +477,7 @@ extern int32 fast_mp_invmod(psPool_t *pool, mp_int *a, mp_int *b, mp_int *c);
 extern int32 fast_mp_montgomery_reduce(mp_int *a, mp_int *m, mp_digit mp);
 
 extern void bn_reverse(unsigned char *s, int32 len);
+
 
 #ifdef __cplusplus
    }
