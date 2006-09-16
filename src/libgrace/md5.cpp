@@ -26,6 +26,7 @@ void md5checksum::init (void)
 	abcd[1] = 0xefcdab89;
 	abcd[2] = 0x98badcfe;
 	abcd[3] = 0x10325476;
+	finalized = false;
 }
 
 void md5checksum::append (const string &in)
@@ -288,10 +289,13 @@ void md5checksum::process (const md5_byte_t *data)
 }
 
 // ========================================================================
-// METHOD ::finish
+// METHOD ::finalize
 // ========================================================================
-void md5checksum::finish (md5_byte_t digest[16])
+void md5checksum::finalize (void)
 {
+	if(finalized)
+		return;
+
     static const md5_byte_t pad[64] = {
 	0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -309,7 +313,17 @@ void md5checksum::finish (md5_byte_t digest[16])
 	append (pad, ((55 - (count[0] >> 3)) & 63) + 1);
 	append (data, 8);
 	
-	for (i=0; i<16; ++i)
+	finalized=true;
+}
+
+// ========================================================================
+// METHOD ::finish
+// ========================================================================
+void md5checksum::finish (md5_byte_t digest[16])
+{
+ 	finalize();
+	
+	for (int i=0; i<16; ++i)
 	{
 		digest[i] = (md5_byte_t) (abcd[i>>2] >> ((i&3) << 3));
 	}
@@ -377,18 +391,15 @@ void md5checksum::addencode (string &into, unsigned int v, int n)
 string *md5checksum::pw (void)
 {
 	returnclass (string) res retain;
-	
 	md5_byte_t digest[16];
 	finish (digest);
 	
-	unsigned int l;
-	
-	addencode (res, (digest[ 0]<<16) | (digest[ 6]<<8) | digest[12], 4);
-	addencode (res, (digest[ 1]<<16) | (digest[ 7]<<8) | digest[13], 4);
-	addencode (res, (digest[ 2]<<16) | (digest[ 8]<<8) | digest[14], 4);
-	addencode (res, (digest[ 3]<<16) | (digest[ 9]<<8) | digest[15], 4);
-	addencode (res, (digest[ 4]<<16) | (digest[10]<<8) | digest[ 5], 4);
-	addencode (res, digest[11], 2);
+	addencode (res, (((unsigned char) digest[ 0])<<16) | (((unsigned char) digest[ 6])<<8) | (unsigned char) digest[12], 4);
+	addencode (res, (((unsigned char) digest[ 1])<<16) | (((unsigned char) digest[ 7])<<8) | (unsigned char) digest[13], 4);
+	addencode (res, (((unsigned char) digest[ 2])<<16) | (((unsigned char) digest[ 8])<<8) | (unsigned char) digest[14], 4);
+	addencode (res, (((unsigned char) digest[ 3])<<16) | (((unsigned char) digest[ 9])<<8) | (unsigned char) digest[15], 4);
+	addencode (res, (((unsigned char) digest[ 4])<<16) | (((unsigned char) digest[10])<<8) | (unsigned char) digest[ 5], 4);
+	addencode (res, (unsigned char) digest[11], 2);
 	
 	return &res;
 }
@@ -426,7 +437,6 @@ string *md5checksum::md5pw (const char *pw, const char *salt)
 	ctx1.append (pw);
 	ctx1.append (tstr);
 	ctx1.append (pw);
-	
 	final = ctx1.checksum();
 	
 	for (pl = strlen(pw); pl>0; pl -= 16)
@@ -436,6 +446,7 @@ string *md5checksum::md5pw (const char *pw, const char *salt)
 		append (tstr);
 	}
 	
+	final[0]=0;
 	for (i = strlen(pw); i; i>>=1)
 	{
 		tstr.crop();
@@ -461,8 +472,8 @@ string *md5checksum::md5pw (const char *pw, const char *salt)
 	{
 		ctx1.init();
 		
-		if (i&1) ctx1.append (pw);
-		else ctx1.append (final);
+		if (i&1) {ctx1.append (pw); }
+		else {ctx1.append (final); }
 		
 		if (i%3)
 		{
@@ -471,13 +482,13 @@ string *md5checksum::md5pw (const char *pw, const char *salt)
 			ctx1.append (tstr);
 		}
 		
-		if (i%7) append (pw);
+		if (i%7)
 		{
 			ctx1.append (pw);
 		}
 		
-		if (i&1) ctx1.append (final);
-		else ctx1.append (pw);
+		if (i&1) {ctx1.append (final);}
+		else {ctx1.append (pw);}
 		
 		final = ctx1.checksum();
 	}
