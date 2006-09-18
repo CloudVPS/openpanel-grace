@@ -1418,12 +1418,13 @@ int string::strcasecmp (const char *s) const
 // ========================================================================
 int string::strncasecmp (const string &s, int sz) const
 {
-	if (! size) return (! sz);
+	if (! size) return (sz);
 	unsigned int rsz = sz;
 	if (! rsz)
 	{
 		rsz = s.strlen();
 	}
+	if (rsz > size) return -1;
 	return ::strncasecmp (data->v, s.str(), rsz);
 }
 
@@ -1434,12 +1435,13 @@ int string::strncasecmp (const string &s, int sz) const
 // ========================================================================
 int string::strncmp (const string &s, int sz) const
 {
-	if (! size) return ( !sz);
+	if (! size) return (sz);
 	unsigned int rsz = sz;
 	if (! rsz)
 	{
 		rsz = s.strlen();
 	}
+	if (rsz > size) return -1;
 	return ::strncmp (data->v, s.str(), rsz);
 }
 
