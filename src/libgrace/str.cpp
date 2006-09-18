@@ -1423,7 +1423,6 @@ int string::strncasecmp (const string &s, int sz) const
 	if (! rsz)
 	{
 		rsz = s.strlen();
-		if (rsz > size) rsz = size;
 	}
 	return ::strncasecmp (data->v, s.str(), rsz);
 }
@@ -1440,7 +1439,6 @@ int string::strncmp (const string &s, int sz) const
 	if (! rsz)
 	{
 		rsz = s.strlen();
-		if (rsz > size) rsz = size;
 	}
 	return ::strncmp (data->v, s.str(), rsz);
 }
