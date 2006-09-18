@@ -13,6 +13,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#define EX_NOEXEC 142
+
 #define PROC_RUNMAIN if (_running && (! _pid)) exit (main())
 
 /// Abstraction for a child process.
@@ -288,7 +290,7 @@ public:
 					 	
 					 	execv (cpath.str(), myargv);
 					 	fout.printf ("could not run\n");
-					 	return 1;
+					 	return EX_NOEXEC;
 					 }
 
 protected:
