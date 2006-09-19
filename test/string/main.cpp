@@ -191,6 +191,21 @@ int stringtestApp::main (void)
 	string empty;
 	if (empty.strncmp ("wibble", 6) == 0)
 		FAIL("bug#40-regression");
+
+	statstring sempty;
+	statstring one ("1");
+	statstring two ("wibble242");
+	statstring three ("/@!5245235");
+	
+	value v;
+	for (int i=0; i<4096; ++i)
+	{
+		v["test"] = (const string &) sempty;
+		v["test"] = (const string &) one;
+		v["case"] = (const string &) two;
+		v["case"] = (const string &) sempty;
+		v["test"] = (const string &) three;
+	}
 	
 	return 0;
 }
