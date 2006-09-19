@@ -289,7 +289,8 @@ public:
 			
 			for (int i=0; g->gr_mem[i]; i++)
 			{
-				r["members"].newval() = g->gr_mem[i];
+				string mem = g->gr_mem[i];
+				r["members"][mem] = mem;
 			}
 			
 			return &r;
