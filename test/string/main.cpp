@@ -200,11 +200,11 @@ int stringtestApp::main (void)
 	value v;
 	for (int i=0; i<4096; ++i)
 	{
-		v["test"] = (const string &) sempty;
-		v["test"] = (const string &) one;
-		v["case"] = (const string &) two;
-		v["case"] = (const string &) sempty;
-		v["test"] = (const string &) three;
+		v["test"] =  sempty;
+		v["test"] =  one;
+		v["case"] =  two;
+		v["case"] =  sempty;
+		v["test"] =  three;
 	}
 	
 	return 0;
