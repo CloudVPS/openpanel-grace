@@ -251,7 +251,7 @@ string::string (const statstring &s) : retainable()
 	alloc = 0;
 	data = NULL;
 	
-	if ((size = s.sval().strlen()))
+	if (s && (size = s.sval().strlen()))
 	{
 		// Make a copy-on-write reference
 		threadref_t me = getref();
@@ -2664,3 +2664,5 @@ int string::countchr (char c, int endpos) const
 	for (int i=0; i < end; ++i) if (data->v[i] == c) ++res;
 	return res;
 }
+
+string emptystring;

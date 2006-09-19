@@ -1193,5 +1193,7 @@ public:
 	string			*replace;
 };	
 
+extern string emptystring;
+
 #endif
 #endif

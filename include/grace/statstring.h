@@ -403,8 +403,7 @@ public:
 						/// Cast to const string.
 	const string		&sval (void) const
 						{
-							static string empty;
-							if (! ref) return empty;
+							if (! ref) return emptystring;
 							return ref->str;
 						}
 
