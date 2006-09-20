@@ -1962,24 +1962,24 @@ size_t string::bingetvint (size_t offset, unsigned int &val) const
 	switch (data->v[offset] & 0xc0)
 	{
 		case 0x00:
-			val = data->v[offset];
+			val = (data->v[offset] & 0xff);
 			return offset+1;
 			
 		case 0x40:
-			val = ((data->v[offset] & 0x3f) << 8) | (data->v[offset+1]);
+			val = ((data->v[offset] & 0x3f) << 8) | (data->v[offset+1] &0xff);
 			return offset+2;
 		
 		case 0x80:
 			val = ((data->v[offset] & 0x3f) << 16) |
-				  ((data->v[offset+1] << 8)) |
-				  ( data->v[offset+2]);
+				  ((data->v[offset+1] & 0xff) << 8) |
+				  ( data->v[offset+2] & 0xff);
 			return offset+3;
 		
 		case 0xc0:
 			val = ((data->v[offset] & 0x3f) << 24) |
-				  ((data->v[offset+1]) << 16) |
-				  ((data->v[offset+2]) << 8) |
-				  ( data->v[offset+3]);
+				  ((data->v[offset+1] & 0xff) << 16) |
+				  ((data->v[offset+2] & 0xff) << 8) |
+				  ( data->v[offset+3] & 0xff);
 			return offset+4;
 	}
 	return 0;
