@@ -893,8 +893,10 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 // --------------
 // Read an indicated amount of bytes from the file.
 // ========================================================================
-string *file::read (size_t sz)
+string *file::read (size_t psz)
 {
+	size_t sz = psz;
+	if (sz > buffer.room()) sz = buffer.room();
 	if (feof && (! buffer.backlog()))
 	{
 		errcode = FERR_EOF;
