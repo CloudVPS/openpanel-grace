@@ -1071,10 +1071,6 @@ public:
 	{
 		return (sval() != s.sval());
 	}
-	inline bool operator!= (bool other) const
-	{
-		return (bval() != other);
-	}
 	
 					 /// Wipe out value and children.
 	void 			 clear (void);
