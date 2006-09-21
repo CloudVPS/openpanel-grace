@@ -901,7 +901,7 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 							if (lts > tag->crsr)
 							{
 								tag->errorcond = true;
-								tag->errorstr = "mixed sub-nodes and data";
+								tag->errorstr = "Mixed sub-nodes and data";
 								tag->line = xml->countchr ('\n', leftb) +1;
 								tag->eof = true;
 								return;
