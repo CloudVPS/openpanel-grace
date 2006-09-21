@@ -22,6 +22,12 @@ public:
 					line = 0;
 				}
 
+	int			getline (const string *xml)
+				{
+					if ((!line) && crsr) line = xml->countchr ('\n', crsr);
+					return line;
+				}
+
 	statstring	type; //< Tag type.
 	string		data; //< Data contents.
 	value		properties; //< Tag properties.
