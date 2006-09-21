@@ -98,6 +98,7 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 	
 	// Need a stack to keep loops/conditionals
 	stack<value> treestack;
+	stack<string> tagstack;
 	value *crsr = this;
 	value *newcrsr;
 		
@@ -143,7 +144,9 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 				}
 				return false;
 			}
-			
+
+			if (tag.eof) break;
+						
 			tagtype = tag.type;
 			
 			if (schema) schema->resolveunionbase (tagtype);
@@ -171,6 +174,32 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 			}
 			else if (tagtype.str()[0] == '/')
 			{
+				string opener;
+				string closer;
+				if (tagstack.count() == 0)
+				{
+					if (err)
+					{
+						(*err) = "Extraneous closing tag";
+						err->printf (" <%s> at end of file", tagtype.str());
+					}
+					return false;
+				}
+				
+				opener = tagstack.pull ();
+				closer = tagtype.sval().mid (1);
+				
+				if (opener != closer)
+				{
+					if (err)
+					{
+						(*err) = "Unbalanced tag, ";
+						err->printf ("got %s expected %s", tag.line,
+									 opener.str(), closer.str());
+					}
+					return false;
+				}
+				
 				if (treestack.count() == 0) break;
 				crsr = treestack.pull ();
 				if (schema && (! schema->iscontainerclass (crsr->_type)))
@@ -194,6 +223,7 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 			}
 			else if (first)
 			{
+				tagstack.push (new string (tagtype));
 				// special treatment of the first tag, it should envelope
 				// the entire tree and cannot have a valid "index".
 				
@@ -239,6 +269,10 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 			}
 			else
 			{
+				if (! tag.closed)
+				{
+					tagstack.push (new string (tagtype));
+				}
 				if (second)
 				{
 					second = false;
@@ -711,7 +745,7 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 	}
 	if (treestack.count())
 	{
-		if (err) err->strcpy ("Unexpected end of file");
+		if (err && (! err->strlen())) err->strcpy ("Unexpected end of file");
 		return false;
 		//throw (exUnexpectedEndOfFile);
 	}

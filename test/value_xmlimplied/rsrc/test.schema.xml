@@ -18,7 +18,7 @@
     <xml.attributes>
       <xml.attribute label="key" mandatory="true" isindex="true">
         <xml.type>string</xml.type>
-      </xml.atrribute>
+      </xml.attribute>
     </xml.attributes>
   </xml.class>
   
@@ -27,7 +27,7 @@
     <xml.attributes>
       <xml.attribute label="key" mandatory="true" isindex="true">
         <xml.type>string</xml.type>
-      </xml.atrribute>
+      </xml.attribute>
     </xml.attributes>
     <xml.proplist>
       <xml.member class="String"/>
@@ -41,7 +41,7 @@
     <xml.attributes>
       <xml.attribute label="key" mandatory="true" isindex="true">
         <xml.type>string</xml.type>
-      </xml.atrribute>
+      </xml.attribute>
     </xml.attributes>
   </xml.class>
 </xml.schema>
