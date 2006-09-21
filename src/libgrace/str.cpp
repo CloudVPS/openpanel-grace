@@ -1838,7 +1838,7 @@ size_t string::binget8u (size_t offset, unsigned char &into) const
 size_t string::binget16 (size_t offset, short &into) const
 {
 	if ((offset+2) > size) return 0;
-	into = (data->v[offset] << 8) | data->v[offset+1];
+	into = ((data->v[offset]&0xff) << 8) | (data->v[offset+1] & 0xff);
 	return offset+2;
 }
 
@@ -1848,7 +1848,7 @@ size_t string::binget16 (size_t offset, short &into) const
 size_t string::binget16u (size_t offset, unsigned short &into) const
 {
 	if ((offset+2) > size) return 0;
-	into = (data->v[offset] << 8) | data->v[offset+1];
+	into = ((data->v[offset]&0xff) << 8) | (data->v[offset+1] & 0xff);
 	return offset+2;
 }
 
@@ -1858,8 +1858,10 @@ size_t string::binget16u (size_t offset, unsigned short &into) const
 size_t string::binget32 (size_t offset, int &into) const
 {
 	if ((offset+4) > size) return 0;
-	into = (data->v[offset] << 24) | (data->v[offset+1] << 16) |
-		   (data->v[offset+2] << 8) | (data->v[offset+3]);
+	into = ((data->v[offset] & 0xff) << 24) |
+		   ((data->v[offset+1] & 0xff) << 16) |
+		   ((data->v[offset+2] & 0xff) << 8) | 
+		   (data->v[offset+3] & 0xff);
 	return offset+4;
 }
 
@@ -1869,8 +1871,10 @@ size_t string::binget32 (size_t offset, int &into) const
 size_t string::binget32u (size_t offset, unsigned int &into) const
 {
 	if ((offset+4) > size) return 0;
-	into = (data->v[offset] << 24) | (data->v[offset+1] << 16) |
-		   (data->v[offset+2] << 8) | (data->v[offset+3]);
+	into = ((data->v[offset] & 0xff) << 24) |
+		   ((data->v[offset+1] & 0xff) << 16) |
+		   ((data->v[offset+2] & 0xff) << 8) | 
+		   (data->v[offset+3] & 0xff);
 	return offset+4;
 }
 
@@ -1880,10 +1884,14 @@ size_t string::binget32u (size_t offset, unsigned int &into) const
 size_t string::binget64 (size_t offset, long long &into) const
 {
 	if (offset+8 > size) return 0;
-	into = ((long long)data->v[offset] << 56) | ((long long)data->v[offset+1] << 48) |
-		   ((long long)data->v[offset+2] << 40) | ((long long)data->v[offset+3] << 32) |
-		   ((long long)data->v[offset+4] << 24) | ((long long)data->v[offset+5] << 16) |
-		   ((long long)data->v[offset+6] << 8) | ((long long)data->v[offset+7]);
+	into = ((long long)(data->v[offset] & 0xff) << 56) |
+		   ((long long)(data->v[offset+1] & 0xff) << 48) |
+		   ((long long)(data->v[offset+2] & 0xff) << 40) | 
+		   ((long long)(data->v[offset+3] & 0xff) << 32) |
+		   ((long long)(data->v[offset+4] & 0xff) << 24) | 
+		   ((long long)(data->v[offset+5] & 0xff) << 16) |
+		   ((long long)(data->v[offset+6] & 0xff) << 8) | 
+		   ((long long)(data->v[offset+7]  & 0xff));
 	return offset+8;
 }
 
@@ -1893,14 +1901,14 @@ size_t string::binget64 (size_t offset, long long &into) const
 size_t string::binget64u (size_t offset, unsigned long long &into) const
 {
 	if (offset+8 > size) return 0;
-	into = ((unsigned long long)data->v[offset] << 56) |
-		   ((unsigned long long)data->v[offset+1] << 48) |
-		   ((unsigned long long)data->v[offset+2] << 40) | 
-		   ((unsigned long long)data->v[offset+3] << 32) |
-		   ((unsigned long long)data->v[offset+4] << 24) | 
-		   ((unsigned long long)data->v[offset+5] << 16) |
-		   ((unsigned long long)data->v[offset+6] << 8) |
-		   ((unsigned long long)data->v[offset+7]);
+	into = ((unsigned long long)(data->v[offset] & 0xff) << 56) |
+		   ((unsigned long long)(data->v[offset+1] & 0xff) << 48) |
+		   ((unsigned long long)(data->v[offset+2] & 0xff) << 40) | 
+		   ((unsigned long long)(data->v[offset+3] & 0xff) << 32) |
+		   ((unsigned long long)(data->v[offset+4] & 0xff) << 24) | 
+		   ((unsigned long long)(data->v[offset+5] & 0xff) << 16) |
+		   ((unsigned long long)(data->v[offset+6] & 0xff) << 8) | 
+		   ((unsigned long long)(data->v[offset+7]  & 0xff));
 	return offset+8;
 }
 
