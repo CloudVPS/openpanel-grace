@@ -1039,6 +1039,14 @@ public:
 	{
 		return (sval().strcmp (other));
 	}
+	inline bool operator!= (bool other) const
+	{
+		return (bval() != other);
+	}
+	inline bool operator!= (bool other)
+	{
+		return (bval() != other);
+	}
 	inline bool operator== (bool other) const
 	{
 		return (bval() == other);
