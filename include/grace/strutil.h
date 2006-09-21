@@ -24,7 +24,7 @@ public:
 
 	int			getline (const string *xml)
 				{
-					if ((!line) && crsr) line = xml->countchr ('\n', crsr);
+					if ((!line) && crsr) line = xml->countchr ('\n', crsr) +1;
 					return line;
 				}
 
