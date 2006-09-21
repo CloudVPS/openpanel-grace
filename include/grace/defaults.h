@@ -112,6 +112,9 @@ namespace defaults
 	{
 		/// Should the parser shriek on unbalanced tags?
 		parameter bool strictbalance defaultvalue (true);
+		
+		/// Should the parser accept data mixed with nested tags?
+		parameter bool permitmixed defaultvalue (true);
 	}
 }
 

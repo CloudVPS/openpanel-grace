@@ -894,6 +894,20 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 					ntag = xml->strstr (searchStr, tag->crsr);
 					if (ntag > tag->crsr)
 					{
+						if (! defaults::xml::permitmixed)
+						{
+							int lts;
+							lts = xml->strchr ('<', tag->crsr);
+							if (lts > tag->crsr)
+							{
+								tag->errorcond = true;
+								tag->errorstr = "mixed sub-nodes and data";
+								tag->line = xml->countchr ('\n', leftb) +1;
+								tag->eof = true;
+								return;
+							}
+						}
+						
 						tag->data = xml->mid (tag->crsr, ntag - (tag->crsr));
 						tag->data.unescapexml();
 						tag->crsr = ntag;
