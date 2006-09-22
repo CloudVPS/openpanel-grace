@@ -173,8 +173,9 @@ void termbuffer::backspace (void)
 	// Does the viewport need to move along?
 	if (crsr < wcrsr)
 	{
-		wcrsr = crsr - (wsize-6);
-		if (wcrsr<0) wcrsr = 0;
+		if (crsr > (wsize-6))
+			wcrsr = crsr - (wsize-6);
+		else wcrsr = 0;
 	}
 }
 
@@ -188,8 +189,9 @@ void termbuffer::crleft (void)
 	
 	if (crsr < wcrsr)
 	{
-		wcrsr = crsr - (wsize - 6);
-		if (wcrsr<0) wcrsr = 0;
+		if (crsr > (wsize-6))
+			wcrsr = crsr - (wsize-6);
+		else wcrsr = 0;
 	}
 }
 
@@ -217,8 +219,9 @@ void termbuffer::crright (void)
 void termbuffer::crend (void)
 {
 	crsr = len;
-	wcrsr = crsr - (wsize - 4);
-	if (wcrsr<0)
+	if (crsr > (wsize-4))
+		wcrsr = crsr - (wsize - 4);
+	else
 	{
 		wcrsr = 0;
 		return;
