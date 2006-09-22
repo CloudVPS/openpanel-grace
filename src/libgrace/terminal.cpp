@@ -40,6 +40,8 @@ termbuffer::termbuffer (file &in, file &out, int _size, int _wsize)
 		ioctl (fin.filno, TIOCGWINSZ, (char *) &sz);
 		wsize = sz.ws_col;
 	}
+	
+	if (! wsize) wsize = 80;
 
 	for (unsigned int i=0; i<wsize; ++i) curview[i] = ' ';
 	
