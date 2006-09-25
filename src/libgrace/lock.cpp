@@ -1,4 +1,5 @@
 #include <grace/lock.h>
+#include <grace/system.h>
 
 bool __THREADED = false;
 
@@ -418,18 +419,32 @@ bool conditional::wait (int timeout)
 	bool result = false;
 	struct timespec ts;
 	
-	ts.tv_sec = timeout/10000;
-	ts.tv_nsec = 10 * (timeout % 10000);
+	struct timeval otv;
+	otv = kernel.time.unow();
+	
+	ts.tv_sec = otv.tv_sec;
+	ts.tv_nsec = 1000 * otv.tv_usec;
+	
+	ts.tv_nsec += (100000 * (timeout % 1000));
+	ts.tv_sec += timeout / 1000;
+	
+	if (ts.tv_nsec > 1000000000)
+	{
+		ts.tv_nsec -= 1000000000;
+		ts.tv_sec++;
+	}
 	
 	pthread_mutex_lock (mutex);
 	if (queue)
 	{
 		--queue;
 		pthread_mutex_unlock (mutex);
+		::printf ("immediate\n");
 		return true;
 	}
 	if (! pthread_cond_timedwait (cond, mutex, &ts))
 	{
+		::printf ("timedwait ok\n");
 		--queue;
 		result = true;
 	}
