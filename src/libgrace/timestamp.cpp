@@ -497,9 +497,9 @@ timeval timestamp::operator- (const timestamp &theother) const
 	nTime.tv_sec 	= ntime / 1000000LL;
 	nTime.tv_usec 	= ntime % 1000000LL;
 	
-	::printf ("current: %llu\n", current);
-	::printf ("given: %llu\n", given);
-	::printf ("result: %llu\n", ntime);
+	// ::printf ("current: %llu\n", current);
+	// ::printf ("given: %llu\n", given);
+	// ::printf ("result: %llu\n", ntime);
 	
 	return nTime;
 }
