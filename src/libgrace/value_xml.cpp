@@ -1133,10 +1133,7 @@ void value::printxml (int indent, string &out, bool compact,
 				{
 					sv = attr.sval();
 			
-					if (sv.strlen())
-						out.printf (" %s=\"%A\"", sn.str(), sv.str());
-					else
-						out.printf (" %s", sn.str());
+					out.printf (" %s=\"%A\"", sn.str(), sv.str());
 				}
 			}
 		}
