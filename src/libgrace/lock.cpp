@@ -425,7 +425,7 @@ bool conditional::wait (int timeout)
 	ts.tv_sec = otv.tv_sec;
 	ts.tv_nsec = 1000 * otv.tv_usec;
 	
-	ts.tv_nsec += (100000 * (timeout % 1000));
+	ts.tv_nsec += (1000000 * (timeout % 1000));
 	ts.tv_sec += timeout / 1000;
 	
 	if (ts.tv_nsec > 1000000000)
