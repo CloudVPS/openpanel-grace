@@ -794,7 +794,8 @@ public:
 			switch (opts.count())
 			{
 				case 0:
-					tb.tprintf ("%% Error at '%s'\n", split[i].cval());
+					tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"",
+								split[i].cval());
 					if (ki) tb.redraw ();
 					return 0;
 				
