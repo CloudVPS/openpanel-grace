@@ -439,12 +439,10 @@ bool conditional::wait (int timeout)
 	{
 		--queue;
 		pthread_mutex_unlock (mutex);
-		::printf ("immediate\n");
 		return true;
 	}
 	if (! pthread_cond_timedwait (cond, mutex, &ts))
 	{
-		::printf ("timedwait ok\n");
 		--queue;
 		result = true;
 	}
