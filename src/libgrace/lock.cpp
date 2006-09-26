@@ -425,9 +425,6 @@ bool conditional::wait (int timeout)
 	ts.tv_sec = otv.tv_sec;
 	ts.tv_nsec = 1000 * otv.tv_usec;
 	
-	::printf ("timeout = %i, %is\n", timeout, timeout/1000);
-	::printf ("start = (%i,%llu)\n", ts.tv_sec, ts.tv_nsec);
-	
 	ts.tv_nsec += (1000000LL * (timeout % 1000));
 	ts.tv_sec += timeout / 1000;
 	
@@ -437,8 +434,6 @@ bool conditional::wait (int timeout)
 		ts.tv_sec++;
 	}
 
-	::printf ("end = (%i,%llu)\n", ts.tv_sec, ts.tv_nsec);
-	
 	pthread_mutex_lock (mutex);
 	if (queue)
 	{

@@ -80,7 +80,7 @@ value *eventq::waitevent (int timeout_msec)
 		{
 			breaksection
 			{
-				if (! event.wait(timeout_msec * 10))
+				if (! event.wait(timeout_msec))
 				{
 					return &res;
 				}
