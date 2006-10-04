@@ -361,6 +361,10 @@ void application::init (int Argc, char *Argv[])
 					exit (1);
 				}
 			}
+			else
+			{
+				argv["*"].newval() = arg;
+			}
 		}
 		else
 		{
