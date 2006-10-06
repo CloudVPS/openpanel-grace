@@ -1,0 +1,37 @@
+.TH mkproject 1 "04 October 2006" "0.8.12" "mkproject"
+.SH NAME
+mkproject \- Create a grace supported C++ application or daemon
+.SH SYNOPSIS
+.\"
+.B mkproject 
+[OPTIONS]... PROJECTANAME
+PROJECTNAME Name of the project to create
+. 
+
+.SH OPTIONS
+
+.IP "-d"
+Create a daemon project
+
+
+
+.SH DESCRIPTION
+Help tool to setup a basic application or daemon skeleton, for use with the grace C++ libraries
+
+.SH EXAMPLE
+.IP "create a daemon project:"        
+$ mkproject -d my_daemon_project
+.IP "create a normal application:"
+$ mkproject my_new_app
+	
+.SH SEE ALSO
+.BR mkconf (1) 
+.BR mkapp (1) 
+.SH BUGS
+No known bugs at this time. 
+.SH AUTHOR
+.nf
+W.A. van der Meeren (danny@openpanel.com)
+.fi
+.SH HISTORY
+2006 \- The mkproject is part of the libgrace-dev package
