@@ -73,13 +73,13 @@ public:
 							 
 							 /// Constructor for the root record.
 							 /// \param iowner The owning dbfile.
-							 dbrecord (dbfile *iowner);
+							 dbrecord (class dbfile *iowner);
 							 
 							 /// Constructor for a child record.
 							 /// \param iowner The owning dbfile.
 							 /// \param iparent The parent record.
 							 /// \param key The node's index key.
-							 dbrecord (dbfile *iowner,
+							 dbrecord (class dbfile *iowner,
 							 		   dbrecord *iparent,
 							 		   const statstring &key);
 							 							 
