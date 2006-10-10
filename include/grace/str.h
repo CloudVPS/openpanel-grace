@@ -375,6 +375,8 @@ public:
 	
 	void			 strcat (const class value &);
 	
+	void			 strcat (const class statstring &);
+	
 					 /// Add string data at the start.
 					 /// Inserts the data from the other string
 					 /// at the left side of the buffer.
