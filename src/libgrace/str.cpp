@@ -1025,6 +1025,11 @@ void string::insert (const string &s)
 	}		
 }
 
+void string::strcat (const statstring &s)
+{
+	strcat (s.sval());
+}
+
 // ========================================================================
 // METHOD ::strcat
 // ---------------
