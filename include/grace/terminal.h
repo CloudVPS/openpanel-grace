@@ -784,7 +784,32 @@ public:
 		ln = tb.getline();
 		cliutil::splitwords (ln, ki ? tb.crsrpos() : ln.strlen(), split);
 		if (! ki) ln = ln.rtrim ();
-		if (ki == '?') split.newval();
+		if (ki == '?')
+		{
+			if (ln[-1]=='\"')
+			{
+				tb.insert (ki);
+				return 0;
+			}
+			// check out if we're in the middle of something quoted.
+			if (split.count())
+			{
+				int qpos = split[-1].sval().strchr('\"');
+				if (qpos >= 0)
+				{
+					// ok there's a quote, is there a second one?
+					if (split[-1].sval().strchr ('\"', qpos+1) < 0)
+					{
+						// thought not, let's treat this as a question
+						// mark proper.
+						tb.insert (ki);
+						return 0;
+					}
+				}
+			}
+			split.newval();
+		}
+		
 		
 		for (i=0; i< (split.count()-1); ++i)
 		{
