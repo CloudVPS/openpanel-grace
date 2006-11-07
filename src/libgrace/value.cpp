@@ -1075,9 +1075,11 @@ value &value::last (void)
 // ========================================================================
 const value	&value::operator[] (int i) const
 {
+	static value emptyvalue;
+	
 	if ((i<0) && ((arraysz+i) >=0)) return *(array[arraysz+i]);
 	value *v = getposition (i);
-	if (!v) return *this;
+	if (!v) return emptyvalue;
 	return *v;
 }
 value &value::operator[] (int i)
