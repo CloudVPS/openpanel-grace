@@ -190,9 +190,11 @@ public:
 	/// Access by string key.
 	inline const value	&operator[] (const char *str) const
 	{
+		static value emptyval;
 		value *v;
+
 		v = findchild (str);
-		if (!v) return *this;
+		if (!v) return emptyval;
 		return *v;
 	}
 
@@ -209,9 +211,11 @@ public:
 	/// Access by string key.
 	inline const value	&operator[] (const string &str) const
 	{
+		static value emptyval;
 		value *v;
+
 		v = findchild (str.str());
-		if (!v) return *this;
+		if (!v) return emptyval;
 		return *v;
 	}
 
@@ -228,10 +232,12 @@ public:
 	/// Access by string key.
 	inline const value	&operator[] (const statstring &str) const
 	{
+		static value emptyval;
 		value *v;
+
 		v = findchild ((unsigned int) str.key(),
 					   (const char *) str.str());
-		if (!v) return *this;
+		if (!v) return emptyval;
 		return *v;
 	}
 
@@ -249,7 +255,9 @@ public:
 	/// Access by value key (int or string).
 	inline value	&operator[] (const value &va)
 	{
+		static value emptyval;
 		value *v;
+
 		if (va.type() == t_int)
 		{
 			if (_type == t_unset)
@@ -264,6 +272,9 @@ public:
 				
 			v = findchild (va.sval());
 		}
+		
+		if (! v) return emptyval;
+		
 		return *v;
 	}
 
