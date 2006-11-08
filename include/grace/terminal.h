@@ -135,7 +135,7 @@ public:
 					 /// command callbacks, unsafe from other threads.
 	void			 writeconsole (const string &s)
 					 {
-					 	fout.puts (s);
+					 	fout.writeln (s);
 					 }
 					 
 					 /// Report the current cursor position.
