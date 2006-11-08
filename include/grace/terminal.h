@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <termios.h>
+#include <stdarg.h>
 #include <sys/ioctl.h>
 
 #define KEYCODE_HOME 1
@@ -962,6 +963,19 @@ public:
 	/// Send data to the console. Can be used by other threads while
 	/// the cli is in run() mode.
 	void sendconsole (const string &s) { term.sendconsole (s); }
+	
+	/// Send formatted data to the console.
+	void printf (const char *fmt, ...)
+	{
+		string out;
+		va_list ap;
+		
+		va_start (ap, fmt);
+		out.printf_va (fmt, &ap);
+		va_end (ap);
+		
+		sendconsole (out);
+	}
 	
 	/// The embedded terminal object.
 	terminal<cli <ctlclass> > term;
