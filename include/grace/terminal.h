@@ -973,9 +973,15 @@ public:
 		va_start (ap, fmt);
 		out.printf_va (fmt, &ap);
 		va_end (ap);
+				
+		linebuffer.strcat (out);
 		
-		fout.puts (ap);
-		term.termbuf.redraw();
+		while (linebuffer.strchr ('\n') >= 0)
+		{
+			out = linebuffer.cutat ('\n');
+			fout.writeln (out);
+			term.termbuf.redraw ();
+		}
 	}
 	
 	/// The embedded terminal object.
