@@ -130,6 +130,14 @@ public:
 					 	eventlock.unlock();
 					 }
 					 
+					 /// Send a line directly to the console, with no
+					 /// regard to the state of the terminal. Safe from
+					 /// command callbacks, unsafe from other threads.
+	void			 writeconsole (const string &s)
+					 {
+					 	fout.puts (s);
+					 }
+					 
 					 /// Report the current cursor position.
 	int				 crsrpos (void) { return crsr - prompt.strlen(); }
 	
@@ -979,7 +987,7 @@ public:
 		while (linebuffer.strchr ('\n') >= 0)
 		{
 			out = linebuffer.cutat ('\n');
-			term.termbuf.fout.writeln (out);
+			term.termbuf.writeconsole (out);
 			term.termbuf.redraw ();
 		}
 	}
