@@ -974,12 +974,8 @@ public:
 		out.printf_va (fmt, &ap);
 		va_end (ap);
 		
-		linebuffer.strcat (out);
-		while (linebuffer.strchr ('\n') >= 0)
-		{
-			out = linebuffer.cutat ('\n');
-			sendconsole (out);
-		}
+		fout.puts (ap);
+		term.termbuf.redraw();
 	}
 	
 	/// The embedded terminal object.
