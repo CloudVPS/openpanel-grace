@@ -979,7 +979,7 @@ public:
 		while (linebuffer.strchr ('\n') >= 0)
 		{
 			out = linebuffer.cutat ('\n');
-			fout.writeln (out);
+			term.termbuf.fout.writeln (out);
 			term.termbuf.redraw ();
 		}
 	}
