@@ -974,7 +974,12 @@ public:
 		out.printf_va (fmt, &ap);
 		va_end (ap);
 		
-		sendconsole (out);
+		linebuffer.strcat (out);
+		while (linebuffer.strchr ('\n') >= 0)
+		{
+			out = linebuffer.cutat ('\n');
+			sendconsole (out);
+		}
 	}
 	
 	/// The embedded terminal object.
@@ -992,6 +997,8 @@ protected:
 	ctlclass *owner; ///< Pointer to the parent object.
 	statstring curcmd; ///< The declaration of a matched command stream. 
 	value cmdline; ///< The last parsed command stream.
+	
+	string linebuffer;
 };
 
 #endif
