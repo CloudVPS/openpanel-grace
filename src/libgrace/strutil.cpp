@@ -774,8 +774,7 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 			}
 			else
 			{
-				tagBuf = xml->mid (leftb, rightb-leftb);
-				tag->crsr = 
+				tag->crsr = rightb + 3;
 			}
 		}
 		return;
