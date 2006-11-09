@@ -3,6 +3,9 @@
   <PrimaryHate hatelabel="reallycoolpeople">
     <HateType>loathing</HateType>
     <string id="hater">me</string>
+    <!--
+      <string id="thisshouldbeignored">test</string>
+    -->
   </PrimaryHate>
   <SecondaryHate hatelabel="ansaphones">
     <HateType>disdain</HateType>
