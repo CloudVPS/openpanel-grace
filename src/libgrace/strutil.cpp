@@ -775,8 +775,7 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 			else
 			{
 				tagBuf = xml->mid (leftb, rightb-leftb);
-				::printf ("### BEGIN ###\n%s\n### END ###\n", tagBuf.str());
-				tag->crsr = rightb+3;
+				tag->crsr = 
 			}
 		}
 		return;
