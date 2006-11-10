@@ -672,13 +672,7 @@ public:
 	{
 		return arraysz;
 	}
-	
-	/// Check whether the value is set.
-	inline bool		 isset (void) const
-	{
-		return (itype != i_unset);
-	}
-	
+		
 	/// Return count of numbered array members.
 	/// Only child nodes that have no key are counted.
 	inline int		 arraysize (void) const
