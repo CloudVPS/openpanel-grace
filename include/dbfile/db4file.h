@@ -2,7 +2,7 @@
 #define _DB4_FILE_H 1
 
 #include <dbfile/dbfile.h>
-#include <db4/db.h>
+#include <db.h>
 
 /// An implementation of dbfile using the Berkeley DB4 backend.
 class db4file : public dbfile
