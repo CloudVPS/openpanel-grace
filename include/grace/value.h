@@ -672,7 +672,7 @@ public:
 	{
 		return arraysz;
 	}
-	
+		
 	/// Return count of numbered array members.
 	/// Only child nodes that have no key are counted.
 	inline int		 arraysize (void) const

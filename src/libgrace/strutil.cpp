@@ -762,6 +762,21 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 	if (tagBuf[0] == '!')
 	{
 		tag->type = "!";
+		if ((tagBuf[1] == '-')&&(tagBuf[2] == '-'))
+		{
+			rightb = xml->strstr ("-->", leftb);
+			if (rightb<leftb)
+			{
+				tag->errorcond = true;
+				tag->errorstr = "Unclosed XML comment";
+				tag->line = xml->countchr ('\n', leftb) +1;
+				tag->eof = true;
+			}
+			else
+			{
+				tag->crsr = rightb + 3;
+			}
+		}
 		return;
 	}
 	

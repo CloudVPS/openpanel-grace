@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <termios.h>
+#include <stdarg.h>
 #include <sys/ioctl.h>
 
 #define KEYCODE_HOME 1
@@ -127,6 +128,14 @@ public:
 					 	eventlock.lockw();
 					 	events.newval() = s;
 					 	eventlock.unlock();
+					 }
+					 
+					 /// Send a line directly to the console, with no
+					 /// regard to the state of the terminal. Safe from
+					 /// command callbacks, unsafe from other threads.
+	void			 writeconsole (const string &s)
+					 {
+					 	fout.writeln (s);
 					 }
 					 
 					 /// Report the current cursor position.
@@ -963,6 +972,26 @@ public:
 	/// the cli is in run() mode.
 	void sendconsole (const string &s) { term.sendconsole (s); }
 	
+	/// Send formatted data to the console.
+	void printf (const char *fmt, ...)
+	{
+		string out;
+		va_list ap;
+		
+		va_start (ap, fmt);
+		out.printf_va (fmt, &ap);
+		va_end (ap);
+				
+		linebuffer.strcat (out);
+		
+		while (linebuffer.strchr ('\n') >= 0)
+		{
+			out = linebuffer.cutat ('\n');
+			term.termbuf.writeconsole (out);
+			term.termbuf.redraw ();
+		}
+	}
+	
 	/// The embedded terminal object.
 	terminal<cli <ctlclass> > term;
 
@@ -978,6 +1007,8 @@ protected:
 	ctlclass *owner; ///< Pointer to the parent object.
 	statstring curcmd; ///< The declaration of a matched command stream. 
 	value cmdline; ///< The last parsed command stream.
+	
+	string linebuffer;
 };
 
 #endif
