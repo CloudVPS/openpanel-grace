@@ -1,5 +1,14 @@
 0.8.13     In production                           <grace@openpanel.com>
 
+           * Internalized md5 crypt can now generate BSD-style MD5 hashes
+             natively.
+
+           * Fixed a timing bug in class conditional.
+
+           * The XML parser is much stricter now and will complain about
+             such things as unbalanced tags. More forgiving behavior can
+             still be requested through a global flag.
+
            * Added leak detection to the management of memory involving
              temporary objects.
 
