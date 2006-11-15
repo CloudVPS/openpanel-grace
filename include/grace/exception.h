@@ -21,11 +21,21 @@ public:
 	{
 		code = c;
 		description = ::strdup (d);
+		dofree = true;
+	}
+	
+	exception (exception &old)
+	{
+		code = old.code;
+		description = old.description;
+		dofree = old.dofree;
+		old.dofree = false;
 	}
 	
 	~exception (void)
 	{
-		free (description);
+		if (dofree) free (description);
+		description = NULL;
 	}
 	
 	/// The exception code. Useful for handling a specific class of
@@ -40,6 +50,7 @@ public:
 	/// like this:
 	/// \verbinclude exception_ex2.cpp
 	char *description;
+	bool dofree;
 };
 
 /// Macro for defining a custom exception class.
