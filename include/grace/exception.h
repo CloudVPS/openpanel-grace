@@ -24,12 +24,12 @@ public:
 		dofree = true;
 	}
 	
-	exception (exception &old)
+	exception (const exception &old)
 	{
 		code = old.code;
 		description = old.description;
 		dofree = old.dofree;
-		old.dofree = false;
+		((exception &)old).dofree = false;
 	}
 	
 	~exception (void)
