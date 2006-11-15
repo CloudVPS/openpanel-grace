@@ -1,6 +1,9 @@
 #ifndef _EXCEPTION_H
 #define _EXCEPTION_H 1
 
+#include <string.h>
+#include <stdlib.h>
+
 /// Base class for exceptions.
 /// Create your own derivations using the THROWS_EXCEPTION macro,
 /// which takes 3 arguments:
@@ -14,7 +17,16 @@
 class exception
 {
 public:
-	exception (int c, const char *d) { code = c; description = d; }
+	exception (int c, const char *d)
+	{
+		code = c;
+		description = ::strdup (d);
+	}
+	
+	~exception (void)
+	{
+		free (description);
+	}
 	
 	/// The exception code. Useful for handling a specific class of
 	/// exception. Exceptions defined through the THROWS_EXCEPTION macro
@@ -27,7 +39,7 @@ public:
 	/// its constructor allows for a custom string. So you can do stuff
 	/// like this:
 	/// \verbinclude exception_ex2.cpp
-	const char *description;
+	char *description;
 };
 
 /// Macro for defining a custom exception class.
