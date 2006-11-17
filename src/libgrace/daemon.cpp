@@ -46,8 +46,8 @@ void daemon::daemonize (void)
 	
 	if (_foreground) writepid ();
 	
-	if (tgid) setregid (tgid, tgid);
-	if (tuid) setreuid (tuid, tuid);
+	if (tgid) setregid (tgid, tegid);
+	if (tuid) setreuid (tuid, teuid);
 	
 	if (_foreground) return;
 	

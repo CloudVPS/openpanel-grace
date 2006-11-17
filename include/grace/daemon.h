@@ -111,8 +111,8 @@ public:
 					 	_log = NULL;
 					 	_logtargets = NULL;
 					 	daemonized = false;
-					 	tuid = 0;
-					 	tgid = 0;
+					 	tuid = teuid = 0;
+					 	tgid = tegid = 0;
 					 }
 					 
 					 /// Destructor.
@@ -168,6 +168,36 @@ public:
 					 }
 								   
 	logtarget		*_logtargets; ///< Linked list of log targets
+	
+					 /// Set the real and effective userid that
+					 /// will be active when we daemonize.
+					 /// \param uid The real and effective uid.
+	void			 settargetuid (uid_t uid) { tuid = teuid = uid; }
+	
+					 /// Set the real and effective userid that
+					 /// will be active when we daemonize.
+					 /// \param ruid The real uid.
+					 /// \param euid The effective uid.
+	void			 settargetuid (uid_t ruid, uid_t euid)
+					 {
+					 	tuid = ruid;
+					 	teuid = euid;
+					 }
+					 
+					 /// Set the real and effective groupid that
+					 /// will be active when we daemonize.
+					 /// \param gid The real and effective gid.
+	void			 settargetgid  (gid_t gid) { tgid = tegid = gid; }
+
+					 /// Set the real and effective groupid that
+					 /// will be active when we daemonize.
+					 /// \param rgid The real gid.
+					 /// \param egid The effective gid.
+	void			 settargetgid (gid_t rgid, gid_t egid)
+					 {
+					 	tgid = rgid;
+					 	tegid = egid;
+					 }
 
 protected:
 					 /// Shut down logthread;
@@ -175,8 +205,10 @@ protected:
 	bool			 _foreground; ///< If true, daemonize will not fork.
 	class logthread	*_log; ///< The logthread.
 	bool			 daemonized; ///< True if daemonize() was called.
-	uid_t			 tuid; ///< Target userid after daemonize().
-	gid_t			 tgid; ///< Target groupid after daemonize().
+	uid_t			 tuid; ///< Target real userid after daemonize().
+	uid_t			 teuid; ///< Target effective userid after daemonize().
+	gid_t			 tgid; ///< Target real groupid after daemonize().
+	gid_t			 tegid; ///< Target effective groupid after daemonize().
 };
 
 #endif
