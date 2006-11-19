@@ -499,7 +499,7 @@ bool filesystem::chown (const string &path, const string &usr, const string &gr)
 	return true;
 }
 
-bool filesystem::chown (const string &path, uid_t userid, gid_d groupid)
+bool filesystem::chown (const string &path, uid_t userid, gid_t groupid)
 {
 	string resolved;
 	resolved = fs.transw (path);
