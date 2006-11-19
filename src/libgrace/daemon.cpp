@@ -82,6 +82,9 @@ void daemon::daemonize (void)
 // ========================================================================
 daemon::~daemon (void)
 {
+	string path;
+	path.printf ("run:%s.pid", creator.str());
+	fs.rm (path);
 }
 
 // ========================================================================
