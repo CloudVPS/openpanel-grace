@@ -83,10 +83,10 @@ void daemon::daemonize (void)
 daemon::~daemon (void)
 {
 	string path;
+	string empty;
 	path.printf ("run:%s.pid", creator.str());
 	path = fs.transr (path);
-	fs.save ("/tmp/rmpath", path);
-	fs.rm (path);
+	fs.save (path, empty);
 }
 
 // ========================================================================
