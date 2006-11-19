@@ -499,6 +499,19 @@ bool filesystem::chown (const string &path, const string &usr, const string &gr)
 	return true;
 }
 
+bool filesystem::chown (const string &path, uid_t userid, gid_d groupid)
+{
+	string resolved;
+	resolved = fs.transw (path);
+	
+	if (! resolved.strlen())
+		return false;
+	
+	if (::chown (resolved.str(), userid, groupid)) return false;
+	
+	return true;
+}
+
 bool filesystem::cp (const string &from, const string &to)
 {
 	string pfrom;

@@ -119,6 +119,12 @@ public:
 					 /// \param group The group name.
 	bool			 chown (const string &path, const string &user,
 							const string &group);
+						
+					 /// Change object's ownership and group ownership.
+					 /// \param path The grace path.
+					 /// \param userid The unix userid of the new owner.
+					 /// \param groupid The unix groupid of the new owner.
+	bool			 chown (const string &path, uid_t userid, gid_t groupid);
 					
 					 /// Change object's group ownership.
 					 /// \param path The grace path.

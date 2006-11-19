@@ -155,8 +155,11 @@ void daemon::writepid (void)
 		{
 			return;
 		}
+		
 		f.printf ("%U", (unsigned long long) pid);
 		f.close();
+		
+		if (teuid || tegid) fs.chown (tpath, teuid, tegid);
 	}
 	catch (...)
 	{
