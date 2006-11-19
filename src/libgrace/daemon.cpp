@@ -44,9 +44,13 @@ void daemon::daemonize (void)
 	
 	daemonized = true;
 	
-	if (_foreground) writepid ();
-	
-	if (_foreground) return;
+	if (_foreground)
+	{
+		writepid ();
+		if (tgid) setregid (tgid, tegid);
+		if (tuid) setreuid (tuid, teuid);
+		return;
+	}
 	
 	switch (fork())
 	{
