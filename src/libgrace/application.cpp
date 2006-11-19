@@ -413,6 +413,7 @@ typedef void (*initfuncptr)(void);
 
 int main (int argc, char *argv[])
 {
+	int returnv;
 	initfuncptr inithook = NULL;
 	void *dlh = NULL;
 	
@@ -424,5 +425,7 @@ int main (int argc, char *argv[])
 	}
 	
 	app()->init (argc, argv);
-	return app()->main ();
+	returnv = app()->main ();
+	delete app();
+	return returnv;
 }
