@@ -147,7 +147,7 @@ void daemon::writepid (void)
 	path.printf ("run:%s.pid", creator.str());
 	try
 	{
-		tpath = fs.transw (path);
+		tpath = fs.transr (path);
 		if (! tpath.strlen())
 		{
 			ferr.printf (errortext::daemon::writepid);
