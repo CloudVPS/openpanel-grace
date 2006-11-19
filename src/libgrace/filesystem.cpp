@@ -480,12 +480,6 @@ bool filesystem::chown (const string &path, const string &touser)
 
 bool filesystem::chown (const string &path, const string &usr, const string &gr)
 {
-	string resolved;
-	resolved = fs.transw (path);
-	
-	if (! resolved.strlen())
-		return false;
-	
 	value pwdat = kernel.userdb.getpwnam (usr);
 	value grdat = kernel.userdb.getgrnam (gr);
 	
@@ -495,8 +489,7 @@ bool filesystem::chown (const string &path, const string &usr, const string &gr)
 	uid_t uid = pwdat["uid"];
 	gid_t gid = grdat["gid"];
 	
-	if (::chown (resolved.str(), uid, gid)) return false;
-	return true;
+	return chown (path, uid, gid);
 }
 
 bool filesystem::chown (const string &path, uid_t userid, gid_t groupid)
