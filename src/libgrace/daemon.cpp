@@ -148,6 +148,7 @@ void daemon::writepid (void)
 	try
 	{
 		tpath = fs.transr (path);
+		if (! tpath) tpath = fs.transw (path);
 		if (! tpath.strlen())
 		{
 			ferr.printf (errortext::daemon::writepid);
