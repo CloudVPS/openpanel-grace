@@ -52,6 +52,10 @@ public:
 						 /// \param k The attribute name to use.
 	void				 indexproperty (value &v, const statstring &k);
 
+						 /// Index child nodes by their immediate value.
+						 /// \param v The value object to index.
+	void				 indexvalues (value &v);
+
 						 /// Index child nodes by a keyed grandchild.
 						 /// For every record in the array, a look is
 						 /// taken for a child object with the provided

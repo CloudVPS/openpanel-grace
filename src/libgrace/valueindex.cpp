@@ -203,6 +203,27 @@ void valueindex::indexproperty (value &v, const statstring &prop)
 	}
 }
 
+void valueindex::indexvalues (value &v)
+{
+	if (root)
+	{
+		delete root;
+		root = NULL;
+	}
+	
+	foreach (node, v)
+	{
+		indexreference *r;
+		statstring pval = node.sval();
+		r = find (pval);
+		if (! r)
+		{
+			r = new indexreference (pval, this);
+		}
+		r->addreference (&node);
+	}
+}
+
 // ========================================================================
 // METHOD indexrecord
 // ------------------
