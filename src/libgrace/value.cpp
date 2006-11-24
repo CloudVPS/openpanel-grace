@@ -1557,4 +1557,12 @@ void value::init (bool first)
 	}
 }
 
+bool value::isempty (void) const
+{
+	if (itype != i_unset) return false;
+	if (array) return false;
+	if (attrib) return false;
+	return true;
+}
+
 const value emptyvalue;

@@ -1320,6 +1320,10 @@ public:
 					 /// Convert to SHOX string data.
 	string			*toshox (void) const;
 	
+					 /// Return true if the value is empty: No data,
+					 /// no attributes and no children.
+	bool			 isempty (void) const;
+	
 					 /// Returns true if a child key exists.
 	bool			 exists (const char *) const;
 
