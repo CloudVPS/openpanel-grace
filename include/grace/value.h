@@ -1509,6 +1509,8 @@ public:
 	void			 init (bool first=true);
 };
 
+extern const value emptyvalue;
+
 string *ip2str (unsigned int ipaddr);
 unsigned int str2ip (const string &str);
 

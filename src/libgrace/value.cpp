@@ -1556,3 +1556,5 @@ void value::init (bool first)
 		clear ();
 	}
 }
+
+const value emptyvalue;
