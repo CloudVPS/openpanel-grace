@@ -1055,7 +1055,7 @@ void value::rmval (const char *key)
 
 void value::rmval (const value &v)
 {
-	rmval (v.key, v._name.str());
+	rmval (v.cval());
 }
 
 // ========================================================================
