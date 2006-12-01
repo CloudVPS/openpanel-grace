@@ -292,7 +292,6 @@ cat > "$DIRNAME/configure" << __END_CONFIGURE__
 # ---------------------------------------------------------------------------
 # Solaris' /bin/sh uses a braindead builtin echo, circumvent
 # ---------------------------------------------------------------------------
-
 TEST=\`echo -n ""\`
 if [ -z "\$TEST" ]; then
   ECHON="echo -n"
@@ -303,29 +302,188 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Parse command line arguments
+# Useful functions for command line argument parsing
 # ---------------------------------------------------------------------------
-
 usage ()
 {
+  S=\`echo "\$0" | sed -e "s/./ /g"\`
   cat << EOF
-Usage: \$0 [-q]
+Usage: \$0 [--quiet]             Quiet mode [-q]
+       \$S [--prefix p]          Set root install-prefix
+       \$S [--exec-prefix p]     Set executable install-prefix
+       \$S [--lib-prefix p]      Set library install-prefix
+       \$S [--conf-prefix p]     Set configuration install-prefix
+       \$S [--include-prefix p]  Set include-files install-prefix
 EOF
   exit 1
 }
 QUIET=0
 
-while getopts "q" opt; do
-  case \$opt in
+# Checks for an option that is defined as --foo=bar. Returns 1 if so, or
+# 0 if not. Caller can use this to shift in cases of "--foo bar".
+parseopt() {
+  withvalue=\`echo "\$1" | sed -e "s/.*=.*//"\`
+  if [ ! -z "\$withvalue" ]; then
+    return 0
+  fi
+  return 1
+}
 
-  q) QUIET=1 ;;
-  esac
+# Part two of the "--foo bar" eq "--foo=bar" trick: Use sed to strip the
+# --foo= off the second variation. In either case we'll end up with "bar".
+parsearg() {
+	echo "\$2" | sed -e "s/--\${1}=//"
+}
+
+# Determine whether we're logged in as root.
+isroot() {
+	uid=\`id | sed -e "s/^uid=//;s/ .*//;s/(.*//"\`
+	if [ "\$uid" = "0" ]; then
+	  return 0
+	fi
+	return 1
+}
+
+# Combine two paths.
+makepath() {
+	echo "\${1}\${2}" | sed -e "s@//@/@g;s@/\./@/.@g"
+}
+
+# ---------------------------------------------------------------------------
+# Set up sensible defaults for the installation paths
+# ---------------------------------------------------------------------------
+if isroot; then
+  if [ -d /sw ]; then
+    INOPT_INSTALLROOT="/sw/"
+  elif [ -d /usr/freeware ]; then
+    INOPT_INSTALLROOT="/usr/freeware/"
+  else
+    INOPT_INSTALLROOT="/usr/local/"
+  fi
+else
+  if [ -d "\$HOME/.lib" ]; then
+    INOPT_INSTALLROOT="\$HOME/."
+  elif [ -d "\$HOME/Library/Preferences" ]; then
+    INOPT_INSTALLROOT="\$HOME/"
+    
+  else
+    INOPT_INSTALLROOT="\$HOME/"
+  fi
+fi
+
+INOPT_INCLUDEPATH="include"
+INOPT_BINPATH="bin"
+INOPT_CONFPATH="etc/conf"
+if [ ! -d "\${INOPT_INSTALLROOT}\${INOPT_CONFPATH}" ]; then
+  if [ -d "\${INOPT_INSTALLROOT}conf" ]; then
+    INOPT_CONFPATH="conf"
+  elif [ -d "\${INOPT_INSTALLROOT}Library/Preferences" ]; then
+    INOPT_CONFPATH="Library/Preferences"
+  elif [ -d "\${HOME}/Library/Preferences" ]; then
+    CONFIG_CONFPATH="\${HOME}/Library/Preferences"
+  fi
+fi
+
+INOPT_LIBPATH="lib"
+QUIET=0
+
+# ---------------------------------------------------------------------------
+# Parse the command line arguments
+# ---------------------------------------------------------------------------
+MOREOPTS="yes"
+while [ ! -z "\$MOREOPTS" ]; do
+	case "\$1" in
+		-h)
+			usage
+			;;
+		--help)
+			usage
+			;;
+		-q)
+			QUIET=1
+			;;
+		--prefix*)
+			if parseopt "\$1" "\$2"; then shift; fi
+			CONFIG_INSTALLROOT=\`parsearg prefix "\$1"\`
+			CONFIG_INSTALLROOT=\`echo "\${CONFIG_INSTALLROOT}/" | sed -e "s@//@@g"\`
+			CONFIG_BINPATH=\`makepath "\$CONFIG_INSTALLROOT" "\$INOPT_BINPATH"\`
+			CONFIG_LIBPATH=\`makepath "\$CONFIG_INSTALLROOT" "\$INOPT_LIBPATH"\`
+			CONFIG_CONFPATH=\`makepath "\$CONFIG_INSTALLROOT" "\$INOPT_CONFPATH"\`
+			;;
+		--exec-prefix*)
+			if parseopt "\$1" "\$2"; then shift; fi
+			CONFIG_BINPATH=\`parsearg exec-prefix "\$1"\`
+			;;
+		--lib-prefix*)
+			if parseopt "\$1" "\$2"; then shift; fi
+			CONFIG_LIBPATH=\`parsearg lib-prefix "\$1"\`
+			;;
+		--conf-prefix*)
+			if parseopt "\$1" "\$2"; then shift; fi
+			CONFIG_CONFPATH=\`parsearg conf-prefix "\$1"\`
+			;;
+		--include-prefix*)
+			if parseopt "\$1" "\$2"; then shift; fi
+			CONFIG_INCLUDEPATH=\`parsearg include-prefix "\$1"\`
+			;;
+		--quiet)
+			QUIET=1
+			;;
+		--)
+			MOREOPTS=""
+			;;
+		--*)
+			arg=\`echo "\$1" | cut -f1 -d=\`
+			echo "Unknown option: \$arg" >&2
+			exit 1
+			;;
+		*)
+			MOREOPTS=""
+			;;
+	esac
+	if [ ! -z "\$MOREOPTS" ]; then shift; fi
 done
+
+# ---------------------------------------------------------------------------
+# Merge values from command line to the actual defaults
+# ---------------------------------------------------------------------------
+if [ -z "\$CONFIG_INSTALLROOT" ]; then
+	CONFIG_INSTALLROOT="\$INOPT_INSTALLROOT"
+fi
+
+if [ -z "\$CONFIG_BINPATH" ]; then
+  CONFIG_BINPATH=\`makepath "\$CONFIG_INSTALLROOT" "\$INOPT_BINPATH"\`
+fi
+
+if [ -z "\$CONFIG_LIBPATH" ]; then
+	CONFIG_LIBPATH=\`makepath "\$CONFIG_INSTALLROOT" "\$INOPT_LIBPATH"\`
+fi
+
+if [ -z "\$CONFIG_CONFPATH" ]; then
+	CONFIG_CONFPATH=\`makepath "\$CONFIG_INSTALLROOT" "\$INOPT_CONFPATH"\`
+fi
+
+if [ -z "\$CONFIG_INCLUDEPATH" ]; then
+	CONFIG_INCLUDEPATH=\`makepath "\$CONFIG_INSTALLROOT" "\$INOPT_INCLUDEPATH"\`
+fi
+
+# ---------------------------------------------------------------------------
+# Create the configure.paths file
+# ---------------------------------------------------------------------------
+cat > configure.paths << _EOF_
+CONFIG_INSTALLROOT="\${CONFIG_INSTALLROOT}"
+CONFIG_BINPATH="\${CONFIG_BINPATH}"
+CONFIG_LIBPATH="\${CONFIG_LIBPATH}"
+CONFIG_CONFPATH="\${CONFIG_CONFPATH}"
+CONFIG_INCLUDEPATH="\${CONFIG_INCLUDEPATH}"
+_EOF_
+
+# Display paths if our pie-hole is not closed administratively.
+if [ \$QUIET = 0 ]; then cat configure.paths; fi
 
 # ---------------------------------------------------------------------------
 # Provide a bunch of useful tools to our snippets
 # ---------------------------------------------------------------------------
-
 saypending ()
 {
   if [ \$QUIET = 1 ]; then
@@ -720,6 +878,78 @@ rm -f conftest.cpp conftest
 
 
 # ---------------------------------------------------------------------------
+# Figure out whether we need libcrypt
+# ---------------------------------------------------------------------------
+
+cat >conftest.c <<EOF
+#include <crypt.h>
+int main (int argc, char *argv[])
+{
+  char *test = crypt("abcdefg","aB");
+  return 1;
+}
+EOF
+
+saypending "checking where crypt() hides"
+if \$COMPILER \$COMPILERFLAGS -o conftest.o -c conftest.c >> configure.log 2>&1; then
+  CRYPTH="#include <crypt.h>"
+  saypass "crypt.h"
+else
+cat >conftest.c <<EOF
+#include <unistd.h>
+int main (int argc, char *argv[])
+{
+   char *test = crypt("abcdefg","aB");
+   return 1;
+}
+EOF
+if \$COMPILER \$COMPILERFLAGS -o conftest.o -c conftest.c >>configure.log 2>&1; then
+  saypass "unistd.h"
+  CRYPTDEFINE=""
+else
+cat >conftest.c <<EOF
+#define _XOPEN_SOURCE
+#include <unistd.h>
+int main (int argc, char *argv[])
+{
+   char *test = crypt("abcdefg","aB");
+   return 1;
+}
+EOF
+if \$COMPILER \$COMPILERFLAGS -o conftest.o -c conftest.c >>configure.log 2>&1; then
+  saypass "unistd.h"
+  CRYPTDEFINE="#define _XOPEN_SOURCE"
+else
+  cat > conftest.c <<EOF
+#define _XOPEN_SOURCE 5
+#include <unistd.h>
+int main (int argc, char *argv[])
+{
+    char *test = crypt("abcdefg","aB");
+    return 1;
+}
+EOF
+if \$COMPILER \$COMPILERFLAGS -o conftest.o -c conftest.c >> configure.log 2>&1; then
+  saypass "unistd.h (evil netbsd)"
+  CRYPTDEFINE="#define _XOPEN_SOURCE 5"
+else
+  sayfail "failed"
+  exit 1
+fi
+fi
+fi
+fi
+saypending "checking whether crypt needs -lcrypt"
+if \$COMPILER \$COMPILERFLAGS -o conftest conftest.o >>configure.log 2>&1; then
+  LIBCRYPT=""
+  saypass "no"
+else
+  LIBCRYPT="-lcrypt"
+  saypass "yes"
+fi
+
+rm -f conftest.c conftest.o conftest
+# ---------------------------------------------------------------------------
 # Create the makeinclude file
 # ---------------------------------------------------------------------------
 
@@ -739,7 +969,7 @@ LD = \$LD
 LDFLAGS = \$LDFLAGS \$LIBDL_LDFLAGS
 LDL = \$LIBDL
 LGRACE = \$LIBGRACE
-LIBS = \$LIBGRACE \$LIBPTHREAD \$LIBSOCKET \$LIBNSL \$LIBDL
+LIBS = \$LIBGRACE \$LIBPTHREAD \$LIBSOCKET \$LIBNSL \$LIBDL \$LIBCRYPT
 LPTHREAD = \$LIBPTHREAD
 LSOCKET = \$LIBSOCKET \$LIBNSL
 SHARED = \$SHARED
@@ -762,12 +992,13 @@ cat >platform.h <<EOF
 \$CTIME_R_INCLUDE
 \$PTHREAD_HAVE_RWLOCK
 \$PTHREAD_HAVE_TIMEDLOCK\$SOCKLEN_TYPEDEF
+\$CRYPTH
+\$CRYPTDEFINE
 #endif
 EOF
 
 saypass "done"
 if [ -f configure.log ]; then rm -f configure.log; fi
-
 
 __END_CONFIGURE__
 
@@ -778,7 +1009,7 @@ grace
 pthread
 libsocket
 libdl
-libnsl
+libcrypt
 __EOF__
 
 echo "Project <$APPDOMAIN.$APPCNAME> created"
