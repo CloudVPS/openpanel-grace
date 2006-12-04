@@ -45,6 +45,10 @@ public:
 	{
 		pwcrypt.randseeded = false;
 	}
+	
+	~systemclass (void)
+	{
+	}
 
 	/// Exceptions thrown by systemclass.
 	enum systemException {
