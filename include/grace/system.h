@@ -85,6 +85,10 @@ public:
 	class userdbFunctions
 	{
 	public:
+		~userdbFunctions (void)
+		{
+		}
+	
 		/// Get current userid.
 		uid_t getuid (void)
 		{
