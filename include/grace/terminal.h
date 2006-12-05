@@ -158,9 +158,10 @@ public:
 					 {
 					 	for (unsigned int i=0; i<wsize; ++i) curview[i] = 0;
 					 }
+
+	file			 fin, fout; // Input/output file descriptors.
 					 
 protected:
-	file			 fin, fout; // Input/output file descriptors.
 	unsigned int	 size; ///< Total size of the buffer.
 	unsigned int	 wsize; ///< Width of the display
 	unsigned int	 len; ///< Current length of text in buffer.
@@ -981,15 +982,9 @@ public:
 		va_start (ap, fmt);
 		out.printf_va (fmt, &ap);
 		va_end (ap);
-				
-		linebuffer.strcat (out);
 		
-		while (linebuffer.strchr ('\n') >= 0)
-		{
-			out = linebuffer.cutat ('\n');
-			term.termbuf.writeconsole (out);
-			term.termbuf.redraw ();
-		}
+		term.termbuf.fout.puts (out);
+		term.termbuf.redraw ();
 	}
 	
 	/// The embedded terminal object.
