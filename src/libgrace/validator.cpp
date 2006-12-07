@@ -76,7 +76,7 @@ bool validator::checkobject (const value &obj, const statstring &id,
 		return false;
 	}
 	
-	
+	currentid = id;
 	def = schema[id];
 	if (matchAnd (obj, def, error))
 	{
@@ -613,7 +613,7 @@ void validator::makeerror (string &into, int errorcode,
 	into.crop (0);
 	string path = encodeidchain();
 	
-	into.printf ("<%03i> [%s] %s", errorcode, path.str(),
+	into.printf ("<%s:%03i> [%s] %s", currentid.str(), errorcode, path.str(),
 								   errortext.str());
 	
 	if (detail.strlen())

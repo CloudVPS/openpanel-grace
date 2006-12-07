@@ -57,6 +57,7 @@ protected:
 	bool			 matchDataMaxSize (const value &, int);
 
 	value			 schema;
+	statstring		 currentid;
 	
 	value			 idchain;
 	string			*encodeidchain (void);
