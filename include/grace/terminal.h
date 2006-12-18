@@ -935,11 +935,11 @@ public:
 	void run (const string &p)
 	{
 		bool done = false;
-		string res;
 		setprompt (p);
 		
 		while (! done)
 		{
+			string res;
 			res = term.readline (prompt);
 			if (res.strlen())
 			{
