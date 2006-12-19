@@ -281,6 +281,7 @@ public:
 	/// Access by value key (int or string).
 	inline value	&operator[] (const value &va) const
 	{
+		static value emptyval;
 		value *v;
 		if (va.type() == t_int)
 		{			
