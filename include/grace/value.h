@@ -290,6 +290,8 @@ public:
 		{
 			v = findchild (va.sval());
 		}
+
+		if (! v) return emptyval;
 		return *v;
 	}
 	
