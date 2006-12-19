@@ -17,7 +17,10 @@
 #define KEYCODE_END 5
 #define KEYCODE_BACKSPACE 8
 #define KEYCODE_DELETE 127
-#define KEYCODE_CLEAR 21
+#define KEYCODE_CLEARLEFT 21
+#define KEYCODE_CLEARRIGHT 25
+#define KEYCODE_WORDRIGHT 6
+#define KEYCODE_WORDLEFT 2
 #define KEYCODE_ESCAPE 27
 #define KEYCODE_RETURN 10
 
@@ -74,6 +77,12 @@ public:
 					 /// Perform a cursor right movement.
 	void			 crright (void);
 	
+					 /// Move one word to the left.
+	void			 wordleft (void);
+	
+					 /// Move one word to the right.
+	void			 wordright (void);
+	
 					 /// Move cursor to the end of the buffer.
 	void			 crend (void);
 	
@@ -113,6 +122,14 @@ public:
 	
 					 /// Clear the terminal buffer.
 	void			 clear (void);
+	
+					 /// Clear the terminal buffer to the left of the
+					 /// cursor.
+	void			 clearleft (void);
+	
+					 /// Clear the terminal buffer to the right of the
+					 /// cursor.
+	void			 clearright (void);
 	
 					 /// Get the current contents of the input buffer.
 	string			*getline (void)
@@ -320,8 +337,20 @@ public:
 					termbuf.backspace();
 					break;
 					
-				case KEYCODE_CLEAR:
-					termbuf.clear();
+				case KEYCODE_CLEARLEFT:
+					termbuf.clearleft();
+					break;
+
+				case KEYCODE_CLEARRIGHT:
+					termbuf.clearright();
+					break;
+					
+				case KEYCODE_WORDLEFT:
+					termbuf.wordleft();
+					break;
+				
+				case KEYCODE_WORDRIGHT:
+					termbuf.wordright();
 					break;
 
 				case KEYCODE_RETURN:
@@ -389,16 +418,33 @@ public:
 						termbuf.backspace();
 						break;
 						
-					case KEYCODE_CLEAR:
-						termbuf.clear();
+					case KEYCODE_CLEARLEFT:
+						termbuf.clearleft();
+						break;
+
+					case KEYCODE_CLEARRIGHT:
+						termbuf.clearright();
+						break;
+						
+					case KEYCODE_WORDLEFT:
+						termbuf.wordleft();
+						break;
+					
+					case KEYCODE_WORDRIGHT:
+						termbuf.wordright();
 						break;
 						
 					case KEYCODE_ESCAPE:
 						kib = termbuf.getkey();
 						if (kib != '[')
 						{
-							termbuf.insert ("^[");
-							termbuf.insert (kib);
+							if (kib == 'f') termbuf.wordright();
+							else if (kib == 'b') termbuf.wordleft();
+							else
+							{
+								termbuf.insert ("^[");
+								termbuf.insert (kib);
+							}
 						}
 						else
 						{
@@ -728,8 +774,10 @@ public:
 					else if ((! word.strlen()) || 
 					         (word.strncmp (opt.id().sval(), word.strlen()) == 0))
 					{
+						if (opt.id() == word) into.clear ();
 						into[opt.id()] = opt;
 						into[-1]("node") = ocmd;
+						if (opt.id() == word) return;
 					}
 				}
 			}
@@ -751,8 +799,15 @@ public:
 				if ((! word.strlen()) || 
 				    (word.strncmp (ocmd, word.strlen()) == 0))
 				{
+					if (word == ocmd)
+					{
+						into.clear();
+					}
+					
 					into[obj.id()] = obj ("description");
 					into[-1]("node") = obj.id().sval();
+					
+					if (word == ocmd) return;
 				}
 			}
 		}

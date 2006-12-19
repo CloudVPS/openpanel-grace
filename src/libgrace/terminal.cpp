@@ -321,6 +321,51 @@ void termbuffer::insert (char c)
 	advance();
 }
 
+void termbuffer::clearleft (void)
+{
+	if (crsr == len)
+	{
+		set ("");
+		return;
+	}
+	
+	int promptsz = prompt.strlen();
+	
+	memmove (buffer+promptsz, buffer+crsr, len-crsr);
+	len -= (crsr-promptsz);
+	crsr = promptsz;
+	wcrsr = 0;
+	advance ();
+}
+
+void termbuffer::clearright (void)
+{
+	if (crsr == len) return;
+	
+	for (;len>crsr;--len) buffer[len] = 0;
+}
+
+void termbuffer::wordleft (void)
+{
+	int promptsz = prompt.strlen();
+	if (crsr <= promptsz) return;
+	crsr--;
+	if (crsr > promptsz) crsr--;
+	
+	while ((crsr>promptsz) && (buffer[crsr] != ' ')) crsr--;
+	if (crsr>promptsz) crsr++;
+	advance();
+}
+
+void termbuffer::wordright (void)
+{
+	if (crsr == len) return;
+	
+	while ((crsr<len) && (buffer[crsr] != ' ')) crsr++;
+	if (crsr<len) crsr++;
+	advance();
+}
+
 // ==========================================================================
 // METHOD termbuffer::advance
 // ==========================================================================
