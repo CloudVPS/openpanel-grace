@@ -1,10 +1,10 @@
 in.xml
 in2.xml
-<001> [] missing birthdate
+<root:001> [] missing birthdate
 in3.xml
-<103> [/postCode] Postcode syntax error (1011 AB)
+<postcode:103> [/postCode] Postcode syntax error (1011 AB)
 in4.xml
-<001> [] missing accesslevel
+<root:001> [] missing accesslevel
 in5.xml
-<001> [] missing postcode
+<root:001> [] missing postcode
 in6.xml
