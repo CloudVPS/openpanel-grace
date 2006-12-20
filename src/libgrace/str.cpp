@@ -2223,7 +2223,7 @@ bool string::validate (const string &set) const
 // Return a subset of the string, copying only the characters that fit
 // a provided set.
 // ========================================================================
-string *string::filter (const string &set)
+string *string::filter (const string &set) const
 {
 	if (! data) return NULL;
 	if (! set) return NULL;

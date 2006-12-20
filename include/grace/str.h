@@ -682,7 +682,7 @@ public:
 					 /// \param set The character set.
 					 /// \return Copy with all characters not in the set
 					 ///         omitted.
-	string			*filter (const string &set);
+	string			*filter (const string &set) const;
 					 
 					 /// Create a new string without the given character
 					 /// \param stripchar The character to strip
