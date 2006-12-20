@@ -188,11 +188,11 @@ int stringtestApp::main (void)
 	if (tstr != "Who are \"Kool & The Gang\" again? K&TG < NOTK!")
 		FAIL("replace2");
 	
-	tstr = "this # is # a # test";
+	tstr = "this ## is # a ## test";
 	rset.clear();
 	rset["#"] = "##";
 	tstr.replace (rset);
-	if (tstr != "this ## is ## a ## test")
+	if (tstr != "this #### is ## a #### test")
 	{
 		ferr.writeln (tstr);
 		FAIL("replace3");
