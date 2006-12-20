@@ -2409,9 +2409,9 @@ void string::replace (const value &set)
 		if (m)
 		{
 			res.strcat (*(m->replace));
-			i += m->lenflag;
+			i += (m->lenflag-1);
 		}
-		if (i<size) res.strcat (data->v[i]);
+		else res.strcat (data->v[i]);
 	}
 	
 	(*this) = res;
