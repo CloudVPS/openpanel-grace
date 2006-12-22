@@ -203,7 +203,7 @@ namespace memory
 	void pool::free (void *ptr)
 	{
 		char tmp[64];
-		sprintf (tmp, "%08x A %i\n", ptr, time(NULL));
+		sprintf (tmp, "%08x - %i\n", ptr, time(NULL));
 		write (2, tmp, strlen(tmp));
 		
 		block *b = (block *) (((char*)ptr) - sizeof (block));
