@@ -8,6 +8,7 @@ memory::pool *__retain_ptr;
 void poolsighandler (int sig)
 {
 	__retain_ptr->dump ("memory.dump");
+	signal (SIGUSR2, poolsighandler);
 }
 
 namespace memory
