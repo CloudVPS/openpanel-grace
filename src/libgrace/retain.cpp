@@ -139,6 +139,7 @@ namespace memory
 		// defaults, this is the end of the line.
 		if (defaults::memory::leakprotection)
 		{
+			dump ("/tmp/memoryleak.dump");
 			c->lck.unlock();
 			throw (memoryLeakException());
 		}
@@ -219,7 +220,7 @@ namespace memory
 		sizepool *c = pools;
 		sizepool *nc, *nnc = NULL;
 
-		if (c) c->lck.lockr();
+		//if (c) c->lck.lockr();
 
 		while (c)
 		{
@@ -237,8 +238,8 @@ namespace memory
 			}
 			
 			nc = c->extend;
-			if (nc) nc->lck.lockr();
-			c->lck.unlock();
+			//if (nc) nc->lck.lockr();
+			//c->lck.unlock();
 			
 			while (nc)
 			{
@@ -254,14 +255,14 @@ namespace memory
 					}
 				}
 				nnc = nc->extend;
-				if (nnc) nnc->lck.lockr();
-				nc->lck.unlock();
+				//if (nnc) nnc->lck.lockr();
+				//nc->lck.unlock();
 				nc = nnc;
 			}
 			
 			nc = c->next;
-			if (nc) nc->lck.lockr();
-			c->lck.unlock();
+			//if (nc) nc->lck.lockr();
+			//c->lck.unlock();
 			c = c->next;
 		}
 		into.close ();
