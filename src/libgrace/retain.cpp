@@ -200,7 +200,7 @@ namespace memory
 	{
 		block *b = (block *) (((char*)ptr) - sizeof (block));
 		
-//#ifdef PARANOID_MEMORY_CHECKS
+#ifdef PARANOID_MEMORY_CHECKS
 		sizepool *c = pools;
 		while (c)
 		{
@@ -217,7 +217,8 @@ namespace memory
 		{
 			throw (memoryInvalidAddressException());
 		}
-//#endif
+#endif
+		
 		b->status = memory::free;
 	}
 	
