@@ -114,6 +114,11 @@ namespace memory
 			
 			if (lastc) lastc->next = c;
 			else pools = c;
+			
+			char tmp[64];
+			sprintf (tmp, "%08x A %i\n", b->dt, time(NULL));
+			write (2, tmp, strlen(tmp));
+			
 			return (void *) b->dt;
 		}
 		
@@ -197,6 +202,10 @@ namespace memory
 	// ====================================================================
 	void pool::free (void *ptr)
 	{
+		char tmp[64];
+		sprintf (tmp, "%08x A %i\n", ptr, time(NULL));
+		write (2, tmp, strlen(tmp));
+		
 		block *b = (block *) (((char*)ptr) - sizeof (block));
 		
 #ifdef PARANOID_MEMORY_CHECKS
