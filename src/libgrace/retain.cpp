@@ -138,6 +138,9 @@ namespace memory
 				b->status = wired;
 				b->pool = c;
 				c->lck.unlock();
+				char tmp[64];
+				sprintf (tmp, "%08x A %i\n", b->dt, time(NULL));
+				write (2, tmp, strlen(tmp));
 				return (void *) b->dt;
 			}
 			
