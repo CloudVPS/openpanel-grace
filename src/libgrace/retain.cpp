@@ -215,7 +215,7 @@ namespace memory
 	
 	void pool::dump (const char *where)
 	{
-		FILE finto;
+		FILE *finto;
 		
 		finto = fopen (where, "w");
 		if (! finto) return;
