@@ -4,6 +4,8 @@
 #define returnclass(typ) typ *__grace_returnptr = new (memory::retainable::onstack) typ; typ &
 #define retain = *__grace_returnptr;
 
+extern void __pool_breakme (void);
+
 #include <grace/lock.h>
 #include <stdlib.h>
 

@@ -11,6 +11,8 @@ void poolsighandler (int sig)
 	signal (SIGUSR2, poolsighandler);
 }
 
+void __pool_breakme (void) { }
+
 namespace memory
 {
 	
@@ -132,6 +134,11 @@ namespace memory
 				b->pool = c;
 				c->lck.unlock();
 				return (void *) b->dt;
+			}
+			
+			if (i>16)
+			{
+				__pool_breakme();
 			}
 		}
 		
