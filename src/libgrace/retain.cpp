@@ -215,8 +215,11 @@ namespace memory
 	
 	void pool::dump (const char *where)
 	{
-		file into;
-		into.openwrite (where);
+		FILE finto;
+		
+		finto = fopen (where, "w");
+		if (! finto) return;
+		
 		sizepool *c = pools;
 		sizepool *nc, *nnc = NULL;
 
@@ -224,7 +227,7 @@ namespace memory
 
 		while (c)
 		{
-			into.printf ("sizepool %i\n", c->sz);
+			fprintf (finto, "sizepool %i\n", c->sz);
 			// Look for a free block.
 			for (unsigned int i=0; i<c->count; ++i)
 			{
@@ -233,7 +236,7 @@ namespace memory
 				// Are you free, Mr. Humphrey?
 				if (b->status != memory::free)
 				{
-					into.printf ("  alloc %u\n", i);
+					fprintf (finto, "  alloc %u\n", i);
 				}
 			}
 			
@@ -243,7 +246,7 @@ namespace memory
 			
 			while (nc)
 			{
-				into.printf ("extension pool %i\n", nc->sz);
+				fprintf (finto, "extension pool %i\n", nc->sz);
 				for (unsigned int i=0; i<nc->count; ++i)
 				{
 					block *b = (block *) (nc->blocks + (i * c->sz));
@@ -251,7 +254,7 @@ namespace memory
 					// Are you free, Mr. Humphrey?
 					if (b->status != memory::free)
 					{
-						into.printf ("  alloc %u\n", i);
+						fprintf (finto, "  alloc %u\n", i);
 					}
 				}
 				nnc = nc->extend;
@@ -265,7 +268,7 @@ namespace memory
 			//c->lck.unlock();
 			c = c->next;
 		}
-		into.close ();
+		fclose (finto);
 	}
 	
 	// ====================================================================
