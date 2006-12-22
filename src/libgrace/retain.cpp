@@ -136,7 +136,7 @@ namespace memory
 				return (void *) b->dt;
 			}
 			
-			if (i>24)
+			if (i>96)
 			{
 				__pool_breakme();
 			}
