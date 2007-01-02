@@ -1,0 +1,48 @@
+#!/bin/sh
+
+genversion() {
+	LINE=`hg tags | egrep "^[[:digit:]]*\.[[:digit:]]*(?\.[[:digit:]]*)? +.*$" | head -1`
+	if [ -z "$LINE" ]; then
+	  LINE="0.8.0 1:0000000000000000000000000000000000000000"
+	fi
+	if [ -z "$DISTRO" ]; then
+	  DISTRO="generic"
+	fi
+	TAGNAME=`echo "$LINE" | cut -f1 -d" "`
+	TAGGEDREV=`echo "$LINE" | sed -e "s/.* //"`
+	
+	ACTUALTAG=`hg id | cut -f2 -d" "`
+	if [ "$ACTUALTAG" = "$TAGNAME" ]; then
+	  echo "${TAGNAME}-${DISTRO}"
+	else
+	  ACTUALID=`hg id | cut -f1 -d" " | sed -e "s/+$/-plus/"`
+	  echo "${TAGNAME}-${DISTRO}-${ACTUALID}"
+	fi
+}
+
+hg id >/dev/null 2>&1 || {
+  echo "% No mercurial repository info found" >&2
+  exit 1
+}
+
+if [ -z "$1" ]; then
+  echo "% Usage: mkversion <filename>"
+  echo "         Will build <filename> from <filename>.in"
+  exit 1
+}
+
+FILENAME="$1"
+
+BUILD_USER=`whoami`
+BUILD_HOST=`hostname`
+BUILD_DATE=`date +%Y-%m-%dT%H:%M:%S`
+BUILD_VERSION=`genversion`
+
+if [ ! -f "${FILENAME}.in" ]; then
+  echo "File ${FILENAME}.in not found"
+  exit 1
+fi
+
+cat "${FILENAME}.in" | sed -e "s/%BUILD_VERSION%/${BUILD_VERSION}/;s/%BUILD_HOST%/${BUILD_HOST}/;s/%BUILD_USER%/${BUILD_USER}/;s/%BUILD_DATE%/${BUILD_DATE}/" \
+	> ${FILENAME}
+
