@@ -29,7 +29,7 @@ if [ -z "$1" ]; then
   echo "% Usage: mkversion <filename>"
   echo "         Will build <filename> from <filename>.in"
   exit 1
-}
+fi
 
 FILENAME="$1"
 
