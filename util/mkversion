@@ -48,12 +48,13 @@ if [ -z "$BUILD_VERSION" ]; then
   BUILD_VERSION=`genversion`
   echo "$BUILD_VERSION" > version.id
 fi
+BUILD_SHORTVERSION=`echo "$BUILD_VERSION" | cut -f1 -d-`
 
 if [ ! -f "${FILENAME}.in" ]; then
   echo "File ${FILENAME}.in not found"
   exit 1
 fi
 
-cat "${FILENAME}.in" | sed -e "s/%BUILD_VERSION%/${BUILD_VERSION}/;s/%BUILD_HOST%/${BUILD_HOST}/;s/%BUILD_USER%/${BUILD_USER}/;s/%BUILD_DATE%/${BUILD_DATE}/" \
+cat "${FILENAME}.in" | sed -e "s/%BUILD_SHORTVERSION%/${BUILD_SHORTVERSION}/;s/%BUILD_VERSION%/${BUILD_VERSION}/;s/%BUILD_HOST%/${BUILD_HOST}/;s/%BUILD_USER%/${BUILD_USER}/;s/%BUILD_DATE%/${BUILD_DATE}/" \
 	> ${FILENAME}
 
