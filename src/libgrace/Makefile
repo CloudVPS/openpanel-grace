@@ -51,6 +51,7 @@ OBJ			= 	application.o \
 				value_csv.o \
 				value_cxml.o \
 				value_shox.o \
+				version.o \
 				xmlschema_root.o \
 				xmlschema_base.o \
 				xmlschema_misc.o \
@@ -64,6 +65,9 @@ all: ../../include/grace/platform.h $(OBJ)
 	mkdir -p ../../lib
 	$(AR) ../../lib/libgrace.a $(OBJ)
 	$(RANLIB) ../../lib/libgrace.a
+
+version.cpp:
+	../../util/mkversion version.cpp
 
 install:
 	./makeinstall
