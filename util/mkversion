@@ -21,9 +21,13 @@ genversion() {
 }
 
 hg id >/dev/null 2>&1 || {
+  if [ ! -f version.id ]; then
+    echo "% No mercurial repository and no version.id file found" >&2
+  fi
+  
   BUILD_VERSION=`head -1 < version.id`
   if [ -z "${BUILD_VERSION}" ]; then
-    echo "% No mercurial repository and no version.id file found" &2
+    echo "% Format error in version.id file"
     exit 1
   fi
 }
