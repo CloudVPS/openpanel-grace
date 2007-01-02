@@ -1,7 +1,7 @@
 #!/bin/sh
 
 genversion() {
-	LINE=`hg tags | egrep "^[[:digit:]]*\.[[:digit:]]*(?\.[[:digit:]]*)? +.*$" | head -1`
+	LINE=`hg tags | egrep "^[[:digit:]]*\.[[:digit:]]*(?\.[[:digit:]]*)?(?pre[[:digit:]]*)? +.*$" | head -1`
 	if [ -z "$LINE" ]; then
 	  LINE="0.8.0 1:0000000000000000000000000000000000000000"
 	fi
