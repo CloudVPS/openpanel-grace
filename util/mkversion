@@ -21,8 +21,11 @@ genversion() {
 }
 
 hg id >/dev/null 2>&1 || {
-  echo "% No mercurial repository info found" >&2
-  exit 1
+  BUILD_VERSION=`head -1 < version.id`
+  if [ -z "${BUILD_VERSION}" ]; then
+    echo "% No mercurial repository and no version.id file found" &2
+    exit 1
+  fi
 }
 
 if [ -z "$1" ]; then
@@ -36,7 +39,10 @@ FILENAME="$1"
 BUILD_USER=`whoami`
 BUILD_HOST=`hostname`
 BUILD_DATE=`date +%Y-%m-%dT%H:%M:%S`
-BUILD_VERSION=`genversion`
+if [ -z "$BUILD_VERSION" ]; then
+  BUILD_VERSION=`genversion`
+  echo "$BUILD_VERSION" > version.id
+fi
 
 if [ ! -f "${FILENAME}.in" ]; then
   echo "File ${FILENAME}.in not found"
