@@ -127,7 +127,32 @@ public:
 	void			 writepid (void); ///< Write daemon's pidfile.
 	virtual int		 main (void); ///< Virtual implementation method.
 	
-	void			 daemonize (void); ///< Spawn to background.
+					 /// Spawn to the background.
+					 /// Unless if setforeground() was called, this will
+					 /// fork the process to the background, detaching
+					 /// from the terminal. The exit of the parent process
+					 /// can optionally be delayed until a later point,
+					 /// when the spawned process is done with its
+					 /// initialization and validation (if it needs to
+					 /// run threads to do this, it has to fork early or
+					 /// the threads will break). In such delayed cases,
+					 /// the parent process will keep a pipe open on the
+					 /// standard output channel of the child and wait
+					 /// for a line of input. If this input does not
+					 /// contain the literal string "OK", the parent
+					 /// process assumes initialization went awry and will
+					 /// exit itself with a status of 1. Otherwise it
+					 /// will use exit(0).
+					 /// \param delayedexit Flag for the delayed exit.
+	void			 daemonize (bool delayedexit=false);
+
+	void			 delayedexitok (void)
+					 {
+					 	fout.writeln ("OK");
+					 	fout.close ();
+					 }
+					 
+	void			 delayedexiterror (const char *parm, ...);
 	
 					 /// Send log message to the logthread.
 					 /// \param prio The message priority.

@@ -34,7 +34,7 @@ namespace logproperty
 // Spawns the current process into the background like a daemon, using
 // a double fork().
 // ========================================================================
-void daemon::daemonize (void)
+void daemon::daemonize (bool delayedexit)
 {
 	if (! checkpid ())
 	{
@@ -52,10 +52,23 @@ void daemon::daemonize (void)
 		return;
 	}
 	
+	int backpipe[2];
+	int i;
+
+	if (delayedexit) pipe (backpipe);
+	
 	switch (fork())
 	{
 		case 0:
-			//for (i=0; i<3; ++i) ::close(i);
+			for (i=0; i<3; ++i) ::close(i);
+			
+			if (delayedexit)
+			{
+				dup2 (backpipe[1], 1);
+				for (i=3;i<16;++i) ::close (i);
+				fout.openread (1);
+			}
+			
 			switch (fork())
 			{
 				case 0:
@@ -74,7 +87,43 @@ void daemon::daemonize (void)
 			ferr.printf (errortext::daemon::nofork);
 			exit (1);
 	}
+	
+	if (delayedexit)
+	{
+		string res;
+		file freturn;
+		
+		freturn.openread (backpipe[0]);
+		try
+		{
+			res = freturn.gets();
+			if (res.strncmp ("ok") == 0)
+			{
+				exit (0);
+			}
+			ferr.writeln (res);
+			exit (1);
+		}
+		catch (...)
+		{
+			exit (1);
+		}
+	}
+	
 	exit (0);
+}
+
+void daemon::delayedexiterror (const char *fmtx, ...)
+{
+	va_list ap;
+	string out;
+	
+	va_start (ap, fmtx);
+	out.printf_va (fmtx, &ap);
+	va_end (ap);
+	
+	fout.writeln (fmtx);
+	fout.close ();
 }
 
 // ========================================================================
