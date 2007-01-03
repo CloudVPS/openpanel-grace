@@ -47,6 +47,7 @@ void daemon::daemonize (bool delayedexit)
 	
 	if (_foreground)
 	{
+		daemonized = true;
 		writepid ();
 		if (tgid) setregid (tgid, tegid);
 		if (tuid) setreuid (tuid, teuid);
