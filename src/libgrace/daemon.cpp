@@ -45,8 +45,6 @@ void daemon::daemonize (bool delayedexit)
 		exit (1);
 	}
 	
-	daemonized = true;
-	
 	if (_foreground)
 	{
 		writepid ();
@@ -77,6 +75,7 @@ void daemon::daemonize (bool delayedexit)
 			switch (fork())
 			{
 				case 0:
+					daemonized = true;
 					writepid ();
 					if (tgid) setregid (tgid, tegid);
 					if (tuid) setreuid (tuid, teuid);
