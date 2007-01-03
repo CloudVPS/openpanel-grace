@@ -68,7 +68,7 @@ void daemon::daemonize (bool delayedexit)
 				open ("/dev/null", O_WRONLY);
 				dup2 (backpipe[1], 1);
 				open ("/dev/null", O_RDONLY);
-				for (i=3;i<16;++i) ::close (i);
+				//for (i=3;i<16;++i) ::close (i);
 				fout.openread (1);
 			}
 			
