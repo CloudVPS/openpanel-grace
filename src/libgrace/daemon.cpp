@@ -14,6 +14,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <syslog.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include <time.h>
 
@@ -64,7 +67,9 @@ void daemon::daemonize (bool delayedexit)
 			
 			if (delayedexit)
 			{
+				open ("/dev/null", O_WRONLY);
 				dup2 (backpipe[1], 1);
+				open ("/dev/null", O_RDONLY);
 				for (i=3;i<16;++i) ::close (i);
 				fout.openread (1);
 			}
