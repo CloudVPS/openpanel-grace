@@ -101,7 +101,7 @@ void daemon::daemonize (bool delayedexit)
 		try
 		{
 			res = freturn.gets();
-			if (res.strncmp ("ok") == 0)
+			if (res.strcasecmp ("ok") == 0)
 			{
 				exit (0);
 			}
