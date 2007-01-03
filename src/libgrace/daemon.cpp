@@ -86,6 +86,7 @@ void daemon::daemonize (bool delayedexit)
 				case -1:
 					exit (1);
 			}
+			exit (0);
 			break;
 		
 		case -1:
