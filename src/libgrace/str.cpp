@@ -2309,6 +2309,16 @@ string *string::trim (const string &set) const
 	if(! set)  return NULL;
 
 	returnclass (string) res retain;
+	int i;
+
+	for (i=0; i<size; i++)
+	{		
+		if (set.strchr(data->v[i]) == -1)
+		{
+			res = right (size-i);
+			break;
+		}
+	}
 
 	res = ltrim (set);
 	res = res.rtrim (set);
@@ -2334,6 +2344,15 @@ string *string::ltrim (const string &set) const
 		if (set.strchr(data->v[i]) == -1)
 		{
 			res = right (size-i);
+			break;
+		}
+	}
+	
+	for (int i=size-1; i>-1; i--)
+	{	
+		if (set.strchr(data->v[i]) == -1)
+		{
+			res = res.left (i+1);
 			break;
 		}
 	}
