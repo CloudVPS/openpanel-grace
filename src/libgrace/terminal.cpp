@@ -180,6 +180,15 @@ void termbuffer::backspace (void)
 }
 
 // ==========================================================================
+// METHOD termbuffer::eraseword
+// ==========================================================================
+void termbuffer::eraseword (void)
+{
+	while ( (crsr > (prompt.strlen()+1)) && (buffer[crsr-1] != ' ') )
+		backspace();
+}
+
+// ==========================================================================
 // METHOD termbuffer::crleft
 // ==========================================================================
 void termbuffer::crleft (void)

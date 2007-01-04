@@ -16,6 +16,8 @@
 #define KEYCODE_HOME 1
 #define KEYCODE_END 5
 #define KEYCODE_BACKSPACE 8
+#define KEYCODE_CLEARSCREEN 12
+#define KEYCODE_ERASEWORD 23
 #define KEYCODE_DELETE 127
 #define KEYCODE_CLEARLEFT 21
 #define KEYCODE_CLEARRIGHT 25
@@ -70,6 +72,9 @@ public:
 					 }
 					 /// Perform a backspace.
 	void			 backspace (void);
+	
+					 /// Erase word to left of cursor.
+	void			 eraseword (void);
 	
 					 /// Perform a cursor left movement.
 	void			 crleft (void);
@@ -428,6 +433,14 @@ public:
 						
 					case KEYCODE_WORDLEFT:
 						termbuf.wordleft();
+						break;
+						
+					case KEYCODE_CLEARSCREEN:
+						termbuf.tprintf ("\033[2J\033[0;0H");
+						break;
+						
+					case KEYCODE_ERASEWORD:
+						termbuf.eraseword();
 						break;
 					
 					case KEYCODE_WORDRIGHT:
