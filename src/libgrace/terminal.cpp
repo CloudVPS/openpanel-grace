@@ -184,7 +184,8 @@ void termbuffer::backspace (void)
 // ==========================================================================
 void termbuffer::eraseword (void)
 {
-	while ( (crsr > (prompt.strlen()+1)) && (buffer[crsr-1] != ' ') )
+	backspace();
+	while ( (crsr>0) && (crsr > (prompt.strlen())) && (buffer[crsr-1] != ' ') )
 		backspace();
 }
 
