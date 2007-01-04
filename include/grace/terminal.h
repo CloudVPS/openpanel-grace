@@ -832,6 +832,8 @@ public:
 	/// \param tb The termbuffer.
 	int exithandler (int ki, termbuffer &tb)
 	{
+		string ln = tb.getline();
+		if (ln.strlen()) return 0;
 		tb.set (exitcmd);
 		return 1;
 	}
@@ -841,6 +843,8 @@ public:
 	/// \param tb The termbuffer.
 	int uphandler (int key, termbuffer &tb)
 	{
+		string ln = tb.getline();
+		if (ln.strlen()) return 0;
 		tb.set (upcmd);
 		return 1;
 	}
