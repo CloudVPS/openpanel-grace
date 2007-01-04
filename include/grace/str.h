@@ -699,21 +699,21 @@ public:
 					 /// in the set.
 					 /// \param set Set of special characters
 					 /// \return New trimmed string
-	string			*trim (const string &set=" ");			 
+	string			*trim (const string &set=" ") const;	 
 					 
 					 /// Trims charcters from the left of the
 					 /// current string until it finds a character not 
 					 /// in the set.
 					 /// \param set Set of special characters
 					 /// \return New trimmed string
-	string			*ltrim (const string &set=" ");			 
+	string			*ltrim (const string &set=" ") const;	 
 					 
 					 /// Trims charcters from the right of the
 					 /// current string until it finds a character not 
 					 /// in the set.
 					 /// \param set Set of special characters
 					 /// \return New trimmed string
-	string			*rtrim (const string &set=" ");			 
+	string			*rtrim (const string &set=" ") const;	 
 
 					 
 					 /// Filter the string with a subset of

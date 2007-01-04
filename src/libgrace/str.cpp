@@ -2303,7 +2303,7 @@ string *string::stripchars	(const string &stripset)
 // Trim the current string from the left and right until it finds a 
 // character which is not in `set`
 // ========================================================================	
-string *string::trim (const string &set)
+string *string::trim (const string &set) const
 {
 	if(! data) return NULL;
 	if(! set)  return NULL;
@@ -2322,7 +2322,7 @@ string *string::trim (const string &set)
 // Trim the current string from the left until it finds a 
 // character which is not in `set`
 // ========================================================================	
-string *string::ltrim (const string &set)
+string *string::ltrim (const string &set) const
 {
 	if(! data) return NULL;
 	if(! set)  return NULL;
@@ -2347,7 +2347,7 @@ string *string::ltrim (const string &set)
 // Trim the current string from the right until it finds a 
 // character which is not in `set`
 // ========================================================================	
-string *string::rtrim (const string &set)
+string *string::rtrim (const string &set) const
 {
 	if(! data) return NULL;
 	if(! set)  return NULL;
