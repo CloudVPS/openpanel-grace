@@ -437,6 +437,7 @@ public:
 						
 					case KEYCODE_CLEARSCREEN:
 						termbuf.tprintf ("\033[2J\033[0;0H");
+						termbuf.redraw();
 						break;
 						
 					case KEYCODE_ERASEWORD:
