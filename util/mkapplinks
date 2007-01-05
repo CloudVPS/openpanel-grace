@@ -1,0 +1,40 @@
+#!/bin/sh
+TEST=`echo -n`
+if [ -z "$TEST" ]; then
+  ECHON="echo -n"
+  NHL=""
+else
+  ECHON="echo"
+  NHL="\c"
+fi
+
+UN_OS=`uname -o 2>/dev/null || uname`
+UN_PROC=`( uname -i 2>/dev/null || uname -p 2>/dev/null || uname -m ) | cut -f1 -d,`
+
+if [ "$UN_OS" = "GNU/Linux" ]; then
+  UN_OS="Linux"
+fi
+
+if [ "$UN_PROC" = "unknown" ]; then
+  if [ "$UN_OS" = "Cygwin" ]; then
+    UN_PROC=i386
+  fi
+fi
+
+ARCH="$UN_OS.$UN_PROC"
+
+appath=`echo "$1" | sed -e "s/\.app$//"`
+if [ ! -d "${appath}.app" ]; then
+  echo "% ${appath}.app not found" >&2
+  exit 1
+fi
+
+appname=`echo "$appath" | sed -e "s@.*/@@"`
+
+if [ ! -e "${appath}" ]; then
+  ln -s "${appname}.app/exec" "${appath}"
+fi
+
+rm -f "${appath}.app/exec"
+ln -s "Contents/${ARCH}/${appname}.exe" "${appath}.app/exec"
+
