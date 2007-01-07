@@ -279,6 +279,10 @@ clean:
 	rm -rf ${APPNAME}.app
 	rm -f ${APPNAME}
 
+makeinclude:
+	@echo please run ./configure
+	@false
+
 SUFFIXES: .cpp .o
 .cpp.o:
 	\$(CXX) \$(CXXFLAGS) \$(INCLUDES) -c \$<
