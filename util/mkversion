@@ -1,22 +1,23 @@
 #!/bin/sh
 
 genversion() {
-	LINE=`hg tags | egrep "^[[:digit:]]*\.[[:digit:]]*(?\.[[:digit:]]*)?(?pre[[:digit:]]*)? +.*$" | head -1`
-	if [ -z "$LINE" ]; then
-	  LINE="0.8.0 1:0000000000000000000000000000000000000000"
-	fi
+    BRANCH=`hg parents -b --template '{branches}\n'`
 	if [ -z "$DISTRO" ]; then
 	  DISTRO="generic"
 	fi
-	TAGNAME=`echo "$LINE" | cut -f1 -d" "`
-	TAGGEDREV=`echo "$LINE" | sed -e "s/.* //"`
 	
 	ACTUALTAG=`hg id | cut -f2 -d" "`
-	if [ "$ACTUALTAG" = "$TAGNAME" ]; then
-	  echo "${TAGNAME}-${DISTRO}"
+	if [ "$ACTUALTAG" = "$BRANCH" ]; then
+	  echo -n "${BRANCH}-${DISTRO}"
 	else
-	  ACTUALID=`hg id | cut -f1 -d" " | sed -e "s/+$/-plus/"`
-	  echo "${TAGNAME}-${DISTRO}-${ACTUALID}"
+	  ACTUALID=`hg id | cut -f1 -d" "`
+	  echo -n "${BRANCH}-${DISTRO}-${ACTUALID}"
+	fi
+	if hg id | cut -f1 -d" " | grep -q "+$"
+	then
+	    echo "-plus"
+	else
+	    echo ""
 	fi
 }
 
@@ -33,12 +34,6 @@ hg id >/dev/null 2>&1 || {
   fi
 }
 
-if [ -z "$1" ]; then
-  echo "% Usage: mkversion <filename>"
-  echo "         Will build <filename> from <filename>.in"
-  exit 1
-fi
-
 FILENAME="$1"
 
 BUILD_USER=`whoami`
@@ -49,6 +44,19 @@ if [ -z "$BUILD_VERSION" ]; then
   echo "$BUILD_VERSION" > version.id
 fi
 BUILD_SHORTVERSION=`echo "$BUILD_VERSION" | cut -f1 -d-`
+
+if [ -z "$1" ]; then
+  echo "% Variables detected:"
+  echo "%BUILD_USER%: $BUILD_USER"
+  echo "%BUILD_HOST%: $BUILD_HOST"
+  echo "%BUILD_DATE%: $BUILD_DATE"
+  echo "%BUILD_VERSION: $BUILD_VERSION"
+  echo "%BUILD_SHORTVERSION: $BUILD_SHORTVERSION"
+  echo
+  echo "% Usage: mkversion <filename>"
+  echo "         Will build <filename> from <filename>.in"
+  exit 1
+fi
 
 if [ ! -f "${FILENAME}.in" ]; then
   echo "File ${FILENAME}.in not found"
