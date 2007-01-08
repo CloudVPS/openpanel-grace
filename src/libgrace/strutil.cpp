@@ -888,6 +888,9 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 				if (rightb<0)
 				{
 					tag->eof = true;
+					tag->errorcond = true;
+					tag->errorstr = "Unbalanced CDATA element";
+					tag->line = xml->countchr ('\n', ntag) +1;
 					return;
 				}
 				tag->hasdata = true;
