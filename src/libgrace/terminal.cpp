@@ -621,6 +621,13 @@ void cliutil::expandword (const string &part, const value &options,
 // ==========================================================================
 void cliutil::displayoptions (termbuffer &tb, const value &options)
 {
+	if (! options.count())
+	{
+		tb.printf ("\n<cr>            Execute command\n");
+		tb.redraw ();
+		return;
+	}
+	
 	int maxlen = 14;
 	foreach (opt, options)
 	{
