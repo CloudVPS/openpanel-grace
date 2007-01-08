@@ -62,7 +62,7 @@ void timeofday::setTime( int 	stSeconds,
 	tm_time.tm_mon	=	(int) stMonth;	// enum: eMonth to --> int
 	tm_time.tm_year	=	stYear - 1900;	// Year since epoch
 	
-	tm_time.tm_isdst = 	daylight;		// referes tzset()
+	tm_time.tm_isdst = 	0;		        // TODO: this is WRONG
 	
 
 	// Create new time
