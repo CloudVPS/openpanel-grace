@@ -623,7 +623,7 @@ void cliutil::displayoptions (termbuffer &tb, const value &options)
 {
 	if (! options.count())
 	{
-		tb.printf ("\n<cr>            Execute command\n");
+		tb.tprintf ("\n<cr>            Execute command\n");
 		tb.redraw ();
 		return;
 	}
