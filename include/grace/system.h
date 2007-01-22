@@ -115,16 +115,6 @@ public:
 			struct passwd *p;
 			value *res = NULL;
 			
-			sharedsection (uidcache)
-			{
-				if (uidcache["byname"].exists (s))
-				{
-					returnclass (value) res retain;
-					res = uidcache["byname"][s];
-					breaksection return &res;
-				}
-			}
-			
 			exclusivesection (pwdbSpinLock)
 			{
 				p = ::getpwnam (s.str());
@@ -138,13 +128,6 @@ public:
 				res = pwval (p);
 			}
 			
-			if (res)
-			{
-				exclusivesection (uidcache)
-				{
-					uidcache["byname"][s] = *res;
-				}
-			}
 			return res;
 		}
 		
@@ -164,16 +147,6 @@ public:
 			
 			string uids;
 			uids.printf ("%u", uid);
-			
-			sharedsection (uidcache)
-			{
-				if (uidcache["byuid"].exists (uids))
-				{
-					returnclass (value) res retain;
-					res = uidcache["byuid"][uids];
-					breaksection return &res;
-				}
-			}
 			
 			exclusivesection (pwdbSpinLock)
 			{
@@ -201,16 +174,6 @@ public:
 			struct group *p;
 			value *res = NULL;
 			
-			sharedsection (gidcache)
-			{
-				if (gidcache["byname"].exists (s))
-				{
-					returnclass (value) res retain;
-					res = gidcache["byname"][s];
-					breaksection return &res;
-				}
-			}
-			
 			exclusivesection (pwdbSpinLock)
 			{
 				p = ::getgrnam (s.cval());
@@ -219,14 +182,6 @@ public:
 					breaksection return NULL;
 				}
 				res = grval (p);
-			}
-			
-			if (res)
-			{
-				exclusivesection (gidcache)
-				{
-					gidcache["byname"][s] = *res;
-				}
 			}
 			
 			return res;
@@ -240,16 +195,6 @@ public:
 			string gids;
 			gids.printf ("%u", gid);
 			
-			sharedsection (gidcache)
-			{
-				if (gidcache["bygid"].exists (gids))
-				{
-					returnclass (value) gres retain;
-					gres = gidcache["bygid"][gids];
-					breaksection return &gres;
-				}
-			}
-			
 			exclusivesection (pwdbSpinLock)
 			{
 				p = ::getgrgid (gid);
@@ -260,14 +205,6 @@ public:
 				res = grval (p);
 			}
 
-			if (res)
-			{
-				exclusivesection (gidcache)
-				{
-					gidcache["bygid"][gids] = *res;
-				}
-			}
-			
 			return res;
 		}
 		
@@ -303,9 +240,6 @@ public:
 			
 			return &r;
 		}
-		
-		lock<value> uidcache;
-		lock<value> gidcache;
 		
 		lock<bool> pwdbSpinLock;
 	} userdb;
