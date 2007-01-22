@@ -158,14 +158,6 @@ public:
 				res = pwval (p);
 			}
 			
-			if (res)
-			{
-				exclusivesection (uidcache)
-				{
-					uidcache["byuid"][uids] = *res;
-				}
-			}
-			
 			return res;
 		}
 		
