@@ -2513,7 +2513,7 @@ string *string::copyafter (const string &s) const
 	
 	pos = strstr (s);
 	if (pos < 0) return NULL;
-	return mid (pos+1);
+	return mid (pos+s.strlen());
 }
 
 // ========================================================================
@@ -2564,7 +2564,7 @@ string *string::cutafter (const string &s)
 	pos = strstr (s);
 	if (pos < 0) return NULL;
 	
-	res = mid (pos+strlen (s));
+	res = mid (pos+s.strlen());
 	docopyonwrite();
 	data->v[pos] = 0;
 	size = pos;
@@ -2605,7 +2605,7 @@ string *string::cutafterlast (const string &s)
 		npos = strstr (s, pos+1);
 	}
 	
-	res = mid (pos+strlen (s));
+	res = mid (pos+s.strlen());
 	docopyonwrite();
 	data->v[pos] = 0;
 	size = pos;
