@@ -263,6 +263,7 @@ void termbuffer::tohistory (void)
 {
 	history.newval() = buffer + prompt.strlen();
 	historycrsr = history.count() - 1;
+	while (history.count() > 256) history.rmindex (0);
 }
 
 // ==========================================================================
