@@ -180,6 +180,17 @@ public:
 					 {
 					 	for (unsigned int i=0; i<wsize; ++i) curview[i] = 0;
 					 }
+					 
+	void			 savehistory (const string &to)
+					 {
+					 	history.savexml (to);
+					 }
+					 
+	void			 loadhistory (const string &from)
+					 {
+					 	history.loadxml (from);
+					 	historycrsr = history.count();
+					 }
 
 	file			 fin, fout; // Input/output file descriptors.
 					 
