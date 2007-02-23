@@ -545,6 +545,14 @@ void cliutil::splitwords (const string &src, int atpos, value &into)
 	int tsz = 0;
 	
 	into = strutil::splitquoted (src, ' ');
+	for (i=0; i<into.count(); ++i)
+	{
+		if (into[i].sval().strlen() == 0)
+		{
+			into.rmindex (i--);
+		}
+	}
+	
 	if (! src.strlen()) return;
 	
 	for (i=0; tsz < atpos; ++i)
