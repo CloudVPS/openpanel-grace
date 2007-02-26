@@ -142,7 +142,7 @@ public:
 	unsigned int	 threadid (void)
 					 {
 					 	if (! tid) return (unsigned int) ((unsigned int) this & 0xffffffff);
-					 	return (unsigned int) ((unsigned int) tid & 0xffffffff);
+					 	return (unsigned int) ((unsigned long long) tid & 0xffffffff);
 					 }
 					 
 					 /// Set the scheduling priority.
