@@ -141,8 +141,8 @@ public:
 					 /// \return The unique id number.
 	unsigned int	 threadid (void)
 					 {
-					 	if (! tid) return (unsigned int) (this& 0xffffffff);
-					 	return (unsigned int) (tid & 0xffffffff);
+					 	if (! tid) return (unsigned int) (this & 0xffffffffL);
+					 	return (unsigned int) (tid & 0xffffffffL);
 					 }
 					 
 					 /// Set the scheduling priority.
