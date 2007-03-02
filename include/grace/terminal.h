@@ -984,7 +984,7 @@ public:
 				
 				if (! split[i])
 				{
-					tb.printf ("\n%% No more options\n");
+					tb.tprintf ("\n%% No more options\n");
 				}
 				else
 				{
