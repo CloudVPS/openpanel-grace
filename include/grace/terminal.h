@@ -879,10 +879,8 @@ public:
 		
 		ln = tb.getline();
 		
-		if (ki ==9) ::printf ("%i %i\n", tb.crsrpos(), ln.strlen());		
-		if ( (ki==9) && (tb.crsrpos()==ln.strlen()) )
+		if ( (ki==9) && (tb.crsrpos() > ln.strlen()) )
 		{
-			fs.save ("tab-at-end.dat", ln);
 			if (ln[-1]==' ') return 0;
 		}
 		
