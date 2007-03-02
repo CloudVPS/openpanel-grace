@@ -882,6 +882,12 @@ public:
 		
 		ln = tb.getline();
 		cliutil::splitwords (ln, ki ? tb.crsrpos() : ln.strlen(), split);
+		
+		if (! ki)
+		{
+			if (! split[-1]) split.rmindex (-1);
+		}
+		
 		if (! ki) ln = ln.rtrim ();
 		if (ki == '?')
 		{
@@ -933,7 +939,6 @@ public:
 							split[i] = opts[0].id().sval();
 						}
 					}
-					::printf (">>> pre-enter %s\n", opts[0]("node").cval());
 					probe.enter (opts[0]("node").sval());
 					break;
 				
