@@ -959,7 +959,7 @@ public:
 		
 		fullexpand (probe, split, i, opts);
 		
-		valude dbug;
+		value dbug;
 		dbug["probe"] = probe.obj();
 		dbug["split"] = split;
 		dbug["opts"] = opt;
