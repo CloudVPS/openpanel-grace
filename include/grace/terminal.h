@@ -919,7 +919,7 @@ public:
 			switch (opts.count())
 			{
 				case 0:
-					tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"",
+					tb.tprintf ("%s%% Error1 at '%s'\n", ki?"\n":"",
 								split[i].cval());
 					if (ki) tb.redraw ();
 					return 0;
@@ -959,6 +959,7 @@ public:
 		
 		fullexpand (probe, split, i, opts);
 		
+		// FIXME
 		value dbug;
 		dbug["probe"] = probe.obj();
 		dbug["split"] = split;
@@ -980,7 +981,7 @@ public:
 					break;
 				}
 				// if (! split[i]) break;
-				tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"", split[i].cval());
+				tb.tprintf ("%s%% Error2 at '%s'\n", ki?"\n":"", split[i].cval());
 				if (ki) tb.redraw ();
 				return 0;
 			
