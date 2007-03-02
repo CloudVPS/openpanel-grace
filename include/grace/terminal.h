@@ -881,7 +881,7 @@ public:
 		
 		if ( (ki==9) && (tb.crsrpos() > ln.strlen()) )
 		{
-			if (ln[-1]==' ') return 0;
+			return 0;
 		}
 		
 		cliutil::splitwords (ln, ki ? tb.crsrpos() : ln.strlen(), split);
