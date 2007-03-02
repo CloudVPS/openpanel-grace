@@ -963,6 +963,7 @@ public:
 		dbug["probe"] = probe.obj();
 		dbug["split"] = split;
 		dbug["opts"] = opt;
+		dbug.savexml ("terminus-debug.xml");
 		
 		if (ki == '?')
 		{
