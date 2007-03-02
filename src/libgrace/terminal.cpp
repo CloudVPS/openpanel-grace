@@ -567,7 +567,9 @@ void cliutil::splitwords (const string &src, int atpos, value &into)
 	}
 	
 	while (i<into.count()) into.rmindex (i);
+	
 	if ( (atpos>0) && (src[atpos-1] == ' ') ) into.newval() == "";
+	
 	into.savexml ("splitwords.xml");
 }
 
@@ -633,6 +635,10 @@ void cliutil::expandword (const string &part, const value &options,
 	if (completion == "*") return;
 	if (completion.strlen()) into = completion.mid (part.strlen());
 	else if (part.strlen() && hadwildcard) into = " ";
+	if (! part.strlen())
+	{
+		if (into[0] == ' ') into.crop(0);
+	}
 }
 
 // ==========================================================================

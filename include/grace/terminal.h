@@ -142,7 +142,8 @@ public:
 					 {
 					 	string *res = new (memory::retainable::onstack) string
 					 							(buffer + prompt.strlen());
-						res->chomp ();
+						//res->chomp ();
+						return res;
 					 }
 					 
 					 /// Send a console message (should be called
@@ -506,7 +507,9 @@ public:
 		termbuf.off();
 		if (! basicmode) termbuf.tohistory();
 		
-		return termbuf.getline();
+		string *res = termbuf.getline();
+		res->chomp();
+		return res;
 	}
 		
 	termbuffer termbuf; ///< Embedded termbuffer.
@@ -909,7 +912,7 @@ public:
 		
 		for (i=0; i< (split.count()-1); ++i)
 		{
-			if (! (split[i].sval().strlen())) continue;
+			//if (! (split[i].sval().strlen())) break;
 			opts.clear ();
 			fullexpand (probe, split, i, opts);
 			
@@ -970,6 +973,7 @@ public:
 					if (ki==9) tb.insert (" ");
 					break;
 				}
+				// if (! split[i]) break;
 				tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"", split[i].cval());
 				if (ki) tb.redraw ();
 				return 0;
