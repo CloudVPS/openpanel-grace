@@ -879,8 +879,11 @@ public:
 		
 		ln = tb.getline();
 		
-		if ( (ki==9) && (tb.crsrpos()==ln.strlen()) && (ln[-1]==' ') )
-			return 0;
+		if ( (ki==9) && (tb.crsrpos()==ln.strlen()) )
+		{
+			fs.save ("tab-at-end.dat", ln);
+			if (ln[-1]==' ') return 0;
+		}
 		
 		cliutil::splitwords (ln, ki ? tb.crsrpos() : ln.strlen(), split);
 		if (! ki) ln = ln.rtrim ();
