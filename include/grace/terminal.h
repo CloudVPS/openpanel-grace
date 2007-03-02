@@ -4,6 +4,7 @@
 #include <grace/file.h>
 #include <grace/str.h>
 #include <grace/strutil.h>
+#include <grace/filesystem.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -139,8 +140,9 @@ public:
 					 /// Get the current contents of the input buffer.
 	string			*getline (void)
 					 {
-					 	return new (memory::retainable::onstack) string
+					 	string *res = new (memory::retainable::onstack) string
 					 							(buffer + prompt.strlen());
+						res->chomp ();
 					 }
 					 
 					 /// Send a console message (should be called
@@ -907,6 +909,7 @@ public:
 		
 		for (i=0; i< (split.count()-1); ++i)
 		{
+			if (! (split[i].sval().strlen())) continue;
 			opts.clear ();
 			fullexpand (probe, split, i, opts);
 			

@@ -9,6 +9,7 @@
 //      ^	^
 #include <grace/terminal.h>
 #include <grace/strutil.h>
+#include <grace/filesystem.h>
 
 #define VT100_CRRIGHT "\033[C"
 #define VT100_CRLEFT "\033[D"
@@ -566,6 +567,8 @@ void cliutil::splitwords (const string &src, int atpos, value &into)
 	}
 	
 	while (i<into.count()) into.rmindex (i);
+	if ( (atpos>0) && (src[atpos-1] == ' ') ) into.newval() == "";
+	into.savexml ("splitwords.xml");
 }
 
 // ==========================================================================
@@ -576,10 +579,17 @@ void cliutil::expandword (const string &part, const value &options,
 {
 	string completion;
 	bool hadwildcard = false;
+
+	if (! part.strlen())
+	{
+		into.crop (0);
+		return;
+	}
 	
 	foreach (opt, options)
 	{
 		string total = opt.id().sval();
+		if (! total.strlen()) continue;
 		if (total[-1] == '*')
 		{
 			if (total.strlen()>1)
