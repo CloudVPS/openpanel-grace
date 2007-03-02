@@ -981,7 +981,17 @@ public:
 					break;
 				}
 				if ((! split[i]) && (! ki)) break;
-				tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"", split[i].cval());
+				
+				if (! split[i])
+				{
+					tb.printf ("\n%% No more options\n");
+				}
+				else
+				{
+					tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"",
+								split[i].cval());
+				}
+				
 				if (ki) tb.redraw ();
 				return 0;
 			
@@ -999,11 +1009,13 @@ public:
 				else if (! ki)
 				{
 					curcmd = "@error";
+					::printf ("--> enter %s\n", opts[0]("node").cval());
 					if (probe.enter (opts[0]("node").sval()))
 					{
 						if (probe.obj().attribexists ("cmd"))
 						{
 							curcmd = probe.obj()("cmd").sval();
+							::printf ("--> curcmd = %s\n", curcmd.str());
 						}
 					}
 				}
