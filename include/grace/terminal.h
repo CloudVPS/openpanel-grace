@@ -142,8 +142,7 @@ public:
 					 {
 					 	string *res = new (memory::retainable::onstack) string
 					 							(buffer + prompt.strlen());
-						//res->chomp ();
-						return res;
+						res->chomp ();
 					 }
 					 
 					 /// Send a console message (should be called
@@ -507,9 +506,7 @@ public:
 		termbuf.off();
 		if (! basicmode) termbuf.tohistory();
 		
-		string *res = termbuf.getline();
-		res->chomp();
-		return res;
+		return termbuf.getline();
 	}
 		
 	termbuffer termbuf; ///< Embedded termbuffer.
@@ -881,13 +878,11 @@ public:
 		curcmd = "";
 		
 		ln = tb.getline();
+		
+		if ( (ki==9) && (tb.crsrpos()==ln.strlen()) && (ln[-1]==' ') )
+			return;
+		
 		cliutil::splitwords (ln, ki ? tb.crsrpos() : ln.strlen(), split);
-		
-		//if (! ki)
-		//{
-	//		if (! split[-1]) split.rmindex (-1);
-	//	}
-		
 		if (! ki) ln = ln.rtrim ();
 		if (ki == '?')
 		{
@@ -918,14 +913,14 @@ public:
 		
 		for (i=0; i< (split.count()-1); ++i)
 		{
-			//if (! (split[i].sval().strlen())) break;
+			if (! (split[i].sval().strlen())) continue;
 			opts.clear ();
 			fullexpand (probe, split, i, opts);
 			
 			switch (opts.count())
 			{
 				case 0:
-					tb.tprintf ("%s%% Error1 at '%s'\n", ki?"\n":"",
+					tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"",
 								split[i].cval());
 					if (ki) tb.redraw ();
 					return 0;
@@ -965,13 +960,6 @@ public:
 		
 		fullexpand (probe, split, i, opts);
 		
-		// FIXME
-		value dbug;
-		dbug["probe"] = probe.obj();
-		dbug["split"] = split;
-		dbug["opts"] = opts;
-		dbug.savexml ("terminus-debug.xml");
-		
 		if (ki == '?')
 		{
 			cliutil::displayoptions(tb, opts);
@@ -986,18 +974,7 @@ public:
 					if (ki==9) tb.insert (" ");
 					break;
 				}
-				if ((! split[i]) && (! ki)) break;
-				
-				if (! split[i])
-				{
-					tb.tprintf ("\n%% No more options\n");
-				}
-				else
-				{
-					tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"",
-								split[i].cval());
-				}
-				
+				tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"", split[i].cval());
 				if (ki) tb.redraw ();
 				return 0;
 			
@@ -1015,13 +992,11 @@ public:
 				else if (! ki)
 				{
 					curcmd = "@error";
-					::printf ("--> enter %s\n", opts[0]("node").cval());
 					if (probe.enter (opts[0]("node").sval()))
 					{
 						if (probe.obj().attribexists ("cmd"))
 						{
 							curcmd = probe.obj()("cmd").sval();
-							::printf ("--> curcmd = %s\n", curcmd.str());
 						}
 					}
 				}
