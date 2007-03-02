@@ -880,7 +880,7 @@ public:
 		ln = tb.getline();
 		
 		if ( (ki==9) && (tb.crsrpos()==ln.strlen()) && (ln[-1]==' ') )
-			return;
+			return 0;
 		
 		cliutil::splitwords (ln, ki ? tb.crsrpos() : ln.strlen(), split);
 		if (! ki) ln = ln.rtrim ();
