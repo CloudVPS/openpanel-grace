@@ -933,6 +933,7 @@ public:
 							split[i] = opts[0].id().sval();
 						}
 					}
+					::printf (">>> pre-enter %s\n", opts[0]("node").cval());
 					probe.enter (opts[0]("node").sval());
 					break;
 				
