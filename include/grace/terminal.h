@@ -980,8 +980,8 @@ public:
 					if (ki==9) tb.insert (" ");
 					break;
 				}
-				// if (! split[i]) break;
-				tb.tprintf ("%s%% Error2 at '%s'\n", ki?"\n":"", split[i].cval());
+				if ((! split[i]) && (! ki)) break;
+				tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"", split[i].cval());
 				if (ki) tb.redraw ();
 				return 0;
 			
