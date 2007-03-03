@@ -4,7 +4,7 @@
 #include <grace/file.h>
 #include <grace/str.h>
 #include <grace/strutil.h>
-#include <grace/filesystem.h>
+#include <grace/defaults.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -922,8 +922,8 @@ public:
 			switch (opts.count())
 			{
 				case 0:
-					tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"",
-								split[i].cval());
+					if (ki) tb.tprintf ("\n");
+					tb.tprintf (errortext::terminal::parser, split[i].cval());
 					if (ki) tb.redraw ();
 					return 0;
 				
@@ -940,8 +940,9 @@ public:
 					break;
 				
 				default:
-					tb.tprintf ("%s%% Ambiguous command at '%s'\n",
-								ki?"\n":"", split[i].cval());
+					if (ki) tb.tprintf ("\n");
+					tb.tprintf (errortext::terminal::ambiguous,
+							    split[i].cval());
 					if (ki) tb.redraw ();
 					return 0;
 			}
@@ -976,7 +977,18 @@ public:
 					if (ki==9) tb.insert (" ");
 					break;
 				}
-				tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"", split[i].cval());
+				if (ki) tb.tprintf ("\n");
+				if (split[i].sval().strlen())
+				{
+					tb.tprintf (errortext::terminal::parser, split[i].cval());
+				}
+				else
+				{
+					if (ki)
+					{
+						tb.tprintf (errortext::terminal::nomore);
+					}
+				}
 				if (ki) tb.redraw ();
 				return 0;
 			
@@ -1014,8 +1026,9 @@ public:
 				}
 				else
 				{
-					tb.tprintf ("%s%% Ambiguous command at '%s'\n",
-								ki?"\n":"", split[i].cval());
+					if (ki) tb.tprintf ("\n");
+					tb.tprintf (errortext::terminal::ambiguous,
+								split[i].cval());
 				}
 				break;
 		}
@@ -1039,7 +1052,7 @@ public:
 				tabhandler (0, term.termbuf);
 				if (curcmd == "@error")
 				{
-					term.termbuf.tprintf ("%% Incomplete command\n");
+					term.termbuf.tprintf (errortext::terminal::incomplete);
 				}
 				else if (cmdline.count())
 				{
