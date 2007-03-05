@@ -856,8 +856,8 @@ public:
 		index[0] = (ki-1) + 'a';
 		
 		if (! ctrlmacros.exists (index)) return 0;
-		bool forceempty = ctrlmacros[index]("forceempty").bval();
-		string replacement = ctrlmacros[index].sval();
+		bool forceempty = ctrlmacros[(const char*)index]("forceempty").bval();
+		string replacement = ctrlmacros[(const char*)index].sval();
 		
 		ln = tb.getline();
 		if (forceempty && ln.strlen()) return 0;
