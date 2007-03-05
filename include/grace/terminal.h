@@ -840,7 +840,7 @@ public:
 	{
 		string idx;
 		idx.strcat (ctrlkey);
-		int keycode = ctrlkey - 'a';
+		int keycode = ctrlkey - 'a' + 1;
 		
 		ctrlmacros[idx] = data;
 		ctrlmacros[idx]("forceempty") = forceempty;
