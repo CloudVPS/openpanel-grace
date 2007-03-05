@@ -855,7 +855,7 @@ public:
 		index[1] = 0;
 		index[0] = (ki-1) + 'a';
 		
-		if (! ctrlmacros.exists (index)) return 0;
+		if (! ctrlmacros.exists ((const char *)index)) return 0;
 		bool forceempty = ctrlmacros[(const char*)index]("forceempty").bval();
 		string replacement = ctrlmacros[(const char*)index].sval();
 		
