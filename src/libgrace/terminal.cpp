@@ -50,6 +50,9 @@ termbuffer::termbuffer (file &in, file &out, int _size, int _wsize)
 	crsr = ocrsr = wcrsr = owcrsr = 0;
 	historycrsr = 0;
 	
+	idlecb = NULL;
+	idlearg = NULL;
+	
 	// Default prompt.
 	setprompt ("$ ");
 }
@@ -511,6 +514,7 @@ int termbuffer::getkey (void)
 		res = fin.read (1, 1000);
 		if (! res.strlen())
 		{
+			if (idlecb) idlecb (idlearg);
 			eventlock.lockw();
 			if (events.count())
 			{

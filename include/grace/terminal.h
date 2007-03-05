@@ -27,6 +27,8 @@
 #define KEYCODE_ESCAPE 27
 #define KEYCODE_RETURN 10
 
+typedef void (*tbidlecb)(void *);
+
 /// A class implementing a VT100-compatible terminal suitable for
 /// command line interaction models. The class models an input line that
 /// automatically scrolls if the cursor reaches the end and the user
@@ -55,6 +57,15 @@ public:
 					 /// called for a terminal that has not first been
 					 /// called with termbuffer:::on().
 	void			 off (void);
+	
+					 /// Set an idle-callback for getkey(). Will call
+					 /// the provided function with the provided argument
+					 /// during idle moments.
+	void			 setidlecb (tbidlecb mycb, void *arg)
+					 {
+					 	idlecb = mycb;
+					 	idlearg = arg;
+					 }
 	
 					 /// Set the prompt string. The new prompt will be
 					 /// active at the next draw().
@@ -207,6 +218,8 @@ protected:
 	char 			*buffer; ///< The input buffer.
 	char			*curview; ///< The screen buffer.
 	string			 prompt; ///< The prompt string.
+	tbidlecb		 idlecb; ///< Optional idle callback.
+	void			*idlearg; ///< Argument for idle callback.
 	
 	value			 events; ///< Queue of console events.
 	lock<int>		 eventlock; ///< Lock on the event queue.
