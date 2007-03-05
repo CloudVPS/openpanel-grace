@@ -624,12 +624,8 @@ public:
 	{
 		first = last = NULL;
 		hfirst = hlast = NULL;
-		exitcmd = "exit";
-		upcmd = "..";
 		owner = p;
 		
-		term.addkeyresponse (4, &cli<ctlclass>::exithandler);
-		term.addkeyresponse (26, &cli<ctlclass>::uphandler);
 		term.addkeyresponse (9, &cli<ctlclass>::tabhandler);
 		term.addkeyresponse ('?', &cli<ctlclass>::tabhandler);
 	}
@@ -840,25 +836,30 @@ public:
 		}
 	}
 	
-	/// Keyhandler for the ^D command.
-	/// \param ki The pressed key.
-	/// \param tb The termbuffer.
-	int exithandler (int ki, termbuffer &tb)
+	void setctrlmacro (char ctrlkey, const string &data, bool forceempty=false)
 	{
-		string ln = tb.getline();
-		if (ln.strlen()) return 0;
-		tb.set (exitcmd);
-		return 1;
+		string idx;
+		idx.strcat (ctrlkey);
+		int keycode = ctrlkey - 'a';
+		
+		ctrlmacros[idx] = data;
+		ctrlmacros[idx]("forceempty") = forceempty;
+		
+		term.addkeyresponse (keycode, &cli<ctlclass>::ctrlmacrohandler);
 	}
 	
-	/// Keyhandler for the ^Z command.
-	/// \param key The pressed key.
-	/// \param tb The termbuffer.
-	int uphandler (int key, termbuffer &tb)
+	int ctrlmacrohandler (int ki, termbuffer &tb)
 	{
-		string ln = tb.getline();
-		if (ln.strlen()) return 0;
-		tb.set (upcmd);
+		char index[2];
+		index[1] = 0;
+		index[0] = (ki-1) + 'a';
+		
+		if (! ctrlmacros.exists (index)) return 0;
+		bool forceempty = ctrlmacros[index]("forceempty").bval();
+		string replacement = ctrlmacros[index].sval();
+		
+		if (forceempty && ln.strlen()) return 0;
+		tb.set (replacement);
 		return 1;
 	}
 	
@@ -911,7 +912,6 @@ public:
 			}
 			split.newval();
 		}
-		
 		
 		for (i=0; i< (split.count()-1); ++i)
 		{
@@ -1102,8 +1102,6 @@ protected:
 	cmdhandler *hfirst; ///< First node in the cmdhandler linked list.
 	cmdhandler *hlast; ///< Last node in the cmdhandler linked list.
 	value cmdtree; ///< The syntax tree.
-	string exitcmd; ///< The command that will be used for ^D.
-	string upcmd; ///< The command that will be used for ^Z.
 	string prompt; ///< The current prompt.
 	ctlclass *owner; ///< Pointer to the parent object.
 	statstring curcmd; ///< The declaration of a matched command stream. 
