@@ -850,6 +850,7 @@ public:
 	
 	int ctrlmacrohandler (int ki, termbuffer &tb)
 	{
+		string ln;
 		char index[2];
 		index[1] = 0;
 		index[0] = (ki-1) + 'a';
@@ -858,6 +859,7 @@ public:
 		bool forceempty = ctrlmacros[index]("forceempty").bval();
 		string replacement = ctrlmacros[index].sval();
 		
+		ln = tb.getline();
 		if (forceempty && ln.strlen()) return 0;
 		tb.set (replacement);
 		return 1;
@@ -1102,6 +1104,7 @@ protected:
 	cmdhandler *hfirst; ///< First node in the cmdhandler linked list.
 	cmdhandler *hlast; ///< Last node in the cmdhandler linked list.
 	value cmdtree; ///< The syntax tree.
+	value ctrlmacros; ///< Control-key bound word macros.
 	string prompt; ///< The current prompt.
 	ctlclass *owner; ///< Pointer to the parent object.
 	statstring curcmd; ///< The declaration of a matched command stream. 
