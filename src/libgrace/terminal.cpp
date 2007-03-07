@@ -9,6 +9,7 @@
 //      ^	^
 #include <grace/terminal.h>
 #include <grace/strutil.h>
+#include <grace/filesystem.h>
 
 #define VT100_CRRIGHT "\033[C"
 #define VT100_CRLEFT "\033[D"
@@ -48,6 +49,9 @@ termbuffer::termbuffer (file &in, file &out, int _size, int _wsize)
 	// Initialize all other cursors.
 	crsr = ocrsr = wcrsr = owcrsr = 0;
 	historycrsr = 0;
+	
+	idlecb = NULL;
+	idlearg = NULL;
 	
 	// Default prompt.
 	setprompt ("$ ");
@@ -510,6 +514,7 @@ int termbuffer::getkey (void)
 		res = fin.read (1, 1000);
 		if (! res.strlen())
 		{
+			if (idlecb) idlecb (idlearg);
 			eventlock.lockw();
 			if (events.count())
 			{
@@ -566,6 +571,7 @@ void cliutil::splitwords (const string &src, int atpos, value &into)
 	}
 	
 	while (i<into.count()) into.rmindex (i);
+	if ( (atpos>0) && (src[atpos-1] == ' ') ) into.newval() == "";
 }
 
 // ==========================================================================
@@ -576,10 +582,17 @@ void cliutil::expandword (const string &part, const value &options,
 {
 	string completion;
 	bool hadwildcard = false;
+
+	if (! part.strlen())
+	{
+		into.crop (0);
+		return;
+	}
 	
 	foreach (opt, options)
 	{
 		string total = opt.id().sval();
+		if (! total.strlen()) continue;
 		if (total[-1] == '*')
 		{
 			if (total.strlen()>1)

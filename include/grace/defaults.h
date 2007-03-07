@@ -306,6 +306,13 @@ namespace errortext
 		sparameter codec defaultvalue ("Codec error: %s");
 		sparameter chandshake defaultvalue ("Codec handshake i/o error");
 	}
+	namespace terminal
+	{
+		sparameter parser defaultvalue ("%% Error at '%s'\n");
+		sparameter ambiguous defaultvalue ("%% Ambiguous command at '%s'\n");
+		sparameter incomplete defaultvalue ("%% Incomplete command\n");
+		sparameter nomore defaultvalue ("%% No more input needed\n");
+	}
 	namespace validator
 	{
 		sparameter rule_unknown defaultvalue ("Unknown rule-id");

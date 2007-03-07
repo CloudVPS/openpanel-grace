@@ -4,6 +4,7 @@
 #include <grace/file.h>
 #include <grace/str.h>
 #include <grace/strutil.h>
+#include <grace/defaults.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,6 +26,8 @@
 #define KEYCODE_WORDLEFT 2
 #define KEYCODE_ESCAPE 27
 #define KEYCODE_RETURN 10
+
+typedef void (*tbidlecb)(void *);
 
 /// A class implementing a VT100-compatible terminal suitable for
 /// command line interaction models. The class models an input line that
@@ -54,6 +57,15 @@ public:
 					 /// called for a terminal that has not first been
 					 /// called with termbuffer:::on().
 	void			 off (void);
+	
+					 /// Set an idle-callback for getkey(). Will call
+					 /// the provided function with the provided argument
+					 /// during idle moments.
+	void			 setidlecb (tbidlecb mycb, void *arg)
+					 {
+					 	idlecb = mycb;
+					 	idlearg = arg;
+					 }
 	
 					 /// Set the prompt string. The new prompt will be
 					 /// active at the next draw().
@@ -139,8 +151,9 @@ public:
 					 /// Get the current contents of the input buffer.
 	string			*getline (void)
 					 {
-					 	return new (memory::retainable::onstack) string
+					 	string *res = new (memory::retainable::onstack) string
 					 							(buffer + prompt.strlen());
+						res->chomp ();
 					 }
 					 
 					 /// Send a console message (should be called
@@ -205,6 +218,8 @@ protected:
 	char 			*buffer; ///< The input buffer.
 	char			*curview; ///< The screen buffer.
 	string			 prompt; ///< The prompt string.
+	tbidlecb		 idlecb; ///< Optional idle callback.
+	void			*idlearg; ///< Argument for idle callback.
 	
 	value			 events; ///< Queue of console events.
 	lock<int>		 eventlock; ///< Lock on the event queue.
@@ -622,12 +637,8 @@ public:
 	{
 		first = last = NULL;
 		hfirst = hlast = NULL;
-		exitcmd = "exit";
-		upcmd = "..";
 		owner = p;
 		
-		term.addkeyresponse (4, &cli<ctlclass>::exithandler);
-		term.addkeyresponse (26, &cli<ctlclass>::uphandler);
 		term.addkeyresponse (9, &cli<ctlclass>::tabhandler);
 		term.addkeyresponse ('?', &cli<ctlclass>::tabhandler);
 	}
@@ -838,25 +849,32 @@ public:
 		}
 	}
 	
-	/// Keyhandler for the ^D command.
-	/// \param ki The pressed key.
-	/// \param tb The termbuffer.
-	int exithandler (int ki, termbuffer &tb)
+	void setctrlmacro (char ctrlkey, const string &data, bool forceempty=false)
 	{
-		string ln = tb.getline();
-		if (ln.strlen()) return 0;
-		tb.set (exitcmd);
-		return 1;
+		string idx;
+		idx.strcat (ctrlkey);
+		int keycode = ctrlkey - 'a' + 1;
+		
+		ctrlmacros[idx] = data;
+		ctrlmacros[idx]("forceempty") = forceempty;
+		
+		term.addkeyresponse (keycode, &cli<ctlclass>::ctrlmacrohandler);
 	}
 	
-	/// Keyhandler for the ^Z command.
-	/// \param key The pressed key.
-	/// \param tb The termbuffer.
-	int uphandler (int key, termbuffer &tb)
+	int ctrlmacrohandler (int ki, termbuffer &tb)
 	{
-		string ln = tb.getline();
-		if (ln.strlen()) return 0;
-		tb.set (upcmd);
+		string ln;
+		char index[2];
+		index[1] = 0;
+		index[0] = (ki-1) + 'a';
+		
+		if (! ctrlmacros.exists ((const char *)index)) return 0;
+		bool forceempty = ctrlmacros[(const char*)index]("forceempty").bval();
+		string replacement = ctrlmacros[(const char*)index].sval();
+		
+		ln = tb.getline();
+		if (forceempty && ln.strlen()) return 0;
+		tb.set (replacement);
 		return 1;
 	}
 	
@@ -876,6 +894,12 @@ public:
 		curcmd = "";
 		
 		ln = tb.getline();
+		
+		if ( (ki==9) && (tb.crsrpos() > ln.strlen()) )
+		{
+			return 0;
+		}
+		
 		cliutil::splitwords (ln, ki ? tb.crsrpos() : ln.strlen(), split);
 		if (! ki) ln = ln.rtrim ();
 		if (ki == '?')
@@ -904,17 +928,17 @@ public:
 			split.newval();
 		}
 		
-		
 		for (i=0; i< (split.count()-1); ++i)
 		{
+			if (! (split[i].sval().strlen())) continue;
 			opts.clear ();
 			fullexpand (probe, split, i, opts);
 			
 			switch (opts.count())
 			{
 				case 0:
-					tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"",
-								split[i].cval());
+					if (ki) tb.tprintf ("\n");
+					tb.tprintf (errortext::terminal::parser, split[i].cval());
 					if (ki) tb.redraw ();
 					return 0;
 				
@@ -931,8 +955,9 @@ public:
 					break;
 				
 				default:
-					tb.tprintf ("%s%% Ambiguous command at '%s'\n",
-								ki?"\n":"", split[i].cval());
+					if (ki) tb.tprintf ("\n");
+					tb.tprintf (errortext::terminal::ambiguous,
+							    split[i].cval());
 					if (ki) tb.redraw ();
 					return 0;
 			}
@@ -967,7 +992,18 @@ public:
 					if (ki==9) tb.insert (" ");
 					break;
 				}
-				tb.tprintf ("%s%% Error at '%s'\n", ki?"\n":"", split[i].cval());
+				if (ki) tb.tprintf ("\n");
+				if (split[i].sval().strlen())
+				{
+					tb.tprintf (errortext::terminal::parser, split[i].cval());
+				}
+				else
+				{
+					if (ki)
+					{
+						tb.tprintf (errortext::terminal::nomore);
+					}
+				}
 				if (ki) tb.redraw ();
 				return 0;
 			
@@ -1005,8 +1041,9 @@ public:
 				}
 				else
 				{
-					tb.tprintf ("%s%% Ambiguous command at '%s'\n",
-								ki?"\n":"", split[i].cval());
+					if (ki) tb.tprintf ("\n");
+					tb.tprintf (errortext::terminal::ambiguous,
+								split[i].cval());
 				}
 				break;
 		}
@@ -1030,7 +1067,7 @@ public:
 				tabhandler (0, term.termbuf);
 				if (curcmd == "@error")
 				{
-					term.termbuf.tprintf ("%% Incomplete command\n");
+					term.termbuf.tprintf (errortext::terminal::incomplete);
 				}
 				else if (cmdline.count())
 				{
@@ -1080,8 +1117,7 @@ protected:
 	cmdhandler *hfirst; ///< First node in the cmdhandler linked list.
 	cmdhandler *hlast; ///< Last node in the cmdhandler linked list.
 	value cmdtree; ///< The syntax tree.
-	string exitcmd; ///< The command that will be used for ^D.
-	string upcmd; ///< The command that will be used for ^Z.
+	value ctrlmacros; ///< Control-key bound word macros.
 	string prompt; ///< The current prompt.
 	ctlclass *owner; ///< Pointer to the parent object.
 	statstring curcmd; ///< The declaration of a matched command stream. 

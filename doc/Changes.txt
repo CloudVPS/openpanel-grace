@@ -1,4 +1,8 @@
-0.8.13     In production                           <grace@openpanel.com>
+0.8.14     Under Development                       <grace@openpanel.com>
+
+           * Fixed a number of tab-handling bugs in terminal/cli.
+
+0.8.13     Fri Jan 05 2007                         <grace@openpanel.com>
 
            * Internalized md5 crypt can now generate BSD-style MD5 hashes
              natively.
