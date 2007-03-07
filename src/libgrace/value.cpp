@@ -264,15 +264,6 @@ value::value (const string &str)
 	_type= t_string;
 }
 
-
-value::value (const statstring &str)
-{
-	init ();
-	s = str.sval();
-	itype = i_string;
-	_type = t_string;
-}
-
 // ========================================================================
 // COPY CONSTRUCTOR
 // ========================================================================
