@@ -258,9 +258,19 @@ value::value (valuable *v)
 // ========================================================================
 value::value (const string &str)
 {
+	init ();
 	s = str;
 	itype = i_string;
 	_type= t_string;
+}
+
+
+value::value (const statstring &str)
+{
+	init ();
+	s = str.sval();
+	itype = i_string;
+	_type = t_string;
 }
 
 // ========================================================================
@@ -268,6 +278,7 @@ value::value (const string &str)
 // ========================================================================
 value::value (string *str)
 {
+	init ();
 	s = str;
 	itype = i_string;
 	_type = t_string;
