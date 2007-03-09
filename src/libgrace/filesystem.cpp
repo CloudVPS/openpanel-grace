@@ -570,7 +570,10 @@ bool filesystem::cp (const string &from, const string &to)
 // ========================================================================
 bool filesystem::chmod (const string &path, int perms)
 {
-	if (::chmod (path.str(), perms)) return false;
+	string resolved;
+	resolved = fs.transw (path);
+	
+	if (::chmod (resolved.str(), perms)) return false;
 	return true;
 }
 
