@@ -113,12 +113,6 @@ public:
 							 /// string.
 	dbrecord				&operator= (string *o) { value v = o; fromvalue (v); return *this; }
 
-							 /// Assignment operator for a const string.
-	dbrecord 				&operator= (const string &o) { value v = o; fromvalue (v); return *this; }
-
-							 /// Assignment operator for a const statstring.
-	dbrecord 				&operator= (const statstring &o) { value v = o; fromvalue (v); return *this; }
-
 							 //@{
 							 /// Convenience access to underlying value.
 	const string			&sval (void) { return v.sval(); }
