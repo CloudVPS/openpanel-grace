@@ -55,7 +55,11 @@ public:
 							if (_array[i])
 							{
 								if (_array[i]->dynamic)
+								{
 									delete (kind *) _array[i]->ent;
+								}
+								_array[i]->ent = NULL;
+								delete _array[i];
 							}
 						}
 						free (_array);
