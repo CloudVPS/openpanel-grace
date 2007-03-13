@@ -1,6 +1,25 @@
-0.8.14     Under Development                       <grace@openpanel.com>
+0.8.14     Tue Mar 13 2007                         <grace@openpanel.com>
 
            * Fixed a number of tab-handling bugs in terminal/cli.
+           
+           * Cleaned up some casting issues that surfaced when using
+             dbfile.
+           
+           * Removed hardcoded mapping between keys like ^D and ^Z
+             from the cli/terminal class.
+             
+           * Added a mechanism to extract the command line history from
+             the terminal class, allowing the application to load/save
+             it.
+             
+           * Improved handling of extraneous whitespace in cli.
+           
+           * When daemon::daemonize() was called without a delayed
+             exit setting, stdin/stdout/stderr were not closed
+             properly, leading to terminal leakage.
+           
+           * Fixed a memory leak error in the dictionary<kind> template
+             class.
 
 0.8.13     Fri Jan 05 2007                         <grace@openpanel.com>
 
@@ -481,53 +500,53 @@
 
 0.8.1      Mon Mar 29 2004                            <pi@madscience.nl>
 
-		   * New methods in value to import and export CSV-format files
-			 into/from two-dimensional arrays (optionally with named
-			 keys). This is not entirely perfect yet with regard to
-			 native encoding of special characters.
-		
-		   * Cleaned up some mess that stops cygwin's gcc from yelling
-			 at me. Implemented an atoll replacement for the same purpose.
-		
+           * New methods in value to import and export CSV-format files
+             into/from two-dimensional arrays (optionally with named
+             keys). This is not entirely perfect yet with regard to
+             native encoding of special characters.
+        
+           * Cleaned up some mess that stops cygwin's gcc from yelling
+             at me. Implemented an atoll replacement for the same purpose.
+        
 0.8.0      Fri Jan  9 2004                            <pi@madscience.nl>
 
-		   * Extra value-types: bool, unsigned, long, ulong, short,
-								ushort, char, uchar, date
-			   
-		   * Visitor template class defines a way to browse tree data
-			 objects without resorting to manual pointer-chasing.
-		   
-		   * Support for "tdict"-style text schemas has been replaced
-			 with the "xml.schema" schema-definition syntax
-			   
-		   * Support for recursion in volume paths, ie:
-			   PATH_SCHEMAS=app\:schemas:etc\:schemas
-			   
-		   * Can now interact with DAAP-style binary XML streams, with
-			 definitions within the XML schemas
-			   
-		   * Default scheme to start a GRACE application on a Unix
-			 system now uses a bundle directory combined with a
-			 softlink, ie:
-			 
-			 MyApplication -> MyApplication.app/exec
-			 MyApplication.app/
-			   .:<mime> system/application-bundle
-			   exec -> code/linux.i386/exec
-			   icon/
-				 64.png
-			   schemas/
-				 nl.madscience.schemas.myapp.defaults.xml
-			   defaults/
-				 nl.madscience.defaults.myapp.xml
-			 
-			 This makes it relatively easy to define schemas that
-			 determine the layout of the data when it is serialized
-			 to XML or CXML.
-		   
-		   * myValue[-1] now returns the last child in the array
-		   
-0.7.2	   Fri Oct 24 2003                            <pi@madscience.nl>
+           * Extra value-types: bool, unsigned, long, ulong, short,
+                                ushort, char, uchar, date
+               
+           * Visitor template class defines a way to browse tree data
+             objects without resorting to manual pointer-chasing.
+           
+           * Support for "tdict"-style text schemas has been replaced
+             with the "xml.schema" schema-definition syntax
+               
+           * Support for recursion in volume paths, ie:
+               PATH_SCHEMAS=app\:schemas:etc\:schemas
+               
+           * Can now interact with DAAP-style binary XML streams, with
+             definitions within the XML schemas
+               
+           * Default scheme to start a GRACE application on a Unix
+             system now uses a bundle directory combined with a
+             softlink, ie:
+             
+             MyApplication -> MyApplication.app/exec
+             MyApplication.app/
+               .:<mime> system/application-bundle
+               exec -> code/linux.i386/exec
+               icon/
+                 64.png
+               schemas/
+                 nl.madscience.schemas.myapp.defaults.xml
+               defaults/
+                 nl.madscience.defaults.myapp.xml
+             
+             This makes it relatively easy to define schemas that
+             determine the layout of the data when it is serialized
+             to XML or CXML.
+           
+           * myValue[-1] now returns the last child in the array
+           
+0.7.2      Fri Oct 24 2003                            <pi@madscience.nl>
 
            * Split up the value class implementation over several files.
 
@@ -547,7 +566,7 @@
              
            * The application class now picks up all environment variables.
 
-0.7.0	   Sat Aug 30 2003                            <pi@madscience.nl>
+0.7.0      Sat Aug 30 2003                            <pi@madscience.nl>
 
            * The value class can now read and write XML files using
              an extended version of the Apple plist DTD.
@@ -574,13 +593,13 @@
              allocation overhead of the label names.
 
 0.6.3      Tue Jun 10 2003                            <pi@madscience.nl>
-		   
+           
            * Added db.insert_id() method and backend handling to save on
              stupid-looking select last_insertid() queries.
-	     
+         
            * Added pathvolume parsing for locating database driver module.
 
-0.6.2	   Fri Feb 28 2003                            <pi@madscience.nl>
+0.6.2      Fri Feb 28 2003                            <pi@madscience.nl>
 
            * Added extra parsing of cmdtoken templates with support
              for function calls through pseudo-tags.
