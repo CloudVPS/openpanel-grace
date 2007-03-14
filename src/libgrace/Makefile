@@ -14,6 +14,7 @@ OBJ			= 	application.o \
 				eventq.o \
 				file.o \
 				filesystem.o \
+				fswatch.o \
 				http.o \
 				httpd.o \
 				httpd_fileshare.o \
