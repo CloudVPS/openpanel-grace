@@ -1,3 +1,9 @@
+// ========================================================================
+// fswatch.cpp: Crude filesystem watcher
+//
+// (C) Copyright 2007 Grace Team <grace@openpanel.com>
+//                    OpenPanel V.O.F., Rotterdam
+// ========================================================================
 #include <grace/fswatch.h>
 
 namespace fschange
@@ -7,6 +13,9 @@ namespace fschange
 	statstring created ("created");
 };
 
+// ========================================================================
+// CONSTRUCTOR fswatch
+// ========================================================================
 fswatch::fswatch (const string &path)
 {
 	attach (path);
@@ -16,16 +25,25 @@ fswatch::fswatch (void)
 {
 }
 
+// ========================================================================
+// DESTRUCTOR fswatch
+// ========================================================================
 fswatch::~fswatch (void)
 {
 }
 
+// ========================================================================
+// METHOD ::attach
+// ========================================================================
 void fswatch::attach (const string &path)
 {
 	watchpath = path;
 	lastround = fs.ls (watchpath);
 }
 
+// ========================================================================
+// METHOD ::listchanges
+// ========================================================================
 value *fswatch::listchanges (void)
 {
 	if (! watchpath)
