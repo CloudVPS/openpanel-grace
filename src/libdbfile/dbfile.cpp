@@ -41,7 +41,12 @@ bool dbrecord::exists (const statstring &k)
 {
 	if (! owner) throw (dbrecordMemoryCorruption());
 	
-	return owner->recordexists (k);
+	if (! parent)
+	{
+		return owner->recordexists (k);
+	}
+	
+	return v.exists (k);
 }
 
 // ========================================================================
