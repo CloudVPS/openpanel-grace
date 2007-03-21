@@ -113,6 +113,13 @@ public:
 							 /// string.
 	dbrecord				&operator= (string *o) { value v = o; fromvalue (v); return *this; }
 
+	dbrecord				&operator= (int o) { value v; v = o; fromvalue (v); return *this; }
+	dbrecord				&operator= (unsigned int o) { value v; v = o; fromvalue (v); return *this; }
+	dbrecord				&operator= (double o) { value v; v = o; fromvalue (v); return *this; }
+	dbrecord				&operator= (long long o) { value v; v = o; fromvalue (v); return *this; }
+	dbrecord				&operator= (unsigned long long o) { value v; v = o; fromvalue (v); return *this; }
+	dbrecord				&operator= (bool b) { value v; v = b; fromvalue (v); return *this; }
+
 							 //@{
 							 /// Convenience access to underlying value.
 	const string			&sval (void) { return v.sval(); }
