@@ -119,6 +119,7 @@ public:
 	dbrecord				&operator= (long long o) { value v; v = o; fromvalue (v); return *this; }
 	dbrecord				&operator= (unsigned long long o) { value v; v = o; fromvalue (v); return *this; }
 	dbrecord				&operator= (bool b) { value v; v = b; fromvalue (v); return *this; }
+	dbrecord				&operator= (const string &s) { value v = o; fromvalue (v); return *this; }
 
 							 //@{
 							 /// Convenience access to underlying value.
