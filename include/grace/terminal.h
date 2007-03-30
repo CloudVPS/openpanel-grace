@@ -154,6 +154,7 @@ public:
 					 	string *res = new (memory::retainable::onstack) string
 					 							(buffer + prompt.strlen());
 						res->chomp ();
+						return res;
 					 }
 					 
 					 /// Send a console message (should be called
