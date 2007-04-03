@@ -1050,12 +1050,13 @@ string *strutil::httpurlencode (value &data)
 // --------------------------
 // Do variable replacement using the scriptparser tools on a string.
 // ========================================================================
-string *strutil::valueparse (const string &str, value &env)
+string *strutil::valueparse (const string &str, const value &env)
 {
+	value renv = env;
 	value tokens;
 	
 	tokens = strutil::split (str, '$');
-	return cmdtoken_parsedata (env, tokens);
+	return cmdtoken_parsedata (renv, tokens);
 }
 
 // ========================================================================

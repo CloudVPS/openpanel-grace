@@ -165,7 +165,7 @@ public:
 						 /// \param str The text data.
 						 /// \param env The variable space.
 						 /// \return New string object.
-	static string		*valueparse (const string &str, value &env);
+	static string		*valueparse (const string &str, const value &env);
 	
 						 /// Convert a relative or absolute path
 						 /// with trailing filename into a string
