@@ -123,5 +123,18 @@ int strutil1App::main (void)
 	
 	if (res != "1, 2, three!") FAIL("valueparse");
 	
+	v.clear();
+	
+	string nvs = "name=John; address = \"1 Brick Road\"; type = upper class;"
+				 "answer=42;test=\"1;2;3\"";
+	
+	v = strutil::parsenv (nvs);
+	
+	if (v["name"] != "John") FAIL("parsenv1");
+	if (v["address"] != "1 Brick Road") FAIL("parsenv2");
+	if (v["type"] != "upper class") FAIL("parsenv3");
+	if (v["answer"] != "42") FAIL("parsenv4");
+	if (v["test"] != "1;2;3") FAIL("parsenv5");
+	
 	return 0;
 }

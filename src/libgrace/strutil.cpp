@@ -453,6 +453,39 @@ value *strutil::parsehdr (const string &hdr)
 }
 
 // ========================================================================
+// STATIC METHOD ::parsenv
+// ========================================================================
+value *strutil::parsenv (const string &line, char split, char nvsplit)
+{
+	returnclass (value) res retain;
+	
+	value pairs = strutil::splitquoted (line, split);
+	foreach (pair, pairs)
+	{
+		string right, left, val;
+		right = pair;
+		left = right.cutat (nvsplit);
+		
+		left.chomp ();
+		right.chomp ();
+		if ((right[0] == '\"') && (right[-1] == '\"'))
+		{
+			for (int i=1; i<right.strlen()-1; ++i)
+			{
+				if (right[i] == '\\') i++;
+				val.strcat (right[i]);
+			}
+		}
+		else val = right;
+		
+		res[left] = val;
+	}
+	
+	return &res;
+}
+
+
+// ========================================================================
 // STATIC METHOD ::urldecode
 // -------------------------
 // Decodes a string that is encoded with %XX escapes for certain

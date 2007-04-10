@@ -117,6 +117,22 @@ public:
 						 /// \return New string object with decoded data.
 	static string		*urldecode (const string &);
 	
+						 /// Parse a list of name/value pairs, as seen in
+						 /// e.g., the http cookie header. Is liberal
+						 /// with whitespace and allows for quote-escpaping
+						 /// of the right-hand value part of a pair, making
+						 /// the following all equivalent:
+						 /// - foo=bar;test=42;zed="dead, baby"
+						 /// - foo = bar; test = 42; zed = dead, baby
+						 /// - foo="bar" ; test="42"; zed="dead, baby"
+						 /// \param line The line to parse.
+						 /// \param split The split between each
+						 ///              name/value pair.
+						 /// \param nvsplit The split character between
+						 ///                each name/value.
+	static value		*parsenv (const string &line, char split=';',
+								  char nvsplit='=');
+								  
 						 /// Derive variables from a GET request.
 						 /// \param str Text data in QUERY_STRING format.
 						 /// \return New value object with key/value pairs
