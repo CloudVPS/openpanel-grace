@@ -38,8 +38,8 @@ termbuffer::termbuffer (file &in, file &out, int _size, int _wsize)
 	if (! wsize) // Defaulted to 0?
 	{
 		// Deduct terminal size.
-		ioctl (fin.filno, TIOCGWINSZ, (char *) &sz);
-		wsize = sz.ws_col;
+		if (ioctl (fin.filno, TIOCGWINSZ, (char *) &sz) >= 0)
+			wsize = sz.ws_col;
 	}
 	
 	if (! wsize) wsize = 80;
