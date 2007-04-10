@@ -26,6 +26,7 @@ OBJ			= 	application.o \
 				regexpression.o \
 				retain.o \
 				ringbuffer.o \
+				session.o \
 				smtp.o \
 				smtpd.o \
 				socketpool.o \
