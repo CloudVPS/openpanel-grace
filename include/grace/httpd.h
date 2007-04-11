@@ -295,7 +295,8 @@ public:
 						 /// \param user The username.
 						 /// \param pass The password.
 						 /// \return Status, \b true if validated.
-	virtual	bool		 authenticate (const string &user, const string &pass);
+	virtual	bool		 authenticate (const string &user, const string &pass,
+									   const string &uri);
 	
 						 /// Get user data.
 						 /// \param user The username.
@@ -327,7 +328,8 @@ public:
 						 /// Validate username/password.
 						 /// \param name The username.
 						 /// \param pass The password.
-	bool				 authenticate (const string &name, const string &pass);
+	bool				 authenticate (const string &name, const string &pass,
+									   const string &uri);
 	
 						 /// Get user data.
 						 /// \param user The username.
@@ -431,7 +433,8 @@ public:
 						 /// were valid.
 						 /// \param user The username.
 						 /// \param pass The password.
-	bool				 authenticate (const string &user, const string &pass);
+	bool				 authenticate (const string &user, const string &pass,
+									   const string &uri);
 	value				*getuser (const string &);
 	
 protected:

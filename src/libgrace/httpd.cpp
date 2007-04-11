@@ -828,7 +828,7 @@ int httpdbasicauth::run (string &uri, string &postbody,
 	
 	// Find the user and check the password
 	
-	bool authenticated = auth->authenticate (username, password);
+	bool authenticated = auth->authenticate (username, password, uri);
 	
 	if (! authenticated) // No dough, whine and return 401
 	{
@@ -1084,7 +1084,8 @@ httpdauthenticator::~httpdauthenticator (void)
 // ========================================================================
 // METHOD ::authenticate
 // ========================================================================
-bool httpdauthenticator::authenticate (const string &u, const string &p)
+bool httpdauthenticator::authenticate (const string &u, const string &p,
+									   const string &uri)
 {
 	return false;
 }
@@ -1116,7 +1117,8 @@ valueauth::~valueauth (void)
 // ========================================================================
 // METHOD ::authenticate
 // ========================================================================
-bool valueauth::authenticate (const string &username, const string &passwd)
+bool valueauth::authenticate (const string &username, const string &passwd,
+							  const string &uri)
 {
 	bool checkedcrypted = false;
 	bool authenticated = false;
@@ -1312,7 +1314,8 @@ void pwfileauth::loadfile (void)
 // ========================================================================
 // METHOD ::authenticate
 // ========================================================================
-bool pwfileauth::authenticate (const string &u, const string &pw)
+bool pwfileauth::authenticate (const string &u, const string &pw,
+							   const string &uri)
 {
 	bool res;
 	checkrecord ();
