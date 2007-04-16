@@ -1,6 +1,7 @@
 #include <grace/application.h>
 #include <grace/filesystem.h>
 #include <grace/md5.h>
+#include <grace/system.h>
 
 class md5pwtestApp : public application
 {
@@ -28,6 +29,10 @@ int md5pwtestApp::main (void)
 	in="foobarbaz";
 	out = md5.md5pw(in, "babylon");
 	fs.save("out.dat", out);
+	
+	if (! kernel.pwcrypt.verify (in, out))
+		FAIL("pwcrypt.verify");
+	
 	return 0;
 }
 

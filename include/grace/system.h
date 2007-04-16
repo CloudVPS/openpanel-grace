@@ -33,7 +33,7 @@ _syscall2(long,jail,int,value,int,data);
 
 extern const char *SALTSRC;
 	
-char *__grace_internal_crypt (const char *, const char *);
+string *__grace_internal_crypt (const char *, const char *);
 
 /// Some OS functions.
 /// This class is accessed through a global instance named 'kernel'.
