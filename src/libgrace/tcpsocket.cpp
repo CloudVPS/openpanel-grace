@@ -338,8 +338,7 @@ void tcpsocket::getcredentials (void)
 {
 #ifdef HAVE_PASSCRED
 	struct ucred credp;
-	socklen_t *alen;
-	int len = sizeof (credp);
+	socklen_t len = sizeof (credp);
 	
 	if (getsockopt (filno, SOL_SOCKET, SO_PEERCRED, (char *) &credp, &len))
 	{		
