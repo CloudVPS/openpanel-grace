@@ -338,53 +338,20 @@ void tcpsocket::getcredentials (void)
 {
 #ifdef HAVE_PASSCRED
 	struct ucred credp;
-	char buf[16];
-	unsigned bufsiz = 8;
-	void *addr;
 	socklen_t *alen;
+	int len = sizeof (credp);
 	
-	int z;
-	struct msghdr msgh;
-	struct iovec iov[1];
-	struct cmsghdr *cmsgp = NULL;
-	char mbuf[CMSG_SPACE(sizeof (credp))];
-	int pram = 1;
-
-	setsockopt (filno, SOL_SOCKET, SO_PASSCRED, (char *) &pram,
-				sizeof (int));
-	
-	memset (&msgh,0,sizeof (msgh));
-	memset (mbuf,0,sizeof (mbuf));
-	msgh.msg_name = NULL;
-	msgh.msg_namelen = 0;
-	
-	msgh.msg_iov = iov;
-	msgh.msg_iovlen = 1;
-	
-	iov[0].iov_base = buf;
-	iov[0].iov_len = bufsiz;
-	
-	msgh.msg_control = mbuf;
-	msgh.msg_controllen = sizeof (mbuf);
-	
-	do {
-		z = recvmsg (filno, &msgh, 0);
-	} while ( (z==-1)&&(errno==EINTR) );
-	
-	if (z != -1)
+	if (getsockopt (filno, SOL_SOCKET, SO_PEERCRED, (char *) &credp, &len)
+	{		
+		peer_pid = credp.pid;
+		peer_uid = credp.uid;
+		peer_gid = credp.gid;
+	}
+	else
 	{
-		for (cmsgp=CMSG_FIRSTHDR(&msgh);cmsgp;cmsgp=CMSG_NXTHDR(&msgh,cmsgp))
-		{
-			if ((cmsgp->cmsg_level == SOL_SOCKET) &&
-			    (cmsgp->cmsg_type == SCM_CREDENTIALS))
-			{
-				credp = *(struct ucred *) CMSG_DATA(cmsgp);
-				peer_pid = credp.pid;
-				peer_uid = credp.uid;
-				peer_gid = credp.gid;
-				return;
-			}
-		}
+		peer_pid = 0;
+		peer_uid = 65534;
+		peer_gid = 65534;
 	}
 #endif
 }
@@ -395,9 +362,9 @@ void tcpsocket::getcredentials (void)
 void tcpsocket::sendcredentials (void)
 {
 #ifdef HAVE_PASSCRED
-	int foo;
-	
-	write (filno, &foo, sizeof (foo));
+	// int foo;
+	// 
+	// write (filno, &foo, sizeof (foo));
 #endif
 }
 
