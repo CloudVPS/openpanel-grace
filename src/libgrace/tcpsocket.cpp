@@ -341,7 +341,7 @@ void tcpsocket::getcredentials (void)
 	socklen_t *alen;
 	int len = sizeof (credp);
 	
-	if (getsockopt (filno, SOL_SOCKET, SO_PEERCRED, (char *) &credp, &len)
+	if (getsockopt (filno, SOL_SOCKET, SO_PEERCRED, (char *) &credp, &len))
 	{		
 		peer_pid = credp.pid;
 		peer_uid = credp.uid;
