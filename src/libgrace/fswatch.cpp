@@ -16,9 +16,9 @@ namespace fschange
 // ========================================================================
 // CONSTRUCTOR fswatch
 // ========================================================================
-fswatch::fswatch (const string &path)
+fswatch::fswatch (const string &path, const string &sfx)
 {
-	attach (path);
+	attach (path, sfx);
 }
 
 fswatch::fswatch (void)
@@ -35,10 +35,11 @@ fswatch::~fswatch (void)
 // ========================================================================
 // METHOD ::attach
 // ========================================================================
-void fswatch::attach (const string &path)
+void fswatch::attach (const string &path, const string &sfx)
 {
 	watchpath = path;
-	lastround = fs.ls (watchpath);
+	suffixpath = sfx;
+	lastround = list ();
 }
 
 // ========================================================================
@@ -53,13 +54,17 @@ value *fswatch::listchanges (void)
 	
 	returnclass (value) res retain;
 	
-	value nw = fs.ls (watchpath);
+	value nw = list ();
 	
 	foreach (nfile, nw)
 	{
 		if (lastround.exists (nfile.id()))
 		{
 			if (lastround[nfile.id()]["mtime"] != nfile["mtime"])
+			{
+				res[fschange::modified][nfile.id()] = nfile;
+			}
+			if (lastround[nfile.id()]["ctime"] != nfile["ctime"])
 			{
 				res[fschange::modified][nfile.id()] = nfile;
 			}
@@ -79,5 +84,26 @@ value *fswatch::listchanges (void)
 	}
 	
 	lastround = nw;
+	return &res;
+}
+
+value *fswatch::list (void)
+{
+	if (! suffixpath) return fs.ls (watchpath);
+
+	returnclass (value) res retain;
+	value dir = fs.dir (watchpath);
+	
+	foreach (node, dir)
+	{
+		string withsuffix = node["path"];
+		withsuffix.printf ("/%s", suffixpath.str());
+		if (fs.exists (withsuffix))
+		{
+			res[node.id()] = fs.getinfo (withsuffix);
+			res[node.id()]["path"] = node["path"];
+		}
+	}
+	
 	return &res;
 }

@@ -19,7 +19,16 @@ class fswatch
 {
 public:
 						 /// Constructor with explicit path initialization.
-						 fswatch (const string &path);
+						 /// \param path The path to watch
+						 /// \param sfx If provided, instead of looking
+						 ///            at files in the watchpath proper,
+						 ///            each entry is considered a directory
+						 ///            that should only be evaluated if it
+						 ///            contains a node with this suffix. All
+						 ///            timing information is derived from
+						 ///            this suffix node (useful for
+						 ///            watching a directory full of maildirs).
+						 fswatch (const string &path, const string &sfx="");
 						 
 						 /// Constructor with delayed initialization. Use
 						 /// fswatch::attach to initialize.
@@ -29,7 +38,7 @@ public:
 						~fswatch (void);
 
 						 /// Attach the watcher to a specific directory.
-	void				 attach (const string &path);
+	void				 attach (const string &path, const string &sfx="");
 	
 						 /// Generate a list of changed files. Returns
 						 /// a value object with the following keys,
@@ -43,6 +52,8 @@ public:
 protected:
 	value				 lastround; ///< Cache of last known contents.
 	string				 watchpath; ///< The path we're watching.
+	string				 suffixpath; ///< Path suffix to apply to analysis
+	value				*list (void); ///< List either direct nodes or suffice-nodes.
 };
 
 #endif
