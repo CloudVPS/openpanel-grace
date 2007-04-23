@@ -265,9 +265,12 @@ void termbuffer::crhome (void)
 // ==========================================================================
 void termbuffer::tohistory (void)
 {
-	history.newval() = buffer + prompt.strlen();
-	historycrsr = history.count() - 1;
-	while (history.count() > 256) history.rmindex (0);
+	if (buffer.strlen() > prompt.strlen())
+	{
+		history.newval() = buffer + prompt.strlen();
+		historycrsr = history.count() - 1;
+		while (history.count() > 256) history.rmindex (0);
+	}
 }
 
 // ==========================================================================
