@@ -1092,6 +1092,8 @@ public:
 	/// \param p The prompt.
 	void singlecmd (const string &c)
 	{
+		bool done = false;
+		
 		term.termbuf.set(c);
 
 		tabhandler (0, term.termbuf);
@@ -1106,7 +1108,7 @@ public:
 			{
 				if (h->path == curcmd)
 				{
-					// if (h->runcmd (owner, cmdline)) done = true;
+					if (h->runcmd (owner, cmdline)) done = true;
 					break;
 				}
 				
