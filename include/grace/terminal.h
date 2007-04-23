@@ -1088,6 +1088,33 @@ public:
 		}
 	}
 	
+	/// Start the command line interpreter.
+	/// \param p The prompt.
+	void singlecmd (const string &c)
+	{
+		term.termbuf.set(c);
+
+		tabhandler (0, term.termbuf);
+		if (curcmd == "@error")
+		{
+			term.termbuf.tprintf (errortext::terminal::incomplete);
+		}
+		else if (cmdline.count())
+		{
+			cmdhandler *h = hfirst;
+			while (h)
+			{
+				if (h->path == curcmd)
+				{
+					// if (h->runcmd (owner, cmdline)) done = true;
+					break;
+				}
+				
+				h = h->next;
+			}
+		}
+	}
+	
 	/// Change the prompt. Can be used by callbacks.
 	void setprompt (const string &p) { prompt = p; }
 	
