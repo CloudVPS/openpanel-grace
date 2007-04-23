@@ -265,7 +265,7 @@ void termbuffer::crhome (void)
 // ==========================================================================
 void termbuffer::tohistory (void)
 {
-	if (buffer.strlen() > prompt.strlen())
+	if (strlen(buffer) > prompt.strlen())
 	{
 		history.newval() = buffer + prompt.strlen();
 		historycrsr = history.count() - 1;
