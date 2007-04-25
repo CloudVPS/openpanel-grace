@@ -1,4 +1,7 @@
 #include <querido/engine.h>
+#ifdef HAVE_SQLITE3
+  #include <querido/sqlite.h>
+#endif
 
 dbhandle::dbhandle (dbengine *owner)
 	: drivername (owner->engine)
@@ -20,7 +23,7 @@ bool dbhandle::close (void)
 	return true;
 }
 
-bool dbhandle::query (const string &sql, value &into)
+bool dbhandle::query (const string &sql, value &into, const statstring &i)
 {
 	return false;
 }
@@ -30,7 +33,7 @@ bool dbhandle::listcolumns (const string &table, value &into)
 	return false;
 }
 
-bool dbhandle::tableexists (const string &table)
+bool dbhandle:: tableexists (const string &table)
 {
 	return false;
 }
@@ -75,19 +78,19 @@ bool dbengine::close (void)
 	hdl->close ();
 }
 
-bool dbengine::query (const string &sql)
+bool dbengine::query (const string &sql, const statstring &idxby)
 {
 	if (! hdl) return false;
 	
 	value tmp;
-	return hdl->query (sql, tmp);
+	return hdl->query (sql, tmp, idxby);
 }
 
-bool dbengine::query (const string &sql, value &into)
+bool dbengine::query (const string &sql, value &into, const statstring &idxby)
 {
 	if (! hdl) return false;
 	
-	return hdl->query (sql, into);
+	return hdl->query (sql, into, idxby);
 }
 
 bool dbengine::listcolumns (const string &table, value &into)
@@ -111,3 +114,16 @@ bool dbengine::listtables (value &into)
 	return hdl->listtables (into);
 }
 
+void dbengine::attachbuiltin (localengine t)
+{
+	switch (t)
+	{
+#ifdef HAVE_SQLITE3
+		case SQLite:
+			hdl = new sqlitehandle (this);
+			break;
+#endif
+		default:
+			throw (unknownEngineException());
+	}
+}

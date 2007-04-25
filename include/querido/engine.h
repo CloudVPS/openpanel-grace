@@ -8,11 +8,11 @@ class dbhandle
 {
 public:
 					 dbhandle (class dbengine *owner);
-					~dbhandle (void);
+	virtual			~dbhandle (void);
 
 	virtual bool	 open (const value &details);
 	virtual bool	 close (void);
-	virtual bool	 query (const string &sql, value &into);
+	virtual bool	 query (const string &sql, value &into, const statstring &i);
 	virtual bool	 listcolumns (const string &table, value &into);
 	virtual bool	 tableexists (const string &table);
 	virtual bool	 listtables (value &into);
@@ -25,6 +25,12 @@ protected:
 	string			 errstr;
 	int				 errcode;
 };
+
+THROWS_EXCEPTION (
+	unknownEngineException,
+	0x677e40e9,
+	"Unknown database engine"
+);
 
 class dbengine
 {
@@ -43,8 +49,9 @@ public:
 					
 	bool			 open (const value &details);
 	bool			 close (void);
-	bool			 query (const string &sql);
-	bool			 query (const string &sql, value &into);
+	bool			 query (const string &sql, const statstring &idxby="");
+	bool			 query (const string &sql, value &into,
+							const statstring &idxby="");
 	bool			 listcolumns (const string &table, value &into);
 	bool			 tableexists (const string &table);
 	bool			 listtables (value &into);

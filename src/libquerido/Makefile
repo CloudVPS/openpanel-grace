@@ -1,12 +1,13 @@
 include makeinclude
 
-OBJ			= 	engine.o query.o row.o table.o
+OBJ			= 	engine.o query.o row.o table.o sqlite.o
 
 AR = ar cr
 
 all: $(OBJ) 
 	$(AR) ../../lib/libquerido.a $(OBJ)
 	$(RANLIB) ../../lib/libquerido.a
+	cp platform.h ../../include/querido/platform.h
 
 install: all
 	echo "install not ready"
