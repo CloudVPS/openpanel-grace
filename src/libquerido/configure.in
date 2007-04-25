@@ -1,0 +1,7 @@
+cxx
+ranlib
+shared
+libdl
+libmysqlclient
+libsqlite3
+libcrypt

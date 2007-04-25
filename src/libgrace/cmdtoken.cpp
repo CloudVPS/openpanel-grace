@@ -473,30 +473,32 @@ string *cmdtoken_parseval (value &env, const string &_expr)
 		expr = expr.mid(1);
 		prefix = _expr[0];
 	}
-	else prefix = 0;
-	
-	if (expr.strstr ("::") >= 0)
+	else
 	{
-		visitor<value> probe (env);
-		value splt;
-		bool found = true;
-		splt = strutil::split (expr, "::");
-		
-		foreach (sclass,splt)
+		prefix = 0;
+		if (expr.strstr ("::") >= 0)
 		{
-			if (! probe.enter (sclass.sval()))
+			visitor<value> probe (env);
+			value splt;
+			bool found = true;
+			splt = strutil::split (expr, "::");
+			
+			foreach (sclass,splt)
 			{
-				found = false;
-				break;
+				if (! probe.enter (sclass.sval()))
+				{
+					found = false;
+					break;
+				}
 			}
+			
+			if (found)
+				myval = probe.obj();
+			else
+				myval = "";
 		}
-		
-		if (found)
-			myval = probe.obj();
-		else
-			myval = "";
+		else myval = env[expr];
 	}
-	else myval = env[expr];
 	
 	value tmpval;
 	string tmpstr;
