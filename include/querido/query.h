@@ -40,8 +40,8 @@ public:
 					
 					~dbstatement (void);
 
-	dbstatement		 operator&& (dbstatement &right);
-	dbstatement		 operator|| (dbstatement &left);
+	dbstatement		 operator&& (dbstatement right);
+	dbstatement		 operator|| (dbstatement left);
 
 	string			*sql (void);
 
@@ -81,10 +81,16 @@ public:
 	dbstatement		 like		(const string &);
 	
 	string			*name (void);
+	const string	&asname (void) { return asid; }
+	
+	dbcolumn		&as (const string &);
+	dbcolumn		&op (const string &);
 	
 protected:
 	statstring		 id;
-	class dbtable	&table;
+	class dbtable	*table;
+	string			 asid;
+	string			 operation;
 };
 
 typedef dictionary<dbcolumn> columndict;
@@ -95,7 +101,7 @@ public:
 					 dbquery (dbengine &peng);
 					~dbquery (void);
 	
-	void			 where (dbstatement &st);
+	void			 where (dbstatement st);
 	void			 select (class dbtable &tab);
 	void			 select (dbcolumn &one);
 	void			 select (dbcolumn &one, dbcolumn &two);

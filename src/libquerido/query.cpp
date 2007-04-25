@@ -10,6 +10,8 @@ dbstatement::dbstatement (dbstatement *orig)
 	else ll = NULL;
 	if (orig->lr) lr = new dbstatement (orig->lr);
 	else lr = NULL;
+	tl = orig->tl;
+	tr = orig->tr;
 }
 
 dbstatement::dbstatement (const value &left, valuetype lefttype,
@@ -26,8 +28,8 @@ dbstatement::dbstatement (const value &left, valuetype lefttype,
 
 dbstatement::dbstatement (dbstatement *left, comptype c, dbstatement *right)
 {
-	tl = v_cref;
-	tr = v_cref;
+	tl = v_stmt;
+	tr = v_stmt;
 	
 	comp = c;
 	ll = new dbstatement (left);
@@ -42,12 +44,12 @@ dbstatement::~dbstatement (void)
 	if (lr) delete lr;
 }
 
-dbstatement dbstatement::operator&& (dbstatement &right)
+dbstatement dbstatement::operator&& (dbstatement right)
 {
 	return dbstatement (this, c_and, &right);
 }
 
-dbstatement dbstatement::operator|| (dbstatement &right)
+dbstatement dbstatement::operator|| (dbstatement right)
 {
 	return dbstatement (this, c_or, &right);
 }
@@ -57,11 +59,12 @@ string *dbstatement::sql (void)
 	returnclass (string) res retain;
 	
 	res.strcat ('(');
+	string tstr;
 	
 	switch (tl)
 	{
 		case v_cref:
-			res.printf ("`%s`", l.str()); break;
+			res.printf ("%s", l.str()); break;
 		
 		case v_stmt:
 			res.strcat (ll->sql()); break;
@@ -94,7 +97,7 @@ string *dbstatement::sql (void)
 	switch (tr)
 	{
 		case v_cref:
-			res.printf ("`%s`", r.str()); break;
+			res.printf ("%s", r.str()); break;
 		
 		case v_stmt:
 			res.strcat (lr->sql()); break;
@@ -112,12 +115,21 @@ string *dbstatement::sql (void)
 			res.printf ("NULL"); break;
 	}
 	
+	res.strcat (')');
+	
 	return &res;
 }
 
-dbcolumn::dbcolumn (dbtable *ptable, const statstring &pid)
-	: id (pid), table (*ptable)
+dbcolumn::dbcolumn (void)
+	: id (""), table (NULL)
 {
+	throw (dbcolumnDefaultConstructorException());
+}
+
+dbcolumn::dbcolumn (dbtable *ptable, const statstring &pid)
+	: id (pid), table (ptable)
+{
+	asid = id;
 }
 
 dbcolumn::~dbcolumn (void)
@@ -275,11 +287,25 @@ dbstatement dbcolumn::like (const string &right)
 	return dbstatement (tnam, v_cref, c_like, right, v_string);
 }
 
+dbcolumn &dbcolumn::as (const string &p)
+{
+	asid = p;
+	return *this;
+}
+
+dbcolumn &dbcolumn::op (const string &p)
+{
+	operation = p;
+	return *this;
+}
+
 string *dbcolumn::name (void)
 {
 	returnclass (string) res retain;
 	
-	res.printf ("%s.%s", table.name.str(), id.str());
+	if (operation) res.printf ("%s(", operation.str());
+	res.printf ("%s.%s", table->name.str(), id.str());
+	if (operation) res.strcat (')');
 	return &res;
 }
 
@@ -292,7 +318,7 @@ dbquery::~dbquery (void)
 {
 }
 
-void dbquery::where (dbstatement &st)
+void dbquery::where (dbstatement st)
 {
 	sqlwhere = st.sql ();
 }
@@ -309,24 +335,24 @@ void dbquery::select (dbcolumn &one)
 {
 	string tmp;
 	
-	tmp = one.name(); fields[tmp] = true; tables[one.table.name] = true;
+	tmp = one.name(); fields[tmp] = one.asname(); tables[one.table->name] = true;
 }
 
 void dbquery::select (dbcolumn &one, dbcolumn &two)
 {
 	string tmp;
 	
-	tmp = one.name(); fields[tmp] = true; tables[one.table.name] = true;
-	tmp = two.name(); fields[tmp] = true; tables[two.table.name] = true;
+	tmp = one.name(); fields[tmp] = one.asname(); tables[one.table->name] = true;
+	tmp = two.name(); fields[tmp] = two.asname(); tables[two.table->name] = true;
 }
 
 void dbquery::select (dbcolumn &one, dbcolumn &two, dbcolumn &three)
 {
 	string tmp;
 	
-	tmp = one.name(); fields[tmp] = true; tables[one.table.name] = true;
-	tmp = two.name(); fields[tmp] = true; tables[two.table.name] = true;
-	tmp = three.name(); fields[tmp] = true; tables[three.table.name] = true;
+	tmp = one.name(); fields[tmp] = one.asname(); tables[one.table->name] = true;
+	tmp = two.name(); fields[tmp] = two.asname(); tables[two.table->name] = true;
+	tmp = three.name(); fields[tmp] = three.asname(); tables[three.table->name] = true;
 }
 
 void dbquery::select (dbcolumn &one, dbcolumn &two, dbcolumn &three,
@@ -334,10 +360,10 @@ void dbquery::select (dbcolumn &one, dbcolumn &two, dbcolumn &three,
 {
 	string tmp;
 	
-	tmp = one.name(); fields[tmp] = true; tables[one.table.name] = true;
-	tmp = two.name(); fields[tmp] = true; tables[two.table.name] = true;
-	tmp = three.name(); fields[tmp] = true; tables[three.table.name] = true;
-	tmp = four.name(); fields[tmp] = true; tables[four.table.name] = true;
+	tmp = one.name(); fields[tmp] = one.asname(); tables[one.table->name] = true;
+	tmp = two.name(); fields[tmp] = two.asname(); tables[two.table->name] = true;
+	tmp = three.name(); fields[tmp] = three.asname(); tables[three.table->name] = true;
+	tmp = four.name(); fields[tmp] = four.asname(); tables[four.table->name] = true;
 }
 
 void dbquery::select (dbcolumn &one, dbcolumn &two, dbcolumn &three,
@@ -345,11 +371,11 @@ void dbquery::select (dbcolumn &one, dbcolumn &two, dbcolumn &three,
 {
 	string tmp;
 	
-	tmp = one.name(); fields[tmp] = true; tables[one.table.name] = true;
-	tmp = two.name(); fields[tmp] = true; tables[two.table.name] = true;
-	tmp = three.name(); fields[tmp] = true; tables[three.table.name] = true;
-	tmp = four.name(); fields[tmp] = true; tables[four.table.name] = true;
-	tmp = five.name(); fields[tmp] = true; tables[five.table.name] = true;
+	tmp = one.name(); fields[tmp] = one.asname(); tables[one.table->name] = true;
+	tmp = two.name(); fields[tmp] = two.asname(); tables[two.table->name] = true;
+	tmp = three.name(); fields[tmp] = three.asname(); tables[three.table->name] = true;
+	tmp = four.name(); fields[tmp] = four.asname(); tables[four.table->name] = true;
+	tmp = five.name(); fields[tmp] = five.asname(); tables[five.table->name] = true;
 }
 
 void dbquery::select (dbcolumn &one, dbcolumn &two, dbcolumn &three,
@@ -357,12 +383,12 @@ void dbquery::select (dbcolumn &one, dbcolumn &two, dbcolumn &three,
 {
 	string tmp;
 	
-	tmp = one.name(); fields[tmp] = true; tables[one.table.name] = true;
-	tmp = two.name(); fields[tmp] = true; tables[two.table.name] = true;
-	tmp = three.name(); fields[tmp] = true; tables[three.table.name] = true;
-	tmp = four.name(); fields[tmp] = true; tables[four.table.name] = true;
-	tmp = five.name(); fields[tmp] = true; tables[five.table.name] = true;
-	tmp = six.name(); fields[tmp] = true; tables[six.table.name] = true;
+	tmp = one.name(); fields[tmp] = one.asname(); tables[one.table->name] = true;
+	tmp = two.name(); fields[tmp] = two.asname(); tables[two.table->name] = true;
+	tmp = three.name(); fields[tmp] = three.asname(); tables[three.table->name] = true;
+	tmp = four.name(); fields[tmp] = four.asname(); tables[four.table->name] = true;
+	tmp = five.name(); fields[tmp] = five.asname(); tables[five.table->name] = true;
+	tmp = six.name(); fields[tmp] = six.asname(); tables[six.table->name] = true;
 }
 
 void dbquery::mksql (void)
@@ -374,7 +400,7 @@ void dbquery::mksql (void)
 	
 	foreach (field, fields)
 	{
-		sql.printf ("%s`%s`", first ? "" : ",", field.name());
+		sql.printf ("%s%s AS %s", first ? "" : ",", field.name(), field.str());
 		first = false;
 	}
 	
@@ -383,7 +409,7 @@ void dbquery::mksql (void)
 	
 	foreach (tab, tables)
 	{
-		sql.printf ("%s`%s`", first ? "" : ",", tab.name());
+		sql.printf ("%s%s", first ? "" : ",", tab.name());
 		first = false;
 	}
 	

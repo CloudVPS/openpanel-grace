@@ -5,7 +5,10 @@
 dbtable::dbtable (dbengine &peng, const string &tname)
 	: name (tname), eng (peng), idxid ("id")
 {
-	
+	if (! eng.listcolumns (tname, dbcolumns))
+	{
+		::printf ("listcolumns failed\n");
+	}
 }
 
 dbtable::~dbtable (void)
@@ -15,7 +18,12 @@ dbtable::~dbtable (void)
 dbcolumn &dbtable::operator[] (const statstring &cname)
 {
 	if (cols.exists (cname)) return cols[cname];
-	if (! dbcolumns.exists (cname)) throw (unknownColumnException());
+	if (! dbcolumns.exists (cname))
+	{
+		string dbcollisting;
+		dbcollisting = dbcolumns.encode ();
+		throw (unknownColumnException());
+	}
 	
 	dbcolumn *ncol = new dbcolumn (this, cname);
 	cols.set (cname, ncol);
@@ -36,7 +44,7 @@ bool dbtable::rowexists (const statstring &rowid)
 {
 	value res;
 	string qry;
-	qry.printf ("SELECT `%s` FROM `%s` WHERE `%s`=\"%S\"", idxid.str(),
+	qry.printf ("SELECT %s FROM %s WHERE %s=\"%S\"", idxid.str(),
 				name.str(), idxid.str(), rowid.str());
 				
 	if (! res.count()) return false;
@@ -51,12 +59,12 @@ void dbtable::commitrows (void)
 		{
 			value ch = row.changes ();
 			string qry;
-			qry.printf ("UPDATE `%s` SET ", name.str());
+			qry.printf ("UPDATE %s SET ", name.str());
 			bool first = true;
 			foreach (change, ch)
 			{
 				if (! first) qry.strcat (',');
-				qry.printf ("`%s`=", change.id().str());
+				qry.printf ("%s=", change.id().str());
 				caseselector (change.type())
 				{
 					incaseof (t_int) :
@@ -69,7 +77,7 @@ void dbtable::commitrows (void)
 						qry.printf ("\"%S\"", change.str()); break;
 				}
 			}
-			qry.printf (" WHERE `%s`=\"%S\"", idxid.str(), row.id().str());
+			qry.printf (" WHERE %s=\"%S\"", idxid.str(), row.id().str());
 			eng.query (qry);
 		}
 	}

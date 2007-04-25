@@ -168,6 +168,9 @@ public:
 					 /// Copy-constructor (from a retained string)
 					 value (string *s);
 					 
+					 /// Copy-constructor (from an integer)
+					 value (int);
+					 
 					 /// Destructor.
 					~value (void);
 	
