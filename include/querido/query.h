@@ -102,6 +102,12 @@ public:
 					~dbquery (void);
 	
 	void			 where (dbstatement st);
+	void			 from (class dbtable &tab);
+	void			 from (class dbtable &tab, class dbtable &tab);
+	void			 from (class dbtable &tab, class dbtable &tab,
+						   class dbtable &tab);
+	void			 from (class dbtable &tab, class dbtable &tab,
+						   class dbtable &tab, class dbtable &tab);
 	void			 select (class dbtable &tab);
 	void			 select (dbcolumn &one);
 	void			 select (dbcolumn &one, dbcolumn &two);
@@ -112,6 +118,11 @@ public:
 							 dbcolumn &four, dbcolumn &five);
 	void			 select (dbcolumn &one, dbcolumn &two, dbcolumn &three,
 							 dbcolumn &four, dbcolumn &five, dbcolumn &six);
+	dbquery			&orderby (dbcolumn &c);
+	dbquery			&orderby (const string &nam);
+	dbquery			&descending (void);	
+	void			 indexby (const string &idxnam);
+	void			 indexby (dbcolumn &c);
 	
 	value			*exec (void);
 	//void			 execvoid (void);
@@ -123,7 +134,10 @@ protected:
 	string			 sqlwhere;
 	value			 fields;
 	value			 tables;
+	value			 orderbys;
+	bool			 descend;
 	dbengine		&eng;
+	statstring		 idxid;
 };
 
 #endif

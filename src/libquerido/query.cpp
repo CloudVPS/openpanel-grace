@@ -312,6 +312,8 @@ string *dbcolumn::name (void)
 dbquery::dbquery (dbengine &peng)
 	: eng (peng)
 {
+	descend = false;
+	idxid = "id";
 }
 
 dbquery::~dbquery (void)
@@ -323,11 +325,37 @@ void dbquery::where (dbstatement st)
 	sqlwhere = st.sql ();
 }
 
+void dbquery::from (dbtable &tab)
+{
+	tables[tab.name] = true;
+}
+
+void dbquery::from (dbtable &tab1, dbtable &tab2)
+{
+	from (tab1);
+	from (tab2);
+}
+
+void dbquery::from (dbtable &tab1, dbtable &tab2, dbtable &tab3)
+{
+	from (tab1);
+	from (tab2);
+	from (tab3);
+}
+
+void dbquery::from (dbtable &tab1, dbtable &tab2, dbtable &tab3, dbtable &tab4)
+{
+	from (tab1);
+	from (tab2);
+	from (tab3);
+	from (tab4);
+}
+
 void dbquery::select (dbtable &tab)
 {
 	string nwfield;
 	nwfield.printf ("%s.*", tab.name.str());
-	fields[nwfield] = true;
+	fields[nwfield] = tab.name;
 	tables[tab.name] = true;
 }
 
@@ -391,6 +419,33 @@ void dbquery::select (dbcolumn &one, dbcolumn &two, dbcolumn &three,
 	tmp = six.name(); fields[tmp] = six.asname(); tables[six.table->name] = true;
 }
 
+dbquery &dbquery::orderby (dbcolumn &one)
+{
+	orderbys.newval() = one.name();
+	return *this;
+}
+
+dbquery &dbquery::orderby (const string &one)
+{
+	orderbys.newval() = one;
+	return *this;
+}
+
+dbquery &dbquery::descending (void)
+{
+	descend = true;
+}
+
+void dbquery::indexby (const string &idxnam)
+{
+	idxid = idxnam;
+}
+
+void dbquery::indexby (dbcolumn &one)
+{
+	idxid = one.asname();
+}
+
 void dbquery::mksql (void)
 {
 	sql.crop ();
@@ -417,6 +472,19 @@ void dbquery::mksql (void)
 	{
 		sql.printf (" WHERE %s", sqlwhere.str());
 	}
+	
+	if (orderbys.count())
+	{
+		first = true;
+		sql.printf (" ORDER BY ");
+		foreach (o, orderbys)
+		{
+			sql.printf ("%s%s", first ? "" : ",", o.str());
+			first = false;
+		}
+		if (descend) sql.printf (" DESC");
+	}
+	::printf ("mksql -> %s\n\n", sql.str());
 }
 
 value *dbquery::exec (void)
@@ -424,6 +492,6 @@ value *dbquery::exec (void)
 	returnclass (value) res retain;
 	
 	mksql ();
-	eng.query (sql, res);
+	eng.query (sql, res, idxid);
 	return &res;
 }
