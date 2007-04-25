@@ -90,8 +90,8 @@ string *dbstatement::sql (void)
 		case c_lte: res.strcat ("<="); break;
 		case c_gte: res.strcat (">="); break;
 		case c_gt: res.strcat (">"); break;
-		case c_and: res.strcat (" and "); break;
-		case c_or: res.strcat (" or "); break;
+		case c_and: res.strcat (" AND "); break;
+		case c_or: res.strcat (" OR "); break;
 	}
 	
 	switch (tr)
@@ -455,7 +455,7 @@ void dbquery::mksql (void)
 	
 	foreach (field, fields)
 	{
-		sql.printf ("%s%s AS %s", first ? "" : ",", field.name(), field.str());
+		sql.printf ("%s%s AS %s", first ? "" : ", ", field.name(), field.str());
 		first = false;
 	}
 	
