@@ -9,8 +9,12 @@ all: $(OBJ)
 	$(RANLIB) ../../lib/libquerido.a
 	cp platform.h ../../include/querido/platform.h
 
+depend:
+	@echo -n > Makefile.depend
+	@makedepend -Y../../include -fMakefile.depend *.cpp 2>/dev/null
+
 install: all
-	echo "install not ready"
+	./makeinstall
 
 clean:
 	rm -f *.o *.a

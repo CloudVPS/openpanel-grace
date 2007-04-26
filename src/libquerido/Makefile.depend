@@ -1,0 +1,66 @@
+# DO NOT DELETE
+
+engine.o: ../../include/querido/engine.h ../../include/grace/str.h
+engine.o: ../../include/grace/value.h ../../include/grace/statstring.h
+engine.o: ../../include/grace/checksum.h ../../include/grace/lock.h
+engine.o: ../../include/grace/exception.h ../../include/grace/platform.h
+engine.o: ../../include/grace/case.h ../../include/grace/file.h
+engine.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
+engine.o: ../../include/grace/stack.h ../../include/grace/iterator.h
+engine.o: ../../include/grace/currency.h ../../include/grace/retain.h
+engine.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+engine.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+engine.o: ../../include/grace/reg.h
+query.o: ../../include/querido/query.h ../../include/grace/value.h
+query.o: ../../include/grace/statstring.h ../../include/grace/str.h
+query.o: ../../include/grace/reg.h ../../include/grace/retain.h
+query.o: ../../include/grace/lock.h ../../include/grace/exception.h
+query.o: ../../include/grace/platform.h ../../include/grace/checksum.h
+query.o: ../../include/grace/case.h ../../include/grace/file.h
+query.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
+query.o: ../../include/grace/stack.h ../../include/grace/iterator.h
+query.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+query.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+query.o: ../../include/grace/flags.h ../../include/querido/engine.h
+query.o: ../../include/querido/table.h ../../include/querido/row.h
+query.o: ../../include/grace/valuable.h
+row.o: ../../include/querido/row.h ../../include/grace/statstring.h
+row.o: ../../include/grace/value.h ../../include/grace/str.h
+row.o: ../../include/grace/reg.h ../../include/grace/retain.h
+row.o: ../../include/grace/lock.h ../../include/grace/exception.h
+row.o: ../../include/grace/platform.h ../../include/grace/file.h
+row.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
+row.o: ../../include/grace/stack.h ../../include/grace/iterator.h
+row.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+row.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+row.o: ../../include/grace/flags.h ../../include/grace/checksum.h
+row.o: ../../include/grace/case.h ../../include/grace/valuable.h
+row.o: ../../include/querido/table.h ../../include/querido/engine.h
+row.o: ../../include/querido/query.h
+sqlite.o: ../../include/querido/sqlite.h
+table.o: ../../include/querido/table.h ../../include/querido/engine.h
+table.o: ../../include/grace/str.h ../../include/grace/value.h
+table.o: ../../include/grace/statstring.h ../../include/grace/checksum.h
+table.o: ../../include/grace/lock.h ../../include/grace/exception.h
+table.o: ../../include/grace/platform.h ../../include/grace/case.h
+table.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
+table.o: ../../include/grace/visitor.h ../../include/grace/stack.h
+table.o: ../../include/grace/iterator.h ../../include/grace/currency.h
+table.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+table.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+table.o: ../../include/grace/flags.h ../../include/grace/reg.h
+table.o: ../../include/querido/row.h ../../include/grace/valuable.h
+table.o: ../../include/querido/query.h
+test.o: ../../include/querido/query.h ../../include/grace/value.h
+test.o: ../../include/grace/statstring.h ../../include/grace/str.h
+test.o: ../../include/grace/reg.h ../../include/grace/retain.h
+test.o: ../../include/grace/lock.h ../../include/grace/exception.h
+test.o: ../../include/grace/platform.h ../../include/grace/checksum.h
+test.o: ../../include/grace/case.h ../../include/grace/file.h
+test.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
+test.o: ../../include/grace/stack.h ../../include/grace/iterator.h
+test.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+test.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+test.o: ../../include/grace/flags.h ../../include/querido/engine.h
+test.o: ../../include/querido/table.h ../../include/querido/row.h
+test.o: ../../include/grace/valuable.h
