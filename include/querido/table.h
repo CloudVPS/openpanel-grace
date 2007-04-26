@@ -22,9 +22,11 @@ class dbtable
 friend class dbcolumn;
 friend class dbquery;
 public:
+						 dbtable (void);
 						 dbtable (dbengine &peng, const string &tname);
 						~dbtable (void);
-					
+	
+	void				 attach (dbengine &peng, const string &tname);
 	dbcolumn			&operator[] (const statstring &cname);
 
 	dbrow				&row (const statstring &rowid);
@@ -38,7 +40,7 @@ public:
 	const string		&id (void) { return name; }
 	const statstring	&indexcolumn (void) { return idxid; }
 
-	dbengine			&eng;
+	dbengine			*eng;
 	
 protected:
 	rowdict				 rows;

@@ -2,10 +2,16 @@
 #include <querido/row.h>
 #include <querido/query.h>
 
-dbtable::dbtable (dbengine &peng, const string &tname)
-	: name (tname), eng (peng), idxid ("id")
+dbtable::dbtable (void)
+	: idxid ("id")
 {
-	if (! eng.listcolumns (tname, dbcolumns))
+	eng = NULL;
+}
+
+dbtable::dbtable (dbengine &peng, const string &tname)
+	: name (tname), eng (&peng), idxid ("id")
+{
+	if (! eng->listcolumns (tname, dbcolumns))
 	{
 		::printf ("listcolumns failed\n");
 	}
@@ -13,6 +19,16 @@ dbtable::dbtable (dbengine &peng, const string &tname)
 
 dbtable::~dbtable (void)
 {
+}
+
+void dbtable::attach (dbengine &peng, const string &tname)
+{
+	name = tname;
+	eng = &peng;
+	if (! eng->listcolumns (tname, dbcolumns))
+	{
+		::printf ("listcolumns failed\n");
+	}
 }
 
 dbcolumn &dbtable::operator[] (const statstring &cname)
@@ -78,7 +94,7 @@ void dbtable::commitrows (void)
 				}
 			}
 			qry.printf (" WHERE %s=\"%S\"", idxid.str(), row.id().str());
-			eng.query (qry);
+			eng->query (qry);
 		}
 	}
 	
