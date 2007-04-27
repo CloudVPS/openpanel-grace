@@ -24,6 +24,8 @@ public:
 	dbcell			&operator= (const value &v);
 	bool			 operator== (const value &v);
 	bool			 operator!= (const value &v);
+					 operator const string &(void) { return val.sval(); }
+					 operator int (void) { return val.ival(); }
 	
 
 protected:					

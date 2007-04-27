@@ -59,7 +59,7 @@ dbrow::dbrow (dbtable *tab, const statstring &pid)
 	string qry;
 	qry.printf ("SELECT * FROM %s WHERE %s=\"%s\"",
 				table->id().str(), table->indexcolumn().str(), pid.str());
-	if (! table->eng.query (qry, tmp))
+	if (! table->eng->query (qry, tmp))
 	{
 	}
 	
