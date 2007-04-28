@@ -322,11 +322,18 @@ dbquery::~dbquery (void)
 
 void dbquery::where (dbstatement st)
 {
+	if ((qtype == q_unset)||(qtype == q_insert))
+		throw (illegalQueryOpException());
+		
 	sqlwhere = st.sql ();
 }
 
 void dbquery::from (dbtable &tab)
 {
+	if ((qtype == q_update) || (qtype == q_insert))
+	{
+		throw (illegalQueryOpException());
+	}
 	tables[tab.name] = true;
 }
 
@@ -353,6 +360,11 @@ void dbquery::from (dbtable &tab1, dbtable &tab2, dbtable &tab3, dbtable &tab4)
 
 void dbquery::select (dbtable &tab)
 {
+	if ( (qtype != q_unset) && (qtype != q_select) )
+	{
+		throw (mixedQueryException());
+	}
+	qtype = q_select;
 	string nwfield;
 	nwfield.printf ("%s.*", tab.name.str());
 	fields[nwfield] = tab.name;
@@ -361,92 +373,137 @@ void dbquery::select (dbtable &tab)
 
 void dbquery::select (dbcolumn &one)
 {
-	string tmp;
+	if ( (qtype != q_unset) && (qtype != q_select) )
+	{
+		throw (mixedQueryException());
+	}
+	qtype = q_select;
 	
+	string tmp;
 	tmp = one.name(); fields[tmp] = one.asname(); tables[one.table->name] = true;
 }
 
 void dbquery::select (dbcolumn &one, dbcolumn &two)
 {
-	string tmp;
-	
-	tmp = one.name(); fields[tmp] = one.asname(); tables[one.table->name] = true;
-	tmp = two.name(); fields[tmp] = two.asname(); tables[two.table->name] = true;
+	select (one);
+	select (two);
 }
 
 void dbquery::select (dbcolumn &one, dbcolumn &two, dbcolumn &three)
 {
-	string tmp;
-	
-	tmp = one.name(); fields[tmp] = one.asname(); tables[one.table->name] = true;
-	tmp = two.name(); fields[tmp] = two.asname(); tables[two.table->name] = true;
-	tmp = three.name(); fields[tmp] = three.asname(); tables[three.table->name] = true;
+	select (one);
+	select (two);
+	select (three);
 }
 
 void dbquery::select (dbcolumn &one, dbcolumn &two, dbcolumn &three,
 					  dbcolumn &four)
 {
-	string tmp;
-	
-	tmp = one.name(); fields[tmp] = one.asname(); tables[one.table->name] = true;
-	tmp = two.name(); fields[tmp] = two.asname(); tables[two.table->name] = true;
-	tmp = three.name(); fields[tmp] = three.asname(); tables[three.table->name] = true;
-	tmp = four.name(); fields[tmp] = four.asname(); tables[four.table->name] = true;
+	select (one);
+	select (two);
+	select (three);
+	select (four);
 }
 
 void dbquery::select (dbcolumn &one, dbcolumn &two, dbcolumn &three,
 					  dbcolumn &four, dbcolumn &five)
 {
-	string tmp;
-	
-	tmp = one.name(); fields[tmp] = one.asname(); tables[one.table->name] = true;
-	tmp = two.name(); fields[tmp] = two.asname(); tables[two.table->name] = true;
-	tmp = three.name(); fields[tmp] = three.asname(); tables[three.table->name] = true;
-	tmp = four.name(); fields[tmp] = four.asname(); tables[four.table->name] = true;
-	tmp = five.name(); fields[tmp] = five.asname(); tables[five.table->name] = true;
+	select (one);
+	select (two);
+	select (three);
+	select (four);
+	select (five);
 }
 
 void dbquery::select (dbcolumn &one, dbcolumn &two, dbcolumn &three,
 					  dbcolumn &four, dbcolumn &five, dbcolumn &six)
 {
-	string tmp;
-	
-	tmp = one.name(); fields[tmp] = one.asname(); tables[one.table->name] = true;
-	tmp = two.name(); fields[tmp] = two.asname(); tables[two.table->name] = true;
-	tmp = three.name(); fields[tmp] = three.asname(); tables[three.table->name] = true;
-	tmp = four.name(); fields[tmp] = four.asname(); tables[four.table->name] = true;
-	tmp = five.name(); fields[tmp] = five.asname(); tables[five.table->name] = true;
-	tmp = six.name(); fields[tmp] = six.asname(); tables[six.table->name] = true;
+	select (one);
+	select (two);
+	select (three);
+	select (four);
+	select (five);
+	select (six);
 }
 
 dbquery &dbquery::orderby (dbcolumn &one)
 {
+	if (qtype != q_select) throw (illegalQueryOpException());
+	
 	orderbys.newval() = one.name();
 	return *this;
 }
 
 dbquery &dbquery::orderby (const string &one)
 {
+	if (qtype != q_select) throw (illegalQueryOpException());
+
 	orderbys.newval() = one;
 	return *this;
 }
 
 dbquery &dbquery::descending (void)
 {
+	if (qtype != q_select) throw (illegalQueryOpException());
 	descend = true;
+	return *this;
 }
 
 void dbquery::indexby (const string &idxnam)
 {
+	if (qtype != q_select) throw (illegalQueryOpException());
 	idxid = idxnam;
 }
 
 void dbquery::indexby (dbcolumn &one)
 {
+	if (qtype != q_select) throw (illegalQueryOpException());
 	idxid = one.asname();
 }
 
+dbquery &dbquery::update (dbtable &tab)
+{
+	if (qtype != q_unset) throw (mixedQueryException());
+	tables[tab.name] = true;
+	qtype = q_update;
+	return *this;
+}
+
+dbquery &dbquery::set (const value &v)
+{
+	if (qtype != q_update) throw (illegalQueryOpException());
+	vset = v;
+	return *this;
+}
+
+dbquery &dbquery::insertinto (dbtable &tab)
+{
+	if (qtype != q_unset) throw (illegalQueryOpException());
+	tables[tab.name] = true;
+	qtype = q_insert;
+	return *this;
+}
+
+dbquery &dbquery::values (const value &v)
+{
+	if (qtype != q_insert) throw (illegalQueryOpException());
+	vset = v;
+	return *this;
+}
+
 void dbquery::mksql (void)
+{
+	switch (qtype)
+	{
+		case q_select: mksqlselect(); break;
+		case q_insert: mksqlinsert(); break;
+		case q_delete: mksqldelete(); break;
+		case q_update: mksqlupdate(); break;
+	}
+	::printf ("mksql -> %s\n\n", sql.str());
+}
+
+void dbquery::mksqlselect (void)
 {
 	sql.crop ();
 	sql.printf ("SELECT ");
@@ -484,7 +541,107 @@ void dbquery::mksql (void)
 		}
 		if (descend) sql.printf (" DESC");
 	}
-	::printf ("mksql -> %s\n\n", sql.str());
+}
+
+void dbquery::mksqlupdate (void)
+{
+	string maintable = tables[0].id();
+	sql.crop ();
+	sql.printf ("UPDATE ");
+	
+	bool first = true;
+	foreach (tab, tables)
+	{
+		if (! first) sql.strcat (',');
+		first = false;
+		
+		sql.strcat (tab.id().sval());
+	}
+	
+	sql.printf (" SET ");
+	
+	first = true;
+	foreach (v, vset)
+	{
+		if (! first) sql.strcat (',');
+		first = false;
+		
+		sql.printf ("%s.%s=", maintable.str(), v.name());
+		caseselector (v.type())
+		{
+			incaseof (t_int):
+				sql.printf ("%i", v.ival());
+				break;
+			
+			incaseof (t_bool):
+				sql.printf ("%i", v.bval() ? 1 : 0);
+				break;
+			
+			incaseof (t_double):
+				sql.printf ("%f", v.dval());
+				break;
+			
+			defaultcase :
+				sql.printf ("\"%S\"", v.cval());
+				break;
+		}
+	}
+	
+	if (sqlwhere.strlen())
+	{
+		sql.printf (" WHERE %s", sqlwhere.str());
+	}
+}
+
+void dbquery::mksqldelete (void)
+{
+	sql.crop ();
+	sql.printf ("DELETE FROM %s", tables[0].name());
+	if (sqlwhere.strlen()) sql.printf (" WHERE %s", sqlwhere.str());
+}
+
+void dbquery::mksqlinsert (void)
+{
+	sql.crop ();
+	sql.printf ("INSERT INTO %s(", tables[0].name());
+	
+	bool first = true;
+	foreach (v, vset)
+	{
+		if (! first) sql.strcat (',');
+		first = false;
+		sql.strcat (v.id().sval());
+	}
+	
+	sql.strcat (") VALUES (");
+	
+	first = true;
+	foreach (v, vset)
+	{
+		if (! first) sql.strcat (',');
+		first = false;
+		
+		caseselector (v.type())
+		{
+			incaseof (t_int):
+				sql.printf ("%i", v.ival());
+				break;
+			
+			incaseof (t_bool):
+				sql.printf ("%i", v.bval() ? 1 : 0);
+				break;
+			
+			incaseof (t_double):
+				sql.printf ("%f", v.dval());
+				break;
+			
+			defaultcase :
+				sql.printf ("\"%S\"", v.cval());
+				break;
+		}
+	}
+	
+	sql.strcat (")");
 }
 
 value *dbquery::exec (void)
