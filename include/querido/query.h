@@ -43,7 +43,7 @@ public:
 	dbstatement		 operator&& (dbstatement right);
 	dbstatement		 operator|| (dbstatement left);
 
-	string			*sql (void);
+	string			*sql (bool isselect);
 
 	value			 l, r;
 	valuetype		 tl, tr;
@@ -152,7 +152,7 @@ public:
 	void			 indexby (dbcolumn &c);
 	
 	value			*exec (void);
-	//void			 execvoid (void);
+	bool			 execvoid (void);
 	
 protected:
 	void			 mksql (void);

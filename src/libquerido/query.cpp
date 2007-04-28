@@ -54,20 +54,26 @@ dbstatement dbstatement::operator|| (dbstatement right)
 	return dbstatement (this, c_or, &right);
 }
 
-string *dbstatement::sql (void)
+string *dbstatement::sql (bool isselect)
 {
 	returnclass (string) res retain;
 	
 	res.strcat ('(');
 	string tstr;
 	
+	string lstr = l.sval();
+	if ((! isselect) && (lstr.strchr ('.') >= 0)) lstr = lstr.cutafter ('.');
+	
+	string rstr = r.sval();
+	if ((! isselect) && (rstr.strchr ('.') >= 0)) rstr = rstr.cutafter ('.');
+	
 	switch (tl)
 	{
 		case v_cref:
-			res.printf ("%s", l.str()); break;
+			res.printf ("%s", lstr.str()); break;
 		
 		case v_stmt:
-			res.strcat (ll->sql()); break;
+			res.strcat (ll->sql(isselect)); break;
 			
 		case v_int:
 			res.printf ("%i", l.ival()); break;
@@ -97,10 +103,10 @@ string *dbstatement::sql (void)
 	switch (tr)
 	{
 		case v_cref:
-			res.printf ("%s", r.str()); break;
+			res.printf ("%s", rstr.str()); break;
 		
 		case v_stmt:
-			res.strcat (lr->sql()); break;
+			res.strcat (lr->sql(isselect)); break;
 			
 		case v_int:
 			res.printf ("%i", r.ival()); break;
@@ -314,6 +320,7 @@ dbquery::dbquery (dbengine &peng)
 {
 	descend = false;
 	idxid = "id";
+	qtype = q_unset;
 }
 
 dbquery::~dbquery (void)
@@ -325,7 +332,7 @@ void dbquery::where (dbstatement st)
 	if ((qtype == q_unset)||(qtype == q_insert))
 		throw (illegalQueryOpException());
 		
-	sqlwhere = st.sql ();
+	sqlwhere = st.sql (qtype == q_select);
 }
 
 void dbquery::from (dbtable &tab)
@@ -491,6 +498,14 @@ dbquery &dbquery::values (const value &v)
 	return *this;
 }
 
+dbquery &dbquery::deletefrom (dbtable &tab)
+{
+	if (qtype != q_unset) throw (illegalQueryOpException());
+	tables[tab.name] = true;
+	qtype = q_delete;
+	return *this;
+}
+
 void dbquery::mksql (void)
 {
 	switch (qtype)
@@ -547,26 +562,15 @@ void dbquery::mksqlupdate (void)
 {
 	string maintable = tables[0].id();
 	sql.crop ();
-	sql.printf ("UPDATE ");
-	
+	sql.printf ("UPDATE %s SET ", maintable.str());
+
 	bool first = true;
-	foreach (tab, tables)
-	{
-		if (! first) sql.strcat (',');
-		first = false;
-		
-		sql.strcat (tab.id().sval());
-	}
-	
-	sql.printf (" SET ");
-	
-	first = true;
 	foreach (v, vset)
 	{
 		if (! first) sql.strcat (',');
 		first = false;
 		
-		sql.printf ("%s.%s=", maintable.str(), v.name());
+		sql.printf ("%s=", v.name());
 		caseselector (v.type())
 		{
 			incaseof (t_int):
@@ -651,4 +655,10 @@ value *dbquery::exec (void)
 	mksql ();
 	eng.query (sql, res, idxid);
 	return &res;
+}
+
+bool dbquery::execvoid (void)
+{
+	mksql ();
+	return eng.query (sql, idxid);
 }
