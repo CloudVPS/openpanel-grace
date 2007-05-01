@@ -527,7 +527,11 @@ void dbquery::mksqlselect (void)
 	
 	foreach (field, fields)
 	{
-		sql.printf ("%s%s AS %s", first ? "" : ", ", field.name(), field.str());
+		if (field.sval().strchr ('*') < 0)
+			sql.printf ("%s%s AS %s", first ? "" : ", ", field.name(), field.str());
+		else
+			sql.printf ("%s%s", first ? "" : ", ", field.name());
+			
 		first = false;
 	}
 	
