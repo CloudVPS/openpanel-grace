@@ -13,7 +13,7 @@ dbtable::dbtable (dbengine &peng, const string &tname)
 {
 	if (! eng->listcolumns (tname, dbcolumns))
 	{
-		::printf ("listcolumns failed\n");
+		throw (tableInfoException());
 	}
 }
 
@@ -27,7 +27,7 @@ void dbtable::attach (dbengine &peng, const string &tname)
 	eng = &peng;
 	if (! eng->listcolumns (tname, dbcolumns))
 	{
-		::printf ("listcolumns failed\n");
+		throw (tableInfoException());
 	}
 }
 
@@ -58,7 +58,7 @@ dbrow &dbtable::row (const statstring &rowid)
 
 bool dbtable::rowexists (const statstring &rowid)
 {
-	value res;
+	value res;	
 	string qry;
 	qry.printf ("SELECT %s FROM %s WHERE %s=\"%S\"", idxid.str(),
 				name.str(), idxid.str(), rowid.str());

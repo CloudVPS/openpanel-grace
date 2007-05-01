@@ -17,6 +17,12 @@ THROWS_EXCEPTION (
 	"Row does not exist"
 );
 
+THROWS_EXCEPTION (
+	tableInfoException,
+	0x4fc5f877,
+	"Error getting table information"
+);
+
 class dbtable
 {
 friend class dbcolumn;
