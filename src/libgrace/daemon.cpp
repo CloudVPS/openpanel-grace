@@ -39,7 +39,7 @@ namespace logproperty
 // ========================================================================
 void daemon::daemonize (bool delayedexit)
 {
-	if (! checkpid ())
+	if (pidcheck && (! checkpid ()))
 	{
 		ferr.printf (errortext::daemon::running, creator.str());
 		exit (1);
@@ -48,7 +48,7 @@ void daemon::daemonize (bool delayedexit)
 	if (_foreground)
 	{
 		daemonized = true;
-		writepid ();
+		if (pidcheck) writepid ();
 		if (tgid) setregid (tgid, tegid);
 		if (tuid) setreuid (tuid, teuid);
 		return;
@@ -83,7 +83,7 @@ void daemon::daemonize (bool delayedexit)
 			{
 				case 0:
 					daemonized = true;
-					writepid ();
+					if (pidcheck) writepid ();
 					if (tgid) setregid (tgid, tegid);
 					if (tuid) setreuid (tuid, teuid);
 	

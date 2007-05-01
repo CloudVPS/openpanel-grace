@@ -113,6 +113,7 @@ public:
 					 	daemonized = false;
 					 	tuid = teuid = 0;
 					 	tgid = tegid = 0;
+					 	pidcheck = true;
 					 }
 					 
 					 /// Destructor.
@@ -176,6 +177,10 @@ public:
 					 /// the actual fork()s.
 	void			 setforeground (void);
 	
+					 /// Call this to disable checking of the pid-file
+					 /// during daemonize().
+	void			 disablepidcheck (void) { pidcheck = false; }
+	
 	bool			 settargetuser (const string &uname)
 					 {
 					 	value pw = kernel.userdb.getpwnam (uname);
@@ -234,6 +239,7 @@ protected:
 	uid_t			 teuid; ///< Target effective userid after daemonize().
 	gid_t			 tgid; ///< Target real groupid after daemonize().
 	gid_t			 tegid; ///< Target effective groupid after daemonize().
+	bool			 pidcheck; ///< False if no pidcheck should be performed.
 };
 
 #endif
