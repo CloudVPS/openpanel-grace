@@ -49,7 +49,11 @@ dbcolumn &dbtable::operator[] (const statstring &cname)
 dbrow &dbtable::row (const statstring &rowid)
 {
 	if (rows.exists (rowid)) return rows[rowid];
-	if (! rowexists (rowid)) throw (unknownRowException());
+	if (! rowexists (rowid)) 
+	{
+		::printf ("exception on rowid=<%s> table=<%s>", rowid.str(), name.str());
+		throw (unknownRowException());
+	}
 	
 	dbrow *nrow = new dbrow (this, rowid);
 	rows.set (rowid, nrow);
