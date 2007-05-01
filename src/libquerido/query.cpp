@@ -374,7 +374,7 @@ void dbquery::select (dbtable &tab)
 	qtype = q_select;
 	string nwfield;
 	nwfield.printf ("%s.*", tab.name.str());
-	fields[nwfield] = tab.name;
+	fields[nwfield] = nwfield;
 	tables[tab.name] = true;
 }
 
