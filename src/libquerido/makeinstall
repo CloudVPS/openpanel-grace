@@ -4,7 +4,7 @@ if [ ! -f configure.paths ]; then
   exit 1
 fi
 
-. configure.paths
+. ./configure.paths
 
 path_bin="$CONFIG_BINPATH"
 path_lib="$CONFIG_LIBPATH"
