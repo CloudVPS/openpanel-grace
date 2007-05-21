@@ -1491,7 +1491,7 @@ void string::crop (void)
 // ========================================================================
 string *string::mid (int pos, int psz) const
 {
-	if (pos > (int) size) return new string("");
+	if ((psz<0)||(pos > (int) size)) return new string("");
 	int sz = psz;
 	if (!sz) sz = (size-pos);
 	if ((pos+sz) > (int) size) sz = (size-pos);
