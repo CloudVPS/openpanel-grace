@@ -1090,7 +1090,7 @@ public:
 	
 	/// Start the command line interpreter.
 	/// \param p The prompt.
-	void singlecmd (const string &c)
+	bool singlecmd (const string &c)
 	{
 		bool done = false;
 		
@@ -1100,6 +1100,7 @@ public:
 		if (curcmd == "@error")
 		{
 			term.termbuf.tprintf (errortext::terminal::incomplete);
+			return false;
 		}
 		else if (cmdline.count())
 		{
@@ -1115,6 +1116,7 @@ public:
 				h = h->next;
 			}
 		}
+		return done;
 	}
 	
 	/// Change the prompt. Can be used by callbacks.
