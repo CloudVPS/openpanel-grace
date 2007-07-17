@@ -1077,7 +1077,7 @@ public:
 					{
 						if (h->path == curcmd)
 						{
-							if (h->runcmd (owner, cmdline) == 0) done = true;
+							if (h->runcmd (owner, cmdline)) done = true;
 							break;
 						}
 						
