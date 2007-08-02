@@ -43,6 +43,11 @@ bool dbhandle::listtables (value &into)
 	return false;
 }
 
+int dbhandle::rowsaffected (void)
+{
+	return 0;
+}
+
 dbengine::dbengine (const string &driver)
 {
 	caseselector (driver)
