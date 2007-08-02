@@ -46,7 +46,11 @@ public:
 class strutil
 {
 public:
-						 /// Split string into array of words.
+						 /// Split string into array of words. The string
+						 /// is split on whitespace boundaries, with any
+						 /// whitespace at the start ignored:
+						 /// - "one two  three" -> "one","two","three"
+						 /// - "  hi \tthere" -> "hi","there"
 	static value		*splitspace (const string &);
 	
 						 /// Split string into array of words.

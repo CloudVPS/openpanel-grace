@@ -114,6 +114,13 @@ bool dbengine::listtables (value &into)
 	return hdl->listtables (into);
 }
 
+int dbengine::rowsaffected (void)
+{
+	if (! hdl) return 0;
+	
+	return hdl->rowsaffected ();
+}
+
 void dbengine::attachbuiltin (localengine t)
 {
 	switch (t)

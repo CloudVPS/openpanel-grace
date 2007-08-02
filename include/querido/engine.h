@@ -16,6 +16,7 @@ public:
 	virtual bool	 listcolumns (const string &table, value &into);
 	virtual bool	 tableexists (const string &table);
 	virtual bool	 listtables (value &into);
+	virtual int		 rowsaffected (void);
 	
 	const string	&error (void) { return errstr; }
 	int				 errorcode (void) { return errcode; }
@@ -55,6 +56,7 @@ public:
 	bool			 listcolumns (const string &table, value &into);
 	bool			 tableexists (const string &table);
 	bool			 listtables (value &into);
+	int				 rowsaffected (void);
 
 protected:
 	dbhandle		*hdl;

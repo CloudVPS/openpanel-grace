@@ -18,6 +18,7 @@ public:
 	bool		 listcolumns (const string &, value &);
 	bool		 tableexists (const string &);
 	bool		 listtables (value &into);
+	int			 rowsaffected (void);
 
 protected:
 	sqlite3 	*hdl;

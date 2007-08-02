@@ -177,4 +177,9 @@ bool sqlitehandle::listtables (value &into)
 	return (query (qry, into, "name"));
 }
 
+int sqlitehandle::rowsaffected (void)
+{
+	return sqlite3_changes (hdl);
+}
+
 #endif
