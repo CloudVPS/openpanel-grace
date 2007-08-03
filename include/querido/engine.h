@@ -57,6 +57,9 @@ public:
 	bool			 tableexists (const string &table);
 	bool			 listtables (value &into);
 	int				 rowsaffected (void);
+	
+	const string	&error (void) { return hdl->error(); }
+	int				 errorcode (void) { return hdl->errorcode(); }
 
 protected:
 	dbhandle		*hdl;
