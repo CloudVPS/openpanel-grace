@@ -331,6 +331,10 @@ public:
 					 /// Build a script tree from a text file.
 					 /// \param dat The text data.
 	void			 build (const string &dat);
+	
+					 /// Returns true if a named section exists inside the
+					 /// script.
+	bool			 sectionexists (const string &sec);
 
 protected:
 	value			 labels; ///< Mapping between labels and statement offset.

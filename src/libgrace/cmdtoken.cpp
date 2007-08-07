@@ -199,6 +199,11 @@ void scriptparser::run(value &v, string &buf, const string &label)
 	if (c) c->run (v, buf);
 }
 
+bool scriptparser::sectionexists (const string &label)
+{
+	return labels.exists (label);
+}
+
 // ========================================================================
 // METHOD ::build
 // --------------
