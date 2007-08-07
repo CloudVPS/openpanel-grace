@@ -228,7 +228,7 @@ void scriptparser::build (const string &src)
 		string stripped;
 		int ps = 0;
 		
-		if (! ln) continue;
+		if (! ln.sval().strlen()) continue;
 		
 		while ((ln.sval()[ps] == ' ')||(ln.sval()[ps] == '\t')) ++ps;
 		stripped = ln.sval().mid (ps);
