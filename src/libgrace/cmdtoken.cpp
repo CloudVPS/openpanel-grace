@@ -112,7 +112,7 @@ void cmdtoken_data::run (value &v, string &buf)
 			
 			scriptparser *pr = (scriptparser *) p;
 			
-			pr->run (v, buf, decl[0].sval());
+			pr->run (v, buf, section);
 		}
 	}
 }
