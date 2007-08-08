@@ -835,7 +835,7 @@ int httpdbasicauth::run (string &uri, string &postbody,
 		if (redirurl && (username || password))
 		{
 			outhdr["Location"] = redirurl;
-			outhdr["Content-type"] = "text.html";
+			outhdr["Content-type"] = "text/html";
 			out.printf ("<html><body><a href=\"%s\">", redirurl.str());
 			out.printf ("Redirected</a></body></html>\n");
 			return 200;
