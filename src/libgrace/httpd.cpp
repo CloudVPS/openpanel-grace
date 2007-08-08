@@ -838,7 +838,7 @@ int httpdbasicauth::run (string &uri, string &postbody,
 			outhdr["Content-type"] = "text/html";
 			out.printf ("<html><body><a href=\"%s\">", redirurl.str());
 			out.printf ("Redirected</a></body></html>\n");
-			return 200;
+			return 307;
 		}
 		
 		outhdr["Content-type"] = "text/html";
