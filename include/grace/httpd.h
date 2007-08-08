@@ -271,9 +271,19 @@ public:
 						  value &inhdr, string &out, value &outhdr,
 						  value &env, tcpsocket &s);
 
+					 /// Set redirect target on failed non-empty
+					 /// auth.
+	void			 redirectto (const string &uri);
+
 protected:
 	httpdauthenticator	*auth; ///< The authenticator class.
 	string				 realm; ///< The realm name.
+	
+						 /// If set, this string points to a URI that
+						 /// will be used to redirect the user in case
+						 /// a non-empty authentication token was
+						 /// offered that did not authenticate.
+	string				 redirurl;
 };
 
 // ------------------------------------------------------------------------

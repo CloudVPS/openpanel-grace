@@ -832,6 +832,15 @@ int httpdbasicauth::run (string &uri, string &postbody,
 	
 	if (! authenticated) // No dough, whine and return 401
 	{
+		if (redirurl && (username || password))
+		{
+			outhdr["Location"] = redirurl;
+			outhdr["Content-type"] = "text.html";
+			out.printf ("<html><body><a href=\"%s\">", redirurl.str());
+			out.printf ("Redirected</a></body></html>\n");
+			return 200;
+		}
+		
 		outhdr["Content-type"] = "text/html";
 		
 		if (parent->havedefault (401))
@@ -863,6 +872,14 @@ int httpdbasicauth::run (string &uri, string &postbody,
 	env["user"] = username;
 	
 	return 0;
+}
+
+// ========================================================================
+// METHOD httpdbasicauth::redirectto
+// ========================================================================
+void httpdbasicauth::redirectto (const string &uri)
+{
+	redirurl = uri;
 }
 
 // ========================================================================
