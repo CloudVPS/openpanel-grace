@@ -477,6 +477,7 @@ string *cmdtoken_parseval (value &env, const string &_expr)
 	{
 		expr = expr.mid(1);
 		prefix = _expr[0];
+		myval = env[expr];
 	}
 	else
 	{
