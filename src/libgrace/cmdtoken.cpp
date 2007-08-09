@@ -471,7 +471,7 @@ string *cmdtoken_parseval (value &env, const string &_expr)
 	char prefix;
 	
 	expr = _expr;
-	static string prefices ("#/+`^");
+	static string prefices ("#/+`^~");
 	
 	if (prefices.strchr (_expr[0]) >= 0)
 	{
@@ -522,6 +522,10 @@ string *cmdtoken_parseval (value &env, const string &_expr)
 			break;
 		case '^':
 			res = strutil::htmlize (myval.sval());
+			break;
+			
+		case '~':
+			res = strutil::urlencode (myval.sval());
 			break;
 		
 		default:
