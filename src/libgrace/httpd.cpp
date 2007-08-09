@@ -296,7 +296,7 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 	value env;
 	value outhdr;
 	string outbody;
-	string rawri = uri;
+	string rawuri = uri;
 	rawuri.cropat ('?');
 	
 	unprotected (load)
