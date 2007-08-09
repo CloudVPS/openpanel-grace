@@ -296,6 +296,8 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 	value env;
 	value outhdr;
 	string outbody;
+	string rawri = uri;
+	rawuri.cropat ('?');
 	
 	unprotected (load)
 	{
@@ -313,7 +315,7 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 	while (crsr)
 	{
 		// Does this one match?
-		if (uri.globcmp (crsr->urimatch))
+		if (rawuri.globcmp (crsr->urimatch))
 		{
 			int res;
 			
