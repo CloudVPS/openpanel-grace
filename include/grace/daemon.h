@@ -147,12 +147,22 @@ public:
 					 /// \param delayedexit Flag for the delayed exit.
 	void			 daemonize (bool delayedexit=false);
 
+					 /// Background initialization success report.
+					 /// If the process was daemonized with delayedexit
+					 /// set to true, this method should be called once
+					 /// all background initialization has proceeded
+					 /// succesfully.
 	void			 delayedexitok (void)
 					 {
 					 	fout.writeln ("OK");
 					 	fout.close ();
 					 }
 					 
+					 /// Background initialization failure report.
+					 /// If the process was daemonized with delayedexit
+					 /// set to true, this method should be called if
+					 /// initialization failed for some reason. Expects
+					 /// printf-formatted arguments.
 	void			 delayedexiterror (const char *parm, ...);
 	
 					 /// Send log message to the logthread.
@@ -181,12 +191,17 @@ public:
 					 /// during daemonize().
 	void			 disablepidcheck (void) { pidcheck = false; }
 	
+					 /// Set a target user/group for the spawned process,
+					 /// as specified by a unix account. Will use the
+					 /// specified uid and primary gid for the account.
+					 /// \param uname The unix username.
 	bool			 settargetuser (const string &uname)
 					 {
 					 	value pw = kernel.userdb.getpwnam (uname);
 					 	if (! pw) return false;
-					 	tuid = pw["uid"].uval();
-					 	tgid = pw["gid"].uval();
+					 	
+					 	settargetuid (pw["uid"].uval());
+					 	settargetgid (pw["gid"].uval());
 					 	return true;
 					 }
 	

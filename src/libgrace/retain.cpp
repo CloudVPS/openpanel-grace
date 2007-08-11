@@ -344,7 +344,7 @@ namespace memory
 	}
 	
 	// ====================================================================
-	// CONSTRUCTOR retainable
+	// METHOD ::retainvalue
 	// ====================================================================
 	void retainable::retainvalue (retainable *r)
 	{
@@ -367,7 +367,7 @@ namespace memory
 		}
 	}
 	// ====================================================================
-	// DESTRUCTOR retainable
+	// METHOD ::destroyvalue
 	// ====================================================================
 	void retainable::destroyvalue (retainable *r)
 	{
