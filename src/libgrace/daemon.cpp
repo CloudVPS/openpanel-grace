@@ -45,27 +45,34 @@ void daemon::daemonize (bool delayedexit)
 		exit (1);
 	}
 	
+	// If the foreground flag is set, we travel a simpler path.
 	if (_foreground)
 	{
 		daemonized = true;
+		
+		// Write the pid-file
 		if (pidcheck) writepid ();
+		
+		// Set user-/groupids.
 		if (tgid) setregid (tgid, tegid);
 		if (tuid) setreuid (tuid, teuid);
 		return;
 	}
 	
-	int backpipe[2];
-	int i;
+	int backpipe[2]; // Comms channel for delayedexit.
+	int i; // Counter
 
 	if (delayedexit) pipe (backpipe);
 	
 	switch (fork())
 	{
 		case 0:
+			// Detach from stdin/-out/-err.
 			for (i=0; i<3; ++i) ::close(i);
 			
 			if (delayedexit)
 			{
+				// Attach the comms pipe to stdout.
 				open ("/dev/null", O_RDONLY);
 				dup2 (backpipe[1], 1);
 				open ("/dev/null", O_WRONLY);
@@ -74,14 +81,17 @@ void daemon::daemonize (bool delayedexit)
 			}
 			else
 			{
+				// Just attach to /dev/null.
 				open ("/dev/null", O_RDONLY);
 				open ("/dev/null", O_WRONLY);
 				open ("/dev/null", O_WRONLY);
 			}
 			
+			// Extra fork round, to detach from parent.
 			switch (fork())
 			{
 				case 0:
+					// We're set. Do the business.
 					daemonized = true;
 					if (pidcheck) writepid ();
 					if (tgid) setregid (tgid, tegid);
@@ -92,7 +102,7 @@ void daemon::daemonize (bool delayedexit)
 				case -1:
 					exit (1);
 			}
-			exit (0);
+			exit (0); // Exit the parent.
 			break;
 		
 		case -1:
@@ -100,6 +110,9 @@ void daemon::daemonize (bool delayedexit)
 			exit (1);
 	}
 	
+	// We're in parent country now, if delayedexit was set we will be
+	// waiting for data on the comms channel triggered by either
+	// delayedexitok() or delayedexiterror().
 	if (delayedexit)
 	{
 		string res;
@@ -111,8 +124,11 @@ void daemon::daemonize (bool delayedexit)
 			res = freturn.gets();
 			if (res.strcasecmp ("ok") == 0)
 			{
+				// Everything fine, exit silently.
 				exit (0);
 			}
+			
+			// Write the error as it was passed.
 			ferr.writeln (res);
 			exit (1);
 		}
@@ -125,6 +141,9 @@ void daemon::daemonize (bool delayedexit)
 	exit (0);
 }
 
+// ========================================================================
+// METHOD ::delayedexiterror
+// ========================================================================
 void daemon::delayedexiterror (const char *fmtx, ...)
 {
 	va_list ap;
@@ -301,7 +320,7 @@ void daemon::log (log::priority prio, const string &modulename,
 		prioNames["allinfo"] = 255 - log::debug;
 		prioNames["allerror"] = log::error | log::critical
 								 | log::alert | log::emergency;
-		prioNames["all"]= 255;
+		prioNames["all"] = 255;
 	}
 
 	// If no logtargets were manually defined, get the desired
