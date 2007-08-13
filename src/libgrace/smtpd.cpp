@@ -155,7 +155,13 @@ void smtpd::run (void)
 	}
 }
 
-#define SENDERROR(str) { if (parent->mask & SMTP_ERROR) { value outev; outev("class") = "error"; outev["thread"] = threadid; outev["error"] = str; parent->eventhandle (outev); }}
+#define SENDERROR(str) { \
+	if (parent->mask & SMTP_ERROR) { \
+		value outev; \
+		outev("class") = "error"; \
+		outev["thread"] = threadid; \
+		outev["error"] = str; \
+		parent->eventhandle (outev); }}
 
 // ==========================================================================
 // METHOD smtpworker::run
