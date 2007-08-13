@@ -339,6 +339,9 @@ void termbuffer::insert (char c)
 	advance();
 }
 
+// ==========================================================================
+// METHOD termbuffer::clearleft
+// ==========================================================================
 void termbuffer::clearleft (void)
 {
 	if (crsr == len)
@@ -356,6 +359,9 @@ void termbuffer::clearleft (void)
 	advance ();
 }
 
+// ==========================================================================
+// METHOD termbuffer::clearright
+// ==========================================================================
 void termbuffer::clearright (void)
 {
 	if (crsr == len) return;
@@ -363,6 +369,9 @@ void termbuffer::clearright (void)
 	for (;len>crsr;--len) buffer[len] = 0;
 }
 
+// ==========================================================================
+// METHOD termbuffer::wordleft
+// ==========================================================================
 void termbuffer::wordleft (void)
 {
 	int promptsz = prompt.strlen();
@@ -375,6 +384,9 @@ void termbuffer::wordleft (void)
 	advance();
 }
 
+// ==========================================================================
+// METHOD termbuffer::wordright
+// ==========================================================================
 void termbuffer::wordright (void)
 {
 	if (crsr == len) return;

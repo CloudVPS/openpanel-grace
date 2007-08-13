@@ -28,11 +28,9 @@ smtpd::~smtpd (void)
 // ==========================================================================
 void smtpd::listento (int port)
 {
-	if (listenport || (! lsock.listento (port)))
-	{
-		throw (smtpdListenPortException());
-	}
+	if (listenport) throw (smtpdListenPortException());
 
+	lsock.listento (port);
 	listenport = port;
 }
 
