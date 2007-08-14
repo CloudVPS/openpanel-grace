@@ -18,7 +18,7 @@ dbcell::~dbcell (void)
 
 dbcell &dbcell::operator= (const value &v)
 {
-	::printf ("dbcell::%s = (%S)\n", id.str(), v.cval());
+	::printf ("dbcell::%s = (%s)\n", id.str(), v.cval());
 	if (v != val)
 	{
 		::printf ("neq, setting changed\n");
