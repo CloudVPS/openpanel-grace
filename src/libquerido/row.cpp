@@ -18,9 +18,12 @@ dbcell::~dbcell (void)
 
 dbcell &dbcell::operator= (const value &v)
 {
-	val = v;
-	changed = true;
-	row->fchanged = true;
+	if (v != val)
+	{
+		val = v;
+		changed = true;
+		row->fchanged = true;
+	}
 	
 	return *this;
 }
