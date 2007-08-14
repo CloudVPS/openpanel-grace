@@ -85,7 +85,7 @@ value *dbrow::changes (void)
 	
 	foreach (cell, cells)
 	{
-		res[cell.id] = cell;
+		if (cell.changed) res[cell.id] = cell;
 	}
 	
 	return &res;
