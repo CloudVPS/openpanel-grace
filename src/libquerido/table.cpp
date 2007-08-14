@@ -67,6 +67,8 @@ bool dbtable::rowexists (const statstring &rowid)
 	qry.printf ("SELECT %s FROM %s WHERE %s=\"%S\"", idxid.str(),
 				name.str(), idxid.str(), rowid.str());
 	
+	::printf ("rowexists -> %s\n", qry.str());
+	
 	eng->query (qry, res);
 	if (! res.count()) return false;
 	return true;
