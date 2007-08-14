@@ -18,8 +18,10 @@ dbcell::~dbcell (void)
 
 dbcell &dbcell::operator= (const value &v)
 {
+	::printf ("dbcell::%s = (%S)\n", id.str(), v.cval());
 	if (v != val)
 	{
+		::printf ("neq, setting changed\n")
 		val = v;
 		changed = true;
 		row->fchanged = true;
