@@ -87,6 +87,7 @@ void dbtable::commitrows (void)
 			foreach (change, ch)
 			{
 				if (! first) qry.strcat (',');
+				first = false;
 				qry.printf ("%s=", change.id().str());
 				caseselector (change.type())
 				{
@@ -101,7 +102,6 @@ void dbtable::commitrows (void)
 				}
 			}
 			qry.printf (" WHERE %s=\"%S\"", idxid.str(), row.id().str());
-			::printf ("commit -> %s\n", qry.str());
 			eng->query (qry);
 		}
 	}
