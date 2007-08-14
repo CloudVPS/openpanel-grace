@@ -51,7 +51,6 @@ dbrow &dbtable::row (const statstring &rowid)
 	if (rows.exists (rowid)) return rows[rowid];
 	if (! rowexists (rowid)) 
 	{
-		::printf ("exception on rowid=<%s> table=<%s>", rowid.str(), name.str());
 		throw (unknownRowException());
 	}
 	
@@ -66,8 +65,6 @@ bool dbtable::rowexists (const statstring &rowid)
 	string qry;
 	qry.printf ("SELECT %s FROM %s WHERE %s=\"%S\"", idxid.str(),
 				name.str(), idxid.str(), rowid.str());
-	
-	::printf ("rowexists -> %s\n", qry.str());
 	
 	eng->query (qry, res);
 	if (! res.count()) return false;

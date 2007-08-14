@@ -18,10 +18,9 @@ dbcell::~dbcell (void)
 
 dbcell &dbcell::operator= (const value &v)
 {
-	::printf ("dbcell::%s = (%s)\n", id.str(), v.cval());
 	if (v != val)
 	{
-		::printf ("neq, setting changed\n");
+		::printf ("SET %s='%s'\n", id().str(), v.cval());
 		val = v;
 		changed = true;
 		row->fchanged = true;
@@ -67,8 +66,6 @@ dbrow::dbrow (dbtable *tab, const statstring &pid)
 	if (! table->eng->query (qry, tmp))
 	{
 	}
-	
-	::printf ("ROW %s ", pid.str());
 	
 	foreach (col, tmp[0])
 	{
