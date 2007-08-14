@@ -10,6 +10,7 @@ dbcell::dbcell (dbrow *prow, const statstring &pid, const value &v)
 	: row (prow), id (pid)
 {
 	val = v;
+	changed = false;
 }
 
 dbcell::~dbcell (void)
