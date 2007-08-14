@@ -68,11 +68,15 @@ dbrow::dbrow (dbtable *tab, const statstring &pid)
 	{
 	}
 	
+	::printf ("ROW %s ", pid.str());
+	
 	foreach (col, tmp[0])
 	{
+		::printf ("%s ", col.id().str());
 		dbcell *node = new dbcell (this, col.id(), col);
 		cells.set (col.id(), node);
 	}
+	::printf ("\n");
 }
 
 dbrow::~dbrow (void)
