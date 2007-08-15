@@ -457,6 +457,13 @@ dbquery &dbquery::descending (void)
 	return *this;
 }
 
+dbquery &dbquery::limit (int offset, int amount)
+{
+	limitoffs = offs;
+	limitamount = amount;
+	return *this;
+}
+
 void dbquery::indexby (const string &idxnam)
 {
 	if (qtype != q_select) throw (illegalQueryOpException());
