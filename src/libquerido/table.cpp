@@ -99,7 +99,6 @@ void dbtable::commitrows (void)
 				}
 			}
 			qry.printf (" WHERE %s=\"%S\"", idxid.str(), row.id().str());
-			::printf ("commit -> %s\n", qry.str());
 			eng->query (qry);
 		}
 	}

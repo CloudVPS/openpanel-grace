@@ -21,7 +21,6 @@ dbcell &dbcell::operator= (const value &v)
 {
 	if (v != val)
 	{
-		::printf ("SET %s='%s'\n", id.str(), v.cval());
 		val = v;
 		changed = true;
 		row->fchanged = true;

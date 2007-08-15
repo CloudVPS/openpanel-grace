@@ -523,7 +523,6 @@ void dbquery::mksql (void)
 		case q_delete: mksqldelete(); break;
 		case q_update: mksqlupdate(); break;
 	}
-	::printf ("mksql -> %s\n\n", sql.str());
 }
 
 void dbquery::mksqlselect (void)
