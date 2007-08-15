@@ -459,7 +459,7 @@ dbquery &dbquery::descending (void)
 
 dbquery &dbquery::limit (int offset, int amount)
 {
-	limitoffs = offset;
+	limitoffs = offset	;
 	limitamount = amount;
 	return *this;
 }
@@ -571,7 +571,7 @@ void dbquery::mksqlselect (void)
 	
 	if (limitamount || limitoffs)
 	{
-		sql.printf ("LIMIT %i,%i", limitoffs, limitamount);
+		sql.printf (" LIMIT %i,%i", limitoffs, limitamount);
 	}
 }
 
