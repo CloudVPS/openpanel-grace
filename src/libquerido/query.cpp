@@ -321,6 +321,7 @@ dbquery::dbquery (dbengine &peng)
 	descend = false;
 	idxid = "id";
 	qtype = q_unset;
+	limitamount = limitoffs = 0;
 }
 
 dbquery::~dbquery (void)
@@ -559,6 +560,11 @@ void dbquery::mksqlselect (void)
 			first = false;
 		}
 		if (descend) sql.printf (" DESC");
+	}
+	
+	if (limitamount || limitoffs)
+	{
+		sql.printf ("LIMIT %i,%i", limitoffs, limitamount);
 	}
 }
 

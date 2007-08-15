@@ -148,6 +148,8 @@ public:
 	dbquery			&orderby (dbcolumn &c);
 	dbquery			&orderby (const string &nam);
 	dbquery			&descending (void);	
+	dbquery			&limit (int amount) { limit (amount, 0); }
+	dbquery			&limit (int offset, int amount);
 	void			 indexby (const string &idxnam);
 	void			 indexby (dbcolumn &c);
 	
@@ -171,6 +173,7 @@ protected:
 	statstring		 idxid;
 	querytype		 qtype;
 	value			 vset;
+	int				 limitamount, limitoffs;
 };
 
 #endif
