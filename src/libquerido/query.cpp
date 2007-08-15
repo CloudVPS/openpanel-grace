@@ -459,7 +459,7 @@ dbquery &dbquery::descending (void)
 
 dbquery &dbquery::limit (int offset, int amount)
 {
-	limitoffs = offs;
+	limitoffs = offset;
 	limitamount = amount;
 	return *this;
 }
