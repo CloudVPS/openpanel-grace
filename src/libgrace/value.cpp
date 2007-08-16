@@ -1139,6 +1139,23 @@ value &value::newval (dtenum typ)
 }
 
 // ========================================================================
+// METHOD ::insertval
+// ========================================================================
+value &value::insertval (int atpos, dtenum typ)
+{
+	if (ucount > atpos)
+	{
+		++arraysz;
+		alloc (arraysz);
+		::memmove (array+atpos+1, array+atpos,
+				   (arraysz - (atpos+1)) * sizeof (value *));
+		array[atpos] = new value;
+		array[atpos]->_type = typ;
+	}
+	return (*this)[atpos];
+}
+
+// ========================================================================
 // METHOD ::getposition
 // --------------------
 // Get a numbered sub value out of the array.

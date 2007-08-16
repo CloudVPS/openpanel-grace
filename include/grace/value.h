@@ -1096,6 +1096,11 @@ public:
 					 /// \param typ Registered type of the new child.
 	value			&newval (dtenum typ=t_unset);
 	
+					 /// Return reference to a new unkeyed child.
+					 /// \param atpos Insertion point.
+					 /// \param typ Registered type of the new child.
+	value			&insertval (int atpos=0, dtenum typ=t_unset);
+	
 					 /// Remove child node at index position.
 	void			 rmindex (int);
 	
