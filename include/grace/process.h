@@ -6,6 +6,7 @@
 #include <grace/value.h>
 #include <grace/exception.h>
 #include <grace/filesystem.h>
+#include <grace/system.h>
 
 #include <sys/types.h>
 #include <signal.h>
@@ -263,6 +264,29 @@ public:
 					 {
 					 }
 					 
+	void			 settargetuid (uid_t ruid)
+					 {
+					 	tuid=teuid = ruid;
+					 }
+	
+	void			 settargetgid (gid_t rgid)
+					 {
+					 	tgid = tegid = rgid;
+					 }
+					 
+	bool			 settargetuser (const string &uname)
+					 {
+					 	value pw = kernel.userdb.getpwnam (uname);
+					 	if (! pw)
+					 	{
+					 		if (! _pid) exit (0);
+					 		return false;
+					 	}
+					 	
+					 	settargetuid (pw["uid"].uval());
+					 	settargetgid (pw["gid"].uval());
+					 }
+					 
 					 /// Child process.
 					 /// Creates an argument list, resolves the path to the
 					 /// file and uses plain old execv() to do the dirty
@@ -288,6 +312,9 @@ public:
 					 	
 					 	cpath = fs.transr (myargv[0]);
 					 	
+					 	if (tgid) setregid (tgid, tegid);
+					 	if (tuid) setreuid (tuid, teuid);
+					 	
 					 	execv (cpath.str(), myargv);
 					 	fout.printf ("could not run\n");
 					 	return EX_NOEXEC;
@@ -296,6 +323,10 @@ public:
 protected:
 	value			 _argv; ///< Command line arguments used
 	value			 _env; ///< The environment variables.
+	uid_t			 tuid; ///< Target real userid for the child.
+	uid_t			 teuid; ///< Target effective userid for the child.
+	gid_t			 tgid; ///< Target real groupid for the child.
+	gid_t			 tegid; ///< Target effective groupid for the child.
 };
 
 #endif
