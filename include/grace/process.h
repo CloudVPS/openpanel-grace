@@ -231,6 +231,7 @@ public:
 					 				bool withStdErr = false)
 					 				: process (false)
 					 {
+					 	tuid = teuid = tgid = tegid = 0;
 					 	_argv = strutil::splitquoted (mcommand, ' ');
 					 	init (mcommand, withStdErr);
 					 }
@@ -242,6 +243,7 @@ public:
 					 				bool withStdErr = false)
 					 				: process (false)
 					 {
+					 	tuid = teuid = tgid = tegid = 0;
 					 	_argv = args;
 					 	init (args[0].sval(), withStdErr);
 					 }	
@@ -254,6 +256,7 @@ public:
 					 				bool withStdErr = false)
 					 				: process (false)
 					 {
+					 	tuid = teuid = tgid = tegid = 0;
 					 	_argv = args;
 					 	_env = env;
 					 	init (args[0].sval(), withStdErr);
