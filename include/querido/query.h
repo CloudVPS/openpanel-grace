@@ -156,7 +156,7 @@ public:
 	value			*exec (void);
 	bool			 execvoid (void);
 	
-	const string	&sqlquery (void) { mksql(); retun sql; }
+	const string	&sqlquery (void) { mksql(); return sql; }
 	
 protected:
 	void			 mksql (void);
