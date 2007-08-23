@@ -13,6 +13,7 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <grp.h>
 
 #define EX_NOEXEC 142
 
@@ -315,6 +316,7 @@ public:
 					 	
 					 	cpath = fs.transr (myargv[0]);
 					 	
+					 	if (tgid || tuid) setgroups (0, NULL);
 					 	if (tgid) setregid (tgid, tegid);
 					 	if (tuid) setreuid (tuid, teuid);
 					 	
