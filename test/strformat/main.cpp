@@ -80,7 +80,7 @@ int strformattestApp::main (void)
 	
 	foreach (r, recs)
 	{
-		fout.writeln ("%{1}24s %[name]32s %[group]s" %format (r, r.id()));
+		fout.writeln ("%{1}26s %[name]30s %[group]s" %format (r, r.id()));
 	}
 	
 	return 0;
