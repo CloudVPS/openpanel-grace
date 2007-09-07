@@ -66,6 +66,22 @@ int strformattestApp::main (void)
 	rec["email"] = "johndoe@example.net";
 	
 	fout.writeln ("Name: %[firstName]s %[lastName]s <%[email]s>" %format (rec));
+	fout.writeln ("%[email]7s" %format (rec));
+	
+	value recs;
+	recs["pi@madscience.nl"]["name"] = "Pim van Riezen";
+	recs[-1]["group"] = "Personal";
+	recs["johndoe@example.net"]["name"] = "Jonathan Doe";
+	recs[-1]["group"] = "Work";
+	recs["janedoe@example.net"]["name"] = "Jane Doe";
+	recs[-1]["group"] = "Work";
+	recs["president@whitehouse.gov"]["name"] = "Miserable Failure";
+	recs[-1]["group"] = "Official";
+	
+	foreach (r, recs)
+	{
+		fout.writeln ("%{1}24s %[name]32s %[group]s" %format (r, r.id()));
+	}
 	
 	return 0;
 }

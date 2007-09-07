@@ -153,18 +153,20 @@ string *operator% (const char *args, const value &arglist)
 					if (*fmt) fmt++;
 					key = copy_s;
 					useskey=true;
+					*copy_p = 0;
 					copy_p--;
 					break;
 					
 				
 				case 's':
+					*copy_p = 0;
 					sz = atoi ((const char *)copy+1);
 					copy_p = (char *) KEYORARG.cval();
 					if (!copy_p) copy_p = (char *) "(null)";
 					if (sz != 0)
 					{
 						copy_s = (const char *) copy_p;
-						copy_s.pad (asz, sz);
+						copy_s.pad (sz, ' ');
 						
 						res.strcat (copy_s);
 						goto CONTINUE;
