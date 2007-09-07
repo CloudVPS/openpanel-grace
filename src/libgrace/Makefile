@@ -49,6 +49,7 @@ OBJ			= 	application.o \
 				value_php.o \
 				value_plist.o \
 				value_sort.o \
+				value_strformat.o \
 				value_xml.o \
 				value_csv.o \
 				value_cxml.o \

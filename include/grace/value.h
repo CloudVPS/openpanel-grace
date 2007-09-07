@@ -168,6 +168,9 @@ public:
 					 /// Copy-constructor (from a retained string)
 					 value (string *s);
 					 
+					 /// Copy-constructor from a statstring
+					 value (const statstring &s);
+					 
 					 /// Copy-constructor (from an integer)
 					 value (int);
 					 
@@ -1536,5 +1539,22 @@ string *__make_timestr (time_t);
 #define SHOX_HAS_ATTRIB			0x40
 #define SHOX_HAS_CHILDREN		0x20
 
+string *operator% (const char *args, const value &arglist);
+value format (const value &);
+value format (const value &, const value &);
+value format (const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
+value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
 
 #endif

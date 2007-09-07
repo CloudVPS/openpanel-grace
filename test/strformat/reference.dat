@@ -1,0 +1,13 @@
+Hello, Pim. How are things in Rotterdam?
+Formatting an integer like '42' as a string
+A string as an integer: 0
+XML-encoding: &lt;boo&gt;yadda&lt;/boo&gt;
+XML-serialization: <dict><integer id="one">1</integer><integer id="two">2</integer><string id="3">three</string></dict>
+XML-serialization of a string: <string>boo</string>
+one = '1'
+two = '2'
+3 = 'three'
+Or even funnier:
+<integer id="one">1</integer>
+<integer id="two">2</integer>
+<string id="3">three</string>
