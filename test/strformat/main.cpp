@@ -59,7 +59,14 @@ int strformattestApp::main (void)
 		fout.writeln ("<%s id=\"%Z\">%Z</%{0}s>" %format (node.type(),
 					  					node.id(), node));
 	}
-
+	
+	value rec;
+	rec["firstName"] = "John";
+	rec["lastName"] = "Doe";
+	rec["email"] = "johndoe@example.net";
+	
+	fout.writeln ("Name: %[firstName]s %[lastName]s <%[email]s>" %format (rec));
+	
 	return 0;
 }
 

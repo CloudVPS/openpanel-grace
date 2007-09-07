@@ -15,6 +15,10 @@ string *operator% (const char *args, const value &arglist)
 	string copy_s;
 	int sz, asz;
 	int szoffset = 1;
+	statstring key;
+	bool useskey;
+	
+	#define KEYORARG (useskey ? arglist[0][key] : arglist[argptr++])
 	
 	while (*fmt)
 	{
@@ -26,6 +30,7 @@ string *operator% (const char *args, const value &arglist)
 		
 		++fmt;
 		copy[0] = '%';
+		useskey = false;
 		
 		for (copy_p = copy+1; copy_p < copy+19;)
 		{
@@ -38,18 +43,18 @@ string *operator% (const char *args, const value &arglist)
 					res.strcat ('%'); goto CONTINUE;
 				
 				case 'c':
-					res.strcat ((char) arglist[argptr++].ival());
+					res.strcat ((char) KEYORARG.ival());
 					goto CONTINUE;
 					
 				case 'L':
 					*copy_p = 0;
-					sprintf (sprintf_out, "%lli", arglist[argptr++].lval());
+					sprintf (sprintf_out, "%lli", KEYORARG.lval());
 					copy_p = sprintf_out;
 					goto DUP;
 				
 				case 'U':
 					*copy_p = 0;
-					sprintf (sprintf_out, "%llu", arglist[argptr++].lval());
+					sprintf (sprintf_out, "%llu", KEYORARG.lval());
 					copy_p = sprintf_out;
 					goto DUP;
 				
@@ -60,7 +65,7 @@ string *operator% (const char *args, const value &arglist)
 				case 'x':
 				case 'X':
 					*copy_p = 0;
-					sprintf (sprintf_out, copy, arglist[argptr++].ival());
+					sprintf (sprintf_out, copy, KEYORARG.ival());
 					copy_p = sprintf_out;
 					goto DUP;
 				
@@ -69,12 +74,12 @@ string *operator% (const char *args, const value &arglist)
 				case 'f':
 				case 'g':
 					*copy_p = 0;
-					sprintf (sprintf_out, copy, arglist[argptr++].dval());
+					sprintf (sprintf_out, copy, KEYORARG.dval());
 					copy_p = sprintf_out;
 					goto DUP;
 				
 				case 'S':
-					copy_p = (char *) arglist[argptr++].cval();
+					copy_p = (char *) KEYORARG.cval();
 					while (*copy_p)
 					{
 						char c = *copy_p;
@@ -94,7 +99,7 @@ string *operator% (const char *args, const value &arglist)
 					goto CONTINUE;
 				
 				case 'Z':
-					copy_p = (char *) arglist[argptr++].cval();
+					copy_p = (char *) KEYORARG.cval();
 					while (*copy_p)
 					{
 						if ( (*copy_p == '&') )
@@ -125,7 +130,7 @@ string *operator% (const char *args, const value &arglist)
 					goto CONTINUE;
 				
 				case '!':
-					copy_s = arglist[argptr++].toxml (value::compact);
+					copy_s = KEYORARG.toxml (value::compact);
 					res.strcat (copy_s);
 					goto CONTINUE;
 					
@@ -138,10 +143,23 @@ string *operator% (const char *args, const value &arglist)
 						copy_p--;
 					}
 					break;
+					
+				case '[':
+					copy_s.crop ();
+					while ((*fmt) && (*fmt != ']'))
+					{
+						copy_s.strcat (*fmt++);
+					}
+					if (*fmt) fmt++;
+					key = copy_s;
+					useskey=true;
+					copy_p--;
+					break;
+					
 				
 				case 's':
 					sz = atoi ((const char *)copy+1);
-					copy_p = (char *) arglist[argptr++].cval();
+					copy_p = (char *) KEYORARG.cval();
 					if (!copy_p) copy_p = (char *) "(null)";
 					if (sz != 0)
 					{
