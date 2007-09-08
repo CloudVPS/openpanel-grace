@@ -49,7 +49,7 @@ int httpdfiletypehandler::run (string &path, string &postbody, value &inhdr,
 	{
 		value ev;
 		string ertxt;
-		ertxt.printf (errortext::httpd::ftype_base, path.str());
+		ertxt = errortext::httpd::ftype_base %format (path);
 		
 		ev("class") = "error";
 		ev["ip"] = s.peer_name;
@@ -194,13 +194,12 @@ int httpdfileshare::run (string &uri, string &postbody,
 	if ((uri.strstr ("//") > 0) || (uri.strstr ("/..") >= 0))
 	{
 		outhdr["Content-type"] = "text/html";
-		out.printf (errortext::httpd::html_body, errortext::httpd::html_illuri);
+		out = errortext::httpd::html_body %format (errortext::httpd::html_illuri);
 
 		if (parent->eventmask & HTTPD_ERROR)
 		{
 			value ev;
-			string ertxt;
-			ertxt.printf (errortext::httpd::illuri, uri.str());
+			string ertxt = errortext::httpd::illuri %format (uri);
 			
 			ev("class") = "error";
 			ev["ip"] = s.peer_name;
@@ -213,8 +212,7 @@ int httpdfileshare::run (string &uri, string &postbody,
 	string createdpath; //< String to build up the translated uri.
 	string realpath; //< The translated uri with translated pathvolume.
 	
-	createdpath = root;
-	createdpath.printf ("%s%s", uri[0]=='/' ? "" : "/", uri.str());
+	createdpath = "%s%s%s" %format (root, uri[0]=='/'?"":"/", uri);
 	realpath = fs.transr (createdpath);
 
 	// If the root path is not a pathvolume, compare it to the final
@@ -225,15 +223,14 @@ int httpdfileshare::run (string &uri, string &postbody,
 	     (realpath.strncmp (root, root.strlen()) != 0) )
 	{
 		outhdr["Content-type"] = "text/html";
-		out.printf (errortext::httpd::html_body, errortext::httpd::html_illuri);
+		out = errortext::httpd::html_body %format (errortext::httpd::html_illuri);
 					
 		if (parent->eventmask & HTTPD_ERROR)
 		{
 			value ev;
 			string ertxt;
-			ertxt.printf (errortext::httpd::illuri_details,
-						  uri.str(), root.str(), realpath.str());
-			
+			ertxt = errortext::httpd::illuri_details %format (uri, root, realpath);
+
 			ev("class") = "error";
 			ev["ip"] = s.peer_name;
 			ev["text"] = ertxt;
@@ -250,8 +247,8 @@ int httpdfileshare::run (string &uri, string &postbody,
 		if (parent->havedefault (404))
 		{
 			unsigned int bytes;
-			s.printf ("HTTP/1.1 404 NOT FOUND\r\n"
-					  "Content-type: text/html\r\n");
+			s.puts ("HTTP/1.1 404 NOT FOUND\r\n"
+					"Content-type: text/html\r\n");
 			
 			bytes = parent->sendfile (s, parent->defaultdocument (404));
 			env["sentbytes"] = bytes;
@@ -294,10 +291,10 @@ int httpdfileshare::run (string &uri, string &postbody,
 	
 	bool keepalive = env["keepalive"].bval();
 	
-	s.printf ("HTTP/1.1 200 OK\r\n");
-	s.printf ("Connection: %s\r\n", keepalive ? "keep-alive" : "close");
-	s.printf ("Content-type: %s\r\n", mimetype.str());
-	s.printf ("Content-length: %i\r\n\r\n", outsz);
+	s.puts ("HTTP/1.1 200 OK\r\n");
+	s.puts ("Connection: %s\r\n" %format (keepalive ? "keep-alive" : "close"));
+	s.puts ("Content-type: %s\r\n" %format (mimetype));
+	s.puts ("Content-length: %i\r\n\r\n" %format (outsz));
 	
 	s.sendfile (realpath, outsz);
 	env["sentbytes"] = outsz;
