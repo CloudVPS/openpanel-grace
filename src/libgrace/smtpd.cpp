@@ -280,7 +280,7 @@ void smtpworker::run (void)
 		try
 		{
 			// Send banner.
-			s.printf ("220 %s ESMTP\r\n", parent->banner.str());
+			s.puts ("220 %s ESMTP\r\n" %format (parent->banner));
 	
 mainloop:
 			env["ip"] = exip;
@@ -303,7 +303,7 @@ mainloop:
 							{
 								helostr = line.mid (5);
 								env["helo"] = helostr;
-								s.printf ("250 Hello %s\r\n", exip.str());
+								s.puts ("250 Hello %s\r\n" %format (exip));
 								st = SMTP_WAITMAILFROM;
 							}
 							else
@@ -392,7 +392,7 @@ mainloop:
 							parent->eventhandle (outev);
 						}
 						
-						s.printf ("250 OK %s\r\n", env["transaction-id"].cval());
+						s.puts ("250 OK %s\r\n" %format (env["transaction-id"]));
 						st = SMTP_WAITMAILFROM;
 					}
 					else
@@ -416,7 +416,8 @@ mainloop:
 				}
 				else
 				{
-					mailbody.printf ("%s\n", line.str());
+					mailbody.strcat (line);
+					mailbody.strcat ("\n");
 				}
 			}
 			
@@ -464,9 +465,8 @@ string *smtpd::maketransactionid (void)
 		srand (kernel.time.now());
 	}
 	
-	res.printf ("%08x-%04x-%08x", kernel.time.now(),
-	            kernel.proc.self(), rand());
-	
+	res = "%08x-%04x-%08x" %format ((unsigned) kernel.time.now(),
+									kernel.proc.self(), rand());
 	return &res;
 }
 
@@ -489,8 +489,8 @@ bool smtpd::deliver (const string &mailbody, value &env)
 	string fn_xml;
 	
 	transid = env["transaction-id"];
-	fn_dat.printf ("%S.dat", transid.str());
-	fn_xml.printf ("%S.xml", transid.str());
+	fn_dat = "%S.dat" %format (transid);
+	fn_xml = "%S.xml" %format (transid);
 	
 	fs.save (fn_dat, mailbody);
 	env.savexml (fn_xml);
