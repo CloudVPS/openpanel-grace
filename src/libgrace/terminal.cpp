@@ -509,6 +509,11 @@ void termbuffer::tprintf (const char *fmt, ...)
 	write (fout.filno, data.str(), data.strlen());
 }
 
+void termbuffer::tputs (const string &str)
+{
+	write (fout.filno, str.str(), str.strlen());
+}
+
 // ==========================================================================
 // METHOD termbuffer::tputc
 // ==========================================================================
@@ -539,8 +544,8 @@ int termbuffer::getkey (void)
 					ev = events[0];
 					events.rmindex (0);
 					eventlock.unlock();
-
-					fout.printf ("\n%s\n", ev.cval());
+					
+					fout.puts ("\n%s\n" %format (ev));
 					memset (curview, 0, len);
 
 					eventlock.lockw();
@@ -660,7 +665,7 @@ void cliutil::displayoptions (termbuffer &tb, const value &options)
 {
 	if (! options.count())
 	{
-		tb.tprintf ("\n<cr>            Execute command\n");
+		tb.tputs ("\n<cr>            Execute command\n");
 		tb.redraw ();
 		return;
 	}
@@ -672,13 +677,13 @@ void cliutil::displayoptions (termbuffer &tb, const value &options)
 		if (w > maxlen) maxlen = w;
 	}
 	
-	tb.tprintf ("\n");
+	tb.tputs ("\n");
 	
 	foreach (opt, options)
 	{
 		string nm = opt.id().sval();
 		nm.pad (maxlen, ' ');
-		tb.tprintf ("%s  %s\n", nm.str(), opt.cval());
+		tb.tputs ("%s  %s\n" %format (nm, opt));
 	}
 	tb.redraw ();
 }

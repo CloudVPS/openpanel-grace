@@ -60,9 +60,9 @@ dbrow::dbrow (dbtable *tab, const statstring &pid)
 	fchanged = false;
 	
 	value tmp;
-	string qry;
-	qry.printf ("SELECT * FROM %s WHERE %s=\"%s\"",
-				table->id().str(), table->indexcolumn().str(), pid.str());
+	string qry = "SELECT * FROM %s WHERE %s=\"%s\"" %format (table->id(),
+							table->indexcolumn(), pid);
+
 	if (! table->eng->query (qry, tmp))
 	{
 	}

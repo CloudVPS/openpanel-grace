@@ -91,7 +91,7 @@ void application::init (int Argc, char *Argv[])
 	}
 	else
 	{
-		tmp.printf ("tools:%s", appnam.str());
+		tmp = "tools:%s" %format (appnam);
 		appath = fs.transr (tmp);
 	}
 
@@ -190,27 +190,23 @@ void application::init (int Argc, char *Argv[])
 
 	if (fs.exists ("/Library/Preferences"))
 	{
-		temppath = "/Library/Preferences";
-		temppath.printf ("/%s", creator.str());
+		temppath = "/Library/Preferences/%s" %format (creator);
 		fs.pathvol["conf"].newval() = temppath;
 	}
 	else if (fs.exists ("/etc/conf"))
 	{
-		temppath = "/etc";
-		temppath.printf ("/conf/%s", creator.str());
+		temppath = "/etc/conf/%s" %format (creator);
 		fs.pathvol["conf"].newval() = temppath;
 	}
 	
 	if (fs.exists ("home:Library/Preferences"))
 	{
-		temppath = env["HOME"];
-		temppath.printf ("/Library/Preferences/%s", creator.str());
+		temppath = "%s/Library/Preferences/%s" %format (env["HOME"], creator);
 		fs.pathvol["conf"].newval() = temppath;
 	}
 	else if (fs.exists ("home:.conf"))
 	{
-		temppath = env["HOME"];
-		temppath.printf ("/.conf/%s", creator.str());
+		temppath = "%s/.conf/%s" %format (env["HOME"], creator);
 		fs.pathvol["conf"].newval() = temppath;
 	}
 
@@ -337,8 +333,7 @@ void application::init (int Argc, char *Argv[])
 						}
 						else
 						{
-							ferr.printf ("%s %s ", shortcuts[name].cval(),
-														name.str());
+							ferr.puts ("%s %s " %format (shortcuts[name],name));
 							
 							if ((option["argc"] == 0) ||
 								(! option["default"].sval().strlen()))
@@ -347,15 +342,13 @@ void application::init (int Argc, char *Argv[])
 							}
 							else
 							{
-								ferr.printf
-									("[%s]", option["default"].cval());
+								ferr.puts ("[%s]" %format (option["default"]));
 							}
 							if (option["help"].sval().strlen())
 							{
-								ferr.printf
-									(": %s", option["help"].cval());
+								ferr.puts (": %s" %format (option["help"]));
 							}
-							ferr.printf ("\n");
+							ferr.puts ("\n");
 						}
 					}
 					exit (1);

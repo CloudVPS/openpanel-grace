@@ -153,8 +153,7 @@ void cmdtoken_loop::run (value &v, string &buf)
 			
 			if (! var.count())
 			{
-				string str;
-				str.printf ("%i", j);
+				string str = "%i" %format (j);
 				v[str] = var;
 			}
 			v[var.id()] = var;
@@ -512,7 +511,7 @@ string *cmdtoken_parseval (value &env, const string &_expr)
 	switch (prefix)
 	{
 		case '#':
-			res.printf ("%i", myval.ival());
+			res = "%i" %format (myval);
 			break;
 		case '/':
 			res = myval.sval();

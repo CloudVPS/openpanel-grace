@@ -57,7 +57,7 @@ string *httpsocket::post (const string &url, const value &postvar,
 	{
 		if (i) postbody.strcat ('&');
 		encoded = strutil::urlencode (nmval.sval());
-		postbody.printf ("%s=%s", nmval.name(), encoded.str());
+		postbody.strcat ("%s=%s" %format (nmval.id(), encoded));
 		++i;
 	}
 	
@@ -92,7 +92,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 		else
 		{
 			errorcode = HTERR_INVALIDURL;
-			error.printf (errortext::http::invalidurl, url.str());
+			error = errortext::http::invalidurl %format (url);
 			return NULL;
 		}
 	}
@@ -141,8 +141,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 		if (! _sock.uconnect (hostpart))
 		{
 			errorcode = HTERR_CONNECTFAIL;
-			error.crop (0);
-			error.printf (errortext::http::connect_usock, hostpart.str());
+			error = errortext::http::connect_usock %format (hostpart);
 			return NULL;
 		}
 	}
@@ -151,9 +150,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 		if (! connectToHost (_proxyhost, _proxyport))
 		{
 			errorcode = HTERR_CONNECTFAIL;
-			error.crop(0);
-			error.printf (errortext::http::connect_proxy,
-					      hostpart.str(), port);
+			error = errortext::http::connect_proxy %format (hostpart, port);
 			return NULL;
 		}	
 	}
@@ -162,8 +159,7 @@ string *httpsocket::post (const string &url, const string &ctype,
 		if (! connectToHost (hostpart, port))
 		{
 			errorcode = HTERR_CONNECTFAIL;
-			error.crop(0);
-			error.printf (errortext::http::connect, hostpart.str(), port);
+			error = errortext::http::connect %format (hostpart, port);
 			return NULL;
 		}
 	}
@@ -176,31 +172,32 @@ string *httpsocket::post (const string &url, const string &ctype,
 	{
 		// If we use a proxy we will insert the whole url
 		if (! _useproxy)
-			_sock.printf ("POST /%s HTTP/1.1\r\n", rawuri.str());
+			_sock.puts ("POST /%s HTTP/1.1\r\n" %format (rawuri));
 		else
-			_sock.printf ("POST %s HTTP/1.1\r\n", url.str());
+			_sock.puts ("POST %s HTTP/1.1\r\n" %format (url));
 
 		if (! postheaders.exists ("Host"))
 		{
-			_sock.printf ("Host: %s\r\n", hostpart.str());
+			_sock.puts ("Host: %s\r\n" %format (hostpart));
 		}
 		
 		foreach (hdr, postheaders)
 		{
-			_sock.printf ("%s: %s\r\n", hdr.name(), hdr.cval());
+			_sock.puts ("%s: %s\r\n" %format (hdr.id(), hdr));
 		}
+		
 		if (_keepalive)
 		{
-			_sock.printf ("Connection: keep-alive\r\n");
+			_sock.puts ("Connection: keep-alive\r\n");
 		}
 		else
 		{
-			_sock.printf ("Connection: close\r\n");
+			_sock.puts ("Connection: close\r\n");
 		}
 		
-		_sock.printf ("Content-type: %s\r\n", ctype.str());
-		_sock.printf ("Content-length: %u\r\n", body.strlen());
-		_sock.printf ("\r\n");
+		_sock.puts ("Content-type: %s\r\n" %format (ctype));
+		_sock.puts ("Content-length: %u\r\n" %format (body.strlen()));
+		_sock.puts ("\r\n");
 		_sock.puts (body);
 		
 		return getResult (hdr);
@@ -238,7 +235,7 @@ string *httpsocket::get (const string &url, value *hdr)
 		else
 		{
 			errorcode = HTERR_INVALIDURL;
-			error.printf (errortext::http::invalidurl, url.str());
+			error = errortext::http::invalidurl %format (url);
 			return NULL;
 		}
 	}
@@ -283,8 +280,7 @@ string *httpsocket::get (const string &url, value *hdr)
 		if (! _sock.uconnect (hostpart))
 		{
 			errorcode = HTERR_CONNECTFAIL;
-			error.crop (0);
-			error.printf (errortext::http::connect_usock, hostpart.str());
+			error = errortext::http::connect_usock %format (hostpart);
 			return NULL;
 		}
 	}
@@ -293,8 +289,7 @@ string *httpsocket::get (const string &url, value *hdr)
 		if (! connectToHost (_proxyhost, _proxyport))
 		{
 			errorcode = HTERR_CONNECTFAIL;
-			error.printf (errortext::http::connect_proxy, _proxyhost.str(),
-						  _proxyport);
+			error = errortext::http::connect_proxy %format (_proxyhost,_proxyport);
 			return NULL;
 		}	
 	}
@@ -303,8 +298,7 @@ string *httpsocket::get (const string &url, value *hdr)
 		if (! connectToHost (hostpart, port))
 		{
 			errorcode = HTERR_CONNECTFAIL;
-			error.crop ();
-			error.printf (errortext::http::connect, hostpart.str(), port);
+			error = errortext::http::connect %format (hostpart, port);
 			return NULL;
 		}
 	}
@@ -312,29 +306,29 @@ string *httpsocket::get (const string &url, value *hdr)
 	try
 	{
 		if (! _useproxy)
-			_sock.printf ("GET /%s HTTP/1.1\r\n", rawuri.str());
+			_sock.puts ("GET /%s HTTP/1.1\r\n" %format (rawuri));
 		else
-			_sock.printf ("GET %s HTTP/1.1\r\n", url.str());
+			_sock.puts ("GET %s HTTP/1.1\r\n" %format (url.str()));
 	
 		if (! postheaders.exists ("Host"))
 		{
-			_sock.printf ("Host: %s\r\n", hostpart.str());
+			_sock.puts ("Host: %s\r\n" %format (hostpart));
 		}
 		
 		if (! postheaders.exists ("Accept-Encoding"))
 		{
-			_sock.printf ("Accept-Encoding: \r\n");
+			_sock.puts ("Accept-Encoding: \r\n");
 		}
 		
 		foreach (hdr, postheaders)
 		{
-			_sock.printf ("%s: %s\r\n", hdr.name(), hdr.cval());
+			_sock.puts ("%s: %s\r\n" %format (hdr.id(), hdr));
 		}
 		
 		if (_keepalive)
-			_sock.printf ("Connection: keep-alive\r\n");
+			_sock.puts ("Connection: keep-alive\r\n");
 		else
-			_sock.printf ("Connection: close\r\n");
+			_sock.puts ("Connection: close\r\n");
 		_sock.printf ("\r\n");
 		
 		return getResult (hdr);
@@ -404,8 +398,7 @@ bool httpsocket::getChunked (string &into)
 			chunksz = ln.toint (16);
 			if (chunksz>defaults::lim::httpd::chunksize)
 			{
-				error.printf (errortext::http::chunksz, 
-							  defaults::lim::httpd::chunksize, chunksz);
+				error = errortext::http::chunksz %format (defaults::lim::httpd::chunksize, chunksz);
 				throw (httpMaxChunksizeException());
 			}
 			if (chunksz>0)
@@ -459,7 +452,7 @@ bool httpsocket::getChunked (string &into)
 		if (! error.strlen())
 		{
 			errorcode = HTERR_BROKENPIPE;
-			error.printf (errortext::http::connbroken, _sock.error().str());
+			error = errortext::http::connbroken %format (_sock.error());
 			_sock.close();
 			_host.crop (0);
 			_port = 0;
@@ -672,7 +665,7 @@ void httpsocket::authentication (const string &user, const string &pass)
 	string authtoken;
 	
 	// Create the base64-encoded monster
-	authdata.printf ("%s:%s", user.cval(), pass.cval());
+	authdata = "%s:%s" %format (user, pass);
 	authtoken = authdata.encode64();
 	authdata = "Basic ";
 	authdata.strcat (authtoken);

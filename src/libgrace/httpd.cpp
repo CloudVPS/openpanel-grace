@@ -331,7 +331,7 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 				
 				foreach (hdr, outhdr)
 				{
-					s.printf ("%s: %s\r\n", hdr.name(), hdr.cval());
+					s.puts ("%s: %s\r\n" %format (hdr.id(), hdr));
 				}
 				s.printf ("\r\n");
 				s.puts (outbody);
@@ -440,7 +440,7 @@ void httpdworker::run (void)
 	string threadid;
 	bool run = true;
 	
-	threadid.printf ("httpdworker/%i", tid);
+	threadid = "httpdworker/%x" %format ((unsigned int) tid);
 	
 	// If anyone cares, shout out that we're alive
 	if (parent->eventmask & HTTPD_INFO)
@@ -677,10 +677,10 @@ void httpdworker::run (void)
 				}
 				else // The rest gets the 500 EFINGER
 				{
-					s.printf ("HTTP/1.1 500 UNKNOWN METHOD '%S'\r\n", cmd.str());
-					s.printf ("Content-type: text/html\r\n\r\n");
-					s.printf (errortext::httpd::html_body,
-							  errortext::httpd::html_500_method);
+					s.puts ("HTTP/1.1 500 UNKNOWN METHOD '%S'\r\n" %format (cmd));
+					s.puts ("Content-type: text/html\r\n\r\n");
+					s.puts (errortext::httpd::html_body %format
+							  		(errortext::httpd::html_500_method));
 					keepalive = false;
 					
 					// Tell the world if it cares
@@ -688,7 +688,7 @@ void httpdworker::run (void)
 					{
 						value ev;
 						string ertxt;
-						ertxt.printf (errortext::httpd::method, cmd.str());
+						ertxt = errortext::httpd::method %format (cmd);
 						
 						ev("class") = "error";
 						ev["ip"] = s.peer_name;
@@ -791,16 +791,14 @@ int httpdbasicauth::run (string &uri, string &postbody,
 {
 	// Format the WWW-Authenticate header
 	string authhdr;
-	authhdr.printf ("Basic realm=\"%S\"", realm.str());
+	authhdr = "Basic realm=\"%S\"" %format (realm);
 	outhdr["WWW-Authenticate"] = authhdr;
 	
 	// No authorization header sent, at all. Educate the client.
 	if (! inhdr.exists ("Authorization"))
 	{
 		outhdr["Content-type"] = "text/html";
-		out.printf ("<html><body>"
-					"<H1>Please Authenticate</H1>"
-					"</body></html>\n");
+		out = "<html><body><H1>Please Authenticate</H1></body></html>\n";
 		return 401;
 	}
 	
@@ -838,8 +836,8 @@ int httpdbasicauth::run (string &uri, string &postbody,
 		{
 			outhdr["Location"] = redirurl;
 			outhdr["Content-type"] = "text/html";
-			out.printf ("<html><body><a href=\"%s\">", redirurl.str());
-			out.printf ("Redirected</a></body></html>\n");
+			out.strcat ("<html><body><a href=\"%s\">" %format (redirurl));
+			out.strcat ("Redirected</a></body></html>\n");
 			return 307;
 		}
 		
@@ -860,9 +858,7 @@ int httpdbasicauth::run (string &uri, string &postbody,
 		{
 			value outev;
 			string errtxt;
-			
-			errtxt.printf (errortext::httpd::authfail,
-						   username.str(), realm.str(), uri.str());
+			errtxt = errortext::httpd::authfail %format (username, realm, uri);
 			outev("class") = "error";
 			outev["ip"] = s.peer_name;
 			outev["text"] = errtxt;
@@ -930,18 +926,10 @@ int httpdlogger::handle (value &ev)
 		// We'll be called from any thread, lock the file access.
 		exclusivesection (faccess)
 		{
-			faccess.printf ("%s - %S [%s] \"%s %S HTTP/%S\" "
-							"%i %i \"%S\" \"%S\"\n",
-							ev["ip"].cval(),
-							remuser.str(),
-							timestr.str(),
-							ev["method"].cval(),
-							uri.str(),
-							ev["httpver"].cval(),
-							ev["status"].ival(),
-							ev["bytes"].ival(),
-							ev["referrer"].cval(),
-							ev["useragent"].cval());
+			faccess.puts ("%[ip]s - %{1}S [%{2}s] \"%[method]s %{3}s "
+						  "HTTP/%[httpver]s\" %[status]i %[bytes]i "
+						  "\"%[referrer]S\" \"%[useragent]S\"\n"
+						  %format (ev, remuser, timestr, uri));
 		}
 	}
 	else if (haserrorlog)
@@ -949,10 +937,8 @@ int httpdlogger::handle (value &ev)
 		// We'll be called from any thread, lock the file access.
 		exclusivesection (ferror)
 		{
-			ferror.printf ("[%s] [error] [client %s] %s\n",
-						   timestr.str(),
-						   ev["ip"].cval(),
-						   ev["text"].cval());
+			ferror.puts ("[%{1}s] [error] [client %[ip]s] "
+						 "%[text]s\n" %format (ev, timestr));
 		}
 	}
 	return 1;
@@ -1066,16 +1052,14 @@ int httpdvhost::run (string &uri, string &postbody, value &inhdr,
 	}
 	else
 	{
-		out.printf (errortext::httpd::html_404_vhost, host.str());
+		out = errortext::httpd::html_404_vhost %format (host);
 	}
 
 	// Also whine to the errorlog, if it's there.
 	if (parent->eventmask & HTTPD_ERROR)
 	{
 		value outev;
-		string errtxt;
-		
-		errtxt.printf (errortext::httpd::novhost, host.str());
+		string errtxt = errortext::httpd::novhost %format (host);
 		outev("class") = "error";
 		outev["ip"] = s.peer_name;
 		outev["text"] = errtxt;
@@ -1415,9 +1399,7 @@ int serverpage::run (string &uri, string &postbody, value &inhdr,
 	res = execute (env, reqenv, out, outhdr);
 	if (res>0) return res;
 	
-	out.crop();
-	out.printf (errortext::httpd::html_body, errortext::httpd::html_spage);
-	
+	out = errortext::httpd::html_body %format (errortext::httpd::html_spage);
 	return 500;
 }
 

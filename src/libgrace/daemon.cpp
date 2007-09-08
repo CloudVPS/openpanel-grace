@@ -164,7 +164,8 @@ daemon::~daemon (void)
 {
 	string path;
 	string empty;
-	path.printf ("run:%s.pid", creator.str());
+	
+	path = "run:%s.pid" %format (creator);
 	path = fs.transr (path);
 	fs.save (path, empty);
 }
@@ -183,7 +184,7 @@ bool daemon::checkpid (void)
 	pid_t  pid;
 	char  *p;
 	
-	path.printf ("run:%s.pid", creator.str());
+	path = "run:%s.pid" %format (creator);
 	tpath = fs.transr (path);
 	if (! tpath.strlen()) return true;
 
@@ -223,8 +224,8 @@ void daemon::writepid (void)
 	file   f;
 	
 	pid = kernel.proc.self ();
-	
-	path.printf ("run:%s.pid", creator.str());
+	path = "run:%s.pid" %format (creator);
+
 	try
 	{
 		tpath = fs.transr (path);
@@ -287,7 +288,7 @@ void daemon::log (log::priority prio, const string &modulename,
 	
 	if ((! daemonized) || (_foreground && (prio == log::critical)))
 	{
-		ferr.printf ("%s: %s\n", modulename.str(), logText.str());
+		ferr.writeln ("%s: %s" %format (modulename, logText));
 		
 		if (! daemonized)
 		{
@@ -520,12 +521,8 @@ void logthread::run (void)
 					#undef MPRIO
 					
 					tstr = ti.format ("%b %e %H:%M:%S");
-					
-					tf->f.printf ("%s %s [%s]: %s\n",
-								  tstr.str(),
-								  modName.str(),
-								  prioName.str(),
-								  ev[logproperty::text].cval());
+					tf->f.writeln ("%s %s [%s]: %s\n" %format (tstr, modName,
+										prioName, ev[logproperty::text]));
 					
 					// rotate logfiles
 					unsigned int msize;
@@ -542,7 +539,7 @@ void logthread::run (void)
 							
 							oldfn = tf->target;
 							if (ii) oldfn.printf (".%i", ii-1);
-							newfn.printf ("%s.%i", tf->target.str(), ii);
+							newfn = "%s.%i" %format (tf->target, ii);
 							fs.mv (oldfn, newfn);
 						}
 						

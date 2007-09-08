@@ -104,17 +104,16 @@ filesystem::filesystem (void)
 		string hlib;
 		foreach (home, pathvol["homes"])
 		{
-			hlib.crop(0);
-			hlib.printf ("%s/Shared/Library", home.cval());
+			hlib = "%s/Shared/Library" %format (home);
 			pathvol["library"].newval() = hlib;
 		}
-		hlib.crop(0);
-		hlib.printf ("%s/.library", hom.str());
+		
+		hlib = "%s/.library" %format (hom);
 		if (! fs.exists (hlib))
 		{
-			hlib.crop(0);
-			hlib.printf ("%s/Library", hom.str());
+			hlib = "%s/Library" %format (hom);
 		}
+		
 		if (fs.exists (hlib))
 			pathvol["library"].newval() = hlib;
 	}
@@ -437,7 +436,7 @@ bool filesystem::cdrelative (const string &path)
 	
 	cwd_path.crop(0);
 	if (cwd_volume.strlen())
-		cwd_path.printf ("%s:", cwd_volume.str());
+		cwd_path.strcat ("%s:" %format (cwd_volume));
 		
 	for (int j=0; j<cwd_tree.count(); ++j)
 	{
@@ -876,9 +875,8 @@ value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 		struct stat st;
 		DIR *d;
 		
-		path.crop(0);
 		if (suffix.strlen())
-			path.printf ("%s/%s", e.cval(), suffix.str());
+			path = "%s/%s" %format (e, suffix);
 		else
 			path = e;
 				
@@ -902,9 +900,7 @@ value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 					res[nam]["path"] = fpath;
 				else
 				{
-					string tp;
-					tp.printf ("%s,%s", res[nam]["path"].cval(), fpath.str());
-					
+					string tp = "%s,%s" %format (res[nam]["path"], fpath);
 					res[nam]["path"] = tp;
 				}
 				
@@ -914,7 +910,7 @@ value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
 					string pad;
 					nam = dir->d_name;
 					
-					pad.printf ("%s/%s", path.str(), nam.str());
+					pad = "%s/%s" %format (path, nam);
 					if (! lstat (pad, &st))
 					{
 						res[nam]["inode"] = (long long) st.st_ino;
@@ -1035,12 +1031,10 @@ string *filesystem::getresource (const string &p, const string &rsrc, const stri
 	}
 	else
 	{
-		string npad;
-		npad.printf (".%s", pad.str());
-		pad = npad;
+		pad = ".%s" %format (pad);
 	}
 	
-	pad.printf (":<%s>", rsrc.str());
+	pad.strcat (":<%s>" %format (rsrc));
 	
 	if (lstat (pad, &st2))
 	{
@@ -1049,14 +1043,14 @@ string *filesystem::getresource (const string &p, const string &rsrc, const stri
 	
 	if ((st2.st_mode & S_IFMT) == S_IFDIR)
 	{
-		pad.printf ("/%s", idx.strlen() ? idx.str() : "data");
+		pad.strcat ("/%s" %format (idx.strlen() ? idx.str() : "data"));
 		if (lstat (pad, &st2)) return &res;
 	}
 	else
 	{
 		if (idx.strlen())
 		{
-			pad.printf (":%s", idx.str());
+			pad.strcat (":%s" %format (idx));
 			if (lstat (pad, &st2)) return &res;
 		}
 	}
@@ -1111,7 +1105,7 @@ string *filesystem::findread (const char *pvol, const char *filename)
 	for (int i=res.count()-1; i>=0; --i)
 	{
 		resolved = res[i];
-		resolved.printf ("/%s", filename);
+		resolved.strcat ("/%s" %format (filename));
 		if (mayread (resolved.str()))
 		{
 			return &resolved;
@@ -1140,18 +1134,12 @@ value *filesystem::getpaths (const  char *pvol)
 	if (pathvol.exists (pvol)) res = pathvol[pvol];
 	else
 	{
-		string pd;
-		
-		pd.printf ("/%s", pvol); res[0] = pd;
-		pd.crop(0);
-		pd.printf ("/usr/%s", pvol); res[1] = pd;
-		pd.crop(0);
-		pd.printf ("/usr/local/%s", pvol); res[2] = pd;
-		pd.crop(0);
+		res[0] = "/%s" %format (pvol);
+		res[1] = "/usr/%s" %format (pvol);
+		res[2] = "/usr/local/%s" %format (pvol);
 		if (getenv ("HOME"))
 		{
-			pd.printf ("%s/.%s", getenv("HOME"), pvol);
-			res[3] = pd;
+			res[3] = "%s/.%s" %format (getenv("HOME"), pvol);
 		}
 	}
 	return &res;

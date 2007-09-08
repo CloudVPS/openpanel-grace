@@ -351,7 +351,7 @@ void dbfile::encode (string &into, value &v)
 			foreach (node, v)
 			{
 				if (into) into.strcat (sep);
-				into.printf ("%s=\"%S\"", node.id().str(), node.cval());
+				into.strcat ("%s=\"%S\"" %format (node.id(), node));
 			}
 			break;
 		
@@ -359,7 +359,7 @@ void dbfile::encode (string &into, value &v)
 			foreach (node, v)
 			{
 				if (into) into.strcat (sep);
-				into.printf ("%s", node.cval());
+				into.strcat (node.sval());
 			}
 			break;
 			
@@ -367,7 +367,7 @@ void dbfile::encode (string &into, value &v)
 			foreach (node, v)
 			{
 				if (into) into.strcat ('|');
-				into.printf ("%s=%s", node.id().str(), node.cval());
+				into.strcat ("%s=%s" %format (node.id(), node));
 			}
 			break;
 		

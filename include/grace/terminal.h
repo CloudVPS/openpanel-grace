@@ -130,6 +130,9 @@ public:
 					 /// Print formatted text to the terminal display.
 	void			 tprintf (const char *, ...);
 	
+					 /// Send a string to the terminal display.
+	void			 tputs (const string &);
+	
 					 /// Write a character to the display.
 	void			 tputc (char);
 	

@@ -70,22 +70,22 @@ string *dbstatement::sql (bool isselect)
 	switch (tl)
 	{
 		case v_cref:
-			res.printf ("%s", lstr.str()); break;
+			res.strcat (lstr); break;
 		
 		case v_stmt:
 			res.strcat (ll->sql(isselect)); break;
 			
 		case v_int:
-			res.printf ("%i", l.ival()); break;
+			res.strcat ("%i" %format (l)); break;
 		
 		case v_double:
-			res.printf ("%f", l.dval()); break;
+			res.strcat ("%f" %format (l)); break;
 		
 		case v_string:
-			res.printf ("\"%S\"", l.cval()); break;
+			res.strcat ("\"%S\"" %format (l)); break;
 		
 		default:
-			res.printf ("NULL"); break;
+			res.strcat ("NULL"); break;
 	}
 	
 	switch (comp)
@@ -103,22 +103,22 @@ string *dbstatement::sql (bool isselect)
 	switch (tr)
 	{
 		case v_cref:
-			res.printf ("%s", rstr.str()); break;
+			res.strcat (rstr); break;
 		
 		case v_stmt:
 			res.strcat (lr->sql(isselect)); break;
 			
 		case v_int:
-			res.printf ("%i", r.ival()); break;
+			res.strcat ("%i" %format (r)); break;
 		
 		case v_double:
-			res.printf ("%f", r.dval()); break;
+			res.strcat ("%f" %format (r)); break;
 		
 		case v_string:
-			res.printf ("\"%S\"", r.cval()); break;
+			res.strcat ("\"%S\"" %format (r)); break;
 		
 		default:
-			res.printf ("NULL"); break;
+			res.strcat ("NULL"); break;
 	}
 	
 	res.strcat (')');
@@ -309,8 +309,8 @@ string *dbcolumn::name (void)
 {
 	returnclass (string) res retain;
 	
-	if (operation) res.printf ("%s(", operation.str());
-	res.printf ("%s.%s", table->name.str(), id.str());
+	if (operation) res.strcat ("%s(" %format (operation));
+	res.strcat ("%s.%s" %format (table->name, id));
 	if (operation) res.strcat (')');
 	return &res;
 }
@@ -373,8 +373,7 @@ void dbquery::select (dbtable &tab)
 		throw (mixedQueryException());
 	}
 	qtype = q_select;
-	string nwfield;
-	nwfield.printf ("%s.*", tab.name.str());
+	string nwfield = "%s.*" %format (tab.name);
 	fields[nwfield] = nwfield;
 	tables[tab.name] = true;
 }
@@ -535,50 +534,49 @@ void dbquery::mksqlselect (void)
 	foreach (field, fields)
 	{
 		if (field.sval().strchr ('*') < 0)
-			sql.printf ("%s%s AS %s", first ? "" : ", ", field.name(), field.str());
+			sql.strcat ("%s%s AS %s" %format (first?"":", ", field.id(), field));
 		else
-			sql.printf ("%s%s", first ? "" : ", ", field.name());
+			sql.strcat ("%s%s" %format (first ? "" : ", ", field.id()));
 			
 		first = false;
 	}
 	
 	first = true;
-	sql.printf (" FROM ");
+	sql.strcat (" FROM ");
 	
 	foreach (tab, tables)
 	{
-		sql.printf ("%s%s", first ? "" : ",", tab.name());
+		sql.strcat ("%s%s" %format (first ? "" : ",", tab));
 		first = false;
 	}
 	
 	if (sqlwhere.strlen())
 	{
-		sql.printf (" WHERE %s", sqlwhere.str());
+		sql.strcat (" WHERE %s" %format (sqlwhere));
 	}
 	
 	if (orderbys.count())
 	{
 		first = true;
-		sql.printf (" ORDER BY ");
+		sql.strcat (" ORDER BY ");
 		foreach (o, orderbys)
 		{
-			sql.printf ("%s%s", first ? "" : ",", o.str());
+			sql.strcat ("%s%s" %format (first ? "" : ",", o));
 			first = false;
 		}
-		if (descend) sql.printf (" DESC");
+		if (descend) sql.strcat (" DESC");
 	}
 	
 	if (limitamount || limitoffs)
 	{
-		sql.printf (" LIMIT %i,%i", limitoffs, limitamount);
+		sql.strcat (" LIMIT %i,%i" %format (limitoffs, limitamount));
 	}
 }
 
 void dbquery::mksqlupdate (void)
 {
 	string maintable = tables[0].id();
-	sql.crop ();
-	sql.printf ("UPDATE %s SET ", maintable.str());
+	sql = "UPDATE %s SET " %format (maintable);
 
 	bool first = true;
 	foreach (v, vset)
@@ -586,44 +584,42 @@ void dbquery::mksqlupdate (void)
 		if (! first) sql.strcat (',');
 		first = false;
 		
-		sql.printf ("%s=", v.name());
+		sql.strcat ("%s=" %format (v.id()));
 		caseselector (v.type())
 		{
 			incaseof (t_int):
-				sql.printf ("%i", v.ival());
+				sql.strcat ("%i" %format (v));
 				break;
 			
 			incaseof (t_bool):
-				sql.printf ("%i", v.bval() ? 1 : 0);
+				sql.strcat ("%i" %format (v.bval() ? 1 : 0));
 				break;
 			
 			incaseof (t_double):
-				sql.printf ("%f", v.dval());
+				sql.strcat ("%f" %format (v));
 				break;
 			
 			defaultcase :
-				sql.printf ("\"%S\"", v.cval());
+				sql.strcat ("\"%S\"" %format (v));
 				break;
 		}
 	}
 	
 	if (sqlwhere.strlen())
 	{
-		sql.printf (" WHERE %s", sqlwhere.str());
+		sql.strcat (" WHERE %s" %format (sqlwhere));
 	}
 }
 
 void dbquery::mksqldelete (void)
 {
-	sql.crop ();
-	sql.printf ("DELETE FROM %s", tables[0].name());
-	if (sqlwhere.strlen()) sql.printf (" WHERE %s", sqlwhere.str());
+	sql = "DELETE FROM %s" %format (tables[0].id());
+	if (sqlwhere.strlen()) sql.strcat (" WHERE %s" %format (sqlwhere));
 }
 
 void dbquery::mksqlinsert (void)
 {
-	sql.crop ();
-	sql.printf ("INSERT INTO %s(", tables[0].name());
+	sql = "INSERT INTO %s(" %format (tables[0].id());
 	
 	bool first = true;
 	foreach (v, vset)
@@ -644,19 +640,19 @@ void dbquery::mksqlinsert (void)
 		caseselector (v.type())
 		{
 			incaseof (t_int):
-				sql.printf ("%i", v.ival());
+				sql.strcat ("%i" %format (v));
 				break;
 			
 			incaseof (t_bool):
-				sql.printf ("%i", v.bval() ? 1 : 0);
+				sql.strcat ("%i" %format (v.bval() ? 1 : 0));
 				break;
 			
 			incaseof (t_double):
-				sql.printf ("%f", v.dval());
+				sql.strcat ("%f" %format (v));
 				break;
 			
 			defaultcase :
-				sql.printf ("\"%S\"", v.cval());
+				sql.strcat ("\"%S\"" %format (v));
 				break;
 		}
 	}

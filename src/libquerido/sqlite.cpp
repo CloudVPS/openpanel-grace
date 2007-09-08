@@ -50,16 +50,14 @@ bool sqlitehandle::query (const string &sql, value &into,
 	if (sqlite3_prepare (hdl, sql.str(), -1, &qhandle, 0) != SQLITE_OK)
 	{
 		errcode = 1;
-		errstr = "Could not prepare statement: ";
-		errstr.printf ("%s", sqlite3_errmsg (hdl));
+		errstr = "Could not prepare: %s" %format (sqlite3_errmsg(hdl));
 		return false;
 	}
 	
 	if (! (qres = sqlite3_step (qhandle)))
 	{
 		errcode = 1;
-		errstr = "Error making first sqlite3 step: ";
-		errstr.printf ("%s", sqlite3_errmsg (hdl));
+		errstr = "Error making first step: %s" %format (sqlite3_errmsg(hdl));
 		sqlite3_finalize (qhandle);
 		return false;
 	}
@@ -95,8 +93,7 @@ bool sqlitehandle::query (const string &sql, value &into,
 			case SQLITE_MISUSE: // achtung, fallthrough
 			case SQLITE_ERROR:
 				errcode = 1;
-				errstr = "Error in sqlite3_step: ";
-				errstr.printf ("%s", sqlite3_errmsg (hdl));
+				errstr = "Error in sqlite3_step: %s" %format (sqlite3_errmsg(hdl));
 				done = true;
 				break;
 			
@@ -148,8 +145,7 @@ bool sqlitehandle::query (const string &sql, value &into,
 	if (sqlite3_finalize (qhandle) != SQLITE_OK)
 	{
 		errcode = 1;
-		errstr = "Error finalizing statement: ";
-		errstr.printf ("%s", sqlite3_errmsg(hdl));
+		errstr = "Error finalizing: %s" %format (sqlite3_errmsg(hdl));
 		return false;
 	}
 	
@@ -159,8 +155,7 @@ bool sqlitehandle::query (const string &sql, value &into,
 
 bool sqlitehandle::listcolumns (const string &table, value &into)
 {
-	string qry;
-	qry.printf ("PRAGMA table_info(%s)", table.str());
+	string qry = "PRAGMA table_info(%s)" %format (table);
 	return (query (qry, into, "name"));
 }
 

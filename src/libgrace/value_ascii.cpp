@@ -69,8 +69,11 @@ void value::load (const char *fname, file &f)
 			ln = f.gets();
 			
 			// Strip leading whitespace
-			for (i=0; (ln[i]==' ')||(ln[i]=='\t'); ++i);
-			ln = ln.mid(i);
+			if (ln)
+			{
+				for (i=0; (ln[i]==' ')||(ln[i]=='\t'); ++i);
+				ln = ln.mid(i);
+			}
 			
 			// Split up the line
 			tmp = strutil::splitquoted (ln, ' ');
