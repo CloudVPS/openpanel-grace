@@ -1596,19 +1596,20 @@ void string::crop (int sz)
 // than the requested size, it is padded up to this length using the
 // character passed in the second argument.
 // ========================================================================
-void string::pad (int sz, char p)
+void string::pad (int psz, char p)
 {
+	int sz = psz;
 	if (! data) strcat (p);
-	if (sz<0) return;
-	
-	docopyonwrite();
+	if (sz<0) sz = -sz;
 	
 	if (((unsigned int) sz) < size)
 	{
-		data->v[sz] = 0;
-		size = sz;
+		crop (psz);
 		return;
 	}
+	
+	docopyonwrite();
+	
 	if ((sz+sizeof(refblock)) >= alloc)
 	{
 		if (data->refcount)
@@ -1625,9 +1626,23 @@ void string::pad (int sz, char p)
 	}
 	if (p)
 	{
-		for (unsigned int i=size; i < (unsigned int) sz; ++i)
+		if (psz<0)
 		{
-			data->v[i] = p;
+			if (size<sz)
+			{
+				memmove (data->v + (sz-size), data->v, size);
+				for (unsigned int i=0; i < (unsigned int)(sz-size); ++i)
+				{
+					data->v[i] = p;
+				}
+			}
+		}
+		else
+		{
+			for (unsigned int i=size; i < (unsigned int) sz; ++i)
+			{
+				data->v[i] = p;
+			}
 		}
 	}
 	data->v[sz] = '\0';

@@ -82,7 +82,7 @@ int strformattestApp::main (void)
 	
 	foreach (r, recs)
 	{
-		fout.writeln ("%{1}26s %[name]30s %[group]s" %format (r, r.id()));
+		fout.writeln ("%{1}-26s | %[name]30s | %[group]s" %format (r, r.id()));
 	}
 	
 	fout.writeln ("Longhex: %016X" %format (-1548172834131337LL));
