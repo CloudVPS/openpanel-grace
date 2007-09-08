@@ -174,6 +174,12 @@ public:
 					 /// Copy-constructor (from an integer)
 					 value (int);
 					 
+					 value (unsigned int);
+					 
+					 value (long long);
+					 
+					 value (unsigned long long);
+					 
 					 /// Destructor.
 					~value (void);
 	

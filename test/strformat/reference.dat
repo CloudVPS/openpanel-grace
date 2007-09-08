@@ -8,12 +8,17 @@ one = '1'
 two = '2'
 3 = 'three'
 Or even funnier:
-<integer id="one">1</integer>
-<integer id="two">2</integer>
-<string id="3">three</string>
+<dict>
+  <integer id="one">1</integer>
+  <integer id="two">2</integer>
+  <string id="3">three</string>
+</dict>
 Name: John Doe <johndoe@example.net>
 johndoe
 pi@madscience.nl           Pim van Riezen                 Personal
 johndoe@example.net        Jonathan Doe                   Work
 janedoe@example.net        Jane Doe                       Work
 president@whitehouse.gov   Miserable Failure              Official
+Longhex: fffa7ff1ec2bb277
+Longhex-from-int: fffffffffffffffd
+Longobject: <long>-1548172834131337</long>

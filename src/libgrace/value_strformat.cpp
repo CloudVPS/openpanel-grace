@@ -47,14 +47,34 @@ string *operator% (const char *args, const value &arglist)
 					goto CONTINUE;
 					
 				case 'L':
+					--copy_p;
+					*(copy_p++) = 'l';
+					*(copy_p++) = 'l';
+					*(copy_p++) = 'i';
 					*copy_p = 0;
-					sprintf (sprintf_out, "%lli", KEYORARG.lval());
+					
+					sprintf (sprintf_out, copy, KEYORARG.lval());
 					copy_p = sprintf_out;
 					goto DUP;
 				
-				case 'U':
+				case 'X':
+					--copy_p;
+					*(copy_p++) = 'l';
+					*(copy_p++) = 'l';
+					*(copy_p++) = 'x';
 					*copy_p = 0;
-					sprintf (sprintf_out, "%llu", KEYORARG.lval());
+					
+					sprintf (sprintf_out, copy, KEYORARG.ulval());
+					copy_p = sprintf_out;
+					goto DUP;
+					
+				case 'U':
+					--copy_p;
+					*(copy_p++) = 'l';
+					*(copy_p++) = 'l';
+					*(copy_p++) = 'u';
+					*copy_p = 0;
+					sprintf (sprintf_out, copy, KEYORARG.lval());
 					copy_p = sprintf_out;
 					goto DUP;
 				
@@ -63,7 +83,6 @@ string *operator% (const char *args, const value &arglist)
 				case 'o':
 				case 'u':
 				case 'x':
-				case 'X':
 					*copy_p = 0;
 					sprintf (sprintf_out, copy, KEYORARG.ival());
 					copy_p = sprintf_out;
@@ -156,21 +175,20 @@ string *operator% (const char *args, const value &arglist)
 					*copy_p = 0;
 					copy_p--;
 					break;
-					
+				
+				
 				
 				case 's':
 					*copy_p = 0;
 					sz = atoi ((const char *)copy+1);
-					copy_p = (char *) KEYORARG.cval();
-					if (!copy_p) copy_p = (char *) "(null)";
+					copy_s = KEYORARG.sval();
 					if (sz != 0)
 					{
-						copy_s = (const char *) copy_p;
 						copy_s.pad (sz, ' ');
-						
-						res.strcat (copy_s);
-						goto CONTINUE;
 					}
+					res.strcat (copy_s);
+					goto CONTINUE;
+					
 DUP:
 					res.strcat ((char *) copy_p);
 					goto CONTINUE;
@@ -457,3 +475,4 @@ value format (const value &v1, const value &v2, const value &v3,
 	res.newval() = v16;
 	return res;
 }
+

@@ -297,6 +297,30 @@ value::value (int orig)
 	_type = t_int;
 }
 
+value::value (unsigned int orig)
+{
+	init ();
+	t.uval = orig;
+	itype = i_unsigned;
+	_type = t_unsigned;
+}
+
+value::value (long long orig)
+{
+	init ();
+	t.lval = orig;
+	itype = i_long;
+	_type = t_long;
+}
+
+value::value (unsigned long long orig)
+{
+	init ();
+	t.ulval = orig;
+	itype = i_ulong;
+	_type = t_ulong;
+}
+
 // ========================================================================
 // DESTRUCTOR
 // ----------
@@ -669,7 +693,9 @@ long long value::lval (void) const
 		case i_long:
 		case i_ulong: return t.lval;
 		case i_double: return (long long) t.dval;
-		case i_int: return (long long) t.ival;
+		case i_int:
+			if (t.ival >= 0) return (long long) t.ival;
+			return ((long long) t.ival) | 0xffffffff00000000LL;
 		case i_date:
 		case i_ipaddr:
 		case i_bool:
@@ -692,6 +718,8 @@ unsigned long long value::ulval (void) const
 		case i_ulong: return t.ulval;
 		case i_double: return (unsigned long long) t.dval;
 		case i_int:
+			if (t.ival >= 0) return (long long) t.ival;
+			return ((long long) t.ival) | 0xffffffff00000000LL;
 		case i_date:
 		case i_ipaddr:
 		case i_bool:

@@ -54,11 +54,13 @@ int strformattestApp::main (void)
 	
 	fout.writeln ("Or even funnier:");
 	
+	fout.writeln ("<%s>" %format (tree.type()));
 	foreach (node, tree)
 	{
-		fout.writeln ("<%s id=\"%Z\">%Z</%{0}s>" %format (node.type(),
+		fout.writeln ("  <%s id=\"%Z\">%Z</%{0}s>" %format (node.type(),
 					  					node.id(), node));
 	}
+	fout.writeln ("</%s>" %format (tree.type()));
 	
 	value rec;
 	rec["firstName"] = "John";
@@ -82,6 +84,12 @@ int strformattestApp::main (void)
 	{
 		fout.writeln ("%{1}26s %[name]30s %[group]s" %format (r, r.id()));
 	}
+	
+	fout.writeln ("Longhex: %016X" %format (-1548172834131337LL));
+	fout.writeln ("Longhex-from-int: %016X" %format (-3));
+	
+	value dd = -1548172834131337LL;
+	fout.writeln ("Longobject: %!" %format (dd));
 	
 	return 0;
 }
