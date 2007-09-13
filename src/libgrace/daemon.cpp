@@ -521,7 +521,7 @@ void logthread::run (void)
 					#undef MPRIO
 					
 					tstr = ti.format ("%b %e %H:%M:%S");
-					tf->f.writeln ("%s %s [%s]: %s\n" %format (tstr, modName,
+					tf->f.writeln ("%s %s [%s]: %s" %format (tstr, modName,
 										prioName, ev[logproperty::text]));
 					
 					// rotate logfiles
