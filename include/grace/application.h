@@ -48,7 +48,7 @@ public:
 					 /// Loads resources, initializes.
 					 ///
 					 /// \param appid the application-id [tld.domain.foo.app]
-					 application (const char *appid);
+					 application (const string &appid);
 	virtual			~application (void);
 
 					 /// Second stage initialization.

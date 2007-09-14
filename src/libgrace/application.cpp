@@ -21,7 +21,7 @@ extern char **environ;
 // Register the creator type, pick up the environment and open the
 // application's resource database.
 // ==========================================================================
-application::application (const char *creator_id)
+application::application (const string &creator_id)
 {
 	string path;
 	
