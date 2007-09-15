@@ -42,6 +42,10 @@ xmlschema::xmlschema (hardCodedSchema i)
 		case XMLValidatorSchemaType:
 			validatorschema();
 			break;
+			
+		case XMLPlistSchemaType:
+			plistschema();
+			break;
 	}
 }
 

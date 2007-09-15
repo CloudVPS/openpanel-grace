@@ -19,7 +19,8 @@ typedef enum
 	XMLBaseSchemaType, ///< Primitive types.
 	XMLNetDBSchemaType, ///< Schema used by the netdb class.
 	XMLRunOptionsSchemaType, ///< Schema for grace.runoptions.xml
-	XMLValidatorSchemaType ///< Schema for grace.validator
+	XMLValidatorSchemaType, ///< Schema for grace.validator
+	XMLPlistSchemaType ///< Schema for apple .plist
 } hardCodedSchema;
 
 /// A parsed xmlschema file.
@@ -51,20 +52,23 @@ public:
 							allow = true
 						 };
 	
-						 /// Set up the builtin root schema.
+						 /// Set up the built-in root schema.
 	void				 xmlrootschema (void);
 
-						 /// Set up the builtin base schema.
+						 /// Set up the built-in base schema.
 	void				 xmlbaseschema (void);
 
 						 /// Set up the builtin netdb schema.
 	void				 netdbschema (void);
 	
-						 /// Set up the builtin runoptions schema.
+						 /// Set up the built-in runoptions schema.
 	void				 runoptschema (void);
 	
-						 /// Set up the builtin validator schema.
+						 /// Set up the built-in validator schema.
 	void				 validatorschema (void);
+	
+						 /// Set up the built-in .plist schema.
+	void				 plistschema (void);
 	
 						 /// Add definitions for all primitive types.
 	void				 addbasemembers (value &);

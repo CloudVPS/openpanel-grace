@@ -107,6 +107,18 @@ namespace key {
 	STRINGRSRC match_mandatory				VALUE ("match.mandatory");
 	STRINGRSRC optional						VALUE ("optional");
 	STRINGRSRC key							VALUE ("key");
+	
+	STRINGRSRC plist						VALUE ("plist");
+	STRINGRSRC version						VALUE ("version");
+	STRINGRSRC date							VALUE ("date");
+	STRINGRSRC booltrue						VALUE ("bool.true");
+	STRINGRSRC boolfalse					VALUE ("bool.flase");
+	STRINGRSRC tfloat						VALUE ("float");
+	STRINGRSRC tstring						VALUE ("string");
+	STRINGRSRC timestamp					VALUE ("timestamp");
+	STRINGRSRC real							VALUE ("real");
+	STRINGRSRC dict							VALUE ("dict");
+	STRINGRSRC integer						VALUE ("integer");
 };
 
 #undef STRINGRSRC

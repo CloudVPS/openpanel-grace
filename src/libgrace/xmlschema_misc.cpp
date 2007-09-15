@@ -586,3 +586,151 @@ void xmlschema::validatorschema (void)
 	schema[key::match_rule].type (key::xml_class);
 	schema[-1][key::xml_type] = "string";
 }
+
+void xmlschema::plistschema (void)
+{
+	// -------------------------------------------------------------------
+	//  <xml.class name="plist">
+	//    <xml.type>container</xml.type>
+	//    <xml.attributes>
+	//      <xml.attribute label="version">
+	//        <xml.type>string</xml.type>
+	//      </xml.attribute>
+	//    </xml.attributes>
+	//    <xml.container>
+	//      <xml.container.valueclass/>
+	//      <xml.container.idclass>key</xml.container.idclass>
+	//      <xml.container.types>
+	//        <xml.container.type id="dict">dict</xml.container.type>
+	//      </xml.container.types>
+	//    </xml.container>
+	//  </xml.class>
+	// -------------------------------------------------------------------
+
+	schema[key::plist].type (key::xml_class);
+	schema[-1][key::xml_type] = "container";
+	
+	schema[-1][key::xml_attributes][key::version].type (key::xml_attribute);
+	schema[-1][-1][-1][key::xml_type] = "string";
+	
+	schema[-1][key::xml_container][key::xml_container_idclass] = "key";
+	schema[-1][-1][key::xml_container_types][key::dict] = "dict";
+	
+	// -------------------------------------------------------------------
+	//  <xml.class name="dict" contained="true">
+	//    <xml.type>container</xml.type>
+	//    <xml.container>
+	//      <xml.container.valueclass/>
+	//      <xml.container.idclass>key</xml.container.idclass>
+	//      <xml.container.types>
+	//        <xml.container.type id="dict">dict</xml.container.type>
+	//        <xml.container.type id="array">array</xml.container.type>
+	//        <xml.container.type id="integer">integer</xml.container.type>
+	//        <xml.container.type id="string">string</xml.container.type>
+	//        <xml.container.type id="date">timestamp</xml.container.type>
+	//        <xml.container.type id="float">real</xml.container.type>
+	//        <xml.container.type id="bool.true">true</xml.container.type>
+	//        <xml.container.type id="bool.false">false</xml.container.type>
+	//      </xml.container.types>
+	//    </xml.container>
+	//  </xml.class>
+	// -------------------------------------------------------------------
+	
+	schema[key::dict].type (key::xml_class);
+	schema[-1](key::contained) = true;
+	schema[-1][key::xml_type] = "container";
+	schema[-1][key::xml_container][key::xml_container_idclass] = "key";
+	schema[-1][-1][key::xml_container_types][key::dict] = "dict";
+	schema[-1][-1][-1][key::array] = "array";
+	schema[-1][-1][-1][key::integer] = "integer";
+	schema[-1][-1][-1][key::tstring] = "string";
+	schema[-1][-1][-1][key::date] = "timestamp";
+	schema[-1][-1][-1][key::tfloat] = "real";
+	schema[-1][-1][-1][key::booltrue] = "true";
+	schema[-1][-1][-1][key::boolfalse] = "false";
+	
+	// -------------------------------------------------------------------
+	//  <xml.class name="array" contained="true">
+	//    <xml.type>container</xml.type>
+	//    <xml.container>
+	//      <xml.container.valueclass/>
+	//      <xml.container.idclass/>
+	//      <xml.container.types>
+	//        <xml.container.type id="dict">dict</xml.container.type>
+	//        <xml.container.type id="array">array</xml.container.type>
+	//        <xml.container.type id="integer">integer</xml.container.type>
+	//        <xml.container.type id="string">string</xml.container.type>
+	//        <xml.container.type id="date">timestamp</xml.container.type>
+	//        <xml.container.type id="float">real</xml.container.type>
+	//        <xml.container.type id="bool.true">true</xml.container.type>
+	//        <xml.container.type id="bool.false">false</xml.container.type>
+	//      </xml.container.types>
+	//    </xml.container>
+	//  </xml.class>
+	// -------------------------------------------------------------------
+	schema[key::array].type (key::xml_class);
+	schema[-1](key::contained) = true;
+	schema[-1][key::xml_type] = "container";
+	schema[-1][key::xml_container][key::xml_container_types][key::dict] = "dict";
+	schema[-1][-1][-1][key::array] = "array";
+	schema[-1][-1][-1][key::integer] = "integer";
+	schema[-1][-1][-1][key::tstring] = "string";
+	schema[-1][-1][-1][key::date] = "timestamp";
+	schema[-1][-1][-1][key::tfloat] = "real";
+	schema[-1][-1][-1][key::booltrue] = "true";
+	schema[-1][-1][-1][key::boolfalse] = "false";
+	
+	// -------------------------------------------------------------------
+	//  <xml.class name="integer" contained="true">
+	//    <xml.type>integer</xml.type>
+	//  </xml.class>
+	// -------------------------------------------------------------------
+	schema[key::integer].type (key::xml_class);
+	schema[-1](key::contained) = true;
+	schema[-1][key::xml_type] = "integer";
+
+	// -------------------------------------------------------------------
+	//  <xml.class name="string" contained="true">
+	//    <xml.type>string</xml.type>
+	//  </xml.class>
+	// -------------------------------------------------------------------
+	schema[key::tstring].type (key::xml_class);
+	schema[-1](key::contained) = true;
+	schema[-1][key::xml_type] = "string";
+
+	// -------------------------------------------------------------------
+	//  <xml.class name="timestamp" contained="true">
+	//    <xml.type>date</xml.type>
+	//  </xml.class>
+	// -------------------------------------------------------------------
+	schema[key::timestamp].type (key::xml_class);
+	schema[-1](key::contained) = true;
+	schema[-1][key::xml_type] = "date";
+
+	// -------------------------------------------------------------------
+	//  <xml.class name="real" contained="true">
+	//    <xml.type>float</xml.type>
+	//  </xml.class>
+	// -------------------------------------------------------------------
+	schema[key::real].type (key::xml_class);
+	schema[-1](key::contained) = true;
+	schema[-1][key::xml_type] = "float";
+
+	// -------------------------------------------------------------------
+	//  <xml.class name="true" contained="true">
+	//    <xml.type>bool.true</xml.type>
+	//  </xml.class>
+	// -------------------------------------------------------------------
+	schema["true"].type (key::xml_class);
+	schema[-1](key::contained) = true;
+	schema[-1][key::xml_type] = "bool.true";
+
+	// -------------------------------------------------------------------
+	//  <xml.class name="false" contained="true">
+	//    <xml.type>bool.false</xml.type>
+	//  </xml.class>
+	// -------------------------------------------------------------------
+	schema["false"].type (key::xml_class);
+	schema[-1](key::contained) = true;
+	schema[-1][key::xml_type] = "bool.false";
+}

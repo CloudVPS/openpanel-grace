@@ -24,7 +24,7 @@
 // ========================================================================
 string *value::toplist (bool compact)
 {
-	xmlschema schema ("schema:com.apple.plist.schema.xml");
+	xmlschema schema (XMLPlistSchemaType);
 	type ("plist");
 	return toxml (compact,schema);
 }
@@ -34,7 +34,7 @@ string *value::toplist (bool compact)
 // ========================================================================
 void value::saveplist (const string &filename, bool compact)
 {
-	xmlschema schema ("schema:com.apple.plist.schema.xml");
+	xmlschema schema (XMLPlistSchemaType);
 	type ("plist");
 	savexml (filename, compact, schema);
 }
@@ -44,7 +44,7 @@ void value::saveplist (const string &filename, bool compact)
 // ========================================================================
 void value::fromplist (const string &xml)
 {
-	xmlschema schema ("schema:com.apple.plist.schema.xml");
+	xmlschema schema (XMLPlistSchemaType);
 	fromxml (xml, schema);
 }
 
@@ -53,6 +53,6 @@ void value::fromplist (const string &xml)
 // ========================================================================
 void value::loadplist (const string &filename)
 {
-	xmlschema schema ("schema:com.apple.plist.schema.xml");
+	xmlschema schema (XMLPlistSchemaType);
 	loadxml (filename, schema);
 }
