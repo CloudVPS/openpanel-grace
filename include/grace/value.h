@@ -1146,11 +1146,11 @@ public:
 					 /// Load data in plain ASCII format.
 					 /// Does not support attributes.
 					 /// \throw value::exception Loading/parsing exception
-	void			 load (const char *);
+	void			 load (const string &);
 	
 					 /// Load ASCII data from an already open file.
 					 /// \throw value::exception Loading/parsing exception
-	void			 load (const char *, class file &);
+	void			 load (class file &);
 	
 					 /// Save as ASCII (sans attributes)
 	void			 save (const string &, bool compact=false) const;
@@ -1214,7 +1214,7 @@ public:
 					 /// \param schema XML schema to apply, NULL for none.
 					 /// \param tp Set to 'atomic' to write atomically using
 					 ///           a temporary file.
-	bool			 savexml (const char *fn, bool compact=false,
+	bool			 savexml (const string &fn, bool compact=false,
 							  class xmlschema *schema=NULL,
 							  flag::savetype tp = flag::normal) const;
 
@@ -1224,14 +1224,14 @@ public:
 					 /// \param compact Set to value::compact or value::nocompact.
 					 /// \param tp Set to 'atomic' to write atomically using
 					 ///           a temporary file.
-	bool			 savexml (const char *fn, bool compact,
+	bool			 savexml (const string &fn, bool compact,
 							  flag::savetype tp) const;
 							  
 					 /// Save in XML format.
 					 /// \param fn File name to save.
 					 /// \param tp Set to 'atomic' to write atomically using
 					 ///           a temporary file.
-	bool			 savexml (const char *fn, flag::savetype tp) const;
+	bool			 savexml (const string &fn, flag::savetype tp) const;
 	
 					 /// Save in XML format.
 					 /// \param fn File name to save.
@@ -1239,7 +1239,7 @@ public:
 					 /// \param schema XML schema to apply.
 					 /// \param tp Set to 'atomic' to write atomically using
 					 ///           a temporary file.
-	bool			 savexml (const char *fn, bool compact,
+	bool			 savexml (const string &fn, bool compact,
 							  class xmlschema &schema,
 							  flag::savetype tp = flag::normal) const;
 	
@@ -1308,7 +1308,7 @@ public:
 					 /// Requires the com.apple.plist.schema.xml schema.
 					 /// \param fn File name.
 					 /// \param compact Either value::compact or value::nocompact.
-	void			 saveplist (const char *fn, bool compact=false);
+	void			 saveplist (const string &fn, bool compact=false);
 	
 					 /// Convert to Apple's plist format.
 					 /// Requires the com.apple.plist.schema.xml schema.

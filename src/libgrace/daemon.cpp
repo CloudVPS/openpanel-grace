@@ -153,7 +153,13 @@ void daemon::delayedexiterror (const char *fmtx, ...)
 	out.printf_va (fmtx, &ap);
 	va_end (ap);
 	
-	fout.writeln (fmtx);
+	fout.writeln (out);
+	fout.close ();
+}
+
+void daemon::delayedexiterror (const string &text)
+{
+	fout.writeln (text);
 	fout.close ();
 }
 
@@ -273,18 +279,24 @@ int daemon::main (void)
 void daemon::log (log::priority prio, const string &modulename,
 				  const char *fmt, ...)
 {
-	// If we weren't threaded, we are now.
-	__THREADED = true;
-	static lock<bool> logmutex;
-	static value backlog;
-	static bool dq = false;
-	
 	string logText;
 	va_list ap;
 	
 	va_start (ap, fmt);
 	logText.printf_va (fmt, &ap);
 	va_end (ap);
+	
+	log (prio, modulename, logText);
+}
+
+void daemon::log (log::priority prio, const string &modulename,
+				  const string &logText)
+{
+	// If we weren't threaded, we are now.
+	__THREADED = true;
+	static lock<bool> logmutex;
+	static value backlog;
+	static bool dq = false;
 	
 	if ((! daemonized) || (_foreground && (prio == log::critical)))
 	{

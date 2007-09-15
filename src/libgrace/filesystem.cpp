@@ -738,7 +738,7 @@ void filesystem::umask (int numask)
 // -----------------
 // Determines if we have write access to a provided UNIX path
 // ========================================================================
-bool filesystem::maywrite (const char *path)
+bool filesystem::maywrite (const string &path)
 {
 	struct stat st;
 	uid_t me = geteuid();
@@ -773,7 +773,7 @@ bool filesystem::maywrite (const char *path)
 // Determines if we have read access to a provided UNIX path
 // ========================================================================
 
-bool filesystem::mayread (const char *path)
+bool filesystem::mayread (const string &path)
 {
 	struct stat st;
 	uid_t me = geteuid();
@@ -807,7 +807,7 @@ bool filesystem::mayread (const char *path)
 // ------------
 // Returns a brief file listing of a provided path
 // ========================================================================
-value *filesystem::dir (const char *_path)
+value *filesystem::dir (const string &_path)
 {
 	return ls (_path, false);
 }
@@ -838,7 +838,7 @@ value *filesystem::dir (const char *_path)
 // ctime		Time created (unix timestamp)
 // mime			The file's mime-type (if available from the filesystem)
 // ========================================================================
-value *filesystem::ls (const char *_path, bool longformat, bool showhidden)
+value *filesystem::ls (const string &_path, bool longformat, bool showhidden)
 {
 	returnclass (value) res retain;
 	string path;
@@ -1095,7 +1095,7 @@ unsigned int filesystem::size (const string &path)
 // Resolves a path inside a pathvolume to the rightmost volume part that
 // has the named file and allows the user read access to it.
 // ========================================================================
-string *filesystem::findread (const char *pvol, const char *filename)
+string *filesystem::findread (const statstring &pvol, const string &filename)
 {
 	returnclass (string) resolved retain;
 	value res;
@@ -1127,7 +1127,7 @@ string *filesystem::findread (const char *pvol, const char *filename)
 // home:/.volume
 // ========================================================================
 
-value *filesystem::getpaths (const  char *pvol)
+value *filesystem::getpaths (const statstring &pvol)
 {
 	returnclass (value) res retain;
 	
@@ -1151,7 +1151,7 @@ value *filesystem::getpaths (const  char *pvol)
 // For a file, find the leftmost element of a path volume that allows
 // the user write access to create or write it.
 // ========================================================================
-string *filesystem::findwrite (const char *pvol, const char *filename)
+string *filesystem::findwrite (const statstring &pvol, const string &filename)
 {
 	returnclass (string) resolved retain;
 	value res;
@@ -1163,10 +1163,10 @@ string *filesystem::findwrite (const char *pvol, const char *filename)
 		if (e("readonly") == false)
 		{
 			resolved = e;
-			if (maywrite (resolved.str()))
+			if (maywrite (resolved))
 			{
-				resolved.printf ("/%s", filename);
-				if ( (! exists (resolved))||(maywrite (resolved.str())) )
+				resolved += "/%s" %format (filename);
+				if ( (! exists (resolved))||(maywrite (resolved)) )
 				{
 					return &resolved;
 				}

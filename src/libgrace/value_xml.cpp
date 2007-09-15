@@ -763,7 +763,7 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 // abusing a small template class abstracting a "printable" stream, be
 // it file or string object.
 // ========================================================================
-bool value::savexml (const char *filename, bool compact,
+bool value::savexml (const string &filename, bool compact,
 					 xmlschema *schema, flag::savetype tp) const
 {
 	string xml;
@@ -772,18 +772,18 @@ bool value::savexml (const char *filename, bool compact,
 	return fs.save (filename, xml, tp);
 }
 
-bool value::savexml (const char *filename, bool compact,
+bool value::savexml (const string &filename, bool compact,
 					 xmlschema &schema, flag::savetype fl) const
 {
 	return savexml (filename, compact, &schema, fl);
 }
 
-bool value::savexml (const char *fn, bool compact, flag::savetype tp) const
+bool value::savexml (const string &fn, bool compact, flag::savetype tp) const
 {
 	return savexml (fn, compact, NULL, tp);
 }
 
-bool value::savexml (const char *fn, flag::savetype tp) const
+bool value::savexml (const string &fn, flag::savetype tp) const
 {
 	return savexml (fn, false, NULL, tp);
 }

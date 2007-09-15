@@ -104,7 +104,7 @@ friend class logthread;
 public:
 					 /// Constructor.
 					 /// \param title The application-id.
-					 daemon (const char *title)
+					 daemon (const string &title)
 					 		: application (title)
 					 {
 					 	_foreground = false;
@@ -162,8 +162,9 @@ public:
 					 /// If the process was daemonized with delayedexit
 					 /// set to true, this method should be called if
 					 /// initialization failed for some reason. Expects
-					 /// printf-formatted arguments.
+					 /// printf-formatted arguments or a single string.
 	void			 delayedexiterror (const char *parm, ...);
+	void			 delayedexiterror (const string &text);
 	
 					 /// Send log message to the logthread.
 					 /// \param prio The message priority.
@@ -172,6 +173,16 @@ public:
 					 /// \param fmt Printf-style formatted arguments.
 	void			 log (log::priority prio, const string &moduleName,
 						  const char *fmt, ...);
+						  
+					 /// Send log message to the logthread.
+					 /// Variation that accepts one string to accommodate
+					 /// %format.
+					 /// \param prio The message priority.
+					 /// \param moduleName A short description of the
+					 ///                   affected application subsystem.
+					 /// \param text The log text.
+	void			 log (log::priority prio, const string &moduleName,
+						  const string &text);
 					 
 					 /// Manually add a log target.
 					 /// \param type The logtype.

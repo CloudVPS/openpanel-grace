@@ -781,7 +781,7 @@ bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 // ========================================================================
 // METHOD ::readuntil
 // ========================================================================
-bool file::readuntil (string &into, const char *watchfor, unsigned int sz, int timeout_ms)
+bool file::readuntil (string &into, const string &watchfor, unsigned int sz, int timeout_ms)
 {
 	unsigned int endposition;
 	if (buffer.findforward (watchfor, sz, endposition))

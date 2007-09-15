@@ -162,7 +162,7 @@ public:
 	bool			 cd (const string &dir);
 	
 					 /// Return a short format directory.
-	value			*dir (const char *path = NULL);
+	value			*dir (const string &path = "");
 	
 					 /// Lists the entries of the current or provided
 					 /// directory. The short format returns just
@@ -173,7 +173,7 @@ public:
 					 /// \param longformat True if long format should be returned.
 					 /// \param showhidden True if 'hidden' files should be listed.
 					 /// \return New value object.
-	value			*ls (const char *path = NULL, bool longformat=true,
+	value			*ls (const string &path="", bool longformat=true,
 						 bool showhidden=false);
 						 
 					 /// Load a resource object associated with a filesystem
@@ -298,13 +298,13 @@ protected:
 	int				 _groupcnt; ///< Size of the groups array.
 	
 	bool			 cdrelative (const string &);
-	string			*findread (const char *, const char *);
-	string			*findwrite (const char *, const char *);
-	value			*getpaths (const char *);
+	string			*findread (const statstring &, const string &);
+	string			*findwrite (const statstring &, const string &);
+	value			*getpaths (const statstring &);
 	//value			*findall (const char *, const char *);
 	
-	bool			 maywrite (const char *);
-	bool			 mayread (const char *);
+	bool			 maywrite (const string &);
+	bool			 mayread (const string &);
 };
 
 /// Global instance.

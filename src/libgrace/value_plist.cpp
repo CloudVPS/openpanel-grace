@@ -32,7 +32,7 @@ string *value::toplist (bool compact)
 // ========================================================================
 // METHOD ::saveplist
 // ========================================================================
-void value::saveplist (const char *filename, bool compact)
+void value::saveplist (const string &filename, bool compact)
 {
 	xmlschema schema ("schema:com.apple.plist.schema.xml");
 	type ("plist");

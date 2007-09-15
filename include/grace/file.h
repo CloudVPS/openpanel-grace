@@ -155,7 +155,7 @@ public:
 				 /// \param size Size of byte sequence.
 				 /// \param tmout Timeout in milliseconds.
 				 /// \return Status, \b false in case of a timeout condition.
-	bool		 readuntil (string &into, const char *watchfor,
+	bool		 readuntil (string &into, const string &watchfor,
 							unsigned int size, int tmout);
 	
 				 /// Read data into the internal buffer.

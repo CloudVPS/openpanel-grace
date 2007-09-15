@@ -25,13 +25,13 @@ const char *___SPC = "                                                          
 // -------------
 // Loads the value's data from a file.
 // ========================================================================
-void value::load (const char *fname)
+void value::load (const string &fname)
 {
 	file f;
 	try
 	{
 		f.openread (fname);
-		load (fname, f);
+		load (f);
 		return;
 	}
 	catch (...)
@@ -41,7 +41,7 @@ void value::load (const char *fname)
 	
 }
 
-void value::load (const char *fname, file &f)
+void value::load (file &f)
 {
 	if (arraysz)
 	{
