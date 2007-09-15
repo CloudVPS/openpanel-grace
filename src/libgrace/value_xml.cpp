@@ -1302,26 +1302,25 @@ void value::printxml (int indent, string &out, bool compact,
 // ========================================================================
 string *value::toxml (bool compact, xmlschema *schema) const
 {
-	string *res = new string;
+	returnclass (string) res retain;
 	value mparent;
 	statstring empty;
 	
 	if (!compact)
 	{
-		(*res).printf ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+		res.strcat ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 		if (schema && schema->hasdoctype())
 		{
-			(*res).printf ("<!DOCTYPE %s %s \"%s\" \"%s\">\n",
-						   schema->doctype()("name").cval(),
-						   schema->doctype()("status").cval(),
-						   schema->doctype().cval(),
-						   schema->doctype()("dtd").cval());
+			const value &dt = schema->doctype();
+			
+			res += "<!DOCTYPE %[name]s %[status]s \"%{1}s\" \"%[dtd]s\">\n"
+						%format (dt.attributes(), dt);
+						
 		}
 	}
 	
-	
-	printxml (-1, *res, compact, schema, &mparent, empty, empty);
-	return res;
+	printxml (-1, res, compact, schema, &mparent, empty, empty);
+	return &res;
 }
 
 string *value::toxml (bool compact, xmlschema &schema) const
