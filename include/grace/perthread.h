@@ -101,6 +101,7 @@ public:
 	/// will need to be able to deal with operator= for a reference to
 	/// its own type.
 	perthread &operator= (kind &i) { get() = i; }
+	perthread &operator= (const kind &i) { get() = i; }
 
 protected:
 	lock<bool> lck; ///< List lock.

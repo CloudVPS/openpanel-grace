@@ -6,6 +6,7 @@
 #include <grace/strutil.h>
 #include <grace/file.h>
 #include <grace/flags.h>
+#include <grace/perthread.h>
 
 /// Filetypes used in directory entries.
 enum fsfiletype {
@@ -189,7 +190,14 @@ public:
 					 /// \return Reference to the path variable.
 	string			&pwd (void)
 					 {
-						 return _cwd;
+					 	if (! _cwd.get())
+					 	{
+					 		char cwdbuffer[1024];
+					 		string tstr = ::getcwd (cwdbuffer, 1023);
+					 		_cwd = tstr;
+					 	}
+					 	
+					 	return _cwd.get();
 					 }
 	
 					 /// Load a file. Returns a pointer
@@ -293,7 +301,7 @@ public:
 
 protected:
 	int				 _umask; ///< Filesystem permission mask.
-	string			 _cwd; ///< Current directory.
+	perthread<string>_cwd; ///< Current directory.
 	gid_t			*_groups; ///< Array of groups the user is in.
 	int				 _groupcnt; ///< Size of the groups array.
 	

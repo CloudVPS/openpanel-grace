@@ -413,7 +413,7 @@ bool filesystem::cdrelative (const string &path)
 	
 	value path_tree;
 	
-	cwd_path = _cwd;
+	cwd_path = _cwd.get();
 	cwd_volume = cwd_path.cutat (':');
 	if (cwd_path.strlen())
 		cwd_tree = strutil::split (cwd_path, '/');

@@ -387,7 +387,7 @@ void daemon::log (log::priority prio, const string &modulename,
 	{
 		foreach (ev, backlog)
 		{
-			_log->sendevent (ev);
+			_log->sendevent ("logmessage", ev);
 		}
 		backlog.clear();
 		dq = false;
@@ -399,7 +399,7 @@ void daemon::log (log::priority prio, const string &modulename,
 	logEv[logproperty::module] = modulename;
 	logEv[logproperty::text] = logText;
 	
-	_log->sendevent (logEv);
+	_log->sendevent ("logmessage", logEv);
 }
 
 // ========================================================================
@@ -452,9 +452,7 @@ void daemon::setforeground (void)
 // ========================================================================
 void logthread::shutdown (void)
 {
-	value death;
-	death[logproperty::command] = "die";
-	sendevent (death);
+	sendevent ("die");
 	shutdownCondition.wait();
 }
 
@@ -477,8 +475,7 @@ void logthread::run (void)
 		ev = waitevent();
 		tf = app->_logtargets;
 		
-		if (ev.exists (logproperty::command) &&
-			(ev[logproperty::command] == "die"))
+		if (ev.type() == "die")
 		{
 			break;
 		}

@@ -83,9 +83,7 @@ void httpd::run (void)
 						// Ask the first thread to sod off at the
 						// next convenient occasion.
 						skimcount = workers.count();
-						value ev;
-						ev["command"] = "die";
-						workers[0].sendevent (ev);
+						workers[0].sendevent ("die");
 						tdelay = 5;
 					}
 				}
@@ -97,9 +95,7 @@ void httpd::run (void)
 	int i;
 	for (i=workers.count(); i; --i)
 	{
-		value ev;
-		ev["command"] = "die";
-		workers[i-1].sendevent (ev);
+		workers[i-1].sendevent ("die");
 	}
 	while (workers.count())
 	{
@@ -459,9 +455,9 @@ void httpdworker::run (void)
 		{
 			// Anyone calling us?
 			ev = nextevent();
-			if (ev.count())
+			if (ev)
 			{
-				if (ev["command"] == "die") // time to go
+				if (ev.type() == "die") // time to go
 				{
 					run = false;
 					if (parent->eventmask & HTTPD_INFO)
@@ -483,9 +479,9 @@ void httpdworker::run (void)
 			if (!s)
 			{
 				ev = nextevent();
-				if (ev.count())
+				if (ev)
 				{
-					if (ev["command"] == "die") // time to go
+					if (ev.type() == "die") // time to go
 					{
 						run = false;
 						parent->tcplock.unlock();

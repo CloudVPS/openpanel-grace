@@ -111,6 +111,7 @@ value *eventq::waitevent (void)
 		res = (const value &) ipc[0];
 		ipc.rmindex (0);
 	}
+	
 	return &res;
 }
 

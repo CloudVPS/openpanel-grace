@@ -131,9 +131,7 @@ void smtpd::run (void)
 					if (workers.count() != skimcount)
 					{
 						skimcount = workers.count();
-						value ev;
-						ev["command"] = "die";
-						workers[0].sendevent (ev);
+						workers[0].sendevent ("die");
 						tdelay = 5;
 					}
 				}
@@ -144,9 +142,7 @@ void smtpd::run (void)
 	
 	for (i=workers.count(); i; --i)
 	{
-		value ev;
-		ev["command"] = "die";
-		workers[i-1].sendevent (ev);
+		workers[i-1].sendevent ("die");
 	}
 	while (workers.count())
 	{
@@ -214,10 +210,10 @@ void smtpworker::run (void)
 		while (! parent->tcplock.trylockw(5))
 		{
 			ev = nextevent();
-			if (ev.count())
+			if (ev)
 			{
 				// Oh no, the event of death!
-				if (ev["command"] == "die")
+				if (ev.type() == "die")
 				{
 					run = false;
 					if (parent->mask & SMTP_INFO)
@@ -240,9 +236,9 @@ void smtpworker::run (void)
 			if (! s) // No socket, might as well check events.
 			{
 				ev = nextevent();
-				if (ev.count())
+				if (ev)
 				{
-					if (ev["command"] == "die")
+					if (ev.type() == "die")
 					{
 						parent->tcplock.unlock();
 						run = false;

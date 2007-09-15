@@ -33,6 +33,11 @@ public:
 			 /// \param tp The type() of the event.
 	void	 send (const statstring &tp);
 	
+			 /// Send an empty event with only a type. Will be received
+			 /// as a boolean 'true' and the tprovided type().
+			 /// \param tp The type() of the event.
+	void	 send (const char *tp) { send ((statstring) tp); }
+	
 			 /// Get the next event, if there is any. Will return an
 			 /// empty value-object if no events are waiting.
 	value	*nextevent (void);
