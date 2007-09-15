@@ -1226,7 +1226,18 @@ public:
 					 ///           a temporary file.
 	bool			 savexml (const string &fn, bool compact,
 							  flag::savetype tp) const;
-							  
+	
+					 /// Save in XML format.
+					 /// \param fn File name to save.
+					 /// \param schema XML schema to use.
+					 /// \param tp Set to 'atomic' to write atomically using
+					 ///           a temporary file.
+	bool			 savexml (const string &fn, class xmlschema &schema,
+							  flag::savetype tp = flag::normal) const
+					 {
+					 	return savexml (fn, value::nocompact, schema, tp);
+					 }
+	
 					 /// Save in XML format.
 					 /// \param fn File name to save.
 					 /// \param tp Set to 'atomic' to write atomically using
