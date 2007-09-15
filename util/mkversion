@@ -10,7 +10,7 @@ genversion() {
 	if [ "$ACTUALTAG" = "$BRANCH" ]; then
 	  echo -n "${BRANCH}-${DISTRO}"
 	else
-	  ACTUALID=`hg id | cut -f1 -d" "`
+	  ACTUALID=`hg id | cut -f1 -d" " | sed -e "s/+$//"`
 	  echo -n "${BRANCH}-${DISTRO}-${ACTUALID}"
 	fi
 	if hg id | cut -f1 -d" " | grep -q "+$"
