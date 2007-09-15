@@ -13,11 +13,12 @@ genversion() {
 	  ACTUALID=`hg id | cut -f1 -d" " | sed -e "s/+$//"`
 	  echo -n "${BRANCH}-${DISTRO}-${ACTUALID}"
 	fi
-	if hg id | cut -f1 -d" " | grep -q "+$"
+	DIFC=`hg diff | wc -l | sed -e "s/ //g"`
+	if [ "$DIFC" = "0" ]
 	then
-	    echo "-plus"
-	else
 	    echo ""
+	else
+	    echo "-plus"
 	fi
 }
 
