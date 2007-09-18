@@ -176,7 +176,10 @@ string *operator% (const char *args, const value &arglist)
 					copy_p--;
 					break;
 				
-				
+				case '~':
+					copy_s = strutil::urlencode (KEYORARG.sval());
+					res.strcat (copy_s);
+					goto CONTINUE;
 				
 				case 's':
 					*copy_p = 0;
