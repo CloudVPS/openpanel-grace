@@ -48,6 +48,7 @@ public:
 	
 					 /// Cast to unix time structure.
 	const struct tm	&tm (void) const;
+	const struct tm &tm (void);
 	
 					 /// Convert to RFC822 format.
 	const string	&rfc822 (void) const;
@@ -175,6 +176,13 @@ public:
 						return ((tvval.tv_sec * 1000000LL) 
 							 + tvval.tv_usec);
 					 }
+	
+	int				 month (void) { return tm().tm_mon +1; }
+	int				 mday (void) { return tm().tm_mday +1; }
+	int				 year (void) { return tm().tm_year +1900; }
+	int				 hour (void) { return tm().tm_hour; }
+	int				 minute (void) { return tm().tm_min; }
+	int				 second (void) { return tm().tm_sec; }
 					 
 	timestamp		&operator += (time_t);
 	timestamp		&operator -= (time_t);

@@ -38,6 +38,7 @@ timestamp::timestamp (time_t orig)
 	tvval.tv_usec = 0;
 }
 
+
 timestamp::timestamp (timeval orig)
 {
 	init ();
@@ -121,7 +122,15 @@ const struct tm &timestamp::tm (void) const
 	if (tmset) return tmval;
 	
 	localtime_r ((const time_t *) &(tvval.tv_sec), (struct tm *) &tmval);
+	return tmval;
+}
+
+const struct tm &timestamp::tm (void)
+{
+	if (tmset) return tmval;
 	
+	localtime_r ((const time_t *) &(tvval.tv_sec), (struct tm *) &tmval);
+	tmset = true;
 	return tmval;
 }
 
@@ -601,3 +610,4 @@ time_t timestamp::interval (int iv, intervaltype ikind)
 	if (ikind == years) return (365 * days * iv);
 	return 0;
 }
+
