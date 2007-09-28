@@ -121,7 +121,10 @@ const struct tm &timestamp::tm (void) const
 {
 	if (tmset) return tmval;
 	
-	localtime_r ((const time_t *) &(tvval.tv_sec) - timezone, (struct tm *) &tmval);
+	time_t tmp;
+	tmp = tvval.tv_sec - timezone;
+	
+	localtime_r ((const time_t *) &tmp, (struct tm *) &tmval);
 	return tmval;
 }
 
@@ -129,7 +132,10 @@ const struct tm &timestamp::tm (void)
 {
 	if (tmset) return tmval;
 	
-	localtime_r ((const time_t *) &(tvval.tv_sec) - timezone, (struct tm *) &tmval);
+	time_t tmp;
+	tmp = tvval.tv_sec - timezone;
+	
+	localtime_r ((const time_t *) &tmp, (struct tm *) &tmval);
 	tmset = true;
 	return tmval;
 }
