@@ -111,7 +111,7 @@ void timestamp::copy (const timestamp &orig)
 // ========================================================================
 time_t timestamp::unixtime (void) const
 {
-	return (tvval.tv_sec);
+	return (tvval.tv_sec + timezone);
 }
 
 // ========================================================================
