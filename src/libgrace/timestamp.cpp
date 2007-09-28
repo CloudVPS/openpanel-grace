@@ -111,7 +111,7 @@ void timestamp::copy (const timestamp &orig)
 // ========================================================================
 time_t timestamp::unixtime (void) const
 {
-	return (tvval.tv_sec);
+	return (tvval.tv_sec + timezone);
 }
 
 // ========================================================================
@@ -260,7 +260,7 @@ void timestamp::iso (const string &isodate)
     timezone = __system_local_timezone;
 	tmset = false;
 #ifdef HAVE_GMTOFF
-		tvval.tv_sec = timegm (&tmval) + timezone;
+		tvval.tv_sec = timegm (&tmval);
 #else
 		tvval.tv_sec = mktime (&tmval);
 #endif
