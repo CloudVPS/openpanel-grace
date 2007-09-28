@@ -124,7 +124,7 @@ const struct tm &timestamp::tm (void) const
 	time_t tmp;
 	tmp = tvval.tv_sec;// - timezone;
 	
-	localtime_r ((const time_t *) &tmp, (struct tm *) &tmval);
+	gmtime_r ((const time_t *) &tmp, (struct tm *) &tmval);
 	return tmval;
 }
 
@@ -135,7 +135,7 @@ const struct tm &timestamp::tm (void)
 	time_t tmp;
 	tmp = tvval.tv_sec;// - timezone;
 	
-	localtime_r ((const time_t *) &tmp, (struct tm *) &tmval);
+	gmtime_r ((const time_t *) &tmp, (struct tm *) &tmval);
 	tmset = true;
 	return tmval;
 }
