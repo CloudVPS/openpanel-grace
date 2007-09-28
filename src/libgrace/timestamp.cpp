@@ -111,7 +111,7 @@ void timestamp::copy (const timestamp &orig)
 // ========================================================================
 time_t timestamp::unixtime (void) const
 {
-	return (tvval.tv_sec + timezone);
+	return (tvval.tv_sec);
 }
 
 // ========================================================================
@@ -259,7 +259,7 @@ void timestamp::iso (const string &isodate)
 #endif
     //timezone = __system_local_timezone;
 	tmset = false;
-	tvval.tv_sec = mktime (&tmval);
+	tvval.tv_sec = gmtime (&tmval);
 	tvval.tv_usec = 0;
 }
 
