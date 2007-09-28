@@ -255,7 +255,7 @@ void timestamp::iso (const string &isodate)
 		tmval.tm_sec = ::atoi (timepart.str() + 6);
 	}
 #ifdef HAVE_GMTOFF
-	tmval.tm_gmtoff = __system_local_timezone;
+	tmval.tm_gmtoff = -__system_local_timezone;
 #endif
     //timezone = __system_local_timezone;
 	tmset = false;
