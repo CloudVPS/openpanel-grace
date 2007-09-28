@@ -298,11 +298,11 @@ void timestamp::ctime (const string &timestr)
 	tmval.tm_sec = ::atoi (tstr+18);
 	tmval.tm_year = ::atoi (tstr+21) - 1900;
 #ifdef HAVE_GMTOFF
-	tmval.tm_gmtoff = __system_local_timezone;
+	tmval.tm_gmtoff = 0;
 #endif
     //timezone = __system_local_timezone;
 	tmset = true;
-	tvval.tv_sec = mktime (&tmval);
+	tvval.tv_sec = timegm (&tmval) - __system_local_timezone;
 	tvval.tv_usec = 0;
 }
 
@@ -315,6 +315,7 @@ void timestamp::rfc822 (const string &timestr)
 	const char *mon;
 	const char *tim;
 	const char *tof;
+	int offs = 0;
 	
 	// 0    1 2   3    4        5     [6]
 	// Mon, 4 Apr 2003 14:23:15 +0200 (CEST)
@@ -374,13 +375,14 @@ void timestamp::rfc822 (const string &timestr)
 		if (negative) seconds = -seconds;
 		
 #ifdef HAVE_GMTOFF
-		tmval.tm_gmtoff = seconds;
+		tmval.tm_gmtoff = 0;
 #endif
+		offs = seconds;
 		//timezone = seconds;
 	}
 
 	tmset = true;
-	tvval.tv_sec = mktime (&tmval);
+	tvval.tv_sec = timegm (&tmval) - seconds;
 	tvval.tv_usec = 0;
 }
 
