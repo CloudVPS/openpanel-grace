@@ -375,7 +375,7 @@ void timestamp::rfc822 (const string &timestr)
 
 	tmset = true;
 #ifdef HAVE_GMTOFF
-		tvval.tv_sec = gmtime (&tmval);
+		tvval.tv_sec = timegm (&tmval);
 #else
 		tvval.tv_sec = mktime (&tmval);
 #endif
