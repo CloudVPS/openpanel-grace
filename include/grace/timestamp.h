@@ -178,7 +178,7 @@ public:
 					 }
 	
 	int				 month (void) { return tm().tm_mon +1; }
-	int				 mday (void) { return tm().tm_mday +1; }
+	int				 mday (void) { return tm().tm_mday; }
 	int				 year (void) { return tm().tm_year +1900; }
 	int				 hour (void) { return tm().tm_hour; }
 	int				 minute (void) { return tm().tm_min; }
