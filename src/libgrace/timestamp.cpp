@@ -380,11 +380,7 @@ void timestamp::rfc822 (const string &timestr)
 	}
 
 	tmset = true;
-#ifdef HAVE_GMTOFF
-		tvval.tv_sec = timegm (&tmval);
-#else
-		tvval.tv_sec = mktime (&tmval);
-#endif
+	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;
 }
 
@@ -416,11 +412,7 @@ void timestamp::tm (const struct tm &in)
 	init();
 	memmove (&tmval, &in, sizeof (struct tm));
 	tmset = true;
-#ifdef HAVE_GMTOFF
-		tvval.tv_sec = timegm (&tmval);
-#else
-		tvval.tv_sec = mktime (&tmval);
-#endif
+	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;
 }
 
