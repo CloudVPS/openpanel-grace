@@ -255,15 +255,11 @@ void timestamp::iso (const string &isodate)
 		tmval.tm_sec = ::atoi (timepart.str() + 6);
 	}
 #ifdef HAVE_GMTOFF
-	tmval.tm_gmtoff = __system_local_timezone;
+	tmval.tm_gmtoff = 0; //__system_local_timezone;
 #endif
     timezone = __system_local_timezone;
 	tmset = false;
-#ifdef HAVE_GMTOFF
-		tvval.tv_sec = timegm (&tmval);
-#else
-		tvval.tv_sec = mktime (&tmval);
-#endif
+	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;
 }
 
@@ -302,15 +298,11 @@ void timestamp::ctime (const string &timestr)
 	tmval.tm_sec = ::atoi (tstr+18);
 	tmval.tm_year = ::atoi (tstr+21) - 1900;
 #ifdef HAVE_GMTOFF
-	tmval.tm_gmtoff = __system_local_timezone;
+	tmval.tm_gmtoff = 0; // __system_local_timezone;
 #endif
     timezone = __system_local_timezone;
 	tmset = true;
-#ifdef HAVE_GMTOFF
-		tvval.tv_sec = timegm (&tmval);
-#else
-		tvval.tv_sec = mktime (&tmval);
-#endif
+	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;
 }
 
@@ -382,7 +374,7 @@ void timestamp::rfc822 (const string &timestr)
 		if (negative) seconds = -seconds;
 		
 #ifdef HAVE_GMTOFF
-		tmval.tm_gmtoff = seconds;
+		tmval.tm_gmtoff = 0; //seconds;
 #endif
 		timezone = seconds;
 	}
@@ -402,7 +394,7 @@ void timestamp::rfc822 (const string &timestr)
 void timestamp::unixtime (time_t in)
 {
 	init();
-	tvval.tv_sec = in - timezone;
+	tvval.tv_sec = in; // - timezone;
 	tvval.tv_usec = 0;
 }
 
@@ -413,7 +405,7 @@ void timestamp::timeofday (timeval in)
 {
 	init();
 	tvval 	= in;
-	tvval.tv_sec -= timezone;
+	//tvval.tv_sec -= timezone;
 }
 
 // ========================================================================
