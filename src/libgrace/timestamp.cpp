@@ -300,7 +300,11 @@ void timestamp::ctime (const string &timestr)
 #endif
     timezone = __system_local_timezone;
 	tmset = true;
-	tvval.tv_sec = mktime (&tmval);
+#ifdef HAVE_GMTOFF
+		tvval.tv_sec = timegm (&tmval);
+#else
+		tvval.tv_sec = mktime (&tmval);
+#endif
 	tvval.tv_usec = 0;
 }
 
@@ -413,7 +417,11 @@ void timestamp::tm (const struct tm &in)
 	init();
 	memmove (&tmval, &in, sizeof (struct tm));
 	tmset = true;
-	tvval.tv_sec = mktime (&tmval);
+#ifdef HAVE_GMTOFF
+		tvval.tv_sec = timegm (&tmval);
+#else
+		tvval.tv_sec = mktime (&tmval);
+#endif
 	tvval.tv_usec = 0;
 }
 
@@ -464,8 +472,10 @@ timestamp &timestamp::operator-= (time_t sub)
 {
 	time_t now;
 	now = tvval.tv_sec;
+	::printf ("-=: now=%i\n", now);
 	init();
 	tvval.tv_sec = now - sub;
+	::printf ("-=: dest=%i\n", tvval.tv_sec);
 	return *this;
 }
 
