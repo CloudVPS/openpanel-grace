@@ -124,7 +124,7 @@ const struct tm &timestamp::tm (void) const
 	time_t tmp;
 	tmp = tvval.tv_sec;// - timezone;
 	
-	gmtime_r ((const time_t *) &tmp, (struct tm *) &tmval);
+	localtime_r ((const time_t *) &tmp, (struct tm *) &tmval);
 	return tmval;
 }
 
@@ -135,7 +135,7 @@ const struct tm &timestamp::tm (void)
 	time_t tmp;
 	tmp = tvval.tv_sec;// - timezone;
 	
-	gmtime_r ((const time_t *) &tmp, (struct tm *) &tmval);
+	localtime_r ((const time_t *) &tmp, (struct tm *) &tmval);
 	tmset = true;
 	return tmval;
 }
@@ -255,11 +255,11 @@ void timestamp::iso (const string &isodate)
 		tmval.tm_sec = ::atoi (timepart.str() + 6);
 	}
 #ifdef HAVE_GMTOFF
-	tmval.tm_gmtoff = 0; //__system_local_timezone;
+	tmval.tm_gmtoff = __system_local_timezone;
 #endif
     //timezone = __system_local_timezone;
 	tmset = false;
-	tvval.tv_sec = timegm (&tmval);
+	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;
 }
 
@@ -298,11 +298,11 @@ void timestamp::ctime (const string &timestr)
 	tmval.tm_sec = ::atoi (tstr+18);
 	tmval.tm_year = ::atoi (tstr+21) - 1900;
 #ifdef HAVE_GMTOFF
-	tmval.tm_gmtoff = 0; // __system_local_timezone;
+	tmval.tm_gmtoff = __system_local_timezone;
 #endif
     //timezone = __system_local_timezone;
 	tmset = true;
-	tvval.tv_sec = timegm (&tmval);
+	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;
 }
 
@@ -374,13 +374,13 @@ void timestamp::rfc822 (const string &timestr)
 		if (negative) seconds = -seconds;
 		
 #ifdef HAVE_GMTOFF
-		tmval.tm_gmtoff = 0; //seconds;
+		tmval.tm_gmtoff = seconds;
 #endif
 		//timezone = seconds;
 	}
 
 	tmset = true;
-	tvval.tv_sec = timegm (&tmval);
+	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;
 }
 
@@ -390,7 +390,7 @@ void timestamp::rfc822 (const string &timestr)
 void timestamp::unixtime (time_t in)
 {
 	init();
-	tvval.tv_sec = in + __system_local_timezone;
+	tvval.tv_sec = in;
 	tvval.tv_usec = 0;
 }
 
@@ -401,7 +401,7 @@ void timestamp::timeofday (timeval in)
 {
 	init();
 	tvval 	= in;
-	tvval.tv_sec += __system_local_timezone;
+	//tvval.tv_sec += __system_local_timezone;
 }
 
 // ========================================================================
@@ -412,7 +412,7 @@ void timestamp::tm (const struct tm &in)
 	init();
 	memmove (&tmval, &in, sizeof (struct tm));
 	tmset = true;
-	tvval.tv_sec = timegm (&tmval);
+	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;
 }
 
