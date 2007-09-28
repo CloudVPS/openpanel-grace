@@ -472,10 +472,8 @@ timestamp &timestamp::operator-= (time_t sub)
 {
 	time_t now;
 	now = tvval.tv_sec;
-	::printf ("-=: now=%i\n", now);
 	init();
 	tvval.tv_sec = now - sub;
-	::printf ("-=: dest=%i\n", tvval.tv_sec);
 	return *this;
 }
 
