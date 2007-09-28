@@ -253,7 +253,11 @@ void timestamp::iso (const string &isodate)
 #endif
     timezone = __system_local_timezone;
 	tmset = true;
-	tvval.tv_sec = mktime (&tmval);
+#ifdef HAVE_GMTOFF
+		tvval.tv_sec = timegm (&tmval);
+#else
+		tvval.tv_sec = mktime (&tmval);
+#endif
 	tvval.tv_usec = 0;
 }
 
