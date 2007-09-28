@@ -374,7 +374,11 @@ void timestamp::rfc822 (const string &timestr)
 	}
 
 	tmset = true;
-	tvval.tv_sec = mktime (&tmval);
+#ifdef HAVE_GMTOFF
+		tvval.tv_sec = gmtime (&tmval);
+#else
+		tvval.tv_sec = mktime (&tmval);
+#endif
 	tvval.tv_usec = 0;
 }
 
