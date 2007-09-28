@@ -260,7 +260,7 @@ void timestamp::iso (const string &isodate)
     timezone = __system_local_timezone;
 	tmset = false;
 #ifdef HAVE_GMTOFF
-		tvval.tv_sec = timegm (&tmval);
+		tvval.tv_sec = timegm (&tmval) + timezone;
 #else
 		tvval.tv_sec = mktime (&tmval);
 #endif
