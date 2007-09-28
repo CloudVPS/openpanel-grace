@@ -257,7 +257,7 @@ void timestamp::iso (const string &isodate)
 #ifdef HAVE_GMTOFF
 	tmval.tm_gmtoff = 0; //__system_local_timezone;
 #endif
-    timezone = __system_local_timezone;
+    //timezone = __system_local_timezone;
 	tmset = false;
 	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;
@@ -300,7 +300,7 @@ void timestamp::ctime (const string &timestr)
 #ifdef HAVE_GMTOFF
 	tmval.tm_gmtoff = 0; // __system_local_timezone;
 #endif
-    timezone = __system_local_timezone;
+    //timezone = __system_local_timezone;
 	tmset = true;
 	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;
@@ -376,7 +376,7 @@ void timestamp::rfc822 (const string &timestr)
 #ifdef HAVE_GMTOFF
 		tmval.tm_gmtoff = 0; //seconds;
 #endif
-		timezone = seconds;
+		//timezone = seconds;
 	}
 
 	tmset = true;
