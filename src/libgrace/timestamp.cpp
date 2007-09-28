@@ -259,7 +259,7 @@ void timestamp::iso (const string &isodate)
 #endif
     //timezone = __system_local_timezone;
 	tmset = false;
-	tvval.tv_sec = mktime (&tmval);
+	tvval.tv_sec = timegm (&tmval);
 	tvval.tv_usec = 0;
 }
 
@@ -302,7 +302,7 @@ void timestamp::ctime (const string &timestr)
 #endif
     //timezone = __system_local_timezone;
 	tmset = true;
-	tvval.tv_sec = mktime (&tmval);
+	tvval.tv_sec = timegm (&tmval);
 	tvval.tv_usec = 0;
 }
 
@@ -380,7 +380,7 @@ void timestamp::rfc822 (const string &timestr)
 	}
 
 	tmset = true;
-	tvval.tv_sec = mktime (&tmval);
+	tvval.tv_sec = timegm (&tmval);
 	tvval.tv_usec = 0;
 }
 
@@ -412,7 +412,7 @@ void timestamp::tm (const struct tm &in)
 	init();
 	memmove (&tmval, &in, sizeof (struct tm));
 	tmset = true;
-	tvval.tv_sec = mktime (&tmval);
+	tvval.tv_sec = timegm (&tmval);
 	tvval.tv_usec = 0;
 }
 
