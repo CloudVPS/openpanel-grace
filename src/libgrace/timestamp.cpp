@@ -477,7 +477,7 @@ timestamp &timestamp::operator+= (timeval add)
 timestamp &timestamp::operator-= (time_t sub)
 {
 	time_t now;
-	now = tvval.tv_sec;
+	now = tvval.tv_sec - timezone;
 	init();
 	tvval.tv_sec = now - sub;
 	return *this;
