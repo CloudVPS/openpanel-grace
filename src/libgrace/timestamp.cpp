@@ -390,7 +390,7 @@ void timestamp::rfc822 (const string &timestr)
 void timestamp::unixtime (time_t in)
 {
 	init();
-	tvval.tv_sec = in; // - timezone;
+	tvval.tv_sec = in + __system_local_timezone;
 	tvval.tv_usec = 0;
 }
 
@@ -401,7 +401,7 @@ void timestamp::timeofday (timeval in)
 {
 	init();
 	tvval 	= in;
-	//tvval.tv_sec -= timezone;
+	tvval.tv_sec += __system_local_timezone;
 }
 
 // ========================================================================
