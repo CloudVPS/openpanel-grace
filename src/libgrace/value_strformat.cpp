@@ -1,5 +1,6 @@
 #include <grace/str.h>
 #include <grace/value.h>
+#include <grace/strutil.h>
 
 const char __HEXTAB[] = "0123456789abcdef";
 
