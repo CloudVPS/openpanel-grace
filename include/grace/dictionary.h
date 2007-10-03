@@ -138,7 +138,7 @@ public:
 	void			 set (const statstring &id, kind &to)
 					 {
 					 	dictionaryEntry *de = demand (id, false);
-					 	if (de->ent && de->dynamic) delete de->ent;
+					 	if (de->ent && de->dynamic) delete (kind *) de->ent;
 					 	de->ent = &to;
 					 	de->dynamic = false;
 					 }
