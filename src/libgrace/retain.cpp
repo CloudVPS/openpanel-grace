@@ -234,13 +234,13 @@ namespace memory
 			nnc = c->next;
 			nc = c->extend;
 			
-			free (c->blocks);
+			::free (c->blocks);
 			delete c;
 			
 			for (c=nc;c;c=nc)
 			{
 				nc = c->extend;
-				free (c->blocks);
+				::free (c->blocks);
 				delete c;
 			}
 			
