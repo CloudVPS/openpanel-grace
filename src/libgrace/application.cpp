@@ -55,9 +55,15 @@ application::application (const string &creator_id)
 application::~application (void)
 {
 	::printf ("-application\n");
-	fin.close ();
-	fout.close ();
-	ferr.close ();
+	try
+	{
+		fin.close ();
+		fout.close ();
+		ferr.close ();
+	}
+	catch (...)
+	{
+	}
 }
 
 // ==========================================================================
