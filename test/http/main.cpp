@@ -66,7 +66,6 @@ int httpApp::main (void)
 		return 3;
 	}
 	
-	sleep (10);
 	hs.authentication ("me","password");
 	restr_local = hs.get ("http://localhost:4269/restricted.dat");
 	if (! restr_local.strlen ())
