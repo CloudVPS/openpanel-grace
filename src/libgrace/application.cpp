@@ -423,10 +423,11 @@ int main (int argc, char *argv[])
 		if (inithook) (*inithook)();
 	}
 	
-	app()->init (argc, argv);
-	returnv = app()->main ();
+	application *a = app();
+	a->init (argc, argv);
+	returnv = a->main ();
 	::printf ("main.returnv = %i\n", returnv);
-	delete app();
+	delete a;
 	::printf ("deleted app\n");
 	__retain_ptr->exit ();
 	return returnv;
