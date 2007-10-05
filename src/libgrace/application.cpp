@@ -58,7 +58,7 @@ application::~application (void)
 	try
 	{
 		fin.close ();
-		fout.close ();
+		//fout.close ();
 		ferr.close ();
 	}
 	catch (...)
