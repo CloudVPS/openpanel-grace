@@ -70,6 +70,7 @@ int httpApp::main (void)
 	if (! restr_local.strlen ())
 	{
 		ferr.printf ("FAIL restricted local\n");
+		fs.save ("restr_local", restr_local);
 		return 4;
 	}
 	restr_default = hs.get ("http://127.0.0.1:4269/restricted.dat");
