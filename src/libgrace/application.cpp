@@ -425,7 +425,9 @@ int main (int argc, char *argv[])
 	
 	app()->init (argc, argv);
 	returnv = app()->main ();
+	::printf ("main.returnv = %i\n", returnv);
 	delete app();
+	::printf ("deleted app\n");
 	__retain_ptr->exit ();
 	return returnv;
 }
