@@ -557,6 +557,7 @@ void httpdworker::run (void)
 							{
 								value test = strutil::parsehdr (line);
 								httpHeaders << test;
+							}
 						}
 					}
 				}
