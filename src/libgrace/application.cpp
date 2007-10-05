@@ -54,7 +54,6 @@ application::application (const string &creator_id)
 // ==========================================================================
 application::~application (void)
 {
-	::printf ("-application\n");
 	try
 	{
 		fin.close ();
@@ -432,9 +431,7 @@ int main (int argc, char *argv[])
 	application *a = app();
 	a->init (argc, argv);
 	returnv = a->main ();
-	::printf ("main.returnv = %i\n", returnv);
 	delete a;
-	::printf ("deleted app\n");
 	__retain_ptr->exit ();
 	return returnv;
 }

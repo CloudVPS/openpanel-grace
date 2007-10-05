@@ -30,13 +30,11 @@ public:
 
 					// Is ignored by connect when string is empty
 					localbindaddr = "";
-					::printf ("+tcpsocket\n");
 				 }
 				 
 				 /// Destructor.
 				~tcpsocket (void)
 				 {
-					::printf ("-tcpsocket\n");
 				 }
 	
 				 /// Connect to an IPv4 host.

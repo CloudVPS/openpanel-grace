@@ -34,7 +34,6 @@ file::file (void)
 	codec = NULL;
 	errcode = FERR_OK;
 	
-	::printf ("+file %08x\n", this);
 }
 
 // ========================================================================
@@ -50,7 +49,6 @@ file::~file (void)
 		codec->refcnt--;
 		if (! codec->refcnt) delete codec;
 	}
-	::printf ("-file %08x\n", this);
 }
 
 // ========================================================================

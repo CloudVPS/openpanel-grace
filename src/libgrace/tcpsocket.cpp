@@ -781,5 +781,6 @@ void tcpsocket::sendfile (const string &path, unsigned int amount)
 	catch (...)
 	{
 	}
+	fi.close ();
 #endif
 }

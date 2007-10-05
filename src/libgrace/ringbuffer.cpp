@@ -23,7 +23,6 @@ ringbuffer::ringbuffer (unsigned int sz)
 	count = sz;
 	buffer = NULL;
 	readcursor = writecursor = 0;
-	::printf ("+ringbuffer %08x\n", this);
 }
 
 // ========================================================================
@@ -33,7 +32,6 @@ ringbuffer::ringbuffer (unsigned int sz)
 // ========================================================================
 ringbuffer::~ringbuffer (void)
 {
-	::printf ("-ringbuffer %08x buffer=%08x\n", this, buffer);
 	if (buffer) delete[] buffer;
 }
 
@@ -44,14 +42,11 @@ ringbuffer::~ringbuffer (void)
 // ========================================================================
 void ringbuffer::init (unsigned int sz)
 {
-	::printf ("*ringbuffer::init %08x oldbuffer=%08x\n", this, buffer);
 	if (buffer != NULL)
 	{
-		::printf (" delete[]\n");
 		delete[] buffer;
 	}
 	buffer = new char[sz];
-	::printf ("*ringbuffer::init %08x newbuffer=%08x\n", this, buffer);
 	count = sz;
 	readcursor = writecursor = 0;
 }
