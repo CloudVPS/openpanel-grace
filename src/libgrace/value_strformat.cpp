@@ -1,5 +1,6 @@
 #include <grace/str.h>
 #include <grace/value.h>
+#include <grace/strutil.h>
 
 const char __HEXTAB[] = "0123456789abcdef";
 
@@ -176,7 +177,10 @@ string *operator% (const char *args, const value &arglist)
 					copy_p--;
 					break;
 				
-				
+				case '~':
+					copy_s = strutil::urlencode (KEYORARG.sval());
+					res.strcat (copy_s);
+					goto CONTINUE;
 				
 				case 's':
 					*copy_p = 0;
