@@ -133,7 +133,7 @@ protected:
 					ti_established = s->ti_established;
 					s->filno = -1;
 					s->feof = true;
-					buffer = s->buffer;
+					//buffer = s->buffer;
 					delete s;
 				 }
 
