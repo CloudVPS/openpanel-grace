@@ -554,7 +554,9 @@ void httpdworker::run (void)
 						else // No, these are headers. Munge.
 						{
 							if (httpHeaders.count() < 48)
-								httpHeaders << strutil::parsehdr (line);
+							{
+								value test = strutil::parsehdr (line);
+								httpHeaders << test;
 						}
 					}
 				}
