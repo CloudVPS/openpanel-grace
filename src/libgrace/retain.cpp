@@ -222,6 +222,34 @@ namespace memory
 		b->status = memory::free;
 	}
 	
+	void pool::exit (void)
+	{
+		sizepool *c, *nc, *nnc;
+		
+		c = pools;
+		nc = nnc = NULL;
+		
+		while (c)
+		{
+			nnc = c->next;
+			nc = c->extend;
+			
+			free (c->blocks);
+			delete c;
+			
+			for (c=nc;c;c=nc)
+			{
+				nc = c->extend;
+				free (c->blocks);
+				delete c;
+			}
+			
+			c = nnc;
+		}
+		
+		pools = NULL;
+	}
+	
 	void pool::dump (const char *where)
 	{
 		FILE *finto;

@@ -76,6 +76,9 @@ namespace memory
 		
 						 /// Create a debugging dump.
 		void			 dump (const char *);
+		
+						 /// Free all memory
+		void			 exit (void);
 	
 	protected:
 		sizepool		*pools; ///< Linked list of sizepools.
