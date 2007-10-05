@@ -44,9 +44,10 @@ ringbuffer::~ringbuffer (void)
 // ========================================================================
 void ringbuffer::init (unsigned int sz)
 {
+	::printf ("*ringbuffer::init %08x oldbuffer=%08x\n", this, buffer);
 	if (buffer != NULL)
 	{
-		::printf ("*ringbuffer::init %08x oldbuffer=%08x\n", this, buffer);
+		::printf (" delete[]\n");
 		delete[] buffer;
 	}
 	buffer = new char[sz];
