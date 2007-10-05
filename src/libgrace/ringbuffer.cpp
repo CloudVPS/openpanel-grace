@@ -33,7 +33,7 @@ ringbuffer::ringbuffer (unsigned int sz)
 // ========================================================================
 ringbuffer::~ringbuffer (void)
 {
-	::printf ("-ringbuffer %08x\n", this);
+	::printf ("-ringbuffer %08x buffer=%08x\n", this, buffer);
 	if (buffer) delete[] buffer;
 }
 
@@ -46,9 +46,11 @@ void ringbuffer::init (unsigned int sz)
 {
 	if (buffer)
 	{
+		::printf ("*ringbuffer::init %08x oldbuffer=%08x\n", this, buffer);
 		delete[] buffer;
 	}
 	buffer = new char[sz];
+	::printf ("*ringbuffer::init %08x newbuffer=%08x\n", this, buffer);
 	count = sz;
 	readcursor = writecursor = 0;
 }
