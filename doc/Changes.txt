@@ -1,3 +1,33 @@
+0.8.15     Fri Oct  5 2007                         <grace@openpanel.com>
+           
+           * Fixed a memory leak in value::rmval().
+           
+           * Fixed a memory leak in the assignment of a tcpsocket object
+             to pointer.
+             
+           * Added python-style string formatting using %format.
+           
+           * Tweak arguments for value::toxml() and value::savexml().
+           
+           * Apple .plist is now a built-in schema.
+           
+           * Tweak thread messaging: It now officially makes more sense
+             to use thread::sendevent ("command") or, its brother,
+             thread::sendevent ("command", (value) data).
+             
+           * Add new database library 'querido'. Currently only supports
+             sqlite.
+           
+           * Add value::insertval() as a sidekick to value::newval().
+           
+           * Fixed some issues with scriptparser.
+           
+           * Added class sessionlist for implementing sessions with
+             timeout over stateless protocols.
+             
+           * kernel.pwcrypt.verify() now supports salted MD5 passwords
+             regardless of what the native crypt() supports.
+
 0.8.14     Tue Mar 13 2007                         <grace@openpanel.com>
 
            * Fixed a number of tab-handling bugs in terminal/cli.
