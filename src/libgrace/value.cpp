@@ -1032,12 +1032,14 @@ void value::rmval (unsigned int ki, const char *key, int pindex)
 		{
 			if ((i==uindex)||(KEYMATCH(array[i])))
 			{
+				::printf ("rmval at %i\n", i);
 				value *crsr= array[i];
 				if ((i+1) < arraysz)
 				{
 					::memmove (array+i, array+i+1,
 							   (arraysz - (i+1)) * sizeof (value *));
 				}
+				::printf ("delete %08x\n", crsr);
 				delete crsr;
 				--arraysz;
 				array[arraysz] = NULL;
