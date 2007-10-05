@@ -404,6 +404,8 @@ typedef void (*initfuncptr)(void);
 
 #include <dlfcn.h>
 
+extern memory::pool *__retain_ptr;
+
 int main (int argc, char *argv[])
 {
 	int returnv;
@@ -420,5 +422,6 @@ int main (int argc, char *argv[])
 	app()->init (argc, argv);
 	returnv = app()->main ();
 	delete app();
+	__retain_ptr->exit ();
 	return returnv;
 }
