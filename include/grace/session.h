@@ -31,6 +31,10 @@ public:
 					 ///         for the newly created session.
 	string			*create (const value &sdat);
 	
+					 /// Remove a session.
+					 /// \param id The session uuid.
+	void			 destroy (const statstring &id);
+	
 					 /// Get the data for a specific id. Note that you
 					 /// should already have gone through
 					 /// sessionlist::exists(), at this point a session

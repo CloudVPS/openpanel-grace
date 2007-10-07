@@ -37,6 +37,14 @@ string *sessionlist::create (const value &sdat)
 	return &uuid;
 }
 
+void sessionlist::destroy (const statstring &id)
+{
+	exclusivesection (db)
+	{
+		db.rmval (id);
+	}
+}
+
 value *sessionlist::get (const statstring &id)
 {
 	returnclass (value) res retain;
