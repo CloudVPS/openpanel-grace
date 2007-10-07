@@ -1041,6 +1041,12 @@ void value::rmval (unsigned int ki, const char *key, int pindex)
 				delete crsr;
 				--arraysz;
 				array[arraysz] = NULL;
+				if (! arraysz)
+				{
+					::free (array);
+					array = NULL;
+					arrayalloc = 0;
+				}
 				if (i<ucount) --ucount;
 				rearrange = true;
 				i = arraysz;

@@ -65,11 +65,12 @@ int httpApp::main (void)
 		ferr.printf ("FAIL restricted local auth\n");
 		return 3;
 	}
+	
 	hs.authentication ("me","password");
 	restr_local = hs.get ("http://localhost:4269/restricted.dat");
 	if (! restr_local.strlen ())
 	{
-		ferr.printf ("FAIL restricted local\n");
+		ferr.printf ("FAIL restricted local: %i\n", hs.status);
 		return 4;
 	}
 	restr_default = hs.get ("http://127.0.0.1:4269/restricted.dat");

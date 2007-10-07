@@ -672,6 +672,8 @@ value_strformat.o: ../../include/grace/dictionary.h
 value_strformat.o: ../../include/grace/array.h
 value_strformat.o: ../../include/grace/stringdict.h
 value_strformat.o: ../../include/grace/flags.h ../../include/grace/reg.h
+value_strformat.o: ../../include/grace/strutil.h
+value_strformat.o: ../../include/grace/regexpression.h
 value_xml.o: ../../include/grace/value.h ../../include/grace/statstring.h
 value_xml.o: ../../include/grace/str.h ../../include/grace/reg.h
 value_xml.o: ../../include/grace/retain.h ../../include/grace/lock.h

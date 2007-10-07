@@ -33,6 +33,7 @@ file::file (void)
 	nonblocking = false;
 	codec = NULL;
 	errcode = FERR_OK;
+	
 }
 
 // ========================================================================

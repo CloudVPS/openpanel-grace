@@ -111,6 +111,8 @@ void httpd::shutdown (void)
 		_shutdown = true;
 		sleep (1);
 	}
+	
+	workers.gc ();
 }
 
 // ========================================================================
@@ -552,7 +554,10 @@ void httpdworker::run (void)
 						else // No, these are headers. Munge.
 						{
 							if (httpHeaders.count() < 48)
-								httpHeaders << strutil::parsehdr (line);
+							{
+								value test = strutil::parsehdr (line);
+								httpHeaders << test;
+							}
 						}
 					}
 				}

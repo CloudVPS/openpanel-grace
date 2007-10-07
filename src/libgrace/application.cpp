@@ -54,6 +54,15 @@ application::application (const string &creator_id)
 // ==========================================================================
 application::~application (void)
 {
+	try
+	{
+		fin.close ();
+		//fout.close ();
+		ferr.close ();
+	}
+	catch (...)
+	{
+	}
 }
 
 // ==========================================================================
@@ -404,6 +413,8 @@ typedef void (*initfuncptr)(void);
 
 #include <dlfcn.h>
 
+extern memory::pool *__retain_ptr;
+
 int main (int argc, char *argv[])
 {
 	int returnv;
@@ -417,8 +428,10 @@ int main (int argc, char *argv[])
 		if (inithook) (*inithook)();
 	}
 	
-	app()->init (argc, argv);
-	returnv = app()->main ();
-	delete app();
+	application *a = app();
+	a->init (argc, argv);
+	returnv = a->main ();
+	delete a;
+	__retain_ptr->exit ();
 	return returnv;
 }

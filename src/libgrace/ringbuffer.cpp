@@ -42,7 +42,7 @@ ringbuffer::~ringbuffer (void)
 // ========================================================================
 void ringbuffer::init (unsigned int sz)
 {
-	if (buffer)
+	if (buffer != NULL)
 	{
 		delete[] buffer;
 	}
