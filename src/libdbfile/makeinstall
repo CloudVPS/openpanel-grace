@@ -27,6 +27,9 @@ if [ ! -d "$path_include/dbfile" ]; then
   mkdir "$path_include/dbfile"
 fi
 
+if [ -e /usr/bin/install_name_tool ]; then
+  install_name_tool -id $path_lib/libdbfile.dylib ../../lib/libdbfile.dylib
+fi
 cp ../../lib/libdbfile.* "$path_lib/"
 cp ../../include/dbfile/*.h "$path_include/dbfile/"
 

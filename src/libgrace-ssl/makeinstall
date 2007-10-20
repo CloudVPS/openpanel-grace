@@ -27,6 +27,9 @@ if [ ! -d "$path_include/matrixssl" ]; then
   mkdir "$path_include/matrixssl"
 fi
 
+if [ -e /usr/bin/install_name_tool ]; then
+  install_name_tool -id $path_lib/libgrace-ssl.dylib ../../lib/libgrace-ssl.dylib
+fi
 cp ../../lib/libgrace-ssl.* "$path_lib/"
 cp ../../include/matrixssl/*.h "$path_include/matrixssl"
 
