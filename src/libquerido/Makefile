@@ -4,9 +4,8 @@ OBJ			= 	engine.o query.o row.o table.o sqlite.o
 
 AR = ar cr
 
-all: $(OBJ) 
-	$(AR) ../../lib/libquerido.a $(OBJ)
-	$(RANLIB) ../../lib/libquerido.a
+all: $(OBJ)
+	$(LDSHARED) -o ../../lib/libquerido.$(DYNEXT) $(OBJ)
 	cp platform.h ../../include/querido/platform.h
 
 depend:
@@ -24,4 +23,4 @@ allclean: clean
 
 .SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -I../../include -c $<
+	$(CXX) $(SHARED) $(CXXFLAGS) $(INCLUDES) -I../../include -c $<

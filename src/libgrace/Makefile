@@ -66,8 +66,7 @@ AR = ar cr
 
 all: ../../include/grace/platform.h $(OBJ)
 	mkdir -p ../../lib
-	$(AR) ../../lib/libgrace.a $(OBJ)
-	$(RANLIB) ../../lib/libgrace.a
+	$(LDSHARED) -o ../../lib/libgrace.$(DYNEXT) $(OBJ)
 
 version.cpp:
 	../../util/mkversion version.cpp
@@ -87,6 +86,6 @@ clean:
 
 .SUFFIXES: .cpp .o
 .cpp.o: 
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -I../../include -c -g $<
+	$(CXX) $(SHARED) $(CXXFLAGS) $(INCLUDES) -I../../include -c -g $<
 
 include Makefile.depend

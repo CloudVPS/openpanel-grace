@@ -187,3 +187,21 @@ void socketpool::done (poolsocket &s)
 	}
 	lck.unlock();
 }
+
+socketpoolhandler::~socketpoolhandler (void)
+{
+}
+
+bool socketpoolhandler::isvalid (tcpsocket &s, time_t last)
+{
+	return false;
+}
+
+void socketpoolhandler::close (tcpsocket &s)
+{
+}
+
+bool socketpoolhandler::open (tcpsocket &s)
+{
+	return false;
+}

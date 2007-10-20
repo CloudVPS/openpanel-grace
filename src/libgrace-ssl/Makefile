@@ -6,8 +6,7 @@ AR = ar cr
 
 all: $(OBJ)
 	./getmatrixobj.sh
-	$(AR) ../../lib/libgrace-ssl.a $(OBJ) matrixobj/*.o
-	$(RANLIB) ../../lib/libgrace-ssl.a
+	$(LDSHARED) -o ../../lib/libgrace-ssl.$(DYNEXT) $(OBJ) matrixobj/*.o
 
 install: all
 	./makeinstall
@@ -17,4 +16,4 @@ clean:
 
 .SUFFIXES: .cpp .o
 .cpp.o: 
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -I../../include -I.. -g -c $<
+	$(CXX) $(SHARED) $(CXXFLAGS) $(INCLUDES) -I../../include -I.. -g -c $<

@@ -5,8 +5,7 @@ OBJ			= 	dbfile.o gdbmfile.o db4file.o
 AR = ar cr
 
 all: $(OBJ)
-	$(AR) ../../lib/libdbfile.a $(OBJ)
-	$(RANLIB) ../../lib/libdbfile.a
+	$(LDSHARED) -o ../../lib/libdbfile.$(DYNEXT) $(OBJ)
 
 depend:
 	@echo -n >Makefile.depend
@@ -20,6 +19,6 @@ clean:
 
 .SUFFIXES: .cpp .o
 .cpp.o: 
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -I../../include -I.. -g -c $<
+	$(CXX) $(SHARED) $(CXXFLAGS) $(INCLUDES) -I../../include -I.. -g -c $<
 
 include Makefile.depend
