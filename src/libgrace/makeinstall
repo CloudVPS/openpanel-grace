@@ -27,14 +27,9 @@ if [ ! -d "$path_include/grace" ]; then
 fi
 
 echo "Installing library in $path_lib"
-cp ../../lib/libgrace.a "$path_lib/"
+cp ../../lib/libgrace.* "$path_lib/"
 echo "Installing headers in $path_include"
 cp ../../include/grace/*.h "$path_include/grace/"
-
-RANLIB=`grep RANLIB < makeinclude | sed -e "s/.* = //"`
-if [ ! -z "$RANLIB" ]; then
-  $RANLIB "$path_lib/libgrace.a"
-fi
 
 echo "Installing utilities in $path_bin"
 if [ -d ../../util ]; then

@@ -27,10 +27,6 @@ if [ ! -d "$path_include/matrixssl" ]; then
   mkdir "$path_include/matrixssl"
 fi
 
-cp ../../lib/libgrace-ssl.a "$path_lib/"
+cp ../../lib/libgrace-ssl.* "$path_lib/"
 cp ../../include/matrixssl/*.h "$path_include/matrixssl"
 
-RANLIB=`grep RANLIB < makeinclude | sed -e "s/.* = //"`
-if [ ! -z "$RANLIB" ]; then
-  $RANLIB "$path_lib/libgrace-ssl.a"
-fi

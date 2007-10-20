@@ -27,12 +27,8 @@ if [ ! -d "$path_include/querido" ]; then
 fi
 
 echo "Installing library in $path_lib"
-cp ../../lib/libquerido.a "$path_lib/"
+cp ../../lib/libquerido.* "$path_lib/"
 echo "Installing headers in $path_include"
 cp ../../include/querido/*.h "$path_include/querido/"
 
-RANLIB=`grep RANLIB < makeinclude | sed -e "s/.* = //"`
-if [ ! -z "$RANLIB" ]; then
-  $RANLIB "$path_lib/libquerido.a"
-fi
 
