@@ -19,6 +19,25 @@ poolsocket::~poolsocket (void)
 	sock = NULL;
 }
 
+poolsocket &poolsocket::operator= (const poolsocket &s)
+{
+	sock = s.sock;
+	iscopy = true;
+	connected = s.connected;
+	when = s.when;
+	inuse = s.inuse;
+	serial = s.serial;
+	
+	return *this;
+}
+
+tcpsocket &poolsocket::s (void)
+{
+	static tcpsocket nosock;
+	if (! sock) return nosock;
+	return *sock;
+}
+
 // ========================================================================
 // METHOD basicpoolhandler::isvalid
 // ========================================================================
