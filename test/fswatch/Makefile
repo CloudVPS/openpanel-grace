@@ -6,7 +6,7 @@ all: fswatch.exe
 	mkapp fswatch
 
 fswatch.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o fswatch.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+	$(CXX) $(LDFLAGS) -o fswatch.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 	rm -f *.o *.exe

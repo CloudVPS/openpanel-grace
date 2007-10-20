@@ -6,7 +6,7 @@ all: value_simplexml.exe
 	mkapp value_simplexml
 
 value_simplexml.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o value_simplexml.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+	$(CXX) $(LDFLAGS) -o value_simplexml.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 	rm -f *.o *.exe

@@ -6,7 +6,7 @@ all: session.exe
 	mkapp session
 
 session.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o session.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+	$(CXX) $(LDFLAGS) -o session.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 	rm -f *.o *.exe

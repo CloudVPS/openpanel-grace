@@ -6,7 +6,7 @@ all: value_php.exe
 		mkapp value_php
 
 value_php.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_php.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_php.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

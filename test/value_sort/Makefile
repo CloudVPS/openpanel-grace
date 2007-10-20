@@ -6,7 +6,7 @@ all: value_sort.exe
 		mkapp value_sort
 
 value_sort.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_sort.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_sort.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

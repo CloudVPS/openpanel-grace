@@ -6,8 +6,7 @@ all: db4.exe
 	mkapp db4
 
 db4.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o db4.exe $(OBJ) "../../lib/libdbfile.a" \
-	"../../lib/libgrace.a" $(LIBS)
+	$(CXX) $(LDFLAGS) -o db4.exe $(OBJ) -L../../lib -ldbfile -lgrace $(LIBS)
 
 clean:
 	rm -f *.o *.exe mydb out.dat

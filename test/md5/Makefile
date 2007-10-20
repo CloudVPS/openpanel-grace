@@ -6,7 +6,7 @@ all: md5.exe
 	mkapp md5
 
 md5.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o md5.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+	$(CXX) $(LDFLAGS) -o md5.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 	rm -f *.o *.exe

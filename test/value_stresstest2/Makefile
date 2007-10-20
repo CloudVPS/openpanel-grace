@@ -6,7 +6,7 @@ all: value_stresstest2.exe
 		mkapp value_stresstest2
 
 value_stresstest2.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_stresstest2.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_stresstest2.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

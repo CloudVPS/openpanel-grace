@@ -6,7 +6,7 @@ all: threadgroup.exe
 		mkapp threadgroup
 
 threadgroup.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o threadgroup.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o threadgroup.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

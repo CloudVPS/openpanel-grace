@@ -25,7 +25,7 @@ int tcpsocketApp::main (void)
 	{
 		string buffer;
 		
-		if (! outs.connect ("80.95.170.11", 443))
+		if (! outs.connect ("www.openprovider.nl", 443))
 		{
 			ferr.printf ("fail: outs.connect\n");
 			ferr.printf ("err: %s\n", outs.error().str());

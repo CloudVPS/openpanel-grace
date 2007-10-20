@@ -6,8 +6,8 @@ all: ssl.exe
 		mkapp ssl
 
 ssl.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o ssl.exe $(OBJ) "../../lib/libgrace.a" \
-			"../../lib/libgrace-ssl.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o ssl.exe $(OBJ) -L../../lib -lgrace \
+			-lgrace-ssl $(LIBS)
 
 clean:
 		rm -f *.o *.exe

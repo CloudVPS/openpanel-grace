@@ -6,7 +6,7 @@ all: value_csv.exe
 		mkapp value_csv
 
 value_csv.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_csv.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_csv.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

@@ -6,7 +6,7 @@ all: md5pw.exe
 	mkapp md5pw
 
 md5pw.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o md5pw.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+	$(CXX) $(LDFLAGS) -o md5pw.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 	rm -f *.o *.exe

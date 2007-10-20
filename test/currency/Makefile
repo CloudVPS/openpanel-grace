@@ -6,7 +6,7 @@ all: currency.exe
 		mkapp currency
 
 currency.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o currency.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o currency.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

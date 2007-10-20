@@ -6,7 +6,7 @@ all: retainbug.exe
 	mkapp retainbug
 
 retainbug.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o retainbug.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+	$(CXX) $(LDFLAGS) -o retainbug.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 	rm -f *.o *.exe

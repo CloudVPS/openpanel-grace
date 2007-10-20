@@ -6,7 +6,7 @@ all: boolcasts.exe
 		mkapp boolcasts
 
 boolcasts.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o boolcasts.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o boolcasts.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

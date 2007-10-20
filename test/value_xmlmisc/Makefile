@@ -6,7 +6,7 @@ all: value_xmlmisc.exe
 		mkapp value_xmlmisc
 
 value_xmlmisc.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_xmlmisc.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_xmlmisc.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

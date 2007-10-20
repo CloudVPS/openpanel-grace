@@ -6,7 +6,7 @@ all: waitforline.exe
 		mkapp waitforline
 
 waitforline.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o waitforline.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o waitforline.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

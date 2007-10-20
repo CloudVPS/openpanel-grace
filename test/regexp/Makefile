@@ -6,7 +6,7 @@ all: regexp.exe
 		mkapp regexp
 
 regexp.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o regexp.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o regexp.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

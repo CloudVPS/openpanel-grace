@@ -6,7 +6,7 @@ all: str_binmethods.exe
 		mkapp str_binmethods
 
 str_binmethods.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o str_binmethods.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o str_binmethods.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

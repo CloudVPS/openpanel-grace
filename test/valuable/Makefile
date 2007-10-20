@@ -6,7 +6,7 @@ all: valuable.exe
 	mkapp valuable
 
 valuable.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o valuable.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+	$(CXX) $(LDFLAGS) -o valuable.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 	rm -f *.o *.exe

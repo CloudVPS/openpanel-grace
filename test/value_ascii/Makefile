@@ -6,7 +6,7 @@ all: value_ascii.exe
 		mkapp value_ascii
 
 value_ascii.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_ascii.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_ascii.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

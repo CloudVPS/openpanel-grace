@@ -6,7 +6,7 @@ all: application.exe
 		mkapp application
 
 application.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o application.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o application.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

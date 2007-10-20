@@ -6,7 +6,7 @@ all: strutil1.exe
 		mkapp strutil1
 
 strutil1.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o strutil1.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o strutil1.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

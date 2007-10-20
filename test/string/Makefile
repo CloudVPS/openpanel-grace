@@ -6,7 +6,7 @@ all: string.exe
 		mkapp string
 
 string.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o string.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o string.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe

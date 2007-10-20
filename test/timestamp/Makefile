@@ -6,7 +6,7 @@ all: timestamp.exe
 		mkapp timestamp
 
 timestamp.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o timestamp.exe $(OBJ) "../../lib/libgrace.a" $(LIBS)
+		$(CXX) $(LDFLAGS) -o timestamp.exe $(OBJ) -L../../lib -lgrace $(LIBS)
 
 clean:
 		rm -f *.o *.exe
