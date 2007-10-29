@@ -422,6 +422,13 @@ value *strutil::parsehdr (const string &hdr)
 	string hval;
 	hval = hdr.mid(clnpos);
 	
+	// FIXME: find a better way to determine when to split headers.
+	if (hdrname == "Cookie")
+	{
+		res[hdrname] = hval;
+		return &res;
+	}
+	
 	value split;
 	split = strutil::splitquoted (hval, ';');
 	
