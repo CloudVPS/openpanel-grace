@@ -12,7 +12,7 @@ if [ -z "$TEST" ]; then
   ECHON="echo -n"
   NNL=""
 else
-  ECHON="/usr/bin/echo"
+  ECHON="echo"
   NNL="\c"
 fi
 

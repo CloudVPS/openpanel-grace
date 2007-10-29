@@ -1,10 +1,29 @@
 %define version 0.9.0
 
+%define libpath /usr/lib
+%ifarch x86_64
+  %define libpath /usr/lib64
+%endif
+
+%define tag gen
+%define is_fedora %(test -e /etc/fedora-release && echo 1 || echo 0)
+%if %is_fedora
+  %define fedora_release %(rpm -q --queryformat '%{VERSION}' fedora-release)
+  %define fedora_version %(echo "%fedora_release" | tr -d '.')
+  %define tag fc%fedora_version
+%endif
+%define is_centos %(grep -q CentOS /etc/redhat-release && echo 1 || echo 0)
+%if %is_centos
+  %define centos_release %(rpm -q --queryformat '%{VERSION}' centos-release)
+  %define centos_version %(echo "%centos_release" | tr -d '.')
+  %define tag EL%centos_version
+%endif
+
 Summary: Grace C++ toolkit library
 Name: libgrace
 Version: %version
-Release: 0
-Copyright: LGPL
+Release: 1.%tag
+License: LGPL
 Group: System Environment/Libraries
 Source: http://packages.openpanel.com/archive/grace-%{version}.tar.gz
 BuildRoot: /var/tmp/%{name}-buildroot
@@ -12,77 +31,77 @@ BuildRoot: /var/tmp/%{name}-buildroot
 %description
 The Grace C++ library
 
-%package libgrace-devel
+%package devel
 Summary: Header files for the Grace C++ toolkit library
 Group: System Environmnent/Libraries
 
-%description libgrace-devel
+%description devel
 Headers for building Grace software.
 
-%package libgrace-ssl
+%package ssl
 Summary: Library extension to use SSL communication with Grace.
 Group: System Environment/Libraries
 
-%description libgrace-ssl
+%description ssl
 Encapsulation of the matrixssl library within the Grace tcpsocket and
 httpsocket classes.
 
-%package libgrace-dbfile
+%package dbfile
 Summary: Grace support library for handling database file formats.
 Group: System Environment/Libraries
 
-%description libgrace-dbfile
+%description dbfile
 Classes for dealing with BerkeleyDB v4 and GDBM files sanely.
 
-%package libgrace-dbfile-devel
+%package dbfile-devel
 Summary: Header files for the dbfile library.
 Group: System Environment/Libraries
 
-%description libgrace-dbfile-devel
+%description dbfile-devel
 Header classes for dbfile, db4file and gdbmfile.
 
-%package libgrace-querido
+%package querido
 Summary: SQL database access classes for Grace.
 Group: System Environment/Libraries
 
-%description libgrace-querido
+%description querido
 Implements access to sqlite databases, with powerful query building and
 result access.
 
-%package libgrace-querido-devel
+%package querido-devel
 Summary: Header files for libquerido.
 Group: System Environments/Libraries
 
-%description libgrace-querido-devel
+%description querido-devel
 Headers.
 
 %prep
 %setup -q -n libgrace-%version
 
 %build
-cd src/libgrace && ./configure --prefix /usr
+cd src/libgrace && ./configure --prefix /usr --lib-prefix %{libpath}
 make
 cd ../matrixssl
 ./configure
 make
 cd ../libgrace-ssl
-./configure --prefix /usr
+./configure --prefix /usr --lib-prefix %{libpath}
 make
 cd ../libdbfile
-./configure --prefix /usr
+./configure --prefix /usr --lib-prefix %{libpath}
 make
 cd ../libquerido
-./configure --prefix /usr
+./configure --prefix /usr --lib-prefix %{libpath}
 make
 cd ../..
 
 %install
-mkdir -p $RPM_BUILD_ROOT/usr/lib
-install -m 644 lib/libgrace.so $RPM_BUILD_ROOT/usr/lib/
-install -m 644 lib/libgrace-ssl.so $RPM_BUILD_ROOT/usr/lib/
-install -m 644 lib/libdbfile.so $RPM_BUILD_ROOT/usr/lib/
-install -m 644 lib/libquerido.so $RPM_BUILD_ROOT/usr/lib/
-mkdir -p $RPM_BUILD_ROOT/usr/incude/grace
+mkdir -p $RPM_BUILD_ROOT%libpath
+install -m 644 lib/libgrace.so $RPM_BUILD_ROOT%{libpath}/
+install -m 644 lib/libgrace-ssl.so $RPM_BUILD_ROOT%{libpath}/
+install -m 644 lib/libdbfile.so $RPM_BUILD_ROOT%{libpath}/
+install -m 644 lib/libquerido.so $RPM_BUILD_ROOT%{libpath}/
+mkdir -p $RPM_BUILD_ROOT/usr/include/grace
 cp include/grace/*.h $RPM_BUILD_ROOT/usr/include/grace/
 mkdir -p $RPM_BUILD_ROOT/usr/include/dbfile
 cp include/dbfile/*.h $RPM_BUILD_ROOT/usr/include/dbfile/
@@ -98,18 +117,17 @@ cd ../..
 rm -rf lib/*.so
 
 %files
-%files libgrace
-/usr/lib/libgrace.so
-%files libgrace-devel
+%{libpath}/libgrace.so
+%files devel
 /usr/include/grace
-%files libgrace-ssl
-/usr/lib/libgrace-ssl.so
-%files libgrace-dbfile
-/usr/lib/libgrace-dbfile.so
-%files libgrace-dbfile-devel
+%files ssl
+%{libpath}/libgrace-ssl.so
+%files dbfile
+%{libpath}/libdbfile.so
+%files dbfile-devel
 /usr/include/dbfile
-%files libgrace-querido
-/usr/lib/libquerido.so
-%files libgrace-querido-devel
+%files querido
+%{libpath}/libquerido.so
+%files querido-devel
 /usr/include/querido
 
