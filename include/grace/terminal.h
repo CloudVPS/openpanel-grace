@@ -507,7 +507,7 @@ public:
 								
 								while (isdigit (kic = termbuf.getkey()))
 								{
-									dgbuf.strcat (kic);
+									dgbuf.strcat ((char)kic);
 								}
 								
 								if (kic == '~')
