@@ -193,7 +193,7 @@ void termbuffer::del (void)
 	if (crsr < prompt.strlen()) return;
 	if (crsr == len) return;
 	
-	memmove (buffer+crsr, buffer+crsr+1, len-crsr);
+	memmove (buffer+crsr, buffer+crsr+1, len-(crsr+1));
 	len--;
 	buffer[len] = 0;
 }

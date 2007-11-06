@@ -503,7 +503,7 @@ public:
 							else if (isdigit (kic))
 							{
 								string dgbuf;
-								dgbuf[0] = kic;
+								dgbuf.strcat ((char) kic);
 								
 								while (isdigit (kic = termbuf.getkey()))
 								{
