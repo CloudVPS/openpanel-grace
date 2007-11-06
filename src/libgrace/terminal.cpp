@@ -184,6 +184,21 @@ void termbuffer::backspace (void)
 }
 
 // ==========================================================================
+// METHOD termbuffer::del
+// ==========================================================================
+void termbuffer::del (void)
+{
+	char *ptr;
+	
+	if (crsr < prompt.strlen()) return;
+	if (crsr == len) return;
+	
+	memmove (buffer+crsr, buffer+crsr+1, len-crsr);
+	len--;
+	buffer[len] = 0;
+}
+
+// ==========================================================================
 // METHOD termbuffer::eraseword
 // ==========================================================================
 void termbuffer::eraseword (void)

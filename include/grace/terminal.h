@@ -85,6 +85,9 @@ public:
 					 /// Perform a backspace.
 	void			 backspace (void);
 	
+					 /// Perform a forward delete.
+	void			 del (void);
+	
 					 /// Erase word to left of cursor.
 	void			 eraseword (void);
 	
@@ -497,6 +500,31 @@ public:
 							else if (kic == 'D') termbuf.crleft();
 							else if (kic == 'A') termbuf.crup();
 							else if (kic == 'B') termbuf.crdown();
+							else if (isdigit (kic))
+							{
+								string dgbuf;
+								dgbuf[0] = kic;
+								
+								while (isdigit (kic = termbuf.getkey()))
+								{
+									dgbuf.strcat (kic);
+								}
+								
+								if (kic == '~')
+								{
+									switch (dgbuf.toint())
+									{
+										case 3:
+											termbuf.del ();
+											break;
+											
+										default:
+											termbuf.insert
+												("^[[%s~" %format (dgbuf));
+											break;
+									}
+								}
+							}
 							else
 							{
 								termbuf.insert ("^[");
