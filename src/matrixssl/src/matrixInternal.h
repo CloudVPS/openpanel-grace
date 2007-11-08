@@ -1,12 +1,12 @@
 /*
  *	matrixInternal.h
- *	Release $Name: MATRIXSSL_1_8_1_OPEN $
+ *	Release $Name: MATRIXSSL_1_8_3_OPEN $
  *
  *	Internal header file used for the MatrixSSL implementation.
  *	Only modifiers of the library should be intersted in this file
  */
 /*
- *	Copyright (c) PeerSec Networks, 2002-2006. All Rights Reserved.
+ *	Copyright (c) PeerSec Networks, 2002-2007. All Rights Reserved.
  *	The latest version of this code is available at http://www.matrixssl.org
  *
  *	This software is open source; you can redistribute it and/or modify
@@ -106,6 +106,7 @@ extern "C" {
 #define TLS_MIN_VER		1
 
 
+
 /*
 	SSL cipher suite values
 */
@@ -179,7 +180,7 @@ typedef struct {
 	sslRsaCert_t	*cert;
 	int32 (*validateCert)(sslCertInfo_t *certInfo, void *arg);
 	void			*validateCertArg;
-	int32				certMatch;
+	int32			certMatch;
 #endif /* USE_CLIENT_SIDE_SSL */
 
 	sslMd5Context_t		msgHashMd5;

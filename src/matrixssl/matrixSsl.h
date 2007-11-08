@@ -1,13 +1,13 @@
 /*
  *	matrixSsl.h
- *	Release $Name: MATRIXSSL_1_8_1_OPEN $
+ *	Release $Name: MATRIXSSL_1_8_3_OPEN $
  *	
  *	Public header file for MatrixSSL
  *	Implementations interacting with the matrixssl library should
  *	only use the APIs and definitions used in this file.
  */
 /*
- *	Copyright (c) PeerSec Networks, 2002-2006. All Rights Reserved.
+ *	Copyright (c) PeerSec Networks, 2002-2007. All Rights Reserved.
  *	The latest version of this code is available at http://www.matrixssl.org
  *
  *	This software is open source; you can redistribute it and/or modify
@@ -95,8 +95,9 @@ extern "C" {
 MATRIXPUBLIC int32	matrixSslOpen(void);
 MATRIXPUBLIC void	matrixSslClose(void);
 
-MATRIXPUBLIC int32	matrixSslReadKeys(sslKeys_t **keys, char *certFile,
-						char *privFile, char *privPass, char *trustedCAFile);
+MATRIXPUBLIC int32	matrixSslReadKeys(sslKeys_t **keys, const char *certFile,
+						const char *privFile, const char *privPass,
+						const char *trustedCAFile);
 
 MATRIXPUBLIC int32	matrixSslReadKeysMem(sslKeys_t **keys,
 						unsigned char *certBuf, int32 certLen,

@@ -2,7 +2,7 @@
 #	Makefile for MatrixSSL library
 #	Builds optimized shared library by default.
 #	See comments below for building a debug library.
-#	Copyright (c) PeerSec Networks, 2002-2006. All Rights Reserved.
+#	Copyright (c) PeerSec Networks, 2002-2007. All Rights Reserved.
 #
 
 CC      = gcc
@@ -50,7 +50,7 @@ DFLAGS	= -g -Wall -Winline -Wdisabled-optimization -DDEBUG
 STRIP	= test
 else
 #DFLAGS	= -Os
-DFLAGS	= -O3
+DFLAGS	= -O3 
 endif
 
 ifdef MATRIXSSL_PROFILE
@@ -68,8 +68,8 @@ endif
 #
 #	Compile options
 #
-SHARED	= -shared 
-CFLAGS  = $(DFLAGS) -DLINUX -I./
+SHARED	= -shared
+CFLAGS  = $(DFLAGS) -fPIC -DLINUX -I./
 LDFLAGS += -lc -lpthread
 
 #

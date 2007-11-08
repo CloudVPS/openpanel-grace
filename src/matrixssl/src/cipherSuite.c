@@ -1,13 +1,13 @@
 /*
  *	cipherSuite.c
- *	Release $Name: MATRIXSSL_1_8_1_OPEN $
+ *	Release $Name: MATRIXSSL_1_8_3_OPEN $
  *
  *	Wrappers for the various cipher suites.
  *	Contributors should add additional cipher suites here.
  *	Enable specific suites at compile time in matrixConfig.h
  */
 /*
- *	Copyright (c) PeerSec Networks, 2002-2006. All Rights Reserved.
+ *	Copyright (c) PeerSec Networks, 2002-2007. All Rights Reserved.
  *	The latest version of this code is available at http://www.matrixssl.org
  *
  *	This software is open source; you can redistribute it and/or modify
@@ -64,9 +64,6 @@ static int32 matrixCipher5Init(sslSec_t *sec, int32 type);
 #ifdef USE_SSL_RSA_WITH_3DES_EDE_CBC_SHA
 static int32 matrixCipherAInit(sslSec_t *sec, int32 type);
 #endif /* USE_SSL_RSA_WITH_3DES_EDE_CBC_SHA */
-
-
-
 
 static int32 nullInit(sslSec_t *sec, int32 type);
 static int32 nullEncrypt(sslCipherContext_t *ctx, unsigned char *in,
@@ -352,6 +349,7 @@ static int32 matrixCipherAInit(sslSec_t *sec, int32 type)
 	return 0;
 }
 #endif /* USE_SSL_RSA_WITH_3DES_EDE_CBC_SHA */
+
 
 /******************************************************************************/
 /*
