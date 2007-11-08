@@ -18,6 +18,7 @@ string *operator% (const char *args, const value &arglist)
 	int szoffset = 1;
 	statstring key;
 	bool useskey;
+	unsigned int ip;
 	
 	#define KEYORARG (useskey ? arglist[0][key] : arglist[argptr++])
 	
@@ -116,6 +117,16 @@ string *operator% (const char *args, const value &arglist)
 						}
 						else res.strcat (*copy_p++);
 					}
+					goto CONTINUE;
+					
+				case 'P':
+					ip = KEYORARG.uval();
+					sprintf (sprintf_out, "%i.%i.%i.%i",
+							   (ip & 0xff000000) >> 24,
+							   (ip & 0xff0000) >> 16,
+							   (ip & 0xff00) >> 8,
+							   ip & 0xff);
+					res.strcat (sprintf_out);
 					goto CONTINUE;
 				
 				case 'Z':

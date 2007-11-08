@@ -513,6 +513,7 @@ bool httpsocket::getData (string &into, size_t contentLength)
 		{
 			errorcode = HTERR_BROKENPIPE;
 			error = errortext::http::prebroken;
+			error = _sock.error ();
 			return false;
 		}
 		return true;
@@ -645,6 +646,7 @@ string *httpsocket::getResult (value *hdr)
 	{
 		errorcode = HTERR_BROKENPIPE;
 		error = errortext::http::prebroken;
+		error = _sock.error();
 		status = 0;
 		_sock.close();
 		_host.crop(0);
