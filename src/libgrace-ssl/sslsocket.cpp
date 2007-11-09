@@ -6,6 +6,11 @@
 // ========================================================================
 #include <grace/sslsocket.h>
 
+int dummyCertValidator (sslCertInfo_t *certInfo, void *arg)
+{
+	return 1;
+}
+
 // =================================================================
 // FUNCTION setupMatrixSSL
 // =================================================================
@@ -42,6 +47,7 @@ sslclientcodec::sslclientcodec (void)
 	outsock.size = 16384;
 	
 	handshakedone = false;
+	disablecerts = false;
 	
 	setupMatrixSSL();
 	//::printf ("session created\n");
@@ -78,17 +84,26 @@ bool sslclientcodec::setup (void)
 			err = "MatrixSSL Session Error";
 			throw (EX_SSL_INIT);
 		}
-		::printf ("setup2\n");
+		
+		if (disablecerts)
+			matrixSslSetCertValidator (ssl, dummyCertValidator, NULL);
+			
+		//::printf ("%08x setup2\n", this);
 		rc = matrixSslEncodeClientHello (ssl, &outsock, 0);
 		if (rc < 0)
 		{
 			err = "MatrixSSL Handshake Error";
 			return false;
 		}
-		::printf ("setup3\n");
+		//::printf ("%08x setup3\n", this);
 		handshakedone = true;
 	}
 	return true;
+}
+
+void sslclientcodec::nocertcheck (void)
+{
+	disablecerts = true;
 }
 
 // =================================================================
@@ -122,7 +137,7 @@ bool sslclientcodec::addinput (const char *data, size_t sz)
 // =================================================================
 // METHOD fetchinput
 // =================================================================
-void sslclientcodec::fetchinput (ringbuffer &into)
+bool sslclientcodec::fetchinput (ringbuffer &into)
 {
 	int rc;
 	unsigned char myerror[256], alertLevel, alertDescription;
@@ -130,8 +145,6 @@ void sslclientcodec::fetchinput (ringbuffer &into)
 	alertLevel = 0;
 	alertDescription = 0;
 	
-	::printf ("fetchinput()\n");
-
 	if (insock.buf < insock.start)
 	{
 		if (insock.start == insock.end)
@@ -146,6 +159,7 @@ void sslclientcodec::fetchinput (ringbuffer &into)
 		}
 	}
 
+	//::printf ("%08x fetchinput() insock.size=%i\n", this, insock.end-insock.start);
 
 again:
 	rc = matrixSslDecode (ssl, &insock, &inbuf, myerror, &alertLevel,
@@ -153,19 +167,19 @@ again:
 	switch (rc)
 	{
 		case SSL_SUCCESS:
-			::printf ("fetchinput SSL_SUCCESS\n");
+			//::printf ("fetchinput SSL_SUCCESS\n");
 			if (insock.end - insock.start) goto again;
-			return;
+			return false;
 			
 		case SSL_PROCESS_DATA:
-			::printf ("fetchinput SSL_PROCESS_DATA\n");
+			//::printf ("%08x fetchinput SSL_PROCESS_DATA\n", this);
 			into.add ((const char *) inbuf.start, inbuf.end-inbuf.start);
 			inbuf.start = inbuf.end = inbuf.buf;
 			if (insock.end - insock.start) goto again;
-			return;
+			return false;
 			
 		case SSL_SEND_RESPONSE:
-			::printf ("fetchinput SSL_SEND_RESPONSE\n");
+			//::printf ("fetchinput SSL_SEND_RESPONSE\n");
 			if ((outsock.size-(outsock.end - outsock.buf)) < 
 			    (inbuf.end - inbuf.start))
 			{
@@ -173,23 +187,23 @@ again:
 				throw (EX_SSL_BUFFER_SNAFU);
 			}
 			
-			memcpy (outsock.end, inbuf.start, inbuf.end-inbuf.start);
+			memmove (outsock.start+(inbuf.end-inbuf.start), outsock.start, outsock.end-outsock.start);
+			memcpy (outsock.start, inbuf.start, inbuf.end-inbuf.start);
 			outsock.end += (inbuf.end - inbuf.start);
 			inbuf.start = inbuf.end = inbuf.buf;
-			return;
+			return true;
 			
 		case SSL_ERROR:
-			::printf ("fetchinput SSL_ERROR\n");
+			//::printf ("%08x fetchinput SSL_ERROR\n", this);
 			err.crop();
 			err.printf ("MatrixSSL Protocol Error: %s", myerror);
 			inbuf.start = inbuf.end = inbuf.buf;
 			throw (EX_SSL_PROTOCOL_ERROR);
 			
 		case SSL_ALERT:
-			::printf ("alert\n");
 			inbuf.start = inbuf.end = inbuf.buf;
 			if (alertDescription == SSL_ALERT_CLOSE_NOTIFY)
-				return;
+				return false;
 			
 			err.crop();
 			err.printf ("MatrixSSL Client Alert: %d/%d",
@@ -197,14 +211,15 @@ again:
 			throw (EX_SSL_CLIENT_ALERT);
 		
 		case SSL_PARTIAL:
-			::printf ("partial\n");
-			return;
+			//::printf ("%08x partial\n", this);
+			return true;
 			
 		case SSL_FULL:
-			::printf ("full\n");
+			//::printf ("full\n");
 			throw (EX_SSL_BUFFER_SNAFU);
 	}
 	::printf ("wtf omg bbq: rc=%i\n", rc);
+	return false;
 }
 
 // =================================================================
@@ -256,7 +271,6 @@ bool sslclientcodec::addoutput (const char *dat, size_t sz)
 			err = "MatrixSSL Buffer Error";
 			throw (EX_SSL_BUFFER_SNAFU);
 	}
-	//::printf ("added output\n");
 	return true;
 }
 

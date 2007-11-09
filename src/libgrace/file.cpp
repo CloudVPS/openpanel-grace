@@ -591,6 +591,7 @@ string *file::gets (int maxlinesize)
 			nonblocking = false;
 		}
 		
+readagain:
 		sz = ::read (filno, buf, wanted-1);
 		
 		if (sz>0)
@@ -606,7 +607,19 @@ string *file::gets (int maxlinesize)
 				}
 				try
 				{
-					codec->fetchinput (buffer);
+					if (codec->fetchinput (buffer))
+					{
+						string t;
+						codec->peekoutput (t);
+						if (t.strlen())
+						{
+							size_t wsz = ::write (filno, t.str(), t.strlen());
+							codec->doneoutput (wsz);
+
+						}
+						goto readagain;
+					}
+					else if (buffer.backlog() == 0) goto readagain;
 				}
 				catch (exception e)
 				{
@@ -696,7 +709,8 @@ bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 		
 		FD_ZERO(&fds);
 		FD_SET(filno,&fds);
-		
+
+readmore:		
 		ssz = ::read (filno, buf, (room<8192) ? room : 8192);
 		if (ssz > 0)
 		{
@@ -706,7 +720,8 @@ bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 				{
 					if (codec->addinput (buf, ssz))
 					{
-						codec->fetchinput (buffer);
+						if (codec->fetchinput (buffer))
+							goto readmore;
 					}
 				}
 				else
@@ -1150,8 +1165,9 @@ void iocodec::addclose (void)
 // ========================================================================
 // METHOD ::fetchinput
 // ========================================================================
-void iocodec::fetchinput (ringbuffer &into)
+bool iocodec::fetchinput (ringbuffer &into)
 {
+	return false;
 }
 
 // ========================================================================
@@ -1182,4 +1198,8 @@ bool iocodec::canoutput (unsigned int sz)
 const string &iocodec::error (void)
 {
 	return err;
+}
+
+void iocodec::nocertcheck (void)
+{
 }

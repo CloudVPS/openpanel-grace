@@ -44,7 +44,7 @@ public:
 	void			 addclose (void);
 	
 					 /// Loads decoded data into a ringbuffer.
-	void			 fetchinput (ringbuffer &);
+	bool			 fetchinput (ringbuffer &);
 	
 					 /// Copies currently encoded output data to a string.
 	void			 peekoutput (string &);
@@ -57,12 +57,16 @@ public:
 					 /// buffer for a given number of bytes.
 	bool			 canoutput (unsigned int);
 	
+					 /// If called, certificate checking will be disabled.
+	void			 nocertcheck (void);
+	
 protected:
 	ssl_t			*ssl;
 	sslBuf_t		 inbuf;
 	sslBuf_t		 insock;
 	sslBuf_t		 outsock;
 	sslSessionId_t	 session;
+	bool			 disablecerts;
 	
 	bool			 handshakedone;
 };
@@ -86,6 +90,11 @@ public:
 					 {
 					 	return codec->error();
 					 }
+					 
+	void			 nocertcheck (void)
+					 {
+					 	codec->nocertcheck ();
+					 }
 };
 
 /// Implementation of httpsocket with SSL support.
@@ -106,6 +115,11 @@ public:
 	const string	&codecerror (void)
 					 {
 					 	return _sock.codec->error();
+					 }
+					 
+	void			 nocertcheck (void)
+					 {
+					 	_sock.codec->nocertcheck();
 					 }
 };
 

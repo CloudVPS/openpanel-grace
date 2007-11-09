@@ -197,13 +197,17 @@ bool tcpsocket::connect (
 			return false;
 		}
 		
+		bool mayskip = false;
+		
 handshakes:
 		string dt;
 		codec->peekoutput(dt);
 		szleft = dt.strlen();
 		szdone = 0;
 		
-		if (! szleft) return true;
+		//::printf ("handshakes szleft=%i mayskip=%i\n", szleft, mayskip?1:0);
+		
+		if ((! szleft) && (! mayskip)) return true;
 		
 		while (szleft > 0)
 		{
@@ -220,10 +224,12 @@ handshakes:
 			szdone += sz;
 			szleft -= sz;
 		}
-		if (szdone)
+		if (mayskip || szdone)
 		{
+			mayskip = false;
 			char buf[4096];
-			codec->doneoutput (szdone);
+			if (szdone) codec->doneoutput (szdone);
+
 			sz = ::read (filno, buf, 4095);
 			if (sz>0)
 			{
@@ -239,7 +245,11 @@ handshakes:
 				}
 				try
 				{
-					codec->fetchinput (buffer);
+					if (codec->fetchinput (buffer))
+					{
+						mayskip = true;
+						goto handshakes;
+					}
 				}
 				catch (...)
 				{

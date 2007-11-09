@@ -42,7 +42,7 @@ public:
 	
 					 /// Read translated input data.
 					 /// \param into The ringbuffer.
-	virtual void	 fetchinput (ringbuffer &into);
+	virtual bool	 fetchinput (ringbuffer &into);
 	
 					 /// Get a copy of the entire output buffer.
 					 /// \param into The string object to dump the
@@ -63,6 +63,9 @@ public:
 	
 					 /// Reference count.
 	unsigned int	 refcnt;
+	
+					 /// Disable certificate checking.
+	virtual void	 nocertcheck (void);
 	
 protected:
 	string			 err; ///< Last generated error text.
