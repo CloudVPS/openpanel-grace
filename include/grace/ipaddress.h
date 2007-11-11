@@ -44,7 +44,7 @@ public:
 						 	addr = o.addr;
 						 }
 						 
-						 operator unsigned int (void)
+						 operator unsigned int (void) const
 						 {
 						 	return addr;
 						 }
@@ -54,31 +54,6 @@ public:
 						 	into.setip (addr);
 						 }
 	
-	ipaddress			 operator+ (ipaddress i) const
-						 {
-						 	return (ipaddress) (addr+i);
-						 }
-	ipaddress			 operator- (ipaddress i) const
-						 {
-						 	return (ipaddress) (addr-i);
-						 }
-	ipaddress			 operator& (ipaddress o) const
-						 {
-						 	return (ipaddress) (addr & o.addr);
-						 }
-	ipaddress			 operator| (ipaddress o) const
-						 {
-						 	return (ipaddress) (addr | o.addr);
-						 }
-	ipaddress			 operator<< (unsigned int o) const
-						 {
-						 	return (ipaddress) (addr << o);
-						 }
-	ipaddress			 operator>> (unsigned int o) const
-						 {
-						 	return (ipaddress) (addr >> o);
-						 }
-
 	
 	ipaddress			&operator++ (int i)
 						 {
