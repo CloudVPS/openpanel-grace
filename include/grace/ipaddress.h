@@ -70,6 +70,15 @@ public:
 						 {
 						 	return (ipaddress) (addr | o.addr);
 						 }
+	ipaddress			 operator<< (unsigned int o) const
+						 {
+						 	return (ipaddress) (addr << o);
+						 }
+	ipaddress			 operator>> (unsigned int o) const
+						 {
+						 	return (ipaddress) (addr >> o);
+						 }
+
 	
 	ipaddress			&operator++ (int i)
 						 {
