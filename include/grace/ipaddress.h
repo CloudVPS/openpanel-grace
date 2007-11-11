@@ -53,7 +53,24 @@ public:
 						 {
 						 	into.setip (addr);
 						 }
-						 
+	
+	ipaddress			 operator+ (int i) const
+						 {
+						 	return (ipaddress) addr+i;
+						 }
+	ipaddress			 operator- (int i) const
+						 {
+						 	return (ipaddress) addr-i;
+						 }
+	ipaddress			 operator& (ipaddress o) const
+						 {
+						 	return (ipaddress) addr & o.addr;
+						 }
+	ipaddress			 operator| (ipaddress o) const
+						 {
+						 	return (ipaddress) addr | o.addr;
+						 }
+	
 	ipaddress			&operator++ (int i)
 						 {
 						 	addr++;
