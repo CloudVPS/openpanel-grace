@@ -1142,12 +1142,14 @@ const value	&value::operator[] (int i) const
 }
 value &value::operator[] (int i)
 {
+	static value emptyvalue;
+
 	if (_type == t_unset)
 		_type = t_array;
 
 	if ((i<0) && ((arraysz+i) >=0)) return *(array[arraysz+i]);
 	value *v = getposition ((unsigned int) i);
-	if (!v) return *this;
+	if (!v) return emptyvalue;
 	return *v;
 }
 
