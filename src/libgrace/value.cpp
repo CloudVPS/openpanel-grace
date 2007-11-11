@@ -1207,8 +1207,7 @@ value &value::insertval (int atpos, dtenum typ)
 // ========================================================================
 value *value::getposition (unsigned int idx) const
 {
-	if (idx >= arraysz)
-		return (value *)this;
+	if (idx >= arraysz) return NULL;
 	return array[idx];
 }
 
