@@ -54,13 +54,13 @@ public:
 						 	into.setip (addr);
 						 }
 	
-	ipaddress			 operator+ (int i) const
+	ipaddress			 operator+ (ipaddress i) const
 						 {
-						 	return (ipaddress) addr+i;
+						 	return (ipaddress) (addr+i);
 						 }
-	ipaddress			 operator- (int i) const
+	ipaddress			 operator- (ipaddress i) const
 						 {
-						 	return (ipaddress) addr-i;
+						 	return (ipaddress) (addr-i);
 						 }
 	ipaddress			 operator& (ipaddress o) const
 						 {
