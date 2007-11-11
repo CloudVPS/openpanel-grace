@@ -89,12 +89,7 @@ unsigned int value::ipval (void)
 			return t.uval;
 		}
 	}
-	if (itype == i_ipaddr)
-		return t.uval;
-	
-	// Sending an exception sounds harsh, would be tricky to catch. Returning
-	// 0 should generally have the desired effect.
-	return 0;
+	return t.uval;
 }
 
 // ========================================================================
