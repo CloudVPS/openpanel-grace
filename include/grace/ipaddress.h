@@ -64,11 +64,11 @@ public:
 						 }
 	ipaddress			 operator& (ipaddress o) const
 						 {
-						 	return (ipaddress) addr & o.addr;
+						 	return (ipaddress) (addr & o.addr);
 						 }
 	ipaddress			 operator| (ipaddress o) const
 						 {
-						 	return (ipaddress) addr | o.addr;
+						 	return (ipaddress) (addr | o.addr);
 						 }
 	
 	ipaddress			&operator++ (int i)
