@@ -54,7 +54,6 @@ public:
 						 	into.setip (addr);
 						 }
 	
-	
 	ipaddress			&operator++ (int i)
 						 {
 						 	addr++;

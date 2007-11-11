@@ -120,7 +120,7 @@ string *operator% (const char *args, const value &arglist)
 					goto CONTINUE;
 					
 				case 'P':
-					ip = KEYORARG.uval();
+					ip = KEYORARG.ipval();
 					sprintf (sprintf_out, "%i.%i.%i.%i",
 							   (ip & 0xff000000) >> 24,
 							   (ip & 0xff0000) >> 16,

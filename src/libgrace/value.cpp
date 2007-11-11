@@ -641,6 +641,7 @@ unsigned int value::uval (void) const
 		case i_int:
 		case i_bool:
 		case i_date:
+		case i_ipaddr:
 		case i_unsigned:
 			return t.uval;
 
