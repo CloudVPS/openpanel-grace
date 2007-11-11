@@ -19,7 +19,7 @@ protected:
 					 /// Virtual method for the actual serialization
 					 /// into a value. Inheriting classes should override
 					 /// this to do something useful.
-	virtual void	 tovalue (value &into);
+	virtual void	 tovalue (value &into) const;
 	
 					 /// Virtual method inherited from memory::retainable.
 	virtual void	 init (bool first);

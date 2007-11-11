@@ -34,6 +34,14 @@ void smtpd::listento (int port)
 	listenport = port;
 }
 
+void smtpd::listento (ipaddress addr, int port)
+{
+	if (listenport) throw (smtpdListenPortException());
+	
+	lsock.listento (addr, port);
+	listenport = port;
+}
+
 // ==========================================================================
 // METHOD smtpd::minthreads
 // ==========================================================================

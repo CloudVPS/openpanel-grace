@@ -2,6 +2,7 @@
 #define _GNETDB_H 1
 
 #include <grace/value.h>
+#include <grace/ipaddress.h>
 
 THROWS_EXCEPTION (badAddressException, 0x08058e57, "Invalid address format");
 
@@ -18,6 +19,9 @@ public:
 	/// \param name The hostname.
 	/// \return New value object with result.
 	static value *gethostbyname (const string &name);
+	
+	/// Quickly resolve a host from its hostname to an ip address.
+	static ipaddress resolve (const string &name);
 	
 	/// Resolve an address to a name.
 	/// \param addr The address in dotted quad notation

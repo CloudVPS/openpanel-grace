@@ -14,6 +14,7 @@
 #include <grace/dictionary.h>
 #include <grace/filesystem.h>
 #include <grace/defaults.h>
+#include <grace/ipaddress.h>
 
 #define HTTPD_ACCESS 1
 #define HTTPD_ERROR 2
@@ -713,6 +714,11 @@ public:
 	void			 listento (int port)
 					 {
 					 	listener.listento (port);
+					 }
+	
+	void			 listento (ipaddress addr, int port)
+					 {
+					 	listener.listento (addr, port);
 					 }
 					 
 					 /// Sey Unix listen socket

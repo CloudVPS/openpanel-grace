@@ -33,6 +33,12 @@ public:
 							 /// \param port The tcp port to listen to.
 		void				 listento (int port);
 		
+							 /// Explicitly set listening tcp port
+							 /// and ip address.
+							 /// \param addr The IPv4 address.
+							 /// \param port The TCP port number.
+		void				 listento (ipaddress addr, int port);
+		
 							 /// Set minimum worker thread count.
 							 /// \param num The amount requested.
 		void				 minthreads (int num);

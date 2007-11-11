@@ -5,6 +5,7 @@
 #include <grace/str.h>
 #include <grace/lock.h>
 #include <grace/system.h>
+#include <grace/ipaddress.h>
 
 THROWS_EXCEPTION (socketException, 0x300356ed, "Generic socket exception");
 THROWS_EXCEPTION (socketCreateException, 0x18a6e054, "Could not create socket");
@@ -37,7 +38,7 @@ public:
 				 {
 				 }
 	
-				 /// Connect to an IPv4 host.
+				 /// Connect to an IPv4 host by name.
 				 /// Returns true if connection succeeded.
 				 /// \param host Hostname or dotted quad to connect to.
 				 /// \param hport TCP port to use.
@@ -45,6 +46,15 @@ public:
 				 /// \throw socketCreateException Error creating a BSD socket.
 				 /// \throw EX_SSL_INIT Error initializing sslclientcodec.
 	bool		 connect (const string &host, int hport);
+	
+				 /// Connect to an IPv4 host by address.
+				 /// Returns true if connection succeeded.
+				 /// \param host Hostname or dotted quad to connect to.
+				 /// \param hport TCP port to use.
+				 /// \return Status, \b true if connection succeeded.
+				 /// \throw socketCreateException Error creating a BSD socket.
+				 /// \throw EX_SSL_INIT Error initializing sslclientcodec.
+	bool		 connect (ipaddress addr, int hport);
 	
 				 /// Connect to a Unix Domain socket.
 				 /// \return Status, \b true if connection succeeded.
@@ -55,8 +65,7 @@ public:
 				 /// Set address to connect from when using connect( .. )
 				 /// First use this before connecting
 				 /// \param address Address to bind
-	bool		 bindtoaddr( const string &);
-
+	bool		 bindtoaddr (ipaddress);
 	
 				 /// Get peer credentials (for unix sockets on some OSes).
 	void		 getcredentials (void);
@@ -103,11 +112,11 @@ public:
 	pid_t		 peer_pid; ///< Peer pid credentials.
 	uid_t		 peer_uid; ///< Peer uid credentials.
 	gid_t		 peer_gid; ///< Peer gid credentials.
-	unsigned int peer_addr; ///< IPv4 address of peer.
+	ipaddress	 peer_addr; ///< IPv4 address of peer.
 	string		 peer_name; ///< String-annotated address of peer.
 	int			 peer_port; ///< TCP port for peer.
 	time_t		 ti_established; ///< Connection time.
-	string 		 localbindaddr;		  ///< Address to bind.
+	ipaddress 	 localbindaddr;		  ///< Address to bind.
 
 protected:
 				 /// Backend implementation of all derivation methods.
@@ -188,6 +197,12 @@ public:
 				 /// \throw socketCreateException Error creating a BSD socket.
 	void		 listento (int port);
 	
+				 /// Start listening on a TCP port at a specific address.
+				 /// \param addr The listening address.
+				 /// \param port The listening tcp port.
+				 /// \throw socketCreateException Error creating a BSD socket.
+	void		 listento (ipaddress addr, int port);
+	
 				 /// Start listening on a Unix socket.
 				 /// \param path The Unix path.
 				 /// \throw socketCreateException Error creating a BSD socket.
@@ -208,6 +223,7 @@ protected:
 	bool		 listening; ///< True if the socket is listening.
 	bool		 tcpdomain; ///< True if we're AF_INET/tcp
 	int			 tcpdomainport; ///< Listen port for tcp.
+	ipaddress	 bindaddress; ///< Listen address (0 for INADDR_ANY)
 	string		 unixdomainpath; ///< Listen path for AF_UNIX.
 	lock<int>	 sock; ///< Lock to allow for cross-thread non blocking.
 };

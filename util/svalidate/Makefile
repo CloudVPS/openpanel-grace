@@ -11,7 +11,7 @@ install:
 	./makeinstall
 
 svalidate.exe: $(OBJ)
-	$(LD) $(LDFLAGS) -o svalidate.exe $(OBJ) $(LIBS) ../../lib/libgrace.a
+	$(LD) $(LDFLAGS) -o svalidate.exe $(OBJ) $(LIBS) -L../../lib -lgrace
 
 clean:
 	rm -f *.o *.exe
@@ -21,4 +21,4 @@ clean:
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -I../../include -c $<
+	$(CXX) $(SHARED) $(CXXFLAGS) $(INCLUDES) -I../../include -c $<

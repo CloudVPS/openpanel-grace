@@ -8,7 +8,7 @@ valuable::~valuable (void)
 {
 }
  
-void valuable::tovalue (value &into)
+void valuable::tovalue (value &into) const
 {
 	into.clear();
 }

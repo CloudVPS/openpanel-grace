@@ -157,7 +157,7 @@ public:
 					 value (const char *);
 					 
 					 /// Copy-constructor (from a valuable)
-					 value (class valuable &);
+					 value (const class valuable &);
 					 
 					 /// Copy-constructor (from a retained valuable)
 					 value (class valuable *);

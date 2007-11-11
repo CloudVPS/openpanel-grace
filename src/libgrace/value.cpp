@@ -236,7 +236,7 @@ value::value (value *v)
 // ========================================================================
 // COPY CONSTRUCTOR
 // ========================================================================
-value::value (valuable &v)
+value::value (const valuable &v)
 {
 	// First do a default null-initialization
 	init ();

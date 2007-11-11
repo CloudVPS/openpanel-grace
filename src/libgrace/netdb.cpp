@@ -54,6 +54,26 @@ value *netdb::gethostbyname (const string &name)
 }
 
 // ========================================================================
+// METHOD ::resolve
+// ========================================================================
+ipaddress netdb::resolve (const string &name)
+{
+	ipaddress result = 0;
+	struct hostent *he;
+	
+	he = ::gethostbyname_r (name.str());
+	if (! he) return result;
+	if (he->h_addrtype == AF_INET) // h_addr == h_addr_list[0];
+	{
+		struct in_addr *sin;
+		sin = ((struct in_addr *)he->h_addr_list[0]);
+		result = ntohl (sin->s_addr);
+	}
+	
+	return result;
+}
+
+// ========================================================================
 // METHOD ::gethostbyaddr
 // ========================================================================
 value *netdb::gethostbyaddr (const string &addr)

@@ -173,6 +173,7 @@ http.o: ../../include/grace/dictionary.h ../../include/grace/array.h
 http.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
 http.o: ../../include/grace/reg.h ../../include/grace/ringbuffer.h
 http.o: ../../include/grace/system.h ../../include/grace/timestamp.h
+http.o: ../../include/grace/ipaddress.h ../../include/grace/valuable.h
 http.o: ../../include/grace/strutil.h ../../include/grace/regexpression.h
 http.o: ../../include/grace/defaults.h
 httpd.o: ../../include/grace/httpd.h ../../include/grace/thread.h
@@ -188,6 +189,7 @@ httpd.o: ../../include/grace/array.h ../../include/grace/stringdict.h
 httpd.o: ../../include/grace/flags.h ../../include/grace/reg.h
 httpd.o: ../../include/grace/eventq.h ../../include/grace/tcpsocket.h
 httpd.o: ../../include/grace/system.h ../../include/grace/timestamp.h
+httpd.o: ../../include/grace/ipaddress.h ../../include/grace/valuable.h
 httpd.o: ../../include/grace/cmdtoken.h ../../include/grace/strutil.h
 httpd.o: ../../include/grace/regexpression.h ../../include/grace/filesystem.h
 httpd.o: ../../include/grace/perthread.h ../../include/grace/defaults.h
@@ -212,6 +214,8 @@ httpd_fileshare.o: ../../include/grace/eventq.h
 httpd_fileshare.o: ../../include/grace/tcpsocket.h
 httpd_fileshare.o: ../../include/grace/system.h
 httpd_fileshare.o: ../../include/grace/timestamp.h
+httpd_fileshare.o: ../../include/grace/ipaddress.h
+httpd_fileshare.o: ../../include/grace/valuable.h
 httpd_fileshare.o: ../../include/grace/cmdtoken.h
 httpd_fileshare.o: ../../include/grace/strutil.h
 httpd_fileshare.o: ../../include/grace/regexpression.h
@@ -252,7 +256,8 @@ netdb.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 netdb.o: ../../include/grace/stack.h ../../include/grace/iterator.h
 netdb.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
 netdb.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-netdb.o: ../../include/grace/flags.h
+netdb.o: ../../include/grace/flags.h ../../include/grace/ipaddress.h
+netdb.o: ../../include/grace/valuable.h
 process.o: ../../include/grace/process.h ../../include/grace/str.h
 process.o: ../../include/grace/value.h ../../include/grace/statstring.h
 process.o: ../../include/grace/checksum.h ../../include/grace/lock.h
@@ -329,6 +334,7 @@ smtp.o: ../../include/grace/dictionary.h ../../include/grace/array.h
 smtp.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
 smtp.o: ../../include/grace/reg.h ../../include/grace/ringbuffer.h
 smtp.o: ../../include/grace/system.h ../../include/grace/timestamp.h
+smtp.o: ../../include/grace/ipaddress.h ../../include/grace/valuable.h
 smtp.o: ../../include/grace/strutil.h ../../include/grace/regexpression.h
 smtp.o: ../../include/grace/defaults.h
 smtpd.o: ../../include/grace/smtpd.h ../../include/grace/thread.h
@@ -344,6 +350,7 @@ smtpd.o: ../../include/grace/array.h ../../include/grace/stringdict.h
 smtpd.o: ../../include/grace/flags.h ../../include/grace/reg.h
 smtpd.o: ../../include/grace/eventq.h ../../include/grace/tcpsocket.h
 smtpd.o: ../../include/grace/system.h ../../include/grace/timestamp.h
+smtpd.o: ../../include/grace/ipaddress.h ../../include/grace/valuable.h
 smtpd.o: ../../include/grace/defaults.h ../../include/grace/filesystem.h
 smtpd.o: ../../include/grace/strutil.h ../../include/grace/regexpression.h
 smtpd.o: ../../include/grace/perthread.h
@@ -359,7 +366,8 @@ socketpool.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
 socketpool.o: ../../include/grace/array.h ../../include/grace/stringdict.h
 socketpool.o: ../../include/grace/flags.h ../../include/grace/reg.h
 socketpool.o: ../../include/grace/ringbuffer.h ../../include/grace/system.h
-socketpool.o: ../../include/grace/timestamp.h
+socketpool.o: ../../include/grace/timestamp.h ../../include/grace/ipaddress.h
+socketpool.o: ../../include/grace/valuable.h
 statstring.o: ../../include/grace/statstring.h ../../include/grace/value.h
 statstring.o: ../../include/grace/str.h ../../include/grace/reg.h
 statstring.o: ../../include/grace/retain.h ../../include/grace/lock.h
@@ -428,10 +436,12 @@ tcpsocket.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
 tcpsocket.o: ../../include/grace/array.h ../../include/grace/stringdict.h
 tcpsocket.o: ../../include/grace/flags.h ../../include/grace/reg.h
 tcpsocket.o: ../../include/grace/ringbuffer.h ../../include/grace/system.h
-tcpsocket.o: ../../include/grace/timestamp.h ../../include/grace/defaults.h
+tcpsocket.o: ../../include/grace/timestamp.h ../../include/grace/ipaddress.h
+tcpsocket.o: ../../include/grace/valuable.h ../../include/grace/defaults.h
 tcpsocket.o: ../../include/grace/filesystem.h ../../include/grace/strutil.h
 tcpsocket.o: ../../include/grace/regexpression.h
-tcpsocket.o: ../../include/grace/perthread.h platform.h
+tcpsocket.o: ../../include/grace/perthread.h ../../include/grace/netdb.h
+tcpsocket.o: platform.h
 terminal.o: ../../include/grace/terminal.h ../../include/grace/file.h
 terminal.o: ../../include/grace/exception.h ../../include/grace/str.h
 terminal.o: ../../include/grace/value.h ../../include/grace/statstring.h

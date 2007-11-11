@@ -13,6 +13,7 @@
 #include <grace/system.h>
 #include <grace/defaults.h>
 #include <grace/filesystem.h>
+#include <grace/netdb.h>
 #include "platform.h"
 
 #include <sys/types.h>
@@ -104,14 +105,19 @@ void __grace_internal_freehostent (struct hostent *he)
 // false if the connection failed. In the rare case no socket
 // could be created, it throws an exception.
 // ========================================================================
-bool tcpsocket::connect (
-  const string &host, int port)
+bool tcpsocket::connect (const string &host, int port)
+{
+	return connect ((ipaddress) netdb::resolve (host), port);
+}
+
+bool tcpsocket::connect (ipaddress addr, int port)
 {
 	struct sockaddr_in	 remote;
 	struct sockaddr_in	 local;
 	struct in_addr		 bindaddr;
-	struct hostent 		*myhostent;
 	int					 pram = 1;
+	
+	if (! addr) return false;
 	
 	buffer.flush();
 	
@@ -130,44 +136,29 @@ bool tcpsocket::connect (
 					
 		remote.sin_family = AF_INET;
 		remote.sin_port   = htons (port);
+		remote.sin_addr.s_addr = htonl (addr);
 		
-		myhostent = __grace_internal_gethostbyname (host);
-		if (myhostent)
-		{
-			peer_addr = ntohl (*(myhostent->h_addr));
-			peer_name = host;
-			peer_port = port;
-			
-			memmove (&bindaddr, myhostent->h_addr,
-					 sizeof (struct in_addr));
-			
-			__grace_internal_freehostent (myhostent);
-			
-			remote.sin_addr = bindaddr;
+		peer_addr = addr;
+		peer_port = port;
 
-			// If an address to bind is set.. first bind 
-			if( localbindaddr )
-			{
-				local.sin_family 		  = AF_INET;
-				local.sin_port			  = 0;
-				local.sin_addr.s_addr = inet_addr( localbindaddr.cval() );
-					  
-				::bind( filno, (struct sockaddr *)&local, sizeof(local) );
-			}
-			
-			if (::connect (filno, (const sockaddr *) &remote,
-						   sizeof (struct sockaddr_in)) != 0)
-			{
-				::close (filno);
-				filno = -1;
-				errcode = FERR_NOCONNECT;
-				err.crop (0);
-				err.printf (errortext::sock::connfail, strerror (errno));
-				return false;
-			}
-		}
-		else
+		// If an address to bind is set.. first bind 
+		if( localbindaddr )
 		{
+			local.sin_family = AF_INET;
+			local.sin_port = 0;
+			local.sin_addr.s_addr = htonl (localbindaddr);
+				  
+			::bind( filno, (struct sockaddr *)&local, sizeof(local) );
+		}
+			
+		if (::connect (filno, (const sockaddr *) &remote,
+					   sizeof (struct sockaddr_in)) != 0)
+		{
+			::close (filno);
+			filno = -1;
+			errcode = FERR_NOCONNECT;
+			err.crop (0);
+			err.printf (errortext::sock::connfail, strerror (errno));
 			return false;
 		}
 	}
@@ -269,7 +260,7 @@ handshakes:
 // ========================================================================
 // METHOD bindtoaddr
 // ========================================================================
-bool tcpsocket::bindtoaddr (const string &address)
+bool tcpsocket::bindtoaddr (ipaddress address)
 {
 	localbindaddr = address; 
 	return true;
@@ -518,12 +509,17 @@ tcplistener::tcplistener (void)
 	tcpdomainport = 0;
 }
 
+void tcplistener::listento (int port)
+{
+	listento (0, port);
+}
+
 // ========================================================================
 // METHOD ::listento
 // -----------------
 // Set up listening on a tcp port.
 // ========================================================================
-void tcplistener::listento (int port)
+void tcplistener::listento (ipaddress addr, int port)
 {
 	exclusivesection (sock)
 	{
@@ -532,6 +528,8 @@ void tcplistener::listento (int port)
 			close (sock);
 			listening = false;
 		}
+		
+		bindaddress = addr;
 		
 		tcpdomain = true;
 		tcpdomainport = port;
@@ -543,7 +541,14 @@ void tcplistener::listento (int port)
 	
 		bzero ((char *) &remote, sizeof (remote));
 		remote.sin_family = AF_INET;
-		remote.sin_addr.s_addr = htonl (INADDR_ANY);
+		if (addr == 0)
+		{
+			remote.sin_addr.s_addr = htonl (INADDR_ANY);
+		}
+		else
+		{
+			remote.sin_addr.s_addr = htonl (addr);
+		}
 		remote.sin_port = htons (port);
 		
 		sock = socket (AF_INET, SOCK_STREAM, 0);
