@@ -325,7 +325,7 @@ public:
 					 	if (tgid) setregid (tgid, tegid);
 					 	if (tuid) setreuid (tuid, teuid);
 					 	
-					 	execv (cpath.str(), myargv);
+					 	execve (cpath.str(), argp, envp);
 					 	fout.printf ("could not run\n");
 					 	return EX_NOEXEC;
 					 }
