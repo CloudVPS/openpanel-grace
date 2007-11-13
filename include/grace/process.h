@@ -234,6 +234,7 @@ public:
 					 {
 					 	tuid = teuid = tgid = tegid = 0;
 					 	_argv = strutil::splitquoted (mcommand, ' ');
+					 	initargs ();
 					 	init (mcommand, withStdErr);
 					 }
 					 
@@ -246,6 +247,7 @@ public:
 					 {
 					 	tuid = teuid = tgid = tegid = 0;
 					 	_argv = args;
+					 	initargs ();
 					 	init (args[0].sval(), withStdErr);
 					 }	
 
@@ -260,6 +262,7 @@ public:
 					 	tuid = teuid = tgid = tegid = 0;
 					 	_argv = args;
 					 	_env = env;
+					 	initargs ();
 					 	init (args[0].sval(), withStdErr);
 					 }				
 					 
@@ -291,6 +294,26 @@ public:
 					 	settargetgid (pw["gid"].uval());
 					 }
 					 
+	void			 initargs (void)
+					 {
+					 	int i;
+					 	argp = new argptr[_argv.count()+1];
+					 	envp = new argptr[_env.count()+1];
+					 	
+					 	for (i=0; i<_argv.count(); ++i)
+					 	{
+					 		argp[i] = (char *) _argv[i].cval();
+					 	}
+					 	argp[i] = 0;
+					 	
+					 	for (i=0; i<_env.count(); ++i)
+					 	{
+					 		envp[i] = (char *) _env[i].cval();
+					 	}
+					 	envp[i] = 0;
+					 	cpath = fs.transr (argp[0]);
+					 }
+					 
 					 /// Child process.
 					 /// Creates an argument list, resolves the path to the
 					 /// file and uses plain old execv() to do the dirty
@@ -298,24 +321,6 @@ public:
 					 /// \return Process return-value.
 	virtual int		 main (void)
 					 {
-					 	argptr *myargv;
-					 	string cpath;
-					 	int i;
-					 	
-					 	myargv = new argptr[_argv.count()+1];
-					 	for (i=0; i<_argv.count(); ++i)
-					 	{
-					 		myargv[i] = (char *) _argv[i].cval();
-					 	}
-					 	myargv[i] = NULL;
-					 	
-					 	foreach (var, _env)
-					 	{
-					 		::setenv (var.id().str(), var.cval(), 1);
-					 	}
-					 	
-					 	cpath = fs.transr (myargv[0]);
-					 	
 					 	if (tgid || tuid) setgroups (0, NULL);
 					 	if (tgid) setregid (tgid, tegid);
 					 	if (tuid) setreuid (tuid, teuid);
@@ -332,6 +337,9 @@ protected:
 	uid_t			 teuid; ///< Target effective userid for the child.
 	gid_t			 tgid; ///< Target real groupid for the child.
 	gid_t			 tegid; ///< Target effective groupid for the child.
+	argptr			*envp; ///< Target environmemt
+	argptr			*argp; ///< Target argument list.
+	string			 cpath; ///< Command path.
 };
 
 #endif
