@@ -52,7 +52,7 @@ int forktestApp::main (void)
 	
 	while (true)
 	{
-		sleep (1);
+		sleep (3);
 		int i;
 		sharedsection (counter) i = counter;
 		if (i>=8000) break;

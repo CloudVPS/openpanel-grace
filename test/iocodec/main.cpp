@@ -58,16 +58,17 @@ public:
 			 {
 			 }
 			 
-	void	 fetchinput (ringbuffer &into)
+	bool	 fetchinput (ringbuffer &into)
 			 {
 			 	size_t amt;
 			 	amt = rbuf.backlog();
 			 	if (amt > into.room()) amt = into.room();
-			 	if (!amt) return;
+			 	if (!amt) return false;
 			 	
 			 	string tstr;
 			 	tstr = rbuf.read (amt);
 			 	into.add (tstr.str(), tstr.strlen());
+			 	return false;
 			 }
 	void	 peekoutput (string &into)
 			 {

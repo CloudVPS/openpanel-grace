@@ -47,6 +47,12 @@ public:
 				 /// \throw EX_SSL_INIT Error initializing sslclientcodec.
 	bool		 connect (const string &host, int hport);
 	
+				 /// Connect to an IPv4 host by name.
+	bool		 connect (const char *host, int port)
+				 {
+				 	return connect ((string) host, port);
+				 }
+	
 				 /// Connect to an IPv4 host by address.
 				 /// Returns true if connection succeeded.
 				 /// \param host Hostname or dotted quad to connect to.
