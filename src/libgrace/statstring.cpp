@@ -103,6 +103,7 @@ void stringrefdb::rmref (stringref *ref)
 // ========================================================================
 void stringrefdb::unref (stringref *ref)
 {
+	if (! root) return;
 	exclusivesection (treelock)
 	{
 		ref->refcnt--;
