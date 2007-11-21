@@ -132,7 +132,7 @@ public:
 					 {
 					 	if (!_pid)
 					 	{
-					 		exit (main());
+					 		_exit (main());
 					 	}
 					 }
 
@@ -286,7 +286,7 @@ public:
 					 	value pw = kernel.userdb.getpwnam (uname);
 					 	if (! pw)
 					 	{
-					 		if (! _pid) exit (0);
+					 		if (! _pid) _exit (0);
 					 		return false;
 					 	}
 					 	

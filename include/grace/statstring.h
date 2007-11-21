@@ -103,7 +103,7 @@ public:
 							 	
 							 	return res;
 							 }
-	
+							 
 protected:
 	stringref				*root; ///< Root node of the database.
 	unsigned short			 sequence; ///< Current sequence number.

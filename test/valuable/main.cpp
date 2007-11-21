@@ -40,7 +40,7 @@ protected:
 				 	email = v["email"];
 				 	level = v["level"];
 				 }
-	virtual void tovalue (value &v)
+	virtual void tovalue (value &v) const
 				 {
 				 	v["name"] = name;
 				 	v["email"] = email;
