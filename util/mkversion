@@ -1,7 +1,8 @@
 #!/bin/sh
 
 genversion() {
-    BRANCH=`hg parents -b --template '{branches}\n'`
+    hg parents -b >/dev/null 2>&1 || BRANCH=$(hg tags | { read a; read line; tipmost=`echo "$line" | cut -f1 -d" "`; echo "$tipmost"; })
+    if [ -z "$BRANCH" ]; then BRANCH=`hg parents -b --template '{branches}\n'`; fi
 	if [ -z "$DISTRO" ]; then
 	  DISTRO="generic"
 	fi
