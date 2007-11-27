@@ -244,9 +244,9 @@ void application::init (int Argc, char *Argv[])
 		// short option (-f -o -o)
 		if ((arg[0] == '-') && (arg[1] != '-'))
 		{
-			value optarg = opt[arg];
-			string longname = opt[arg]["long"].sval();
-			value longarg = opt[opt[arg]["long"].sval()];
+			value &optarg = opt[arg];
+			statstring longname = optarg["long"].sval();
+			value &longarg = opt[longname];
 			// should it have arguments (and more than 1)?
 			if (longarg["argc"] > 1)
 			{
