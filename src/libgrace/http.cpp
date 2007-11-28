@@ -427,14 +427,14 @@ bool httpsocket::getChunked (string &into)
 						else
 						{
 							errorcode = HTERR_TIMEOUT;
-							error = "Timeout";
+							error = errortext::http::timeout;
 							return false;
 						}
 					}
 					if (! _sock.waitforline (ln, _timeout, 16))
 					{
 						errorcode = HTERR_TIMEOUT;
-						error = "Timeout";
+						error = errortext::http::timeout;
 						return false;
 					}
 				}
