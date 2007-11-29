@@ -21,6 +21,13 @@
 #include <stdio.h>
 #include <string.h>
 
+value *$ (const statstring &id, const value &v)
+{
+	returnclass (value) res retain;
+	res[id] = v;
+	return &res;
+}
+
 // ========================================================================
 // CONSTRUCTOR
 // -----------

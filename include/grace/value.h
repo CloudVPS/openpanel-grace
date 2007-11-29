@@ -108,6 +108,8 @@ bool naturalSort (value *, value *, const string &);
 /// is left empty, the node's key is used for sorting.
 bool naturalLabelSort (value *, value *, const string &);
 
+value *$ (const statstring &id, const value &v);
+
 /// Generic storage for hierarchical data.
 /// A value object can either contain direct data (either an integer, a
 /// string or some other intrinsic type) or a mixed array of child values,
@@ -1100,6 +1102,13 @@ public:
 	
 					 /// Wipe out value and children.
 	void 			 clear (void);
+	
+					 /// Setter.
+	value			*$ (const statstring &id, const value &v)
+					{
+						(*this)[id] = v;
+						return this;
+					}
 	
 					 /// Return reference to a new unkeyed child.
 					 /// \param typ Registered type of the new child.
