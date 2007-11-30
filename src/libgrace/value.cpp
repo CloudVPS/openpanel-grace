@@ -41,7 +41,7 @@ value::value (void)
 // ========================================================================
 // CONSTRUCTOR (char)
 // -----------
-// This constructor initializes an empty value object
+// This constructor initializes a value object with string data.
 // ========================================================================
 value::value (const char *orig)
 {
@@ -50,9 +50,20 @@ value::value (const char *orig)
 }
 
 // ========================================================================
+// CONSTRUCTOR (double)
+// --------------------
+// This constructor initializes a value object with a float value.
+// ========================================================================
+value::value (double orig)
+{
+	init (true);
+	(*this) = orig;
+}
+
+// ========================================================================
 // CONSTRUCTOR (key)
 // -----------------
-// This constructor initializes value object with an integer key
+// This constructor initializes a value object with an integer key
 // ========================================================================
 value::value (creatorlabel l, unsigned int k)
 {

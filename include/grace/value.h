@@ -158,6 +158,9 @@ public:
 					 /// Copy-constructor (from string).
 					 value (const char *);
 					 
+					 /// Copy-constructor (from double).
+					 value (double);
+					 
 					 /// Copy-constructor (from a valuable)
 					 value (const class valuable &);
 					 
