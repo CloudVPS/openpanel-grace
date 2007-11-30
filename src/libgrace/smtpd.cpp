@@ -203,11 +203,10 @@ void smtpworker::run (void)
 	// Send an event if someone cares
 	if (parent->mask & SMTP_INFO)
 	{
-		value outev;
-		outev("class") = "info";
-		outev["type"] = "threadstarted";
-		outev["thread"] = threadid;
-		parent->eventhandle (outev);
+		parent->eventhandle (
+			$attr("class", "info") ->
+			$("type", "threadstarted") ->
+			$("thread", threadid));
 	}
 	
 	// Loop
@@ -226,11 +225,10 @@ void smtpworker::run (void)
 					run = false;
 					if (parent->mask & SMTP_INFO)
 					{
-						value outev;
-						outev("class") = "info";
-						outev["type"] = "threadstopped";
-						outev["thread"] = threadid;
-						parent->eventhandle (outev);
+						parent->eventhandle (
+							$attr("class","info") ->
+							$("type", "threadstopped") ->
+							$("thread", threadid));
 					}
 					return;
 				}
@@ -270,13 +268,12 @@ void smtpworker::run (void)
 		// Send an event for the connection, if someone wants it.
 		if (parent->mask & SMTP_INFO)
 		{
-			value outev;
-			outev("class") = "info";
-			outev["type"] = "connectionaccepted";
-			outev["thread"] = threadid;
-			outev["load"] = nload;
-			outev["ip"] = exip;
-			parent->eventhandle (outev);
+			parent->eventhandle (
+				$attr("class", "info") ->
+				$("type", "connectionaccepted") ->
+				$("thread", threadid) ->
+				$("load", nload) ->
+				$("ip", exip));
 		}
 		
 		st = SMTP_WAITHELO; // next state.
@@ -385,15 +382,14 @@ mainloop:
 					{
 						if (parent->mask & SMTP_DELIVERY)
 						{
-							value outev;
-							outev("class") = "delivery";
-							outev["thread"] = threadid;
-							outev["from"] = env["from"];
-							outev["rcpt"] = env["rcpt"];
-							outev["size"] = mailbody.strlen();
-							outev["status"] = 250;
-							outev["transaction-id"] = env["transaction-id"];
-							parent->eventhandle (outev);
+							parent->eventhandle (
+								$attr("class", "delivery") ->
+								$("thread", threadid) ->
+								$("from", env["from"]) ->
+								$("rcpt", env["rcpt"]) ->
+								$("size", mailbody.strlen()) ->
+								$("status", 250) ->
+								$("transaction-id", env["transactionid"]));
 						}
 						
 						s.puts ("250 OK %s\r\n" %format (env["transaction-id"]));
@@ -403,14 +399,13 @@ mainloop:
 					{
 						if (parent->mask & SMTP_DELIVERY)
 						{
-							value outev;
-							outev("class") = "delivery";
-							outev["thread"] = threadid;
-							outev["from"] = env["from"];
-							outev["rcpt"] = env["rcpt"];
-							outev["size"] = mailbody.strlen();
-							outev["status"] = 550;
-							parent->eventhandle (outev);
+							parent->eventhandle (
+								$attr("class", "delivery") ->
+								$("thread", threadid) ->
+								$("from", env["from"]) ->
+								$("rcpt", env["rcpt"]) ->
+								$("size", mailbody.strlen()) ->
+								$("status", 550));
 						}
 
 						s.printf ("550 Failed\r\n");
@@ -445,12 +440,11 @@ mainloop:
 		
 		if (parent->mask & SMTP_INFO)
 		{
-			value outev;
-			outev("class") = "info";
-			outev["type"] = "connectionclosed";
-			outev["ip"] = exip;
-			outev["thread"] = threadid;
-			parent->eventhandle (outev);
+			parent->eventhandle (
+				$attr("class", "info") ->
+				$("type", "connectionclosed") ->
+				$("ip", exip) ->
+				$("thread", threadid));
 		}
 	}
 }
