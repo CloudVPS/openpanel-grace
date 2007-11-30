@@ -234,7 +234,7 @@ const char *httpstatusstr (int st)
 // The types 'threadstopped' and 'connectionclosed' have the same payload
 // as their counterparts listed above.
 // ========================================================================
-void httpd::eventhandle (value &ev)
+void httpd::eventhandle (const value &ev)
 {
 	httpdeventhandler *hdl;
 	int eventclass = 0;
@@ -304,10 +304,10 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 	}
 		
 	// Give the objects access to the keepalive status
-	env["keepalive"] = keepalive;
-	env["method"] = method;
-	env["ip"] = s.peer_name;
-	env["referrer"] = inhdr["Referrer"];
+	env << $("keepalive", keepalive) ->
+		   $("method", method) ->
+		   $("ip", s.peer_name) ->
+		   $("referrer", inhdr["Referer"]);
 	
 	// Loop over the chain
 	while (crsr)
@@ -337,21 +337,19 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 				// Create a log-event if needed
 				if (eventmask & HTTPD_ACCESS)
 				{
-					value logdata;
-					logdata("class") = "access";
-					logdata["method"] = method;
-					logdata["httpver"] = httpver;
-					logdata["uri"] = uri;
-					logdata["file"] = env["file"];
-					logdata["ip"] = s.peer_name;
-					logdata["user"] = env["user"];
-					logdata["referrer"] = inhdr["Referrer"];
-					logdata["useragent"] = inhdr["User-Agent"];
-					logdata["status"] = res;
-					logdata["bytes"] = outbody.strlen();
-					
 					keepalive = env["keepalive"].bval();
-					eventhandle (logdata);
+					eventhandle ($attr("class", "access") ->
+								 $("method", method) ->
+								 $("httpver", httpver) ->
+								 $("uri", uri) ->
+								 $("file", env["file"]) ->
+								 $("ip", s.peer_name) ->
+								 $("user", env["user"]) ->
+								 $("referrer", inhdr["Referer"]) ->
+								 $("useragent", inhdr["User-Agent"]) ->
+								 $("status", res) ->
+								 $("bytes", outbody.strlen())
+								);
 				}
 				
 				return;
@@ -361,20 +359,18 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 				// Create a log-event if needed
 				if (eventmask & HTTPD_ACCESS)
 				{
-					value logdata;
-					logdata("class") = "access";
-					logdata["method"] = method;
-					logdata["httpver"] = httpver;
-					logdata["uri"] = uri;
-					logdata["file"] = env["file"];
-					logdata["ip"] = s.peer_name;
-					logdata["user"] = env["user"];
-					logdata["referrer"] = inhdr["Referer"];
-					logdata["useragent"] = inhdr["User-Agent"];
-					logdata["status"] = -res;
-					logdata["bytes"] = env["sentbytes"].ival();
-					
-					eventhandle (logdata);
+					eventhandle ($attr("class", "access") ->
+								 $("method", method) ->
+								 $("httpver", httpver) ->
+								 $("uri", uri) ->
+								 $("file", env["file"]) ->
+								 $("ip", s.peer_name) ->
+								 $("user", env["user"]) ->
+								 $("referrer", inhdr["Referer"]) ->
+								 $("useragent", inhdr["User-Agent"]) ->
+								 $("status", -res) ->
+								 $("bytes", env["sentbytes"].ival())
+								);
 				}
 				
 				// Retain the keepalive status
@@ -386,39 +382,37 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 	}
 	
 	// Tough luck, fall back to ugliness
-	s.printf ("HTTP/1.1 404 NOT FOUND\r\n");
+	s.puts ("HTTP/1.1 404 NOT FOUND\r\n");
 	
 	int fbytes;
 	
 	if (havedefault (404))
 	{
-		s.printf ("Content-type: text/html\r\n");
+		s.puts ("Content-type: text/html\r\n");
 		fbytes = sendfile (s, defaultdocument (404));
 	}
 	else
 	{
-		s.printf ("Content-length: 36\r\n");
-		s.printf ("Content-type: text/html\r\n\r\n");
-		s.printf ("<html><h1>404 Not Found</h1></html>\n");
+		s.puts ("Content-length: 36\r\n"
+				"Content-type: text/html\r\n\r\n"
+				"<html><h1>404 Not Found</h1></html>\n");
 		fbytes = 36;
 	}
 	
 	if (eventmask & HTTPD_ACCESS)
 	{
-		value logdata;
-		logdata("class") = "access";
-		logdata["method"] = method;
-		logdata["httpver"] = httpver;
-		logdata["uri"] = uri;
-		logdata["file"] = "";
-		logdata["ip"] = s.peer_name;
-		logdata["user"] = "";
-		logdata["referrer"] = inhdr["Referer"];
-		logdata["useragent"] = inhdr["User-Agent"];
-		logdata["status"] = 404;
-		logdata["bytes"] = fbytes;
-		
-		eventhandle (logdata);
+		eventhandle ($attr("class", "access") ->
+					 $("method", method) ->
+					 $("httpver", httpver) ->
+					 $("uri", uri) ->
+					 $("file", "") ->
+					 $("ip", s.peer_name) ->
+					 $("user", "") ->
+					 $("referrer", inhdr["Referer"]) ->
+					 $("useragent", inhdr["User-Agent"]) ->
+					 $("status", 404) ->
+					 $("bytes", fbytes)
+					);
 	}
 	
 	keepalive = false;
@@ -443,11 +437,10 @@ void httpdworker::run (void)
 	// If anyone cares, shout out that we're alive
 	if (parent->eventmask & HTTPD_INFO)
 	{
-		value ev;
-		ev("class") = "info";
-		ev["type"] = "threadstarted";
-		ev["thread"] = threadid;
-		parent->eventhandle (ev);
+		parent->eventhandle ($attr("class", "info") ->
+							 $("type", "threadstarted") ->
+							 $("thread", threadid)
+							);
 	}
 	
 	// As long as we weren't asked to die
@@ -464,11 +457,9 @@ void httpdworker::run (void)
 					run = false;
 					if (parent->eventmask & HTTPD_INFO)
 					{
-						value ev;
-						ev("class") = "info";
-						ev["type"] = "threadstopped";
-						ev["thread"] = threadid;
-						parent->eventhandle (ev);
+						parent->eventhandle ($attr("class", "info") ->
+											 $("type", "threadstopped") ->
+											 $("thread", threadid));
 					}
 					return;
 				}
@@ -489,11 +480,9 @@ void httpdworker::run (void)
 						parent->tcplock.unlock();
 						if (parent->eventmask & HTTPD_INFO)
 						{
-							value ev;
-							ev("class") = "info";
-							ev["type"] = "threadstopped";
-							ev["thread"] = threadid;
-							parent->eventhandle (ev);
+							parent->eventhandle ($attr("class", "info") ->
+												 $("type", "threadstopped") ->
+												 $("thread", threadid));
 						}
 						return;
 					}
@@ -510,13 +499,11 @@ void httpdworker::run (void)
 		// Should we tell anyone?
 		if (parent->eventmask & HTTPD_INFO)
 		{
-			value ev;
-			ev("class") = "info";
-			ev["type"] = "connectionaccepted";
-			ev["thread"] = threadid;
-			ev["load"] = nload;
-			ev["ip"] = s.peer_name;
-			parent->eventhandle (ev);
+			parent->eventhandle ($attr("class", "info") ->
+								 $("type", "connectionaccepted") ->
+								 $("thread", threadid) ->
+								 $("load", nload) ->
+								 $("ip", s.peer_name));
 		}
 		
 		bool keepalive = true;
@@ -583,23 +570,20 @@ void httpdworker::run (void)
 					if (sz > (unsigned int) parent->maxpostsize())
 					{
 						// tis? Whine!
-						s.printf ("HTTP/1.1 413 ENTITY TOO LARGE\r\n");
-						s.printf ("Content-type: text/html\r\n\r\n");
-						s.printf (errortext::httpd::html_body,
-								  errortext::httpd::html_413);
+						s.puts ("HTTP/1.1 413 ENTITY TOO LARGE\r\n"
+								"Content-type: text/html\r\n\r\n");
+						s.puts (errortext::httpd::html_body
+								  %format (errortext::httpd::html_413));
 						keepalive = false;
 						
 						// Whine upstream if needed
 						if (parent->eventmask & HTTPD_ERROR)
 						{
-							value ev;
-							string ertxt;
-							ertxt.printf (errortext::httpd::toolarge, sz);
-							
-							ev("class") = "error";
-							ev["ip"] = s.peer_name;
-							ev["text"] = ertxt;
-							parent->eventhandle (ev);
+							parent->eventhandle (
+								$attr("class", "error") ->
+								$("ip", s.peer_name) ->
+								$("text", errortext::httpd::toolarge
+											%format ((int) sz)));
 						}
 						break;
 					}
@@ -616,19 +600,18 @@ void httpdworker::run (void)
 					{
 						if (httpHeaders["Content-length"].ival() > 0)
 						{
-							s.printf ("HTTP/1.1 400 BAD REQUEST\r\n");
-							s.printf ("Content-type: text/html\r\n\r\n");
-							s.printf ("<html><h1>GET request with POST body");
-							s.printf (" not allowed</h1></html>\n");
+							s.puts ("HTTP/1.1 400 BAD REQUEST\r\n"
+									"Content-type: text/html\r\n\r\n"
+									"<html><h1>GET request with POST body"
+									" not allowed</h1></html>\n");
 							keepalive = false;
 							
 							if (parent->eventmask & HTTPD_ERROR)
 							{
-								value ev;
-								ev("class") = "error";
-								ev["ip"] = s.peer_name;
-								ev["text"] = errortext::httpd::getbody;
-								parent->eventhandle (ev);
+								parent->eventhandle (
+									$attr("class", "error") ->
+									$("ip", s.peer_name) ->
+									$("text", errortext::httpd::getbody));
 							}
 							break;
 						}
@@ -687,14 +670,10 @@ void httpdworker::run (void)
 					// Tell the world if it cares
 					if (parent->eventmask & HTTPD_ERROR)
 					{
-						value ev;
-						string ertxt;
-						ertxt = errortext::httpd::method %format (cmd);
-						
-						ev("class") = "error";
-						ev["ip"] = s.peer_name;
-						ev["text"] = ertxt;
-						parent->eventhandle (ev);
+						parent->eventhandle (
+							$attr("class", "error") ->
+							$("ip", s.peer_name) ->
+							$("text", errortext::httpd::method %format (cmd)));
 					}
 				}
 			}
@@ -711,13 +690,12 @@ void httpdworker::run (void)
 		// Inform those who want to be informed
 		if (parent->eventmask & HTTPD_INFO)
 		{
-			value ev;
-			ev("class") = "info";
-			ev["type"] = "connectionclosed";
-			ev["thread"] = threadid;
-			ev["load"] = nload;
-			ev["ip"] = s.peer_name;
-			parent->eventhandle (ev);
+			parent->eventhandle (
+				$attr("class", "info") ->
+				$("type", "connectionclosed") ->
+				$("thread", threadid) ->
+				$("load", nload) ->
+				$("ip", s.peer_name));
 		}
 	}
 }
@@ -857,19 +835,16 @@ int httpdbasicauth::run (string &uri, string &postbody,
 		// Whine to some log object if there's any that care
 		if (username.strlen() && (parent->eventmask & HTTPD_ERROR))
 		{
-			value outev;
-			string errtxt;
-			errtxt = errortext::httpd::authfail %format (username, realm, uri);
-			outev("class") = "error";
-			outev["ip"] = s.peer_name;
-			outev["text"] = errtxt;
-			parent->eventhandle (outev);
+			parent->eventhandle (
+				$attr("class", "error") ->
+				$("ip", s.peer_name) ->
+				$("text", errortext::httpd::authfail
+										%format (username, realm, uri)));
 		}
 		return 401;
 	}
 	
 	env["user"] = username;
-	
 	return 0;
 }
 
@@ -901,7 +876,7 @@ httpdeventhandler::httpdeventhandler (httpd &pparent,
 // I guess Someone forgot to override a virtual method. Now Someone will
 // be facing a default method. I guess Someone will feel stupid.
 // ========================================================================
-int httpdeventhandler::handle (value &ev)
+int httpdeventhandler::handle (const value &ev)
 {
 	return 0;
 }
@@ -912,14 +887,14 @@ int httpdeventhandler::handle (value &ev)
 // Writes access events to an apache-style accesslog. Writes error events
 // to an apache-style errorlog. Life is simple.
 // ========================================================================
-int httpdlogger::handle (value &ev)
+int httpdlogger::handle (const value &ev)
 {
 	timestamp ti = kernel.time.now();
 	string timestr = ti.format ("%d/%b/%Y:%H:%M:%S %z");
 	string uri = ev["uri"];
 	if (uri.strchr ('?') >= 0) delete uri.cutafter ('?');
 
-	if (ev ("class") == "access")
+	if (ev("class") == "access")
 	{
 		string remuser = ev["user"];
 		if (! remuser.strlen()) remuser = "-";
@@ -1059,12 +1034,10 @@ int httpdvhost::run (string &uri, string &postbody, value &inhdr,
 	// Also whine to the errorlog, if it's there.
 	if (parent->eventmask & HTTPD_ERROR)
 	{
-		value outev;
-		string errtxt = errortext::httpd::novhost %format (host);
-		outev("class") = "error";
-		outev["ip"] = s.peer_name;
-		outev["text"] = errtxt;
-		parent->eventhandle (outev);
+		parent->eventhandle (
+			$attr("class", "error") ->
+			$("ip", s.peer_name) ->
+			$("text", errortext::httpd::novhost %format (host)));
 	}
 	
 	// We'll file this under case number 404: "The Lost Case"

@@ -95,4 +95,15 @@ public:
 #define APPOBJECT(foo) extern "C" foo *app (void) { static foo *a = new foo; return a; }
 #define MAIN (* (app()))
 
+#define $appid(theid) const char *__GRACE_APPID = #theid
+#define $version(theversion) const char *__GRACE_APPVERSION = #theversion
+#define $appobject(classname) extern "C" classname *app (void) \
+	{ \
+		static classname *a = new classname; \
+		return a; \
+	}
+
+
+			
+
 #endif

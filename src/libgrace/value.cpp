@@ -28,6 +28,27 @@ value *$ (const statstring &id, const value &v)
 	return &res;
 }
 
+value *$ (const value &v)
+{
+	returnclass (value) res retain;
+	res = v;
+	return &res;
+}
+
+value *$attr (const statstring &id, const value &v)
+{
+	returnclass (value) res retain;
+	res(id) = v;
+	return &res;
+}
+
+value *$type (const statstring &t)
+{
+	returnclass (value) res retain;
+	res.type (t);
+	return &res;
+}
+
 // ========================================================================
 // CONSTRUCTOR
 // -----------
@@ -337,6 +358,14 @@ value::value (unsigned long long orig)
 	t.ulval = orig;
 	itype = i_ulong;
 	_type = t_ulong;
+}
+
+value::value (bool b)
+{
+	init ();
+	t.ival = b ? 1 : 0;
+	itype = i_bool;
+	_type = t_bool;
 }
 
 // ========================================================================

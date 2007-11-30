@@ -272,6 +272,11 @@ public:
 							assign (str);
 							return *this;
 						}
+	inline statstring	&operator= (statstring *str)
+						 {
+						 	assign (str);
+						 	return *this;
+						 }
 			
 	inline statstring	&operator= (const char *str)
 						{

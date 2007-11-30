@@ -109,6 +109,9 @@ bool naturalSort (value *, value *, const string &);
 bool naturalLabelSort (value *, value *, const string &);
 
 value *$ (const statstring &id, const value &v);
+value *$ (const value &v);
+value *$attr (const statstring &id, const value &v);
+value *$type (const statstring &t);
 
 /// Generic storage for hierarchical data.
 /// A value object can either contain direct data (either an integer, a
@@ -184,6 +187,8 @@ public:
 					 value (long long);
 					 
 					 value (unsigned long long);
+					 
+					 value (bool);
 					 
 					 /// Destructor.
 					~value (void);
@@ -606,7 +611,7 @@ public:
 	}
 
 	/// Merge children of other value into current tree.
-	inline value	&operator<< (value &v)
+	inline value	&operator<< (const value &v)
 	{
 		for (int i=0; i<v.count(); ++i)
 		{
@@ -1108,10 +1113,25 @@ public:
 	
 					 /// Setter.
 	value			*$ (const statstring &id, const value &v)
-					{
+					 {
 						(*this)[id] = v;
 						return this;
-					}
+					 }
+	value			*$ (const value &v)
+					 {
+					 	(*this) << v;
+					 	return this;
+					 }
+	value			*$attr (const statstring &id, const value &v)
+					 {
+					 	(*this)(id) = v;
+					 	return this;
+					 }
+	value			*$type (const statstring &t)
+					 {
+					 	type (t);
+					 	return this;
+					 }
 	
 					 /// Return reference to a new unkeyed child.
 					 /// \param typ Registered type of the new child.

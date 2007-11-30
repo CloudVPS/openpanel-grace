@@ -574,7 +574,7 @@ public:
 					 	 /// 
 					 	 /// These are some example events:
 					 	 /// \verbinclude httpd_events.xml
-	virtual int			 handle (value &ev);
+	virtual int			 handle (const value &ev);
 	
 						 /// Which event classes to apply. Is a combination
 						 /// of HTTPD_ACCESS, HTTPD_ERROR and HTTPD_INFO.
@@ -624,7 +624,7 @@ public:
 						 /// Writes access events to the access log file.
 						 /// If haserrorlog is true, error events are
 						 /// also written to the error log file.
-	virtual int			 handle (value &);
+	virtual int			 handle (const value &);
 	
 protected:
 	lock<file>			 faccess; ///< The access log file
@@ -819,7 +819,7 @@ public:
 					 /// Handle an event through the chain of event handlers.
 					 /// Some example events:
 					 /// \verbinclude httpd_events.xml
-	void			 eventhandle (value &);
+	void			 eventhandle (const value &);
 	
 					 /// Use sendfile symantics to send a disk file.
 					 /// \param s The request's tcpsocket.
