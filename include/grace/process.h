@@ -269,6 +269,8 @@ public:
 					 /// Destructor.
 	virtual			~systemprocess (void)
 					 {
+					 	delete[] argp;
+					 	delete[] envp;
 					 }
 					 
 	void			 settargetuid (uid_t ruid)
@@ -305,6 +307,16 @@ public:
 					 		argp[i] = (char *) _argv[i].cval();
 					 	}
 					 	argp[i] = 0;
+					 	
+					 	if (! _env.exists ("PATH"))
+					 	{
+					 		_env["PATH"] = ::getenv("PATH");
+					 	}
+					 	
+					 	foreach (e, _env)
+					 	{
+					 		e = "%s=%s" %format (e.id(), e);
+					 	}
 					 	
 					 	for (i=0; i<_env.count(); ++i)
 					 	{
