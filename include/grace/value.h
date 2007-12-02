@@ -1337,6 +1337,9 @@ public:
 	void			 encodejsonid (string &into);
 	void			 encodejson (string &into);
 	string			*tojson (void);
+	
+	void			 encodegrace (string &into, int indent);
+	string			*tograce (void);
 
 					 /// Convert from CXML.
 					 /// Uses a binary storage format comparable to the
