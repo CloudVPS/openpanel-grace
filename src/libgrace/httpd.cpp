@@ -561,7 +561,8 @@ void httpdworker::run (void)
 				cmd.ctoupper();
 				
 				// If it was a post, get the post body.
-				if (cmd.strcasecmp ("post") == 0)
+				if ((cmd.strcasecmp ("post") == 0) ||
+					(cmd.strcasecmp ("put") == 0))
 				{
 					size_t sz = httpHeaders["Content-length"].uval();
 					
