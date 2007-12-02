@@ -41,7 +41,7 @@ void *thread::dorun (void *param)
 	sigemptyset (&sigs);
 	sigaddset (&sigs, SIGPIPE);
 	pthread_sigmask (SIG_BLOCK, &sigs, NULL);
-	pthread_setcanceltype (PTHREAD_CANCEL_DISABLE, NULL);
+	pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, NULL);
 
 	(*me).isrunning.lockw();
 	(*me).isrunning.o = true;

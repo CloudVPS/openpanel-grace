@@ -166,7 +166,7 @@ public:
 					 	}
 					 	return &res;
 					 }
-	
+
 protected:
 	pthread_t		 tid; ///< Local thread id.
 	pthread_attr_t	 attr; ///< POSIX thread attributes.

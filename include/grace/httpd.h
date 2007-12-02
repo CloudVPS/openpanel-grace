@@ -864,6 +864,7 @@ protected:
 	string				 syspath; ///< System path.
 	int					_maxpostsize; ///< Max post size.
 	bool				_shutdown; ///< True if shutdown mode is on.
+	conditional			 shutdowndone; ///< Shutdown conditional
 };
 
 // ------------------------------------------------------------------------

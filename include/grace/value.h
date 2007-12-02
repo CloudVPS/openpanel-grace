@@ -1331,6 +1331,13 @@ public:
 	bool			 loadxml (const string &p, class xmlschema &s, string &er);
 	bool			 fromxml (const string &p, class xmlschema &s, string &er);
 					 
+	bool			 fromjson (const string &j);
+
+	void			 encodejsonstring (string &into);
+	void			 encodejsonid (string &into);
+	void			 encodejson (string &into);
+	string			*tojson (void);
+
 					 /// Convert from CXML.
 					 /// Uses a binary storage format comparable to the
 					 /// Apple/NeXT serialized plist. Requires a schema
@@ -1345,6 +1352,10 @@ public:
 					 /// CXML elements.
 					 /// \param s The schema to use.
 	string			*tocxml (class xmlschema &s);
+	
+	const char		*decodejson (const char *);
+	const char		*readjsonstring (const char *, string &);
+	const char		*readjsonnumber (const char *, string &);
 
 	// Apple plist format import/export
 					 /// Save in Apple's plist format.

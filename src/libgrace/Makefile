@@ -46,6 +46,7 @@ OBJ			= 	application.o \
 				value_ascii.o \
 				value_ini.o \
 				value_ip.o \
+				value_json.o \
 				value_php.o \
 				value_plist.o \
 				value_sort.o \

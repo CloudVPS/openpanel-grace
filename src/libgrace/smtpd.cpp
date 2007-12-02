@@ -160,12 +160,12 @@ void smtpd::run (void)
 }
 
 #define SENDERROR(str) { \
-	if (parent->mask & SMTP_ERROR) { \
-		value outev; \
-		outev("class") = "error"; \
-		outev["thread"] = threadid; \
-		outev["error"] = str; \
-		parent->eventhandle (outev); }}
+	if (parent->mask & SMTP_ERROR) \
+		parent->eventhandle ( \
+			$attr("class", "error") -> \
+			$("thread", threadid) -> \
+			$("error", str)); \
+}
 
 // ==========================================================================
 // METHOD smtpworker::run

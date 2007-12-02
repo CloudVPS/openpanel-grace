@@ -47,7 +47,9 @@ void httpd::run (void)
 	// Main loop
 	while (! _shutdown)
 	{
-		sleep (tune::httpd::mainthread::idle); // No rush
+		value ev = waitevent (tune::httpd::mainthread::idle * 1000);
+		if (ev.type() == "die") break;
+
 		int tload;
 		
 		// Get the current load
@@ -99,19 +101,16 @@ void httpd::run (void)
 	}
 	while (workers.count())
 	{
-		sleep (1);
 		workers.gc ();
 	}
+	
+	shutdowndone.broadcast ();
 }
 
 void httpd::shutdown (void)
 {
-	while (workers.count())
-	{
-		_shutdown = true;
-		sleep (1);
-	}
-	
+	sendevent ("die");
+	shutdowndone.wait ();
 	workers.gc ();
 }
 
@@ -446,7 +445,7 @@ void httpdworker::run (void)
 	// As long as we weren't asked to die
 	while (run)
 	{
-		while (! parent->tcplock.trylockw(5))
+		while (! parent->tcplock.trylockw(1))
 		{
 			// Anyone calling us?
 			ev = nextevent();
