@@ -1,6 +1,29 @@
-0.9.0      -                                       <grace@openpanel.com>
+0.9.3      -                                       <grace@openpanel.com>
 
            * Grace is now a shared library.
+           
+           * Applications using daemon can now use the globally
+             available log::write() function instead of daemon::log().
+             
+           * The fin, fout and ferr file objects are now globally
+             available (no longer tied to the application class).
+             
+           * Trees of value objects can now easily be constructed using
+             the '$(key,value) -> $(key, value)' notation.
+             
+           * Added support for reading and writing JSON-encoded strings.
+           
+           * Added $appobject() macro, deprecates APPOBJECT().
+           
+           * Added $version() macro.
+           
+           * Added $exception() macro, deprecates THROWS_EXCEPTION().
+
+0.9.2      Private release
+
+0.9.1      Private release
+
+0.9.0      Private release
 
 0.8.15     Fri Oct  5 2007                         <grace@openpanel.com>
            
