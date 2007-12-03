@@ -119,7 +119,7 @@ void collector::run (void)
 		
 		if (ev["command"] == "start")
 		{
-			if (data.exists (tid)) app->ferr.printf ("unit still found: %s\n", tid.str());
+			if (data.exists (tid)) ferr.printf ("unit still found: %s\n", tid.str());
 			data[tid]["count"] = 0;
 		}
 		else if (ev["command"] == "count")
@@ -132,12 +132,12 @@ void collector::run (void)
 			data.rmval (tid);
 			if (data.exists (tid))
 			{
-				app->ferr.printf ("fuck ass!@$#!@$\n");
+				ferr.printf ("ass!@$#!@$\n");
 			}
 		}
 		else if (ev["command"] == "die")
 		{
-			app->fout.printf ("%u\n", totalCount);
+			fout.printf ("%u\n", totalCount);
 			app->resultCount = totalCount;
 			shouldRun = false;
 		}

@@ -83,11 +83,11 @@ public:
 	value			 rsrc; ///< The resource file
 	value			 opt;  ///< The runoptions file
 	string			 creator; ///< The application id
-	
-	file			 fin; ///< The standard input channel
-	file			 fout; ///< The standard output channel
-	file			 ferr; ///< The standard error channel
 };
+
+extern file fin;
+extern file fout;
+extern file ferr;
 
 /// Defines the app() call to create an instance of your application class.
 /// If your application class is called myApp, then embed an

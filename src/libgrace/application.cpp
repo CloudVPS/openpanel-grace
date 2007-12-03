@@ -15,6 +15,10 @@
 
 extern char **environ;
 
+file fin;
+file fout;
+file ferr;
+
 // ==========================================================================
 // CONSTRUCTOR
 // -----------
