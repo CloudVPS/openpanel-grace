@@ -40,6 +40,34 @@ void log::write (log::priority prio, const string &mod, const string &text)
 }
 
 // ========================================================================
+// CONSTRUCTOR daemon
+// ========================================================================
+daemon::daemon (const string &title) : application (title)
+{
+	MAINDAEMON = this;
+	_foreground = false;
+	LOGTHREAD = NULL;
+	LOGTARGETS = NULL;
+	daemonized = false;
+	tuid = teuid = 0;
+	tgid = tegid = 0;
+	pidcheck = true;
+}
+
+// ========================================================================
+// DESTRUCTOR daemon
+// ========================================================================
+daemon::~daemon (void)
+{
+	string path;
+	string empty;
+	
+	path = "run:%s.pid" %format (creator);
+	path = fs.transr (path);
+	fs.save (path, empty);
+}
+
+// ========================================================================
 // METHOD ::daemonize
 // ------------------
 // Spawns the current process into the background like a daemon, using
@@ -150,6 +178,15 @@ void daemon::daemonize (bool delayedexit)
 }
 
 // ========================================================================
+// METHOD ::delayedexitok
+// ========================================================================
+void daemon::delayedexitok (void)
+{
+	fout.writeln ("OK");
+	fout.close ();
+}
+
+// ========================================================================
 // METHOD ::delayedexiterror
 // ========================================================================
 void daemon::delayedexiterror (const char *fmtx, ...)
@@ -169,19 +206,6 @@ void daemon::delayedexiterror (const string &text)
 {
 	fout.writeln (text);
 	fout.close ();
-}
-
-// ========================================================================
-// DESTRUCTOR daemon
-// ========================================================================
-daemon::~daemon (void)
-{
-	string path;
-	string empty;
-	
-	path = "run:%s.pid" %format (creator);
-	path = fs.transr (path);
-	fs.save (path, empty);
 }
 
 // ========================================================================
@@ -450,6 +474,19 @@ void daemon::addlogtarget (log::logtype type, const string &target,
 void daemon::setforeground (void)
 {
 	_foreground = true;
+}
+
+// ========================================================================
+// METHOD ::settargetuser
+// ========================================================================
+bool daemon::settargetuser (const string &uname)
+{
+	value pw = kernel.userdb.getpwnam (uname);
+	if (! pw) return false;
+	
+	settargetuid (pw["uid"].uval());
+	settargetgid (pw["gid"].uval());
+	return true;
 }
 
 // ========================================================================

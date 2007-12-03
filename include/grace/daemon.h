@@ -109,19 +109,8 @@ class daemon : public application
 public:
 					 /// Constructor.
 					 /// \param title The application-id.
-					 daemon (const string &title)
-					 		: application (title)
-					 {
-					 	MAINDAEMON = this;
-					 	_foreground = false;
-					 	LOGTHREAD = NULL;
-					 	LOGTARGETS = NULL;
-					 	daemonized = false;
-					 	tuid = teuid = 0;
-					 	tgid = tegid = 0;
-					 	pidcheck = true;
-					 }
-					 
+					 daemon (const string &title);
+
 					 /// Destructor.
 	virtual			~daemon (void);
 	
@@ -158,11 +147,7 @@ public:
 					 /// set to true, this method should be called once
 					 /// all background initialization has proceeded
 					 /// succesfully.
-	void			 delayedexitok (void)
-					 {
-					 	fout.writeln ("OK");
-					 	fout.close ();
-					 }
+	void			 delayedexitok (void);
 					 
 					 /// Background initialization failure report.
 					 /// If the process was daemonized with delayedexit
@@ -212,15 +197,7 @@ public:
 					 /// as specified by a unix account. Will use the
 					 /// specified uid and primary gid for the account.
 					 /// \param uname The unix username.
-	bool			 settargetuser (const string &uname)
-					 {
-					 	value pw = kernel.userdb.getpwnam (uname);
-					 	if (! pw) return false;
-					 	
-					 	settargetuid (pw["uid"].uval());
-					 	settargetgid (pw["gid"].uval());
-					 	return true;
-					 }
+	bool			 settargetuser (const string &uname);
 	
 					 /// Set the desired width of the 'module' part of
 					 /// a log line in log::file logs.
