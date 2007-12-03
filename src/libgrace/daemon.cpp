@@ -81,6 +81,8 @@ void daemon::daemonize (bool delayedexit)
 		exit (1);
 	}
 	
+	signal (SIGTERM, daemon::termhandler);
+	
 	// If the foreground flag is set, we travel a simpler path.
 	if (_foreground)
 	{
@@ -488,6 +490,33 @@ bool daemon::settargetuser (const string &uname)
 	settargetgid (pw["gid"].uval());
 	return true;
 }
+
+void daemon::sendevent (const string &type)
+{
+	statstring tp = type;
+	events.send (tp);
+}
+
+void daemon::sendevent (const statstring &type, const value &data)
+{
+	events.send (type, data);
+}
+
+value *daemon::waitevent (void)
+{
+	return events.waitevent ();
+}
+
+value *daemon::waitevent (int timeout_ms)
+{
+	return events.waitevent (timeout_ms);
+}
+
+void daemon::termhandler (int sig)
+{
+	MAINDAEMON->sendevent ("shutdown");
+}
+
 
 // ========================================================================
 // METHOD ::shutdown

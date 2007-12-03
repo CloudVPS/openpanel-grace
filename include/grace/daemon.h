@@ -236,6 +236,16 @@ public:
 					 	tegid = egid;
 					 }
 
+	void			 sendevent (const string &type);
+	
+	void			 sendevent (const statstring &type, const value &v);
+	
+	value			*waitevent (void);
+	
+	value			*waitevent (int msec);
+	
+	static void		 termhandler (int sig);
+
 protected:
 					 /// Shut down logthread;
 	void			 stoplog (void) { if (LOGTHREAD) LOGTHREAD->shutdown(); }
@@ -246,6 +256,7 @@ protected:
 	gid_t			 tgid; ///< Target real groupid after daemonize().
 	gid_t			 tegid; ///< Target effective groupid after daemonize().
 	bool			 pidcheck; ///< False if no pidcheck should be performed.
+	eventq			 events; ///< Inbound event socket.
 };
 
 #endif
