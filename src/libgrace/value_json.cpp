@@ -182,6 +182,16 @@ const char *value::decodejson (const char *objpos)
 				crsr = (*this)[nam].decodejson (crsr);
 				if (! crsr) return NULL;
 			}
+			else if (::strncmp (crsr, "true", 4) == 0)
+			{
+				(*this)[nam] = true;
+				crsr += 4;
+			}
+			else if (::strncmp (crsr, "false", 5) == 0)
+			{
+				(*this)[nam] = false;
+				crsr += 5;
+			}
 			else
 			{
 				return NULL;
@@ -229,6 +239,16 @@ const char *value::decodejson (const char *objpos)
 			{
 				crsr = (*this).newval().decodejson (crsr);
 				if (! crsr) return NULL;
+			}
+			else if (::strncmp (crsr, "true", 4) == 0)
+			{
+				(*this).newval() = true;
+				crsr += 4;
+			}
+			else if (::strncmp (crsr, "false", 5) == 0)
+			{
+				(*this).newval() = false;
+				crsr += 5;
 			}
 			else
 			{
@@ -298,6 +318,10 @@ void value::encodejson (string &into)
 		{
 			into.printf ("%f", dval());
 		}
+		else if (itype == i_bool)
+		{
+			into.strcat (bval() ? "true" : "false");
+		}
 		else
 		{
 			into.strcat ('\"');
@@ -337,5 +361,6 @@ string *value::tojson (void)
 {
 	returnclass (string) res retain;
 	encodejson (res);
+	res.strcat ("\n");
 	return &res;
 }

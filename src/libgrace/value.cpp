@@ -28,10 +28,17 @@ value *$ (const statstring &id, const value &v)
 	return &res;
 }
 
-value *$ (const value &v)
+value *$merge (const value &v)
 {
 	returnclass (value) res retain;
 	res = v;
+	return &res;
+}
+
+value *$ (const value &v)
+{
+	returnclass (value) res retain;
+	res.newval() = v;
 	return &res;
 }
 
@@ -46,6 +53,13 @@ value *$type (const statstring &t)
 {
 	returnclass (value) res retain;
 	res.type (t);
+	return &res;
+}
+
+value *$val (const value &v)
+{
+	returnclass (value) res retain;
+	res = v;
 	return &res;
 }
 

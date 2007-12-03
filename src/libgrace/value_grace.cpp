@@ -9,7 +9,28 @@ void value::encodegrace (string &into, int indent)
 	string dent;
 	if (! count())
 	{
-		if (itype == i_int)
+		int j = 0;
+		if (attrib) foreach (a, (*attrib))
+		{
+			if (j) into.strcat (" ->");
+			into.strcat ("\n");
+			dent.pad (indent, ' ');
+			into.strcat ("%s$attr(\"" %format (dent));
+			a.encodejsonid (into);
+			into.strcat ("\",");
+			a.encodegrace (into, indent);
+			into.strcat (")");
+			j++;
+		}
+		if (j && (itype != i_unset))
+		{
+			into.strcat (" ->\n%s$val(" %format (dent));
+		}
+		if (j && (itype == i_unset))
+		{
+			j = 0;
+		}
+		else if (itype == i_int)
 		{
 			into.printf ("%i", ival());
 		}
@@ -27,6 +48,7 @@ void value::encodegrace (string &into, int indent)
 			encodejsonstring (into);
 			into.strcat ('\"');
 		}
+		if (j) into.strcat (")");
 	}
 	else
 	{
@@ -48,9 +70,16 @@ void value::encodegrace (string &into, int indent)
 			if (j) into.strcat (" ->");
 			into.strcat ("\n");
 			dent.pad (indent, ' ');
-			into.strcat ("%s$(\"" %format (dent));
-			array[i]->encodejsonid (into);
-			into.strcat ("\",");
+			if (i >= ucount)
+			{
+				into.strcat ("%s$(\"" %format (dent));
+				array[i]->encodejsonid (into);
+				into.strcat ("\",");
+			}
+			else
+			{
+				into.strcat ("%s$(" %format (dent));
+			}
 			array[i]->encodegrace (into, indent+4);
 			into.strcat (")");
 			j++;

@@ -112,6 +112,8 @@ value *$ (const statstring &id, const value &v);
 value *$ (const value &v);
 value *$attr (const statstring &id, const value &v);
 value *$type (const statstring &t);
+value *$merge (const value &v);
+value *$val (const value &v);
 
 /// Generic storage for hierarchical data.
 /// A value object can either contain direct data (either an integer, a
@@ -1119,7 +1121,7 @@ public:
 					 }
 	value			*$ (const value &v)
 					 {
-					 	(*this) << v;
+					 	newval() = v;
 					 	return this;
 					 }
 	value			*$attr (const statstring &id, const value &v)
@@ -1130,6 +1132,34 @@ public:
 	value			*$type (const statstring &t)
 					 {
 					 	type (t);
+					 	return this;
+					 }
+	value			*$merge (const value &v)
+					 {
+					 	(*this) << v;
+					 	return this;
+					 }
+	value			*$val (const value &v)
+					 {
+					 	switch (v.itype)
+					 	{
+					 		case i_unset: break;
+					 		case i_bool: (*this) = v.bval(); break;
+					 		case i_long: (*this) = v.lval();
+					 		case i_unsigned: (*this) = v.uval();
+					 		case i_ulong: (*this) = v.ulval();
+					 		case i_ipaddr: setip (v.ipval());
+					 		case i_int: (*this) = v.ival(); break;
+					 		case i_double: (*this) = v.dval(); break;
+					 		case i_string:
+					 		case i_date:
+					 		case i_currency:
+					 			(*this) = v.sval();
+					 			break;
+					 		default:
+					 			(*this) = v;
+					 			break;
+					 	}
 					 	return this;
 					 }
 	

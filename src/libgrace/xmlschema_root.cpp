@@ -407,7 +407,7 @@ void xmlschema::xmlrootschema (void)
 	schema[-1][key::xml_type] = "dict";
 	schema[-1][key::xml_code] = "XAun";
 	schema[-1][key::xml_proplist]
-			  [key::xml_union_match].newval (key::xml_member);
+			  [key::xml_union_match].type (key::xml_member);
 	
 	schema[key::xml_union_match].type (key::xml_class);
 	schema[-1][key::xml_type] = "string";
