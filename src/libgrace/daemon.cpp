@@ -21,6 +21,9 @@
 #include <time.h>
 
 lock<value> THREADLIST;
+logthread *LOGTHREAD = NULL;
+logtarget *LOGTARGETS = NULL;
+class daemon *MAINDAEMON = NULL;
 
 // Statically kept statstrings to be used as common keys in log events.
 namespace logproperty
@@ -30,6 +33,11 @@ namespace logproperty
 	statstring command ("command");
 	statstring text ("text");
 };
+
+void log::write (log::priority prio, const string &mod, const string &text)
+{
+	MAINDAEMON->log (prio, mod, text);
+}
 
 // ========================================================================
 // METHOD ::daemonize
@@ -339,7 +347,7 @@ void daemon::log (log::priority prio, const string &modulename,
 	// If no logtargets were manually defined, get the desired
 	// information from the application's resources.xml	
 	
-	if (! _logtargets)
+	if (! LOGTARGETS)
 	{
 		foreach (logdef, rsrc["log"])
 		{
@@ -374,11 +382,11 @@ void daemon::log (log::priority prio, const string &modulename,
 		}
 	}
 	
-	if (! _log)
+	if (! LOGTHREAD)
 	{
-		_log = new logthread (this);
-		_log->start();
-		_log->startupCondition.wait();
+		LOGTHREAD = new logthread (this);
+		LOGTHREAD->start();
+		LOGTHREAD->startupCondition.wait();
 	}
 	
 	logmutex.unlock();
@@ -387,7 +395,7 @@ void daemon::log (log::priority prio, const string &modulename,
 	{
 		foreach (ev, backlog)
 		{
-			_log->sendevent ("logmessage", ev);
+			LOGTHREAD->sendevent ("logmessage", ev);
 		}
 		backlog.clear();
 		dq = false;
@@ -399,7 +407,7 @@ void daemon::log (log::priority prio, const string &modulename,
 	logEv[logproperty::module] = modulename;
 	logEv[logproperty::text] = logText;
 	
-	_log->sendevent ("logmessage", logEv);
+	LOGTHREAD->sendevent ("logmessage", logEv);
 }
 
 // ========================================================================
@@ -424,13 +432,13 @@ void daemon::addlogtarget (log::logtype type, const string &target,
 	{
 		mytg->f.openappend (mytg->target);
 	}
-	if (_logtargets)
+	if (LOGTARGETS)
 	{
-		tail = _logtargets;
+		tail = LOGTARGETS;
 		while (tail->next) tail = tail->next;
 		tail->next = mytg;
 	}
-	else _logtargets = mytg;
+	else LOGTARGETS = mytg;
 }
 
 // ========================================================================
@@ -473,7 +481,7 @@ void logthread::run (void)
 	while (true)
 	{
 		ev = waitevent();
-		tf = app->_logtargets;
+		tf = LOGTARGETS;
 		
 		if (ev.type() == "die")
 		{
@@ -560,7 +568,7 @@ void logthread::run (void)
 		}
 	}
 	
-	tf = app->_logtargets;
+	tf = LOGTARGETS;
 	while (tf)
 	{
 		if (tf->type == log::syslog)
@@ -582,3 +590,4 @@ void logthread::run (void)
 	// Ok we're dying, raise the white flag.
 	shutdownCondition.broadcast();
 }
+

@@ -68,6 +68,8 @@ namespace log
 		file = 0x1, ///< Log to a system file
 		syslog = 0x2 ///< Log to a syslog socket
 	};
+	
+	void write (priority prio, const string &mod, const string &text);
 };
 
 /// Bookkeeping for a generic logging target.
@@ -81,6 +83,10 @@ struct logtarget
 	file			 f; ///< File object (for log::file)
 	unsigned int	 maxsize; ///< Max size of logfile (for log::file)
 };
+
+extern logthread *LOGTHREAD;
+extern logtarget *LOGTARGETS;
+extern class daemon *MAINDAEMON;
 
 /// Daemon class. Acts like an application except that it will spawn
 /// in the background. A log facility is added in that allows the
@@ -100,16 +106,16 @@ struct logtarget
 /// the fork() calls that relate to daemonization have been executed.
 class daemon : public application
 {
-friend class logthread;
 public:
 					 /// Constructor.
 					 /// \param title The application-id.
 					 daemon (const string &title)
 					 		: application (title)
 					 {
+					 	MAINDAEMON = this;
 					 	_foreground = false;
-					 	_log = NULL;
-					 	_logtargets = NULL;
+					 	LOGTHREAD = NULL;
+					 	LOGTARGETS = NULL;
 					 	daemonized = false;
 					 	tuid = teuid = 0;
 					 	tgid = tegid = 0;
@@ -220,11 +226,9 @@ public:
 					 /// a log line in log::file logs.
 	void			 setlogmodulewidth (int i)
 					 {
-					 	if (_log) _log->setmodulewidth (i);
+					 	if (LOGTHREAD) LOGTHREAD->setmodulewidth (i);
 					 }
 								   
-	logtarget		*_logtargets; ///< Linked list of log targets
-	
 					 /// Set the real and effective userid that
 					 /// will be active when we daemonize.
 					 /// \param uid The real and effective uid.
@@ -257,9 +261,8 @@ public:
 
 protected:
 					 /// Shut down logthread;
-	void			 stoplog (void) { if (_log) _log->shutdown(); }
+	void			 stoplog (void) { if (LOGTHREAD) LOGTHREAD->shutdown(); }
 	bool			 _foreground; ///< If true, daemonize will not fork.
-	class logthread	*_log; ///< The logthread.
 	bool			 daemonized; ///< True if daemonize() was called.
 	uid_t			 tuid; ///< Target real userid after daemonize().
 	uid_t			 teuid; ///< Target effective userid after daemonize().

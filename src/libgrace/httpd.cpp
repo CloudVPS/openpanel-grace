@@ -561,8 +561,7 @@ void httpdworker::run (void)
 				cmd.ctoupper();
 				
 				// If it was a post, get the post body.
-				if ((cmd.strcasecmp ("post") == 0) ||
-					(cmd.strcasecmp ("put") == 0))
+				if ((cmd == "POST") || (cmd == "PUT"))
 				{
 					size_t sz = httpHeaders["Content-length"].uval();
 					
@@ -594,7 +593,7 @@ void httpdworker::run (void)
 						bodyData = s.read (sz);
 					}
 				}
-				else if (cmd.strcasecmp ("get") == 0)
+				else if (cmd == "GET")
 				{
 					if (httpHeaders.exists ("Content-length"))
 					{
@@ -652,8 +651,8 @@ void httpdworker::run (void)
 					keepalive = true;
 				
 				// As of now, we only recognize get and post requests
-				if ((cmd.strcasecmp ("post") == 0) ||
-				    (cmd.strcasecmp ("get") == 0))
+				if ((cmd == "POST") || (cmd == "PUT") || (cmd == "GET") ||
+					(cmd == "DELETE"))
 				{
 					parent->handle (uri, bodyData, httpHeaders,
 									cmd, httpCommand,
