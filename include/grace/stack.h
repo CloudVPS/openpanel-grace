@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-THROWS_EXCEPTION (stackUnderflowException, 0x8a5cd8e8, "Stack underflow");
-THROWS_EXCEPTION (stackOutOfMemoryException, 0xbe960a43, "Stack out of memory");
+$exception (stackUnderflowException, "Stack underflow");
+$exception (stackOutOfMemoryException, "Stack out of memory");
 
 /// A generic stack.
 /// Template class for keeping a stack of objects.

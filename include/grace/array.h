@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-THROWS_EXCEPTION (arrayOutOfBoundsException, 0xa0990a04, "Array out of bounds");
+$exception (arrayOutOfBoundsException, "Array out of bounds");
 
 /// A template-implementation of a variable-size array
 /// Elements are stored as pointers to existing objects. Memory management

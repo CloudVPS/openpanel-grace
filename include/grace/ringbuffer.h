@@ -3,7 +3,7 @@
 
 #include <grace/exception.h>
 
-THROWS_EXCEPTION (bufferOverflowException, 0x826ec972, "Ring buffer overflow");
+$exception (bufferOverflowException, "Ring buffer overflow");
 
 /// Circular buffer for byte streams.
 /// Implements a cyclical buffer with a maximum size.

@@ -82,11 +82,11 @@ protected:
 #define FERR_NOCONNECT	0x395e2cbb
 #define FERR_NORSRC		0x2babc890
 
-THROWS_EXCEPTION (endOfFileException, 0x3793883d, "End of file");
-THROWS_EXCEPTION (fileNotOpenException, 0x42b59ac6, "File not open");
-THROWS_EXCEPTION (fileReadException, 0x68d261fc, "Read error");
-THROWS_EXCEPTION (fileWriteException, 0x0f278828, "Write error");
-THROWS_EXCEPTION (fileCodecException, 0x0fd7598b, "Codec exception");
+$exception (endOfFileException, "End of file");
+$exception (fileNotOpenException, "File not open");
+$exception (fileReadException, "Read error");
+$exception (fileWriteException, "Write error");
+$exception (fileCodecException, "Codec exception");
 
 /// An input/output channel.
 class file

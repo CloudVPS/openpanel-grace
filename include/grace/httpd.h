@@ -872,7 +872,7 @@ protected:
 //                    gruntwork.
 // ------------------------------------------------------------------------
 
-THROWS_EXCEPTION (httpdWorkerException, 0xda322857, "Error in worker");
+$exception (httpdWorkerException, "Error in worker");
 
 /// Worker thread handling an http connection.
 class httpdworker : public groupthread

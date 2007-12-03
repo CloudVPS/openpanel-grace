@@ -7,8 +7,8 @@
 #include <grace/xmlschema.h>
 #include <grace/dictionary.h>
 
-THROWS_EXCEPTION (cgiEndOfFileException, 0x38366020, "CGI End of File");
-THROWS_EXCEPTION (cgiPostFormatException, 0x252748a5, "CGI Post Format Error");
+$exception (cgiEndOfFileException, "CGI End of File");
+$exception (cgiPostFormatException, "CGI Post Format Error");
 
 //typedef dictionary<xmlschema> schemadict;
 

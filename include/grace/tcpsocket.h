@@ -7,8 +7,8 @@
 #include <grace/system.h>
 #include <grace/ipaddress.h>
 
-THROWS_EXCEPTION (socketException, 0x300356ed, "Generic socket exception");
-THROWS_EXCEPTION (socketCreateException, 0x18a6e054, "Could not create socket");
+$exception (socketException, "Generic socket exception");
+$exception (socketCreateException, "Could not create socket");
 
 /// A tcp connection class.
 /// Implements blocking and non-blocking interaction with another host

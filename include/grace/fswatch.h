@@ -5,7 +5,7 @@
 #include <grace/statstring.h>
 #include <grace/value.h>
 
-THROWS_EXCEPTION (nothingToWatchException, 0x7dba6305, "Nothing to watch");
+$exception (nothingToWatchException, "Nothing to watch");
 
 namespace fschange
 {

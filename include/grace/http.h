@@ -6,8 +6,8 @@
 #include <grace/str.h>
 #include <grace/strutil.h>
 
-THROWS_EXCEPTION (httpMaxChunksizeException, 0xa9584697, "Max chunk-size exceeded");
-THROWS_EXCEPTION (httpTimeoutException, 0xc2d289ae, "Timeout in HTTP");
+$exception (httpMaxChunksizeException, "Max chunk-size exceeded");
+$exception (httpTimeoutException, "Timeout in HTTP");
 
 #define HTERR_INVALIDURL	0xbe6ca9fa
 #define HTERR_CONNECTFAIL	0x9704f181

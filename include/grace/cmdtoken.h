@@ -19,9 +19,8 @@ typedef enum {
 	rootToken ///< Implements a script.
 } tokentype;
 
-THROWS_EXCEPTION (scriptSyntaxException, 0x168f4a6b, "Syntax Error");
-THROWS_EXCEPTION (scriptUnbalancedConditionException, 0xd472acfa,
-				  "Unbalanced condition");
+$exception (scriptSyntaxException, "Syntax Error");
+$exception (scriptUnbalancedConditionException, "Unbalanced condition");
 
 /// A command unit in a script.
 /// Base class for all scriptparser functionality.

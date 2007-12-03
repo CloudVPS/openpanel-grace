@@ -11,8 +11,8 @@
 
 extern bool __THREADED;
 
-THROWS_EXCEPTION (threadCreateException, 0x203ae251, "Could not create thread");
-THROWS_EXCEPTION (threadGroupIndexException, 0x32083076, "Invalid group index");
+$exception (threadCreateException, "Could not create thread");
+$exception (threadGroupIndexException, "Invalid group index");
 
 extern lock<value> THREADLIST;
 
@@ -141,8 +141,9 @@ public:
 					 /// \return The unique id number.
 	unsigned int	 threadid (void)
 					 {
-					 	if (! tid) return (unsigned int) ((unsigned long long) this & 0xffffffff);
-					 	return (unsigned int) ((unsigned long long) tid & 0xffffffff);
+					 	void *tmp = this;
+					 	if (! tid) return (unsigned int) (((unsigned long long) tmp & 0xffffffff));
+					 	return (unsigned int) (((unsigned long long) tid) & 0xffffffff);
 					 }
 					 
 					 /// Set the scheduling priority.

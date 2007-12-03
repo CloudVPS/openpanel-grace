@@ -23,12 +23,8 @@ public:
 	dictionaryEntry	*lower, *higher; ///< Hashtree pointers.
 };
 
-THROWS_EXCEPTION
-(
-	dictIndexOutOfBoundsException,
-	0x1bef3ab0,
-	"Dictionary array index out of range"
-);
+$exception (dictIndexOutOfBoundsException,
+			"Dictionary array index out of range");
 
 typedef class dictionaryEntry *dictPtr;
 

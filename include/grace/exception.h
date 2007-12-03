@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <grace/checksum.h>
 
 /// Base class for exceptions.
 /// Create your own derivations using the THROWS_EXCEPTION macro,
@@ -64,3 +65,16 @@ public:
 	};
 
 #endif
+
+#define $exception(cls,des) \
+	class cls : public exception \
+	{ \
+	public: \
+		cls (const char *o) : exception (checksum ( #cls), o) { } \
+		cls (void) : exception (checksum ( #cls), des) { } \
+		static unsigned int getcode (void) { \
+			static unsigned int c = checksum ( #cls); \
+			return c; \
+		} \
+	};
+

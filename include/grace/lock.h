@@ -18,7 +18,7 @@ enum locktype {
 	lockWrite ///< Write lock.
 };
 
-THROWS_EXCEPTION (lockException, 0x61e33d33, "Error locking");
+$exception (lockException, "Error locking");
 
 inline void __musleep (int ms)
 {

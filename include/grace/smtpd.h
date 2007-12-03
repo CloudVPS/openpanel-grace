@@ -5,8 +5,8 @@
 #include <grace/tcpsocket.h>
 #include <grace/defaults.h>
 
-THROWS_EXCEPTION (smtpdListenPortException, 0x4c6c197c, "Cannot set up listenport");
-THROWS_EXCEPTION (smtpdPigsFlyException, 0x50e87bed, "Pigs fly");
+$exception (smtpdListenPortException, "Cannot set up listenport");
+$exception (smtpdPigsFlyException, "Pigs fly");
 
 typedef int smtpeventmask;
 

@@ -9,11 +9,11 @@ extern void __pool_breakme (void);
 #include <grace/lock.h>
 #include <stdlib.h>
 
-THROWS_EXCEPTION (memoryMismatchException, 0x2d7c1121, "Mismatch in retainable");
-THROWS_EXCEPTION (memoryInvalidAddressException, 0x396c43d0, "Invalid address pointer");
-THROWS_EXCEPTION (memoryLeakException, 0x28b8afca, "Possible memory leak "
-				  "detected, set defaults::memory::leakprotection to false "
-				  "if you know what you are doing");
+$exception (memoryMismatchException, "Mismatch in retainable");
+$exception (memoryInvalidAddressException, "Invalid address pointer");
+$exception (memoryLeakException, "Possible memory leak detected, "
+								 "set defaults::memory::leakprotection to "
+								 "false if you know what you are doing");
 
 void poolsighandler (int);
 				  

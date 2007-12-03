@@ -4,17 +4,12 @@
 #include <grace/value.h>
 #include <grace/ipaddress.h>
 
-THROWS_EXCEPTION (badAddressException, 0x08058e57, "Invalid address format");
+$exception (badAddressException, "Invalid address format");
 
 /// Resolver utility class.
 class netdb
 {
 public:
-	/// Exceptions.
-	enum exception {
-		exBadAddress /// Badly formed address exception.
-	} netdbExceptions;
-	
 	/// Resolve a host from its hostname.
 	/// \param name The hostname.
 	/// \return New value object with result.
