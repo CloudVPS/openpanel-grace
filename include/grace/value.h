@@ -68,7 +68,7 @@ enum creatorlabel {
 };
 
 /// List of intrinsic variable types.
-/// Any vaue object has one of these types, regardless of what it's
+/// Any value object has one of these types, regardless of what it's
 /// registered type/class is.
 enum itypes {
   i_unset, ///< Empty value.
