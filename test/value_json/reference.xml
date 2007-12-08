@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dict>
+	<integer id="test">42</integer>
+	<array id="shoutouts">
+		<string>brothers</string>
+		<string>sisters</string>
+		<string>nephews</string>
+	</array>
+	<dict id="scores">
+		<integer id="brothers">42</integer>
+		<integer id="grok">16</integer>
+	</dict>
+	<array id="testresults">
+		<bool>true</bool>
+		<bool>false</bool>
+		<bool>true</bool>
+	</array>
+</dict>
