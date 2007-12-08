@@ -229,6 +229,23 @@ public:
 		return true;
 	}
 	
+	bool loadini (const string &path, string &error)
+	{
+		if (! fs.exists (path))
+		{
+			error = "File does not exist";
+			return false;
+		}
+		
+		ndb.loadini (path);
+		if (! handleactions (error)) return false;
+		lck.lockw ();
+		db = ndb;
+		lastloaded = kernel.time.now();
+		lck.unlock ();
+		return true;
+	}
+	
 	/// Add a watcher.
 	/// \param kp The path to watch.
 	/// \param m The method to call.
