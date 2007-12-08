@@ -58,6 +58,7 @@ TYPENAME t_date 		TVALUE ("date");
 TYPENAME t_currency 	TVALUE ("currency");
 
 typedef statstring dtenum;
+extern const class value emptyvalue;
 
 /// Use this to access a constructor that allows the id/type to be set in
 /// the arguments.
@@ -83,8 +84,8 @@ enum itypes {
   i_currency ///< fixed point currency
 };
 
-THROWS_EXCEPTION (valueFileNotFoundException, 0x3faddb29, "File not found");
-THROWS_EXCEPTION (valueParsingException, 0x04e281a4, "Error parsing file");
+$exception (valueFileNotFoundException, "File not found");
+$exception (valueParsingException, "Error parsing file");
 
 typedef bool (*sortmethod) (value *, value *, const string &);
 
@@ -108,11 +109,32 @@ bool naturalSort (value *, value *, const string &);
 /// is left empty, the node's key is used for sorting.
 bool naturalLabelSort (value *, value *, const string &);
 
+/// Function for the valuebuilder syntax. Creates a new value
+/// with one keyed child node.
+/// \param id The key.
+/// \param v The value.
 value *$ (const statstring &id, const value &v);
+
+/// Valuebuilder: Create new value with unkeyed child.
+/// \param v Child data.
 value *$ (const value &v);
+
+/// Valuebuilder: Create new value with a set attribute.
+/// \param id Attribute name.
+/// \param v Attribute value.
 value *$attr (const statstring &id, const value &v);
+
+/// Valuebuilder: Create new value with a set type.
+/// \param t The type.
 value *$type (const statstring &t);
+
+/// Valuebuilder: Create new value as a copy of an existing
+/// value that will get merged through further chaining.
+/// \param v The value to copy.
 value *$merge (const value &v);
+
+/// Valuebuilder: Create a new value with specific data.
+/// \param v Original data.
 value *$val (const value &v);
 
 /// Generic storage for hierarchical data.
@@ -184,12 +206,16 @@ public:
 					 /// Copy-constructor (from an integer)
 					 value (int);
 					 
+					 /// Copy-constructor (unsigned integer)
 					 value (unsigned int);
 					 
+					 /// Copyy-constructor (long long)
 					 value (long long);
 					 
+					 /// Copy-constructor (unsigned long long)
 					 value (unsigned long long);
 					 
+					 /// Copy-constructor (bool)
 					 value (bool);
 					 
 					 /// Destructor.
@@ -1113,32 +1139,58 @@ public:
 					 /// Wipe out value and children.
 	void 			 clear (void);
 	
-					 /// Setter.
+					 /// Continuation method for the valuebuilder
+					 /// syntax. The first node in an arraybuilder
+					 /// declaration is actually a $(...)-style
+					 /// function that creates a new object.
+					 /// Further nodes are chained using the
+					 /// regular '->' pointer follower.
+					 /// \param id Key for the new node.
+					 /// \param v Value for the new node.
 	value			*$ (const statstring &id, const value &v)
 					 {
 						(*this)[id] = v;
 						return this;
 					 }
+					 
+					 /// Valuebuilder: add new unkeyed node.
+					 /// \param v The new node value.
 	value			*$ (const value &v)
 					 {
 					 	newval() = v;
 					 	return this;
 					 }
+					 
+					 /// Valuebuilder: add attribute node.
+					 /// \param id Attribute key.
+					 /// \param v Attribute value.
 	value			*$attr (const statstring &id, const value &v)
 					 {
 					 	(*this)(id) = v;
 					 	return this;
 					 }
+					 
+					 /// Valuebulder: set value type().
+					 /// \param t The type.
 	value			*$type (const statstring &t)
 					 {
 					 	type (t);
 					 	return this;
 					 }
+					 
+					 /// Valuebuilder: merge another value.
+					 /// \param v The value to merge.
 	value			*$merge (const value &v)
 					 {
 					 	(*this) << v;
 					 	return this;
 					 }
+					 
+					 /// Valuebuilder: set explicit value.
+					 /// \param v The explicit value. Attributes
+					 /// are skipped unless if the original is
+					 /// of an array type.
+					 /// \param v Original value.
 	value			*$val (const value &v)
 					 {
 					 	switch (v.itype)
@@ -1196,10 +1248,11 @@ public:
 					 /// Return last array member.
 	value			&last (void);
 	
-					 /// Cast key as a c-string.
+					 /// Cast key as a c-string. Use id() and %format if
+					 /// possible.
 	const char		*name (void) const;
 	
-					 /// Cast key as a statstring.
+					 /// Cast key as a statstring. Deprecated, use id().
 	const statstring &label (void) const;
 
 					 /// Cast key as a statstring.
@@ -1233,12 +1286,14 @@ public:
 	bool			 loadinitree (const string &fn);
 
 	// csv format import/export
-					 /// Convert to CSV format.
+					 /// Convert to CSV format. This export does not
+					 /// encode attributes.
 					 /// \param withHeaders If true, add a header row.
 					 /// \param indexName Column name for the index field.
 	string			*tocsv (bool withHeaders=true, const char *indexName="id");
 	
-					 /// Save in CSV format.
+					 /// Save in CSV format. This export does not
+					 /// encode attributes.
 					 /// \param fn Filename to save.
 					 /// \param withHeaders If true, add a header row.
 					 /// \param indexName Column name for the index field.
@@ -1263,10 +1318,16 @@ public:
 					 /// \param phpdata A serialized PHP array.
 	void			 phpdeserialize (const string &phpdata);
 	
-					 /// Serialize PHP data.
-					 /// Discards attribute data, really prefers everything
-					 /// to have a key and only really knows about ints
-					 /// and strings.
+					 /// Serialize to a PHP array.
+					 /// \param withattr If set, all objects will be split
+					 ///                 in two levels. Arrays will gain
+					 ///                 at least one extra node called
+					 ///                 ".attr" if there are attributes.
+					 ///                 Data objects will end up with
+					 ///                 their actual value inside a
+					 ///                 child-node called ".data" with,
+					 ///                 again, any attributes inside
+					 ///                 ".attr".
 					 /// \return A new string object.
 	string			*phpserialize (bool withattr = false) const;
 					 
@@ -1353,22 +1414,37 @@ public:
 	bool			 loadxml (const string &path, class xmlschema *s = NULL,
 							  string *err = NULL);
 	
+					 /// Load from an XML file using the default grace
+					 /// schema.
+					 /// \param path The file name.
+					 /// \param err Output string for parser errors.
 	bool			 loadxml (const string &path, string &err)
 					 {
 					 	return loadxml (path, NULL, &err);
 					 }
 					 
+					 /// Load from an XML file with schema and error reporting.
+					 /// \param p The file name.
+					 /// \param s The XML schema to use.
+					 /// \param err Output string for the parser errors.
 	bool			 loadxml (const string &p, class xmlschema &s, string &er);
+
+					 /// Convert from an XML string with schema and error reporting.
+					 /// \param p The file name.
+					 /// \param s The XML schema to use.
+					 /// \param err Output string for the parser errors.
 	bool			 fromxml (const string &p, class xmlschema &s, string &er);
 					 
+					 /// Convert from a JSON-encoded string.
+					 /// \param j JSON string.
 	bool			 fromjson (const string &j);
 
-	void			 encodejsonstring (string &into);
-	void			 encodejsonid (string &into);
-	void			 encodejson (string &into);
+					 /// Convert to a JSON-encoded string.
 	string			*tojson (void);
 	
 	void			 encodegrace (string &into, int indent);
+
+					 /// Convert to grace-style $() notation.
 	string			*tograce (void);
 
 					 /// Convert from CXML.
@@ -1386,10 +1462,6 @@ public:
 					 /// \param s The schema to use.
 	string			*tocxml (class xmlschema &s);
 	
-	const char		*decodejson (const char *);
-	const char		*readjsonstring (const char *, string &);
-	const char		*readjsonnumber (const char *, string &);
-
 	// Apple plist format import/export
 					 /// Save in Apple's plist format.
 					 /// Requires the com.apple.plist.schema.xml schema.
@@ -1442,17 +1514,36 @@ public:
 
 					 /// Returns true if a child key exists.
 	bool			 exists (const statstring &) const;
+	
+					 /// Returns true if the object is an array, with
+					 /// keyed and/or numbered child nodes.
+	bool			 isarray (void) const;
+	
+					 /// Returns true if the object is a pure dict
+					 /// with only keyed child nodes.
+	bool			 isdict (void) const;
+	
+					 /// Returns true if the object is an array mix of
+					 /// numbered and keyed child nodes.
+	bool			 ismixed (void) const;
 
 					 /// Returns true if the object has attributes.
+					 /// Deprecated, use value::hasattributes().
 	bool			 haveattributes (void) const
 					 {
 					 	return (attrib != NULL);
 					 }
 					 
+					 /// Returns true if the object has attributes.
+	bool			 hasattributes (void) const
+					 {
+					 	return (attrib != NULL);
+					 }
+
 					 /// Access attributes as a value object.
 	const value		&attributes (void) const
 					 {
-					   if (! attrib) return *this;
+					   if (! attrib) return emptyvalue;
 					   return *attrib;
 					 }
 
@@ -1583,6 +1674,14 @@ protected:
 					 /// Internal method for SHoX serialization.
 	void			 printshox (string &, stringdict &) const;
 		
+	void			 encodejsonstring (string &into);
+	void			 encodejsonid (string &into);
+	void			 encodejson (string &into);
+	
+	const char		*decodejson (const char *);
+	const char		*readjsonstring (const char *, string &);
+	const char		*readjsonnumber (const char *, string &);
+
 	dtenum			 _type; ///< The registered type/class.
 	string			 s; ///< The string value.
 	dtype			 t; ///< The numeric value.
@@ -1620,7 +1719,6 @@ public:
 	void			 init (bool first=true);
 };
 
-extern const value emptyvalue;
 
 string *ip2str (unsigned int ipaddr);
 unsigned int str2ip (const string &str);
