@@ -5,8 +5,8 @@ Pending issues for GRACE:
   - Add support for a 'version' type (2b uint vector) [BEFORE 1.0]
   - Add support for a 'vector' type (usvector,svector,ivector,uvector,vector)
   - Add support for a 'color' type [BEFORE 1.0]
-  - Make the ipaddress handling more useful [BEFORE 1.0]
   - Make the timestamp handling more useful [BEFORE 1.0]
+  - Add import/export of sexpressions.
 
   class statstring:
   - Migrate to a 64-bit key [MAYBE NOT]
@@ -21,21 +21,16 @@ Pending issues for GRACE:
   - Make room to the left of the object's allocation pointer to keep track
     of metadata, initially the object's size and type.
 
-  class query: [status: BEFORE 1.0]
-  - A new class that defines complex matching criteria
+  querido: [status: BEFORE 1.0]
+  - Implement MySQL
+  - Implement PostgreSQL
 
-  class dbconnection (UDBC): [status: BEFORE 1.0]
-  - Add support for the query class 
-  - Consider integrating table definitions with xmlschema
-  
-  class directory: [status: UNSURE, partially met by libdbfile]
-  - A new class abstracting access to any structural outside-of-program
-    data stores
-  - Optionally overlay several data stores in the same way the filesystem
-    class does with files
-  
   configure-files have been hand-edited after tina generation:
-  - Update tina with our changes
-  - Re-generate configure-files
   - Possibly remove configure-files from repository as they are
     generated
+
+  scriptparser:
+  - Sanitize language [status: BEFORE 1.0]
+  - Sanitize parsing [status: BEFORE 1.0]
+  
+  
