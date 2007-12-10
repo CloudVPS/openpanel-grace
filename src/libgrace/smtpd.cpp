@@ -76,7 +76,7 @@ void smtpd::start (void)
 	}
 	if (! banner.strlen())
 	{
-		banner = kernel.net.hostname();
+		banner = core.net.hostname();
 	}
 	spawn();
 }
@@ -460,11 +460,11 @@ string *smtpd::maketransactionid (void)
 	if (! initialized)
 	{
 		initialized = true;
-		srand (kernel.time.now());
+		srand (core.time.now());
 	}
 	
-	res = "%08x-%04x-%08x" %format ((unsigned) kernel.time.now(),
-									kernel.proc.self(), rand());
+	res = "%08x-%04x-%08x" %format ((unsigned) core.time.now(),
+									core.proc.self(), rand());
 	return &res;
 }
 

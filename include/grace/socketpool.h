@@ -23,7 +23,7 @@ public:
 					 	serial = s.serial;
 					 	sock = s.sock;
 					 	connected = s.connected;
-					 	when = kernel.time.now();
+					 	when = core.time.now();
 					 	iscopy = true;
 					 	inuse = false;
 					 }

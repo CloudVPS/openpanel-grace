@@ -285,7 +285,7 @@ public:
 					 
 	bool			 settargetuser (const string &uname)
 					 {
-					 	value pw = kernel.userdb.getpwnam (uname);
+					 	value pw = core.userdb.getpwnam (uname);
 					 	if (! pw)
 					 	{
 					 		if (! _pid) _exit (0);

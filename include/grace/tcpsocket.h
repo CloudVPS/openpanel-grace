@@ -27,7 +27,7 @@ public:
 				 	peer_gid = 65534;
 				 	peer_addr = 0;
 				 	peer_port = 0;
-				 	ti_established = kernel.time.now();
+				 	ti_established = core.time.now();
 
 					// Is ignored by connect when string is empty
 					localbindaddr = "";

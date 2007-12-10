@@ -68,7 +68,7 @@ void timestamp::init (void)
 		struct tm tmp;
 		time_t ti;
 		
-		ti = kernel.time.now();
+		ti = core.time.now();
 		localtime_r (&ti, &tmp);
 #ifdef HAVE_GMTOFF
 		tmval.tm_gmtoff = 0;

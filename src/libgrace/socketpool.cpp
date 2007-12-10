@@ -109,7 +109,7 @@ socketpool::~socketpool (void)
 // ========================================================================
 bool socketpool::setsize (unsigned int ncount)
 {
-	time_t now = kernel.time.now();
+	time_t now = core.time.now();
 	lck.lockw();
 	
 	if (ncount < count) return false;
@@ -145,7 +145,7 @@ bool socketpool::setsize (unsigned int ncount)
 bool socketpool::getsocket (poolsocket &into)
 {
 	poolsocket *crsr;
-	time_t now = kernel.time.now();
+	time_t now = core.time.now();
 	lck.lockr();
 	
 	crsr = first;

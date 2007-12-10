@@ -420,7 +420,7 @@ bool conditional::wait (int timeout)
 	struct timespec ts;
 	
 	struct timeval otv;
-	otv = kernel.time.unow();
+	otv = core.time.unow();
 	
 	ts.tv_sec = otv.tv_sec;
 	ts.tv_nsec = 1000 * otv.tv_usec;

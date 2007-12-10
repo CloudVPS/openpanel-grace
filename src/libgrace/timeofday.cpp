@@ -137,7 +137,7 @@ void timeofday::init()
 		struct tm tmp;
 		time_t ti;
 		
-		ti = kernel.time.now();
+		ti = core.time.now();
 		localtime_r (&ti, &tmp);
 #ifdef HAVE_GMTOFF
 		__system_local_timezone = tmp.tm_gmtoff;

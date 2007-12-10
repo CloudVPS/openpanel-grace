@@ -355,7 +355,7 @@ value *filesystem::getinfo (const string &_path)
 		
 		value tmpv;
 
-		tmpv = kernel.userdb.getpwuid (st.st_uid);
+		tmpv = core.userdb.getpwuid (st.st_uid);
 		if (tmpv.exists ("username"))
 		{
 			result["user"] = tmpv["username"];
@@ -367,7 +367,7 @@ value *filesystem::getinfo (const string &_path)
 			result["user"] = tstr;
 		}
 			
-		tmpv = kernel.userdb.getgrgid (st.st_gid);
+		tmpv = core.userdb.getgrgid (st.st_gid);
 		if (tmpv.exists ("groupname"))
 		{
 			result["group"] = tmpv["groupname"];
@@ -461,7 +461,7 @@ bool filesystem::chown (const string &path, const string &touser)
 	if (! resolved.strlen())
 		return false;
 	
-	value pwdat = kernel.userdb.getpwnam (touser);
+	value pwdat = core.userdb.getpwnam (touser);
 	value finf = fs.getinfo (resolved);
 	
 	if (! pwdat.count()) return false;
@@ -479,8 +479,8 @@ bool filesystem::chown (const string &path, const string &touser)
 
 bool filesystem::chown (const string &path, const string &usr, const string &gr)
 {
-	value pwdat = kernel.userdb.getpwnam (usr);
-	value grdat = kernel.userdb.getgrnam (gr);
+	value pwdat = core.userdb.getpwnam (usr);
+	value grdat = core.userdb.getgrnam (gr);
 	
 	if (! pwdat.count()) return false;
 	if (! grdat.count()) return false;
@@ -587,7 +587,7 @@ bool filesystem::chgrp (const string &path, const string &gr)
 	if (! resolved.strlen())
 		return false;
 	
-	value grdat = kernel.userdb.getgrnam (gr);
+	value grdat = core.userdb.getgrnam (gr);
 	value finf = fs.getinfo (resolved);
 	
 	if (! grdat.count()) return false;

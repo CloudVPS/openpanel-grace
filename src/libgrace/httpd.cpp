@@ -888,7 +888,7 @@ int httpdeventhandler::handle (const value &ev)
 // ========================================================================
 int httpdlogger::handle (const value &ev)
 {
-	timestamp ti = kernel.time.now();
+	timestamp ti = core.time.now();
 	string timestr = ti.format ("%d/%b/%Y:%H:%M:%S %z");
 	string uri = ev["uri"];
 	if (uri.strchr ('?') >= 0) delete uri.cutafter ('?');
@@ -1102,7 +1102,7 @@ bool valueauth::authenticate (const string &username, const string &passwd,
 	if (userdb ("crypt") == true)
 	{
 		checkedcrypted = true;
-		authenticated = kernel.pwcrypt.verify (passwd,
+		authenticated = core.pwcrypt.verify (passwd,
 											   userdb[username].sval());
 	}
 	else
@@ -1234,7 +1234,7 @@ pwfileauth::~pwfileauth (void)
 // ========================================================================
 void pwfileauth::checkrecord (void)
 {
-	time_t ti = kernel.time.now();
+	time_t ti = core.time.now();
 	value v;
 	if ((ti - lastcheck) > 10)
 	{
@@ -1301,7 +1301,7 @@ bool pwfileauth::authenticate (const string &u, const string &pw,
 		lck.unlock();
 		return false;
 	}
-	res = kernel.pwcrypt.verify (pw, userdb[u]["passwd"].sval());
+	res = core.pwcrypt.verify (pw, userdb[u]["passwd"].sval());
 	lck.unlock();
 	
 	return res;

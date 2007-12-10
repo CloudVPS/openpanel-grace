@@ -170,7 +170,7 @@ bool tcpsocket::connect (ipaddress addr, int port)
 	}
 	
 	feof = false;
-	ti_established = kernel.time.now ();
+	ti_established = core.time.now ();
 	if (codec)
 	{
 		size_t szleft;
@@ -310,7 +310,7 @@ bool tcpsocket::uconnect (const string &path)
 		setsockopt (filno, SOL_SOCKET, SO_PASSCRED, (char *) &pram,
 					sizeof (int));
 	#endif
-	ti_established = kernel.time.now ();
+	ti_established = core.time.now ();
 	if (codec)
 	{
 		if (! codec->setup())
@@ -689,7 +689,7 @@ tcpsocket *tcplistener::accept (void)
 		(*myfil).peer_port = ntohs (peer.sin_port);
 		(*myfil).peer_name = ip2str (raddr);
 	}
-	(*myfil).ti_established = kernel.time.now();
+	(*myfil).ti_established = core.time.now();
 	return myfil;
 }
 
@@ -761,7 +761,7 @@ tcpsocket *tcplistener::tryaccept (double timeout)
 	(*myfil).peer_addr = raddr;
 	(*myfil).peer_port = ntohs (peer.sin_port);
 	(*myfil).peer_name = ip2str (raddr);
-	(*myfil).ti_established = kernel.time.now();
+	(*myfil).ti_established = core.time.now();
 	return myfil;
 }
 

@@ -419,6 +419,7 @@ public:
 	
 };
 
-extern systemclass kernel;
+extern systemclass core;
+extern systemclass &kernel;
 
 #endif

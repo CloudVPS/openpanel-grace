@@ -6,6 +6,7 @@
 
 $exception (stackUnderflowException, "Stack underflow");
 $exception (stackOutOfMemoryException, "Stack out of memory");
+$exception (stackAccessRangeException, "Stack access ouf of range");
 
 /// A generic stack.
 /// Template class for keeping a stack of objects.
@@ -67,7 +68,9 @@ public:
 				 }
 	inline kind	&operator[] (int pos)
 				 {
-				 	return *(array[pos]);
+				 	if (pos < 0) throw (stackAccessRangeException());
+				 	if (pos >= cnt) throw (stackAccessRangeException());
+				 	return *(array[(cnt-1) - pos]);
 				 }
 
 private:

@@ -224,7 +224,7 @@ public:
 		
 		lck.lockw();
 		db = ndb;
-		lastloaded = kernel.time.now();
+		lastloaded = core.time.now();
 		lck.unlock();
 		return true;
 	}

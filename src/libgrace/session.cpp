@@ -31,7 +31,7 @@ string *sessionlist::create (const value &sdat)
 	{
 		while (db.exists (uuid)) uuid = strutil::uuid();
 		db[uuid] = sdat;
-		db[uuid]("time") = (unsigned int) kernel.time.now();
+		db[uuid]("time") = (unsigned int) core.time.now();
 	}
 	
 	return &uuid;
@@ -51,7 +51,7 @@ value *sessionlist::get (const statstring &id)
 	
 	exclusivesection (db)
 	{
-		db[id]("time") = (unsigned int) kernel.time.now();
+		db[id]("time") = (unsigned int) core.time.now();
 		res = db[id];
 	}
 	
@@ -63,13 +63,13 @@ void sessionlist::set (const statstring &id, const value &dat)
 	exclusivesection (db)
 	{
 		db[id] = dat;
-		db[id]("time") = (unsigned int) kernel.time.now();
+		db[id]("time") = (unsigned int) core.time.now();
 	}
 }
 
 void sessionlist::expire (int timeout)
 {
-	time_t now = kernel.time.now();
+	time_t now = core.time.now();
 	time_t then;
 	
 	exclusivesection (db)

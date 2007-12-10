@@ -263,7 +263,7 @@ void daemon::writepid (void)
 	pid_t  pid;
 	file   f;
 	
-	pid = kernel.proc.self ();
+	pid = core.proc.self ();
 	path = "run:%s.pid" %format (creator);
 
 	try
@@ -483,7 +483,7 @@ void daemon::setforeground (void)
 // ========================================================================
 bool daemon::settargetuser (const string &uname)
 {
-	value pw = kernel.userdb.getpwnam (uname);
+	value pw = core.userdb.getpwnam (uname);
 	if (! pw) return false;
 	
 	settargetuid (pw["uid"].uval());
@@ -579,7 +579,7 @@ void logthread::run (void)
 					string prioName;
 					string tstr;
 					string modName;
-					timestamp ti = kernel.time.now();
+					timestamp ti = core.time.now();
 					
 					modName = ev[logproperty::module].sval();
 					modName.pad (padding, ' ');

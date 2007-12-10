@@ -3,7 +3,8 @@
 #include "platform.h"
 #include <unistd.h>
 
-systemclass kernel;
+systemclass core;
+systemclass &kernel (core);
 const char *SALTSRC = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 					  "0123456789./";
 

@@ -22,9 +22,9 @@ smtpsocket::smtpsocket (void)
 	erno = 0;
 	
 	setsmtphost ("localhost");
-	hostname = kernel.net.hostname();
-	myuid = kernel.userdb.getuid();
-	pw = kernel.userdb.getpwuid (myuid);
+	hostname = core.net.hostname();
+	myuid = core.userdb.getuid();
+	pw = core.userdb.getpwuid (myuid);
 	
 	myaddress.printf ("%s@%s", pw["username"].cval(), hostname.str());
 	setsender (myaddress, "Mail System");

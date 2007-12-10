@@ -85,7 +85,7 @@ void process::kill (int sig)
 {
 	if (running())
 	{
-		kernel.proc.kill (_pid, sig);
+		core.proc.kill (_pid, sig);
 		running();
 	}
 }
