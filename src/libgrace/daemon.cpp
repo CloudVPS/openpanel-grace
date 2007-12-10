@@ -82,6 +82,7 @@ void daemon::daemonize (bool delayedexit)
 	}
 	
 	signal (SIGTERM, daemon::termhandler);
+	signal (SIGHUP, daemon::huphandler);
 	
 	// If the foreground flag is set, we travel a simpler path.
 	if (_foreground)
@@ -517,6 +518,10 @@ void daemon::termhandler (int sig)
 	MAINDAEMON->sendevent ("shutdown");
 }
 
+void daemon::huphandler (int sig)
+{
+	MAINDAEMON->sendevent ("reconfigure");
+}
 
 // ========================================================================
 // METHOD ::shutdown

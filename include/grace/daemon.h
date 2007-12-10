@@ -69,6 +69,10 @@ namespace log
 		syslog = 0x2 ///< Log to a syslog socket
 	};
 	
+	/// Send a log-event to the logthread.
+	/// \param prio The log priority.
+	/// \param mod The module for this log entry.
+	/// \param text The log text to send.
 	void write (priority prio, const string &mod, const string &text);
 };
 
@@ -120,7 +124,13 @@ public:
 					 /// \return Result, \b true if there is no other instance.
 	bool			 checkpid (void);
 	
-	void			 writepid (void); ///< Write daemon's pidfile.
+					 /// Write the daemon's pidfile to
+					 /// /var/run/application-id.pid. This call is
+					 /// normally handdled by daemonize(). For daemons
+					 /// with a target uid, the pidfile is opened
+					 /// and written to by the invoking user (usually
+					 /// root at that point).
+	void			 writepid (void);
 	virtual int		 main (void); ///< Virtual implementation method.
 	
 					 /// Spawn to the background.
@@ -157,7 +167,8 @@ public:
 	void			 delayedexiterror (const char *parm, ...);
 	void			 delayedexiterror (const string &text);
 	
-					 /// Send log message to the logthread.
+					 /// Send log message to the logthread. Deprecated
+					 /// in favor of global log::write.
 					 /// \param prio The message priority.
 					 /// \param moduleName A short description of the
 					 ///                   affected application subsystem.
@@ -167,7 +178,8 @@ public:
 						  
 					 /// Send log message to the logthread.
 					 /// Variation that accepts one string to accommodate
-					 /// %format.
+					 /// %format. Deprecated in favor of using
+					 /// global log::write.
 					 /// \param prio The message priority.
 					 /// \param moduleName A short description of the
 					 ///                   affected application subsystem.
@@ -236,15 +248,32 @@ public:
 					 	tegid = egid;
 					 }
 
+					 /// Send an empty event to the main thread, with
+					 /// only the type() set.
+					 /// \param type The event type.
 	void			 sendevent (const string &type);
 	
+					 /// Send an event to the main thread.
+					 /// \param type The event type.
+					 /// \param v Event parameter data.
 	void			 sendevent (const statstring &type, const value &v);
 	
+					 /// Indefinitely wait for a new event.
+					 /// \return A new event object.
 	value			*waitevent (void);
 	
+					 /// Wait a given amount of time for an event.
+					 /// \param msec Timeout in milliseconds.
+					 /// \return A new event object or NULL.
 	value			*waitevent (int msec);
 	
+					 /// Static handler for SIGTERM. Sends a
+					 /// 'shutdown' event.
 	static void		 termhandler (int sig);
+	
+					 /// Static handler for SIGHUP. Sends a
+					 /// 'reconfigure' event.
+	static void		 huphandler (int sig);
 
 protected:
 					 /// Shut down logthread;

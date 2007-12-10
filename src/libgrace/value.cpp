@@ -842,6 +842,30 @@ bool value::exists (const statstring &key) const
 }
 
 // ========================================================================
+// METHOD ::isarray
+// ========================================================================
+bool value::isarray (void) const
+{
+	return arraysz;
+}
+
+// ========================================================================
+// METHOD ::isdict
+// ========================================================================
+bool value::isdict (void) const
+{
+	return arraysz && (! ucount);
+}
+
+// ========================================================================
+// METHOD ::ismixed
+// ========================================================================
+bool value::ismixed (void) const
+{
+	return arraysz && (arraysz != ucount);
+}
+
+// ========================================================================
 // METHOD ::findchild
 // ------------------
 // Locate a sub-value inside the array by its key value
@@ -1195,8 +1219,6 @@ value &value::last (void)
 // ========================================================================
 const value	&value::operator[] (int i) const
 {
-	static value emptyvalue;
-	
 	if ((i<0) && ((arraysz+i) >=0)) return *(array[arraysz+i]);
 	value *v = getposition (i);
 	if (!v) return emptyvalue;
