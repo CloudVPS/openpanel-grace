@@ -159,6 +159,13 @@ public:
 						 	assign (str);
 						 }
 						 
+						 /// Cnstrucotr. Copy from unsigned C-string.
+						 statstring (const unsigned char *str)
+						 {
+						 	ref = NULL;
+						 	assign ((const char *) str);
+						 }
+						 
 						 /// Copy-constructor.
 						 statstring (const string &str)
 						 {
@@ -283,6 +290,12 @@ public:
 							assign (str);
 							return *this;
 						}
+						
+	inline statstring 	&operator= (const unsigned char *str)
+					 	{
+					 		assign ((const char *) str);
+					 		return *this;
+					 	}
 						
 	inline statstring	&operator= (const string &str)
 						{
