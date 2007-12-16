@@ -339,6 +339,9 @@ tryagain:
 	catch (...)
 	{
 		++attempt;
+		_host.crop ();
+		_port = 0;
+		_sock.close ();
 		if (attempt<2) goto tryagain;
 	}
 	return NULL;
