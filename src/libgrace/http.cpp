@@ -266,6 +266,9 @@ string *httpsocket::get (const string &url, value *hdr)
 		}
 	}
 	
+	int attempt = 0;
+	
+tryagain:
 	if (unixdomain)
 	{
 		if (_host.strlen())
@@ -335,8 +338,10 @@ string *httpsocket::get (const string &url, value *hdr)
 	}
 	catch (...)
 	{
-		return NULL;
+		++attempt;
+		if (attempt<2) goto tryagain;
 	}
+	return NULL;
 }
 
 // ========================================================================
