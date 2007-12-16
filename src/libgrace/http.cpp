@@ -306,44 +306,45 @@ tryagain:
 		}
 	}
 	
-	try
+	while (true)
 	{
 		if (! _useproxy)
-			_sock.puts ("GET /%s HTTP/1.1\r\n" %format (rawuri));
+			if (!_sock.puts ("GET /%s HTTP/1.1\r\n" %format (rawuri))) break;
 		else
-			_sock.puts ("GET %s HTTP/1.1\r\n" %format (url.str()));
+			if (!_sock.puts ("GET %s HTTP/1.1\r\n" %format (url.str()))) break;
 	
 		if (! postheaders.exists ("Host"))
 		{
-			_sock.puts ("Host: %s\r\n" %format (hostpart));
+			if (!_sock.puts ("Host: %s\r\n" %format (hostpart))) break;
 		}
 		
 		if (! postheaders.exists ("Accept-Encoding"))
 		{
-			_sock.puts ("Accept-Encoding: \r\n");
+			if (! _sock.puts ("Accept-Encoding: \r\n")) break;
 		}
 		
 		foreach (hdr, postheaders)
 		{
-			_sock.puts ("%s: %s\r\n" %format (hdr.id(), hdr));
+			if (! _sock.puts ("%s: %s\r\n" %format (hdr.id(), hdr))) break;
 		}
 		
 		if (_keepalive)
-			_sock.puts ("Connection: keep-alive\r\n");
+			if (! _sock.puts ("Connection: keep-alive\r\n")) break;
 		else
-			_sock.puts ("Connection: close\r\n");
-		_sock.printf ("\r\n");
+			if (! _sock.puts ("Connection: close\r\n")) break;
+			
+		if (! _sock.puts ("\r\n")) break;
 		
 		return getResult (hdr);
 	}
 	catch (...)
 	{
-		++attempt;
-		_host.crop ();
-		_port = 0;
-		_sock.close ();
-		if (attempt<2) goto tryagain;
 	}
+	++attempt;
+	_host.crop ();
+	_port = 0;
+	_sock.close ();
+	if (attempt<2) goto tryagain;
 	return NULL;
 }
 
