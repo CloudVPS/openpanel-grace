@@ -337,9 +337,6 @@ tryagain:
 		
 		return getResult (hdr);
 	}
-	catch (...)
-	{
-	}
 	++attempt;
 	_host.crop ();
 	_port = 0;
