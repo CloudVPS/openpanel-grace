@@ -333,10 +333,11 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 				s.printf ("\r\n");
 				s.puts (outbody);
 				
+				keepalive = env["keepalive"].bval();
+				
 				// Create a log-event if needed
 				if (eventmask & HTTPD_ACCESS)
 				{
-					keepalive = env["keepalive"].bval();
 					eventhandle ($attr("class", "access") ->
 								 $("method", method) ->
 								 $("httpver", httpver) ->
