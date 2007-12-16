@@ -325,6 +325,9 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 				// Send the http response, headers and body
 				s.printf ("HTTP/1.1 %i %s\r\n", res, httpstatusstr (res));
 				outhdr["Content-length"] = outbody.strlen();
+				keepalive = env["keepalive"].bval();
+				if (! outhdr.exists ("Connection"))
+					outhdr["Connection"] = keepalive ? "keepalive" : "close";
 				
 				foreach (hdr, outhdr)
 				{
@@ -333,7 +336,6 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 				s.printf ("\r\n");
 				s.puts (outbody);
 				
-				keepalive = env["keepalive"].bval();
 				
 				// Create a log-event if needed
 				if (eventmask & HTTPD_ACCESS)
