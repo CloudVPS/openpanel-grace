@@ -152,7 +152,7 @@ const char *value::phpdeserialize (const char *phpdata, bool recursed)
 				crsr++;
 				SKIPEXPECTED(':');
 				itmp = ::atoi (crsr);
-				while (::isdigit (*crsr)) crsr++;
+                while ((::isdigit (*crsr))||((*crsr)=='-')) crsr++;
 				SKIPEXPECTED(';');
 				if (st == parse_key)
 				{
