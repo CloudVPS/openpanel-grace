@@ -245,6 +245,66 @@ dictionaryEntry 	*demand (const statstring &s, bool alloc=true)
 						
 						return NULL;
 					 }
+					 
+void				 remove (const statstring &s)
+					 {
+					 	if (_count == 0) return;
+					 	dictionaryEntry *crsr;
+					 	
+					 	for (int i=0; i<_count; ++i)
+					 	{
+					 		crsr = _array[i];
+					 		if (_array[i]->id == s)
+					 		{
+					 			--_count;
+					 			if (i<_count)
+					 			{
+					 				memmove (_array+i, _array+i+1, _count*sizeof (dictionaryEntry *));
+					 			}
+					 			
+					 			if (! _count)
+					 			{
+					 				delete crsr;
+					 				return;
+					 			}
+					 			
+					 			_array[0]->lower = NULL;
+					 			_array[0]->higher = NULL;
+					 			
+					 			for (int j=1; j<_count; ++j)
+					 			{
+					 				dictionaryEntry *n = _array[j];
+					 				n->lower = NULL;
+					 				n->higher = NULL;
+					 				dictionaryEntry *c = _array[0];
+					 				
+					 				while (c)
+					 				{
+					 					if (c->id.key() < n->id.key())
+					 					{
+					 						if (c->higher) c = c->higher;
+					 						else
+					 						{
+					 							c->higher = n;
+					 							break;
+					 						}
+					 					}
+					 					else
+					 					{
+					 						if (c->lower) c = c->lower;
+					 						else
+					 						{
+					 							c->lower = n;
+					 							break;
+					 						}
+					 					}
+					 				}
+					 			}
+					 			
+					 			delete crsr;
+					 		}
+					 	}
+					 }
 
 					 /// Look up an entry in the dictionary by its numeric key.
 					 /// \param key The object's numeric key.
