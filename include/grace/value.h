@@ -1440,7 +1440,7 @@ public:
 	bool			 fromjson (const string &j);
 
 					 /// Convert to a JSON-encoded string.
-	string			*tojson (void);
+	string			*tojson (void) const;
 	
 	void			 encodegrace (string &into, int indent);
 
@@ -1674,9 +1674,9 @@ protected:
 					 /// Internal method for SHoX serialization.
 	void			 printshox (string &, stringdict &) const;
 		
-	void			 encodejsonstring (string &into);
-	void			 encodejsonid (string &into);
-	void			 encodejson (string &into);
+	void			 encodejsonstring (string &into) const;
+	void			 encodejsonid (string &into) const;
+	void			 encodejson (string &into) const;
 	
 	const char		*decodejson (const char *);
 	const char		*readjsonstring (const char *, string &);

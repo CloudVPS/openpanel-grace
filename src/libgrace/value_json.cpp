@@ -270,7 +270,7 @@ bool value::fromjson (const string &code)
 	decodejson (code.cval() + pos);	
 }
 
-void value::encodejsonstring (string &into)
+void value::encodejsonstring (string &into) const
 {
 	const char *c = cval();
 	int len = sval().strlen();
@@ -286,7 +286,7 @@ void value::encodejsonstring (string &into)
 	}
 }
 
-void value::encodejsonid (string &into)
+void value::encodejsonid (string &into) const
 {
 	const char *c = name();
 	int len = id().sval().strlen();
@@ -302,7 +302,7 @@ void value::encodejsonid (string &into)
 	}
 }
 
-void value::encodejson (string &into)
+void value::encodejson (string &into) const
 {
 	if (! count())
 	{
@@ -357,7 +357,7 @@ void value::encodejson (string &into)
 	}
 }
 
-string *value::tojson (void)
+string *value::tojson (void) const
 {
 	returnclass (string) res retain;
 	encodejson (res);
