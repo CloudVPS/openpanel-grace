@@ -44,7 +44,7 @@ extern statstring nokey;
 /// Keeps a global collection of stringref objects.
 class stringrefdb
 {
-friend class process
+friend class process;
 public:
 							 stringrefdb (void)
 							 {
