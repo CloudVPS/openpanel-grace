@@ -228,12 +228,15 @@ public:
 					 /// Constructor.
 					 /// \param mcommand The command string
 					 /// \param withStdErr True if the stderr channel should be caught.
+					 /// \param asUser The user to switch to in the child process.
 					 systemprocess (const string &mcommand,
-					 				bool withStdErr = false)
+					 				bool withStdErr = false,
+					 				const string &asUser = "")
 					 				: process (false)
 					 {
 					 	tuid = teuid = tgid = tegid = 0;
 					 	_argv = strutil::splitquoted (mcommand, ' ');
+					 	if (asUser) settargetuser (asUser);
 					 	initargs ();
 					 	init (mcommand, withStdErr);
 					 }
@@ -241,15 +244,18 @@ public:
 					 /// Constructor.
 					 /// \param args The command + arguments array.
 					 /// \param withStdErr True if the stderr channel should be caught.
+					 /// \param asUser The user to switch to in the child process.
 					 systemprocess (const value &args,
-					 				bool withStdErr = false)
+					 				bool withStdErr = false,
+					 				const string &asUser = "")
 					 				: process (false)
 					 {
 					 	tuid = teuid = tgid = tegid = 0;
 					 	_argv = args;
+					 	if (asUser) settargetuser (asUser);
 					 	initargs ();
 					 	init (args[0].sval(), withStdErr);
-					 }	
+					 }
 
 					 /// Constructor.
 					 /// \param args The command + arguments array.
@@ -281,19 +287,6 @@ public:
 	void			 settargetgid (gid_t rgid)
 					 {
 					 	tgid = tegid = rgid;
-					 }
-					 
-	bool			 settargetuser (const string &uname)
-					 {
-					 	value pw = core.userdb.getpwnam (uname);
-					 	if (! pw)
-					 	{
-					 		if (! _pid) _exit (0);
-					 		return false;
-					 	}
-					 	
-					 	settargetuid (pw["uid"].uval());
-					 	settargetgid (pw["gid"].uval());
 					 }
 					 
 	void			 initargs (void)
@@ -352,6 +345,20 @@ protected:
 	argptr			*envp; ///< Target environmemt
 	argptr			*argp; ///< Target argument list.
 	string			 cpath; ///< Command path.
+
+	bool			 settargetuser (const string &uname)
+					 {
+					 	value pw = core.userdb.getpwnam (uname);
+					 	if (! pw)
+					 	{
+					 		if (! _pid) _exit (0);
+					 		return false;
+					 	}
+					 	
+					 	settargetuid (pw["uid"].uval());
+					 	settargetgid (pw["gid"].uval());
+					 }
+					 
 };
 
 #endif
