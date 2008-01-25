@@ -72,7 +72,9 @@ public:
 						 pipe (inpipe);
 						 pipe (outpipe);
 						 
+						 STRINGREF().treelock.lockr();
 						 _pid = fork();
+						 STRINGREF().treelock.unlock();
 						 
 						 if (_pid == 0)
 						 {
