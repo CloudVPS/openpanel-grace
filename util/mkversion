@@ -23,7 +23,7 @@ genversion() {
 	fi
 }
 
-if [ -f version.id ]
+if [ -f version.id ]; then
    BUILD_VERSION=`head -1 < version.id`
   if [ -z "${BUILD_VERSION}" ]; then
     echo "% Format error in version.id file"
