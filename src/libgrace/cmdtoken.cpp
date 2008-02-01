@@ -444,7 +444,8 @@ string *cmdtoken_parsedata (value &env, value &str)
 	{
 		if (i & 1)
 		{
-			res += cmdtoken_parseval (env, element.sval());
+			if (! element.sval()) res += '$';
+			else res += cmdtoken_parseval (env, element.sval());
 		}
 		else
 		{
