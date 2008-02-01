@@ -164,6 +164,11 @@ string *operator% (const char *args, const value &arglist)
 					copy_s = KEYORARG.toxml (value::compact);
 					res.strcat (copy_s);
 					goto CONTINUE;
+				
+				case 'J':
+					copy_s = KEYORARG.tojson ();
+					res.strcat (copy_s);
+					goto CONTINUE;
 					
 				case '{':
 					if (*fmt)
