@@ -217,6 +217,12 @@ int stringtestApp::main (void)
 		v["test"] =  three;
 	}
 	
+	string str = "This is a test";
+	string l = str.left (0);
+	if (l.strlen()) FAIL("string::left()");
+	string r = str.right (0);
+	if (r.strlen()) FAIL("string::right()");
+	
 	return 0;
 }
 
