@@ -610,6 +610,7 @@ public:
 					 /// \return New object with the result.
 	inline string	*left (int sz) const
 					 {
+					 	if (! sz) return NULL;
 					 	return mid (0, sz);
 					 }
 					 
@@ -618,6 +619,7 @@ public:
 					 /// \return New object with the result.
 	inline string	*right (int sz) const
 					 {
+					 	if (! sz) return NULL;
 					 	if (((unsigned int)sz) > size)
 							return new string(*this);
 						return mid (size-sz, 0);
