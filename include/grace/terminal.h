@@ -237,6 +237,8 @@ protected:
 	struct termios 	 oldterm; ///< Stored termios settings.
 	struct termios	 newterm; ///< Active termios settings.
 	
+	bool			 engaged; ///< true if we are in the 'on' state.
+	
 					 /// Automatically advance viewport cursor to updated
 					 /// situation.
 	void			 advance (void);
@@ -548,7 +550,7 @@ public:
 		}
 		
 		termbuf.tprintf ("\n");
-		termbuf.off();
+		//termbuf.off();
 		if (! basicmode) termbuf.tohistory();
 		
 		return termbuf.getline();
@@ -1117,6 +1119,7 @@ public:
 				}
 			}
 		}
+		term.termbuf.off ();
 	}
 	
 	/// Start the command line interpreter.

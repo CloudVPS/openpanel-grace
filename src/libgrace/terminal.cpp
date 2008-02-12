@@ -26,6 +26,7 @@ termbuffer::termbuffer (file &in, file &out, int _size, int _wsize)
 	fout = out;
 	struct winsize sz;
 	len = 0;
+	engaged = false;
 	
 	size = _size;
 	
@@ -71,6 +72,8 @@ termbuffer::~termbuffer (void)
 // ==========================================================================
 void termbuffer::on (void)
 {
+	if (engaged) return;
+	
 	int i;
 	string term;
 	
@@ -100,6 +103,8 @@ void termbuffer::on (void)
 		// in the wild).
 		tprintf (XTERM_SETVT100);
 	}
+	
+	engaged = true;
 }
 
 // ==========================================================================
@@ -107,7 +112,8 @@ void termbuffer::on (void)
 // ==========================================================================
 void termbuffer::off (void)
 {
-	tcsetattr (fin.filno, TCSAFLUSH, &oldterm);
+	if (engaged) tcsetattr (fin.filno, TCSAFLUSH, &oldterm);
+	engaged = false;
 }
 
 // ==========================================================================
