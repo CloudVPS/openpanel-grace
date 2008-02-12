@@ -1,4 +1,10 @@
-0.9.3      -                                       <grace@openpanel.com>
+0.9.5      Tue Feb 12 2007                           <grace@openpanel.com>
+
+           * Fix keyboard readahead in class terminal.
+
+0.9.4      Fri Feb  8 2007                           <grace@openpanel.com>
+
+           * Support JSON-encoding through %format.
 
            * Grace is now a shared library.
            
@@ -18,6 +24,8 @@
            * Added $version() macro.
            
            * Added $exception() macro, deprecates THROWS_EXCEPTION().
+
+0.9.3      Private release
 
 0.9.2      Private release
 
