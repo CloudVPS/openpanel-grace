@@ -22,5 +22,5 @@ diff out.dat reference.dat >> test.log 2>&1 || {
   echo " failed (DIFF)"
   exit 1
 }
-rm -f test.log
+rm -f test.log out.dat
 echo " passed"

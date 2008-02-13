@@ -4,11 +4,22 @@ CVS
 *.o
 *.a
 *.so
+*.dylib
 *.exe
 *.app
+*.orig
+configure.paths
+version.id
+*~
 makeinclude
 platform.h
 .gdb_history
+doc/generated
+doxygen.warnings
+__.SYMDEF SORTED
+Makefile.depend.bak
+version.id.*
+src/libgrace/version.cpp
 
 syntax: regexp
 ^include/matrixssl/

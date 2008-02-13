@@ -63,18 +63,22 @@ public:
 					 /// \param withStdErr The stderr flag.
 	void			 init (const string &name, bool withStdErr)
 					 {
-						 _pid = -1;
-						 _running = false;
-						 _name = name;
-						 
-						 int inpipe[2], outpipe[2];
-						 
-						 pipe (inpipe);
-						 pipe (outpipe);
-						 
-						 STRINGREF().treelock.lockr();
-						 _pid = fork();
-						 STRINGREF().treelock.unlock();
+					 	static lock<bool> forklock;
+						int inpipe[2], outpipe[2];
+					 	
+					 	exclusivesection (forklock)
+					 	{
+							 _pid = -1;
+							 _running = false;
+							 _name = name;
+							 
+							 pipe (inpipe);
+							 pipe (outpipe);
+							 
+							 STRINGREF().treelock.lockr();
+							 _pid = fork();
+							 STRINGREF().treelock.unlock();
+						 }
 						 
 						 if (_pid == 0)
 						 {

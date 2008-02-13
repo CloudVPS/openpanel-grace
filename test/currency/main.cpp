@@ -35,6 +35,14 @@ int currencytestApp::main (void)
 	
 	value out;
 	value in;
+	string sout;
+	
+	currency c = parsecurrency ("137.14");
+	if (c != base) FAIL ("parsecurrency1");
+	printcurrency (sout, c);
+	if (sout != "137.14") FAIL ("printcurrency");
+	currency x = parsecurrency (sout);
+	if (x != base) FAIL ("parsecurrency2");
 	
 	out["base"] = base;
 	out["vat"] = vat;

@@ -45,7 +45,7 @@ int forktestApp::main (void)
 {
 	signal (SIGALRM, alarmhandler);
 	alarm (60);
-	for (int i=0; i<8; ++i)
+	for (int i=0; i<4; ++i)
 	{
 		new forker (this);
 	}
@@ -55,7 +55,7 @@ int forktestApp::main (void)
 		sleep (3);
 		int i;
 		sharedsection (counter) i = counter;
-		if (i>=8000) break;
+		if (i>=4000) break;
 		ferr.printf ("%i\n", i);
 	}
 	

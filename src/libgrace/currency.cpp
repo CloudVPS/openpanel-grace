@@ -426,7 +426,8 @@ long long parsecurrency (const string &from)
 	const char *crsr;
 	long long base;
 	long long fract;
-	char decimal[2];
+	char decimal[3];
+	decimal[2] = 0;
 	
 	crsr = from.str();
 	while ((*crsr)!='.')

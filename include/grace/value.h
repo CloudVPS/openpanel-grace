@@ -1732,20 +1732,12 @@ string *__make_timestr (time_t);
 
 string *operator% (const char *args, const value &arglist);
 value format (const value &);
-value format (const value &, const value &);
-value format (const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
-value format (const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &, const value &);
-
+value format (const value &a, const value &b);
+value format (const value &a, const value &b, const value &c, const value &d = emptyvalue);
+value format (const value &a, const value &b, const value &c, const value &d,
+			  const value &e, const value &f = emptyvalue,
+			  const value &g = emptyvalue, const value &h = emptyvalue,
+			  const value &i = emptyvalue, const value &j = emptyvalue,
+			  const value &k = emptyvalue, const value &l = emptyvalue);
+			  
 #endif

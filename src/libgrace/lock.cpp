@@ -115,6 +115,9 @@ bool lockbase::trylockw (int secs)
 #endif
 }
 
+void __lockbase_unlock_breakme (void)
+{
+}
 
 // ========================================================================
 // METHOD ::unlock
@@ -127,6 +130,7 @@ void lockbase::unlock (void)
 	{
 		::printf ("unlock fail eno=%i %s\n",
 				  eno, strerror (eno));
+		__lockbase_unlock_breakme ();
 		throw (lockException());
 	}
 }

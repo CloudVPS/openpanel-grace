@@ -235,15 +235,6 @@ value format (const value &v1, const value &v2)
 	return res;
 }
 
-value format (const value &v1, const value &v2, const value &v3)
-{
-	value res;
-	res.newval() = v1;
-	res.newval() = v2;
-	res.newval() = v3;
-	return res;
-}
-
 value format (const value &v1, const value &v2, const value &v3,
 			  const value &v4)
 {
@@ -251,123 +242,7 @@ value format (const value &v1, const value &v2, const value &v3,
 	res.newval() = v1;
 	res.newval() = v2;
 	res.newval() = v3;
-	res.newval() = v4;
-	return res;
-}
-value format (const value &v1, const value &v2, const value &v3,
-			  const value &v4, const value &v5)
-{
-	value res;
-	res.newval() = v1;
-	res.newval() = v2;
-	res.newval() = v3;
-	res.newval() = v4;
-	res.newval() = v5;
-	return res;
-}
-
-value format (const value &v1, const value &v2, const value &v3,
-			  const value &v4, const value &v5, const value &v6)
-{
-	value res;
-	res.newval() = v1;
-	res.newval() = v2;
-	res.newval() = v3;
-	res.newval() = v4;
-	res.newval() = v5;
-	res.newval() = v6;
-	return res;
-}
-
-value format (const value &v1, const value &v2, const value &v3,
-			  const value &v4, const value &v5, const value &v6,
-			  const value &v7)
-{
-	value res;
-	res.newval() = v1;
-	res.newval() = v2;
-	res.newval() = v3;
-	res.newval() = v4;
-	res.newval() = v5;
-	res.newval() = v6;
-	res.newval() = v6;
-	res.newval() = v7;
-	return res;
-}
-
-value format (const value &v1, const value &v2, const value &v3,
-			  const value &v4, const value &v5, const value &v6,
-			  const value &v7, const value &v8)
-{
-	value res;
-	res.newval() = v1;
-	res.newval() = v2;
-	res.newval() = v3;
-	res.newval() = v4;
-	res.newval() = v5;
-	res.newval() = v6;
-	res.newval() = v6;
-	res.newval() = v7;
-	res.newval() = v8;
-	return res;
-}
-
-value format (const value &v1, const value &v2, const value &v3,
-			  const value &v4, const value &v5, const value &v6,
-			  const value &v7, const value &v8, const value &v9)
-{
-	value res;
-	res.newval() = v1;
-	res.newval() = v2;
-	res.newval() = v3;
-	res.newval() = v4;
-	res.newval() = v5;
-	res.newval() = v6;
-	res.newval() = v6;
-	res.newval() = v7;
-	res.newval() = v8;
-	res.newval() = v9;
-	return res;
-}
-
-value format (const value &v1, const value &v2, const value &v3,
-			  const value &v4, const value &v5, const value &v6,
-			  const value &v7, const value &v8, const value &v9,
-			  const value &v10)
-{
-	value res;
-	res.newval() = v1;
-	res.newval() = v2;
-	res.newval() = v3;
-	res.newval() = v4;
-	res.newval() = v5;
-	res.newval() = v6;
-	res.newval() = v6;
-	res.newval() = v7;
-	res.newval() = v8;
-	res.newval() = v9;
-	res.newval() = v10;
-	return res;
-}
-
-value format (const value &v1, const value &v2, const value &v3,
-			  const value &v4, const value &v5, const value &v6,
-			  const value &v7, const value &v8, const value &v9,
-			  const value &v10, const value &v11)
-{
-	value res;
-	res.newval() = v1;
-	res.newval() = v2;
-	res.newval() = v3;
-	res.newval() = v4;
-	res.newval() = v5;
-	res.newval() = v6;
-	res.newval() = v6;
-	res.newval() = v7;
-	res.newval() = v8;
-	res.newval() = v9;
-	res.newval() = v10;
-	res.newval() = v11;
+	if (! v4.isempty()) res.newval() = v4;
 	return res;
 }
 
@@ -376,123 +251,22 @@ value format (const value &v1, const value &v2, const value &v3,
 			  const value &v7, const value &v8, const value &v9,
 			  const value &v10, const value &v11, const value &v12)
 {
+	#define ADDROW(var) if (var.isempty()) return res; res.newval() = var
 	value res;
 	res.newval() = v1;
 	res.newval() = v2;
 	res.newval() = v3;
 	res.newval() = v4;
 	res.newval() = v5;
-	res.newval() = v6;
-	res.newval() = v6;
-	res.newval() = v7;
-	res.newval() = v8;
-	res.newval() = v9;
-	res.newval() = v10;
-	res.newval() = v11;
-	res.newval() = v12;
-	return res;
-}
-
-value format (const value &v1, const value &v2, const value &v3,
-			  const value &v4, const value &v5, const value &v6,
-			  const value &v7, const value &v8, const value &v9,
-			  const value &v10, const value &v11, const value &v12,
-			  const value &v13)
-{
-	value res;
-	res.newval() = v1;
-	res.newval() = v2;
-	res.newval() = v3;
-	res.newval() = v4;
-	res.newval() = v5;
-	res.newval() = v6;
-	res.newval() = v6;
-	res.newval() = v7;
-	res.newval() = v8;
-	res.newval() = v9;
-	res.newval() = v10;
-	res.newval() = v11;
-	res.newval() = v12;
-	res.newval() = v13;
-	return res;
-}
-
-value format (const value &v1, const value &v2, const value &v3,
-			  const value &v4, const value &v5, const value &v6,
-			  const value &v7, const value &v8, const value &v9,
-			  const value &v10, const value &v11, const value &v12,
-			  const value &v13, const value &v14)
-{
-	value res;
-	res.newval() = v1;
-	res.newval() = v2;
-	res.newval() = v3;
-	res.newval() = v4;
-	res.newval() = v5;
-	res.newval() = v6;
-	res.newval() = v6;
-	res.newval() = v7;
-	res.newval() = v8;
-	res.newval() = v9;
-	res.newval() = v10;
-	res.newval() = v11;
-	res.newval() = v12;
-	res.newval() = v13;
-	res.newval() = v14;
-	return res;
-}
-
-value format (const value &v1, const value &v2, const value &v3,
-			  const value &v4, const value &v5, const value &v6,
-			  const value &v7, const value &v8, const value &v9,
-			  const value &v10, const value &v11, const value &v12,
-			  const value &v13, const value &v14, const value &v15)
-{
-	value res;
-	res.newval() = v1;
-	res.newval() = v2;
-	res.newval() = v3;
-	res.newval() = v4;
-	res.newval() = v5;
-	res.newval() = v6;
-	res.newval() = v6;
-	res.newval() = v7;
-	res.newval() = v8;
-	res.newval() = v9;
-	res.newval() = v10;
-	res.newval() = v11;
-	res.newval() = v12;
-	res.newval() = v13;
-	res.newval() = v14;
-	res.newval() = v15;
-	return res;
-}
-
-value format (const value &v1, const value &v2, const value &v3,
-			  const value &v4, const value &v5, const value &v6,
-			  const value &v7, const value &v8, const value &v9,
-			  const value &v10, const value &v11, const value &v12,
-			  const value &v13, const value &v14, const value &v15,
-			  const value &v16)
-{
-	value res;
-	res.newval() = v1;
-	res.newval() = v2;
-	res.newval() = v3;
-	res.newval() = v4;
-	res.newval() = v5;
-	res.newval() = v6;
-	res.newval() = v6;
-	res.newval() = v7;
-	res.newval() = v8;
-	res.newval() = v9;
-	res.newval() = v10;
-	res.newval() = v11;
-	res.newval() = v12;
-	res.newval() = v13;
-	res.newval() = v14;
-	res.newval() = v15;
-	res.newval() = v16;
+	ADDROW(v6);
+	ADDROW(v7);
+	ADDROW(v8);
+	ADDROW(v9);
+	ADDROW(v10);
+	ADDROW(v11);
+	ADDROW(v12);
+	
+	#undef ADDROW
 	return res;
 }
 
