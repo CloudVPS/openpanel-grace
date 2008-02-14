@@ -15,6 +15,7 @@
 #include <grace/strutil.h>
 #include <grace/filesystem.h>
 #include <grace/xmlschema.h>
+#include <grace/ipaddress.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -699,6 +700,17 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 							newcrsr->setcurrency (parsecurrency (tag.data));
 							
 							if (tagtype != t_currency)
+							{
+								(void)(*newcrsr).sval();
+								(*newcrsr)._type = tagtype;
+							}
+						}
+						else if (tp == t_ipaddr)
+						{
+							ipaddress i = tag.data;
+							newcrsr->setip (i);
+							
+							if (tagtype != t_ipaddr)
 							{
 								(void)(*newcrsr).sval();
 								(*newcrsr)._type = tagtype;

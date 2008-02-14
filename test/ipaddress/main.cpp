@@ -32,6 +32,14 @@ int ipaddresstestApp::main (void)
 	
 	fout.writeln ("%P" %format (netdb::resolve ("localhost")));
 	
+	value foo = $("address", netdb::resolve ("localhost"));
+	foo.savexml ("out.xml");
+	
+	value v;
+	v.loadxml ("out.xml");
+	if (addr != v) FAIL ("readabck compare");
+	if (v != addr) FAIL ("readback compare flip");
+	
 	return 0;
 }
 

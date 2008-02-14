@@ -1,7 +1,6 @@
 #ifndef _IPADDRESS_H
 #define _IPADDRESS_H 1
 
-#include <grace/valuable.h>
 #include <grace/value.h>
 
 /// Representation of an IPv4 address.
@@ -16,7 +15,7 @@
 /// The constructors and operators implemented should make this
 /// a drop-in replacement for wielding sockaddr_in or unsigned
 /// ints.
-class ipaddress : public valuable
+class ipaddress
 {
 public:
 						 /// Default constructor. Sets the value
@@ -86,12 +85,6 @@ public:
 						 	return addr;
 						 }
 						 
-						 /// Virtual implementation of valuable::tovalue.
-	void				 tovalue (value &into) const
-						 {
-						 	into.setip (addr);
-						 }
-	
 						 /// Increment operator.
 						 /// \todo Implement prefix/postfix properly.
 	ipaddress			&operator++ (int i)
@@ -131,7 +124,31 @@ public:
 						 	addr |= o.addr;
 						 	return *this;
 						 }
-	
+						 
+						 #define INTOP(thetype) \
+						 	bool operator== (thetype o) const \
+						 	{ \
+						 		return o == addr; \
+						 	} \
+						 	bool operator!= (thetype o) const \
+						 	{ \
+						 		return o != addr; \
+						 	}
+						 
+						 INTOP (int)
+						 INTOP (unsigned int)
+						 
+						 
+	bool				 operator== (const value &o) const
+						 {
+						 	return o.ipval() == addr;
+						 }
+						 
+	bool				 operator!= (const value &o) const
+						 {
+						 	return o.ipval() != addr;
+						 }
+						 
 protected:
 	unsigned int		 addr; ///< The IPv4 address in host format.
 };

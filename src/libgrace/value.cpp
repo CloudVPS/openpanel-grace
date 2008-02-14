@@ -17,6 +17,7 @@
 #include <grace/strutil.h>
 #include <grace/filesystem.h>
 #include <grace/valuable.h>
+#include <grace/ipaddress.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -179,6 +180,12 @@ value::value (creatorlabel l, const string &k)
 	arrayalloc = 0;
 	ucount = 0;
 	attrib = NULL;
+}
+
+value::value (const ipaddress &o)
+{
+	init (o);
+	setip (o);
 }
 
 // ========================================================================

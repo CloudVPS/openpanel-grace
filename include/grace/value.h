@@ -218,6 +218,9 @@ public:
 					 /// Copy-constructor (bool)
 					 value (bool);
 					 
+					 /// Copy-constructor (ipaddress)
+					 value (const class ipaddress &);
+					 
 					 /// Destructor.
 					~value (void);
 	
@@ -407,6 +410,7 @@ public:
 	value	&operator= (value *v);
 	value	&operator= (class valuable &);
 	value	&operator= (class valuable *);
+	value	&operator= (const class ipaddress &);
 
 	/// Cast as bool.
 	inline			 operator bool (void) const
@@ -1135,6 +1139,9 @@ public:
 	{
 		return (sval() != s.sval());
 	}
+	
+	bool operator== (const class ipaddress &o);
+	bool operator!= (const class ipaddress &o);
 	
 					 /// Wipe out value and children.
 	void 			 clear (void);

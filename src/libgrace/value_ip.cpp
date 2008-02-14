@@ -14,6 +14,7 @@
 #include <grace/stack.h>
 #include <grace/strutil.h>
 #include <grace/filesystem.h>
+#include <grace/ipaddress.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -68,8 +69,9 @@ unsigned int str2ip (const string &str)
 // ========================================================================
 unsigned int value::ipval (void) const
 {
+	if (itype != i_string) return this->uval();
 	value t;
-	t = *this;
+	t = this->uval();
 	return t.ipval();
 }
 
@@ -106,3 +108,17 @@ value &value::setip (unsigned int addr)
 	return *this;
 }
 
+value &value::operator= (const ipaddress &o)
+{
+	setip (o);
+}
+
+bool value::operator== (const ipaddress &o)
+{
+	return o == (*this);
+}
+
+bool value::operator!= (const ipaddress &o)
+{
+	return o != (*this);
+}

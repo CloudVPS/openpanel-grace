@@ -48,6 +48,10 @@ string *operator% (const char *args, const value &arglist)
 					res.strcat ((char) KEYORARG.ival());
 					goto CONTINUE;
 					
+				case '$':
+					printcurrency (res, KEYORARG.getcurrency());
+					goto CONTINUE;
+					
 				case 'L':
 					--copy_p;
 					*(copy_p++) = 'l';
