@@ -1,3 +1,16 @@
+0.9.7      ???????????????                           <grace@openpanel.com>
+
+           * Optimized string::trim() and family.
+           
+           * Added value::splice().
+           
+           * Improved handling of class ipaddress.
+           
+           * Improvements to class currency.
+           
+           * Fixed problems related to fork() inside class process and
+             the global stringref treelock.
+
 0.9.6      Thu Feb 14 2007                           <grace@openpanel.com>
 
            * Fix interaction between class value and class ipaddress
