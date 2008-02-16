@@ -182,6 +182,9 @@ value::value (creatorlabel l, const string &k)
 	attrib = NULL;
 }
 
+// ========================================================================
+// CONSTRUCTOR (ipaddress)
+// ========================================================================
 value::value (const ipaddress &o)
 {
 	init (o);
@@ -443,9 +446,9 @@ value &value::operator= (const value &v)
 
 	// Prefer to keep the original object's type.
 	
-	dtenum vt = v.type();
+	_type = v.type();
+	itype = v.itype;
 	
-	_type = vt;
 	switch (v.itype)
 	{
 		case i_string: s.strclone (v.s); break;
@@ -459,8 +462,6 @@ value &value::operator= (const value &v)
 		case i_ulong:
 		case i_long: t.ulval = v.t.ulval; break;
 	}
-	itype = v.itype;
-	_type = v.type();
 	
 	// Now clone the children if needed
 	
@@ -485,7 +486,7 @@ value &value::operator= (const value &v)
 		}
 		if (arraysz != (unsigned int) v.count())
 		{
-			::printf ("FUCK!\n");
+			throw (valueCountMismmatchException());
 		}
 	}
 	if (v.attrib)
@@ -595,8 +596,8 @@ const string &value::sval (void) const
 	// the itype is not i_string.
 	//
 	// This string representation is an internal affair of the class and
-	// its side-effects  do not harm the principal constness, the code
-	// the code 'owning' a value-object and passing it as const to another
+	// its side-effects  do not harm the principal constness, the
+	// code 'owning' a value-object and passing it as const to another
 	// function does not find the object in a functionally altered state.
     string &S = (string &) s;
 
@@ -846,6 +847,14 @@ bool value::exists (const statstring &key) const
 	if (! key) return false;
 	if (havechild (key.key(), key.str())) return true;
 	return false;
+}
+
+// ========================================================================
+// METHOD ::strlen
+// ========================================================================
+int value::strlen (void) const
+{
+	return sval().strlen();
 }
 
 // ========================================================================
@@ -1758,6 +1767,9 @@ void value::init (bool first)
 	}
 }
 
+// ========================================================================
+// METHOD ::isempty
+// ========================================================================
 bool value::isempty (void) const
 {
 	if (itype != i_unset) return false;

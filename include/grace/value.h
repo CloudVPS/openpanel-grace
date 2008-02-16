@@ -18,6 +18,8 @@
 #include <string.h>
 #include <sys/types.h>
 
+$exception (valueCountMismmatchException, "internal count mismatch");
+
 /// Union for all number types embedded in a value object.
 typedef union dtypes
 {
@@ -1509,6 +1511,10 @@ public:
 					 /// Return true if the value is empty: No data,
 					 /// no attributes and no children.
 	bool			 isempty (void) const;
+	
+					 /// Returns the length of this node's string
+					 /// representation.
+	int				 strlen (void) const;
 	
 					 /// Returns true if a child key exists.
 	bool			 exists (const char *) const;
