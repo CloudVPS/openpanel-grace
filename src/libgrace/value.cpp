@@ -1568,6 +1568,40 @@ value *value::copyright (int pcnt) const
 }
 
 // ========================================================================
+// METHOD value::splice
+// ========================================================================
+value *value::splice (int _pos, int _count) const
+{
+	int pos = _pos;
+	if (pos < 0) pos += arraysz;
+	if (pos < 0) pos = arraysz;
+	else if (pos > arraysz) pos = arraysz;
+	
+	int count = _count;
+	if (count < 0) _count = arraysz - pos;
+	if (count < 0) count = 0;
+	
+	if (! count) return NULL;
+	int endpos = pos+count;
+	if (endpos > arraysz) endpos = arraysz;
+	
+	returnclass (value) res retain;
+	for (int i=pos; i<endpos; ++i)
+	{
+		if (array[(arraysz-1)-i]->id())
+		{
+			res[array[(arraysz-1)-i]->id()] = *(array[(arraysz-1)-i]);
+		}
+		else
+		{
+			res.newval() = *(array[(arraysz-1)-i]);
+		}
+	}
+	
+	return &res;
+}
+
+// ========================================================================
 // METHOD ::treecmp
 // ========================================================================
 bool value::treecmp (const value &other) const

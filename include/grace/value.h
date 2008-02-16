@@ -1612,7 +1612,22 @@ public:
 					 /// \param num The number, if negative relative to the
 					 ///            total array size.
 	value			*copyright (int num) const;
+	
+					 /// Crop an array to the left half that has a
+					 /// set maximum number of nodes.
+					 /// \param num The maximum amount of nodes to keep.
+	void			 cropleft (int num);
+	
+					 /// Crop an array to the right half that has a
+					 /// set aximum number of nodes.
+					 /// \param num The maximum amount of nodes to keep.
+	void			 cropright (int num);
 
+					 /// Get a copy of a sub-range of the array.
+					 /// \param pos Starting position.
+					 /// \param count Max number of nodes to copy.
+	value			*splice (int pos, int count=-1) const;
+	
 					 /// Compare two value objects on a tree level.
 	bool			 treecmp (const value &other) const;
 
