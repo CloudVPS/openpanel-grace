@@ -42,13 +42,14 @@ int retainbugtestApp::main (void)
 			testing();
 			
 			test = "abcdefghijkl";
-			for (int i=0; i<400; ++i)
+			for (int i=0; i<800; ++i)
 			{
+				test.strcat (" \t");
 				test.trim (" \t");
 			}
 		}
 	}
-	catch (...)
+	catch (memoryLeakException e)
 	{
 		return 0;
 	}

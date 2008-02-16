@@ -1498,7 +1498,7 @@ string *string::mid (int pos, int psz) const
 	if (!sz) sz = (size-pos);
 	if ((pos+sz) > (int) size) sz = (size-pos);
 	
-	string *res = new string;
+	string *res = new (memory::retainable::onstack) string;
 	res->alloc = GROW(sz+1+sizeof (refblock));
 	res->data = (refblock *) malloc ((size_t) res->alloc);
 	res->data->refcount = 0;
@@ -2330,7 +2330,7 @@ string *string::trim (const string &set) const
 	while ((left<right)&&(set.strchr (data->v[left]) >= 0)) left++;
 	if (left == right) return NULL;
 	
-	while ((right>left)&&(set.strchr (data->v[left]) >= 0)) right--;
+	while ((right>left)&&(set.strchr (data->v[right]) >= 0)) right--;
 	if (left == right) return NULL;
 	
 	right++;
@@ -2370,6 +2370,8 @@ string *string::rtrim (const string &set) const
 	int right = size-1;
 	while ((right>0) && (set.strchr (data->v[right]) >= 0)) right--;
 	if (right < 1) return NULL;
+	
+	if (right<size) right++;
 	
 	return left (right);
 }

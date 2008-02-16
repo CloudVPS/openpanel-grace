@@ -160,7 +160,6 @@ int stringtestApp::main (void)
 	
 	//Right trim
 	tstr = tstr.rtrim ("\n\t ");
-	::printf(tstr.cval());
 	if(tstr != "HELLOW\nWORLD") FAIL("rtrim");
 	
 		// Test trimming
