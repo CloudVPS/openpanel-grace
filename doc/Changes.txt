@@ -1,3 +1,9 @@
+0.9.6      Thu Feb 14 2007                           <grace@openpanel.com>
+
+           * Fix interaction between class value and class ipaddress
+
+           * Fix bug in parsing a currency value out of a string.
+
 0.9.5      Tue Feb 12 2007                           <grace@openpanel.com>
 
            * Fix keyboard readahead in class terminal.
