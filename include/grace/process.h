@@ -66,20 +66,17 @@ public:
 					 	static lock<bool> forklock;
 						int inpipe[2], outpipe[2];
 					 	
-					 	exclusivesection (forklock)
-					 	{
-							 _pid = -1;
-							 _running = false;
-							 _name = name;
-							 
-							 pipe (inpipe);
-							 pipe (outpipe);
-							 
-							 STRINGREF().treelock.lockr();
-							 _pid = fork();
-							 STRINGREF().treelock.unlock();
-						 }
+						 _pid = -1;
+						 _running = false;
+						 _name = name;
 						 
+						 pipe (inpipe);
+						 pipe (outpipe);
+						 
+						 try {STRINGREF().treelock.lockw();} catch (...) {}
+						 _pid = fork();
+						 if (_pid) try {STRINGREF().treelock.unlock();} catch (...) {}
+
 						 if (_pid == 0)
 						 {
 						 	::close (0);

@@ -11,14 +11,12 @@ bool __THREADED = false;
 // ========================================================================
 void lockbase::lockr (void)
 {
-	if (! __THREADED) return;
+	//if (! __THREADED) return;
 	int eno;
 	if ((eno = pthread_rwlock_rdlock (rwlock)))
 	{
 		if (eno != EDEADLK)
 		{
-			::printf ("lockr fail eno=%i %s\n",
-					  eno, strerror (eno));
 			throw (lockException());
 		}
 	}
@@ -29,14 +27,11 @@ void lockbase::lockr (void)
 // ========================================================================
 void lockbase::lockw (void)
 {
-	if (! __THREADED) return;
 	int eno;
 	if ((eno = pthread_rwlock_wrlock (rwlock)))
 	{
 		if (eno != EDEADLK)
 		{
-			::printf ("lockw fail eno=%i %s\n",
-					  eno, strerror (eno));
 			throw (lockException());
 		}
 	}
@@ -47,7 +42,7 @@ void lockbase::lockw (void)
 // ========================================================================
 bool lockbase::trylockr (int secs)
 {
-	if (! __THREADED) return true;
+	//if (! __THREADED) return true;
 	if (! secs)
 	{
 		if (pthread_rwlock_tryrdlock (rwlock)) return false;
@@ -83,7 +78,7 @@ bool lockbase::trylockr (int secs)
 // ========================================================================
 bool lockbase::trylockw (int secs)
 {
-	if (! __THREADED) return true;
+	//if (! __THREADED) return true;
 	if (! secs)
 	{
 		if (pthread_rwlock_trywrlock (rwlock)) return false;
@@ -125,11 +120,9 @@ void __lockbase_unlock_breakme (void)
 void lockbase::unlock (void)
 {
 	int eno;
-	if (! __THREADED) return;
+	//if (! __THREADED) return;
 	if ((eno = pthread_rwlock_unlock (rwlock)))
 	{
-		::printf ("unlock fail eno=%i %s\n",
-				  eno, strerror (eno));
 		__lockbase_unlock_breakme ();
 		throw (lockException());
 	}
@@ -143,7 +136,7 @@ void lockbase::unlock (void)
 // ========================================================================
 void lockbase::lockr (void)
 {
-	if (! __THREADED) return;
+	//if (! __THREADED) return;
 	int goahead = 0;
 	pthread_t self = pthread_self();
 	//::printf ("%08x@[%d] ::lockr()\n", this, self);
@@ -176,7 +169,7 @@ void lockbase::lockr (void)
 // ========================================================================
 void lockbase::lockw (void)
 {
-	if (! __THREADED) return;
+	//if (! __THREADED) return;
 	int goahead = 0;
 	bool upgrading = false;
 	pthread_t self = pthread_self();
@@ -233,7 +226,7 @@ void lockbase::lockw (void)
 // ========================================================================
 void lockbase::unlock (void)
 {
-	if (! __THREADED) return;
+	//if (! __THREADED) return;
 	pthread_mutex_lock (mutex);
 	pthread_t self = pthread_self();
 	//::printf ("%08x@[%d] ::unlock()\n", this, self);
@@ -274,7 +267,7 @@ void lockbase::unlock (void)
 // ========================================================================
 bool lockbase::trylockr (int secs)
 {
-	if (! __THREADED) return true;
+	//if (! __THREADED) return true;
 	int goahead = 0;
 	
 	for (int i=0; i<10; ++i)
@@ -307,7 +300,7 @@ bool lockbase::trylockr (int secs)
 // ========================================================================
 bool lockbase::trylockw (int secs)
 {
-	if (! __THREADED) return true;
+	//if (! __THREADED) return true;
 	int goahead = 0;
 	bool upgrading = false;
 	pthread_t self = pthread_self();
