@@ -1578,7 +1578,7 @@ value *value::splice (int _pos, int _count) const
 	else if (pos > arraysz) pos = arraysz;
 	
 	int count = _count;
-	if (count < 0) _count = arraysz - pos;
+	if (count < 0) count = arraysz - pos;
 	if (count < 0) count = 0;
 	
 	if (! count) return NULL;
@@ -1588,13 +1588,13 @@ value *value::splice (int _pos, int _count) const
 	returnclass (value) res retain;
 	for (int i=pos; i<endpos; ++i)
 	{
-		if (array[(arraysz-1)-i]->id())
+		if (array[i]->id())
 		{
-			res[array[(arraysz-1)-i]->id()] = *(array[(arraysz-1)-i]);
+			res[array[i]->id()] = *(array[i]);
 		}
 		else
 		{
-			res.newval() = *(array[(arraysz-1)-i]);
+			res.newval() = *(array[i]);
 		}
 	}
 	
