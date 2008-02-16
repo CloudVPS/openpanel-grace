@@ -102,7 +102,7 @@ currency &currency::operator= (currency *orig)
 
 currency &currency::operator= (double orig)
 {
-	val = (long long) (orig * 1000.0);
+	val = 10LL * ((long long) ((orig + 0.005) * 100.0));
 	return *this;
 }
 
