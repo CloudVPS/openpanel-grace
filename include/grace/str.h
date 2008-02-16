@@ -1125,6 +1125,10 @@ public:
 					 /// Strip leading and trailing whitespace.
 	void			 chomp (void);
 	
+					 /// Strip leading and trailing characters.
+					 /// \param set The set of characters to strip.
+	void			 chomp (const string &set);
+	
 					 /// Initialization (retainable)
 	virtual void	 init (bool first=true);
 

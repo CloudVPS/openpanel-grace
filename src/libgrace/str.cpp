@@ -2313,7 +2313,6 @@ string *string::stripchars	(const string &stripset)
 	return &res;
 }
 
-
 // ========================================================================
 // METHOD ::trim
 // ---------------
@@ -2322,27 +2321,23 @@ string *string::stripchars	(const string &stripset)
 // ========================================================================	
 string *string::trim (const string &set) const
 {
-	if(! data) return NULL;
-	if(! set)  return NULL;
-
-	returnclass (string) res retain;
-	int i;
-
-	for (i=0; i<size; i++)
-	{		
-		if (set.strchr(data->v[i]) == -1)
-		{
-			res = right (size-i);
-			break;
-		}
-	}
-
-	res = ltrim (set);
-	res = res.rtrim (set);
+	int left = 0;
+	int right = size-1;
 	
-	return &res;
+	if (! data) return NULL;
+	if (! size) return NULL;
+	
+	while ((left<right)&&(set.strchr (data->v[left]) >= 0)) left++;
+	if (left == right) return NULL;
+	
+	while ((right>left)&&(set.strchr (data->v[left]) >= 0)) right--;
+	if (left == right) return NULL;
+	
+	right++;
+	
+	return mid (left, (right-left));
 }
-					 
+			 
 // ========================================================================
 // METHOD ::ltrim
 // ---------------
@@ -2354,27 +2349,11 @@ string *string::ltrim (const string &set) const
 	if(! data) return NULL;
 	if(! set)  return NULL;
 	
-	returnclass (string) res retain;
-		
-	for (unsigned int i=0; i<size; i++)
-	{		
-		if (set.strchr(data->v[i]) == -1)
-		{
-			res = right (size-i);
-			break;
-		}
-	}
+	int left = 0;
+	while ((left<size) && (set.strchr (data->v[left]) >= 0)) left++;
+	if (left == size) return NULL;
 	
-	for (int i=size-1; i>-1; i--)
-	{	
-		if (set.strchr(data->v[i]) == -1)
-		{
-			res = res.left (i+1);
-			break;
-		}
-	}
-	
-	return &res;
+	return mid (left);
 }
 					 
 // ========================================================================
@@ -2388,18 +2367,11 @@ string *string::rtrim (const string &set) const
 	if(! data) return NULL;
 	if(! set)  return NULL;
 	
-	returnclass (string) res retain;
-		
-	for (int i=size-1; i>-1; i--)
-	{	
-		if (set.strchr(data->v[i]) == -1)
-		{
-			res = this->left (i+1);
-			break;
-		}
-	}
+	int right = size-1;
+	while ((right>0) && (set.strchr (data->v[right]) >= 0)) right--;
+	if (right < 1) return NULL;
 	
-	return &res;
+	return left (right);
 }
 
 // ========================================================================
@@ -2683,6 +2655,12 @@ void string::chomp (void)
 	
 	(*this) = mid (left, (right-left));
 }
+
+void string::chomp (const string &set)
+{
+	(*this) = trim (set);
+}
+
 
 // ========================================================================
 // METHOD ::init
