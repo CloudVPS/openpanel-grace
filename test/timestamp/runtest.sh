@@ -15,5 +15,10 @@ echo "--- start run" >> test.log
   exit 1
 }
 $(which echo) -n "."
-rm -f test.log
+echo "--- start diff" >> test.log
+diff out.xml reference.xml >> test.log 2>&1 || {
+  echo " failed (DIFF)"
+  exit 1
+}
+rm -f test.log out.xml
 echo " passed"

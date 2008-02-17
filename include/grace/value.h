@@ -10,6 +10,7 @@
 #include <grace/stringdict.h>
 #include <grace/retain.h>
 #include <grace/flags.h>
+#include <grace/timestamp.h>
 
 #include <grace/checksum.h>
 #include <stdlib.h>
@@ -223,6 +224,9 @@ public:
 					 /// Copy-constructor (ipaddress)
 					 value (const class ipaddress &);
 					 
+					 /// Copy-constructor (timestamp)
+					 value (const class timestamp &);
+					 
 					 /// Destructor.
 					~value (void);
 	
@@ -407,12 +411,14 @@ public:
 
 			 /// Set as an IPv4 address. Address is in host format.	
 	value	&setip (unsigned int);
+	value	&settime (const class timestamp &);
 	
 	value	&operator= (const value &v);
 	value	&operator= (value *v);
 	value	&operator= (class valuable &);
 	value	&operator= (class valuable *);
 	value	&operator= (const class ipaddress &);
+	value	&operator= (const class timestamp &);
 
 	/// Cast as bool.
 	inline			 operator bool (void) const

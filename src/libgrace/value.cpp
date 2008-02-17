@@ -187,8 +187,17 @@ value::value (creatorlabel l, const string &k)
 // ========================================================================
 value::value (const ipaddress &o)
 {
-	init (o);
+	init ();
 	setip (o);
+}
+
+// ========================================================================
+// CONSTRUCTOR (ipaddress)
+// ========================================================================
+value::value (const timestamp &o)
+{
+	init ();
+	settime (o);
 }
 
 // ========================================================================
@@ -431,6 +440,20 @@ value &value::operator= (valuable *other)
 	other->tovalue (*this);
 	delete other;
 	return *this;
+}
+
+value &value::settime (const timestamp &o)
+{
+	itype = i_date;
+	t.uval = o.unixtime();
+	return *this;
+}
+
+value &value::operator= (const timestamp &o)
+{
+	clear();
+	_type = t_date;
+	return settime (o);
 }
 
 // ========================================================================
@@ -1648,24 +1671,9 @@ bool value::treecmp (const value &other) const
 // ========================================================================
 time_t __parse_timestr (const string &dt)
 {
-	string fm;
-	string ent;
-	struct tm mytm;
-	
-    fm = dt;
-    ent = fm.cutat ('-');
-    mytm.tm_year = atoi (ent.str()) - 1900;
-    ent = fm.cutat ('-');
-    mytm.tm_mon = atoi (ent.str()) -1;
-    ent = fm.cutat (' ');
-    mytm.tm_mday = atoi (ent.str());
-    ent = fm.cutat (':');
-    mytm.tm_hour = atoi (ent.str());
-    ent = fm.cutat (':');
-    mytm.tm_min = atoi (ent.str());
-    mytm.tm_sec = atoi (fm.str());
-    
-    return mktime (&mytm);
+	timestamp t;
+	t.iso (dt);
+	return t.unixtime ();
 }
 
 // ========================================================================
@@ -1673,23 +1681,10 @@ time_t __parse_timestr (const string &dt)
 // ========================================================================
 string *__make_timestr (time_t ti)
 {
-	struct tm mytm;
-	string *res = new string;
-	
-	gmtime_r (&ti, &mytm);
-	res->printf ("%i-", mytm.tm_year + 1900);
-	if (mytm.tm_mon<9) (*res).strcat ('0');
-	res->printf ("%i-", mytm.tm_mon+1);
-	if (mytm.tm_mday<10) (*res).strcat ('0');
-	res->printf ("%i ", mytm.tm_mday);
-	if (mytm.tm_hour<10) (*res).strcat (' ');
-	res->printf ("%i:", mytm.tm_hour);
-	if (mytm.tm_min<10) (*res).strcat ('0');
-	res->printf ("%i:", mytm.tm_min);
-	if (mytm.tm_sec<10) (*res).strcat ('0');
-	res->printf ("%i", mytm.tm_sec);
-	
-	return res;
+	returnclass (string) res retain;
+	timestamp t = ti;
+	res = t.iso ();
+	return &res;
 }
 
 // ========================================================================

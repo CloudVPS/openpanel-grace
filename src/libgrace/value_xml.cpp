@@ -688,11 +688,16 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 						{
 							*newcrsr = (unsigned int)
 											__parse_timestr (tag.data);
-											
+							newcrsr->itype = i_date;
+							
 							if (tagtype != t_date)
 							{
 								(void)(*newcrsr).sval();
 								(*newcrsr)._type = tagtype;
+							}
+							else
+							{
+								(*newcrsr)._type = t_date;
 							}
 						}
 						else if (tp == t_currency)

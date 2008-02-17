@@ -109,6 +109,23 @@ int timestamptestApp::main (void)
 	fout.printf ("* If this was not close to 12 seconds, your\n");
 	fout.printf ("* library sucks! \n*\n\n");
 	
+	timestamp parsed1, parsed2;
+	parsed1.iso ("2007-12-24T13:39:15");
+	parsed2.iso ("2008-12-16T11:15:15");
+	fout.writeln ("delta: %i" %format (parsed1.delta (parsed2, days)));
+	
+	value out = $("parsed1", parsed1) ->
+				$("parsed2", parsed2);
+				
+	fout.writeln (out.toxml());
+	
+	value in;
+	in.fromxml (out.toxml());
+	
+	timestamp pback = in["parsed1"];
+	fout.writeln (pback.ctime());
+	in.savexml ("out.xml");
+	
 	return 0;
 }
 

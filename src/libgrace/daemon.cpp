@@ -492,6 +492,9 @@ bool daemon::settargetuser (const string &uname)
 	return true;
 }
 
+// ========================================================================
+// METHOD ::sendevent
+// ========================================================================
 void daemon::sendevent (const string &type)
 {
 	statstring tp = type;
@@ -503,6 +506,9 @@ void daemon::sendevent (const statstring &type, const value &data)
 	events.send (type, data);
 }
 
+// ========================================================================
+// METHOD ::waitevent
+// ========================================================================
 value *daemon::waitevent (void)
 {
 	return events.waitevent ();
@@ -513,11 +519,17 @@ value *daemon::waitevent (int timeout_ms)
 	return events.waitevent (timeout_ms);
 }
 
+// ========================================================================
+// STATIC METHOD ::termhandler
+// ========================================================================
 void daemon::termhandler (int sig)
 {
 	MAINDAEMON->sendevent ("shutdown");
 }
 
+// ========================================================================
+// STATIC METHOD ::huphandler
+// ========================================================================
 void daemon::huphandler (int sig)
 {
 	MAINDAEMON->sendevent ("reconfigure");

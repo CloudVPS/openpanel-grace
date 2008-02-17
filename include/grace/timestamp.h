@@ -39,6 +39,8 @@ public:
 					 
 					 /// Constructor (init from timeval)
 					 timestamp (timeval);
+					 
+					 timestamp (const class value &);
 	
 					 /// Internal initialization method.
 	void			 init (void);
@@ -157,6 +159,8 @@ public:
 					 	delete orig;
 					 	return *this;
 					 }
+	
+	timestamp		&operator= (const class value &orig);
 					 
 	timestamp		&operator= (unsigned long long orig)
 					 {

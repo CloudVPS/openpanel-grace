@@ -10,6 +10,8 @@
            
            * Fixed problems related to fork() inside class process and
              the global stringref treelock.
+             
+           * Iproved handling of class timestammp.
 
 0.9.6      Thu Feb 14 2007                           <grace@openpanel.com>
 

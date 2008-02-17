@@ -46,6 +46,19 @@ timestamp::timestamp (timeval orig)
 	tvval.tv_usec = orig.tv_usec;
 }
 
+timestamp::timestamp (const value &v)
+{
+	init ();
+	tvval.tv_sec = v.uval();
+	tvval.tv_usec = 0;
+}
+
+timestamp &timestamp::operator= (const value &v)
+{
+	unixtime (v.uval());
+	return *this;
+}
+
 // ========================================================================
 // METHOD ::init
 // ========================================================================
