@@ -75,7 +75,7 @@ public:
 						 
 						 try {STRINGREF().treelock.lockw();} catch (...) {}
 						 _pid = fork();
-						 if (_pid) try {STRINGREF().treelock.unlock();} catch (...) {}
+						 /*if (_pid)*/ try {STRINGREF().treelock.unlock();} catch (...) {}
 
 						 if (_pid == 0)
 						 {
