@@ -1534,6 +1534,9 @@ public:
 					 /// Returns true if a child key exists.
 	bool			 exists (const statstring &) const;
 	
+					 /// Return true if a child key exists.
+	bool			 exists (const value &) const;
+	
 					 /// Returns true if the object is an array, with
 					 /// keyed and/or numbered child nodes.
 	bool			 isarray (void) const;
