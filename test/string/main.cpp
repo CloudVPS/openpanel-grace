@@ -153,6 +153,14 @@ int stringtestApp::main (void)
 	tstr = tstr.stripchars ("-+");
 	if(tstr != "ABCDEF") FAIL("stripchars");
 	
+	tstr = "1";
+	tstr = tstr.trim (" \t");
+	if (! tstr) FAIL ("trimsz1");
+	tstr = tstr.ltrim (" \t");
+	if (! tstr) FAIL ("ltrimsz1");
+	tstr = tstr.rtrim (" \t");
+	if (! tstr) FAIL ("rtrimsz1");
+	
 	// Test trimming
 	tstr = " \n\tHELLOW\nWORLD\n\t";
 	tstr = tstr.ltrim ("\n\t ");

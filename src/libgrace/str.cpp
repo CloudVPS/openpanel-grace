@@ -2328,7 +2328,7 @@ string *string::trim (const string &set) const
 	if (! size) return NULL;
 	
 	while ((left<right)&&(set.strchr (data->v[left]) >= 0)) left++;
-	if (left == right) return NULL;
+	if (left == (right+1)) return NULL;
 	
 	while ((right>left)&&(set.strchr (data->v[right]) >= 0)) right--;
 	if (left == (right+1)) return NULL;
@@ -2369,9 +2369,9 @@ string *string::rtrim (const string &set) const
 	
 	int right = size-1;
 	while ((right>0) && (set.strchr (data->v[right]) >= 0)) right--;
-	if (right < 1) return NULL;
 	
 	if (right<size) right++;
+	if (right < 1) return NULL;
 	
 	return left (right);
 }
