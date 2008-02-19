@@ -143,7 +143,6 @@ public:
 					 {
 					 	void *me = this;
 					 	void *tmp = &me;
-					 	if (tid) me = tid;
 					 	if (sizeof (void *) == 4)
 					 	{
 					 		unsigned int *o = (unsigned int *) tmp;
