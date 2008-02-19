@@ -2519,7 +2519,7 @@ string *string::copyafterlast (char c) const
 	if (pos < 0) return NULL;
 	
 	npos = pos;
-	while (npos>0)
+	while (npos>=0)
 	{
 		pos = npos;
 		npos = strchr (c, pos+1);
@@ -2536,7 +2536,7 @@ string *string::copyafterlast (const string &s) const
 	if (pos < 0) return NULL;
 	
 	npos = pos;
-	while (npos>0)
+	while (npos>=0)
 	{
 		pos = npos;
 		npos = strstr (s, pos+1);

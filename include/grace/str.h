@@ -838,7 +838,7 @@ public:
 					 	int isthere, at;
 					 	isthere = at = strchr (c);
 					 	if (isthere<0) { crop(); return; }
-					 	while ( (isthere=strchr(c,at+1)) > 0 ) at = isthere;
+					 	while ( (isthere=strchr(c,at+1)) >= 0 ) at = isthere;
 					 	++at;
 					 	crop (at - strlen());
 					 }
@@ -854,7 +854,7 @@ public:
 					 	int isthere, at;
 					 	isthere = at = strstr (c);
 					 	if (isthere<0) { crop(); return; }
-					 	while ( (isthere=strstr(c,at+1)) > 0 ) at = isthere;
+					 	while ( (isthere=strstr(c,at+1)) >= 0 ) at = isthere;
 					 	at += ::strlen (c);
 					 	crop (at - strlen());
 					 }
