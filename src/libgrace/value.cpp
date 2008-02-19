@@ -865,6 +865,11 @@ bool value::exists (const string &key) const
 	return false;
 }
 
+bool value::exists (const value &key) const
+{
+	return exists (key.sval());
+}
+
 bool value::exists (const statstring &key) const
 {
 	if (! key) return false;

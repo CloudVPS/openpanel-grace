@@ -75,7 +75,7 @@ public:
 						 
 						 try {STRINGREF().treelock.lockw();} catch (...) {}
 						 _pid = fork();
-						 if (_pid) try {STRINGREF().treelock.unlock();} catch (...) {}
+						 /*if (_pid)*/ try {STRINGREF().treelock.unlock();} catch (...) {}
 
 						 if (_pid == 0)
 						 {
@@ -295,14 +295,14 @@ public:
 	void			 initargs (void)
 					 {
 					 	int i;
-					 	argp = new argptr[_argv.count()+1];
-					 	envp = new argptr[_env.count()+1];
+					 	argp = new argptr[_argv.count()+2];
+					 	envp = new argptr[_env.count()+2];
 					 	
 					 	for (i=0; i<_argv.count(); ++i)
 					 	{
 					 		argp[i] = (char *) _argv[i].cval();
 					 	}
-					 	argp[i] = 0;
+					 	argp[i] = NULL;
 					 	
 					 	if (! _env.exists ("PATH"))
 					 	{
