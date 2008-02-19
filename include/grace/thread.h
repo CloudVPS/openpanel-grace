@@ -141,9 +141,22 @@ public:
 					 /// \return The unique id number.
 	unsigned int	 threadid (void)
 					 {
-					 	void *tmp = this;
-					 	if (! tid) return (unsigned int) (((unsigned long long) tmp & 0xffffffff));
-					 	return (unsigned int) (((unsigned long long) tid) & 0xffffffff);
+					 	void *me = this;
+					 	void *tmp = &me;
+					 	if (tid) me = tid;
+					 	if (sizeof (void *) == 4)
+					 	{
+					 		unsigned int *o = (unsigned int *) tmp;
+					 		return *o;
+					 	}
+					 	else
+					 	{
+					 		unsigned long long *o = (unsigned long long *) tmp;
+					 		unsigned int r;
+					 		r =  (unsigned int) ((*o) & (0xffffffff00000000LL) >> 32);
+					 		r ^= (unsigned int) ((*o) & 0xffffffffLL);
+					 		return r;
+					 	}
 					 }
 					 
 					 /// Set the scheduling priority.
