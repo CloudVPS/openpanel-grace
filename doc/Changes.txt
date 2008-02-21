@@ -1,3 +1,7 @@
+0.9.8      Thu Feb 21 2007                           <grace@openpanel.com>
+
+           * Changed packaging.
+
 0.9.7      Tue Feb 19 2007                           <grace@openpanel.com>
 
            * Optimized string::trim() and family.
