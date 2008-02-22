@@ -156,19 +156,44 @@ httpdfileshare::httpdfileshare (httpd &pparent, const string &purimatch,
 	if (root.strchr (':') >= 0) roothasvolume = true;
 	else roothasvolume = false;
 
-	mimedb["html"] = "text/html";
-	mimedb["jpg"] = "image/jpeg";
-	mimedb["gif"] = "image/gif";
-	mimedb["png"] = "image/png";
-	mimedb["xml"] = "application/xml";
-	mimedb["txt"] = "text/plain";
-	mimedb["gz"] = "application/gzip";
-	mimedb["tar"] = "application/tar";
-	mimedb["rpm"] = "application/x-rpm";
-	mimedb["htm"] = "text/html";
-	mimedb["cpp"] = "text/plain";
-	mimedb["h"] = "text/plain";
-	mimedb["c"] = "text/plain";
+	if (fs.exists ("/etc/mime.types"))
+	{
+		file fm;
+		string ln;
+		value splt;
+		
+		fm.openread ("/etc/mime.types");
+		while (! fm.eof ())
+		{
+			ln = fm.gets ();
+			splt = strutil::splitspace (ln);
+			if (splt.count() > 1)
+			{
+				for (int i=1; i<splt.count(); ++i)
+				{
+					mimedb[splt[i]] = splt[0];
+				}
+			}
+		}
+		fm.close ();
+	}
+
+	if (! mimedb.count())
+	{
+		mimedb = $("html", "text/html") ->
+				 $("htm", "text/html") ->
+				 $("gif", "image/gif") ->
+				 $("jpg", "image/jpeg") ->
+				 $("jpeg", "image/jpeg") ->
+				 $("xml", "application/xml") ->
+				 $("txt", "text/plain") ->
+				 $("gz", "application/gzip") ->
+				 $("tar", "application/tar") ->
+				 $("rpm", "application/x-rpm") ->
+				 $("cpp", "text/plain") ->
+				 $("h", "text/plain") ->
+				 $("c", "text/plain");
+	}
 }
 
 // ========================================================================
