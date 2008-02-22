@@ -182,6 +182,7 @@ httpdfileshare::httpdfileshare (httpd &pparent, const string &purimatch,
 	{
 		mimedb = $("html", "text/html") ->
 				 $("htm", "text/html") ->
+				 $("js", "application/x-javascript") ->
 				 $("gif", "image/gif") ->
 				 $("jpg", "image/jpeg") ->
 				 $("jpeg", "image/jpeg") ->
