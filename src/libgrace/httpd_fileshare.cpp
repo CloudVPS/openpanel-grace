@@ -290,12 +290,21 @@ int httpdfileshare::run (string &uri, string &postbody,
 	}
 	
 	bool keepalive = env["keepalive"].bval();
+
+	value vinf = fs.getinfo (realpath);
+	timestamp tmodif = vinf["mtime"].uval();
+	timestamp tnow = core.time.now ();
+	timestamp texp = tnow.unixtime () + 3600;
+	
+	#define HTTP_F "%a, %e %b %Y %H:%M:%S %Z"
 	
 	s.puts ("HTTP/1.1 200 OK\r\n");
 	s.puts ("Connection: %s\r\n" %format (keepalive ? "keep-alive" : "close"));
 	s.puts ("Content-type: %s\r\n" %format (mimetype));
+	s.puts ("Date: %s\r\n" %format (tnow.format (HTTP_F)));
+	s.puts ("Last-Modified: %s\r\n" %format (tmodif.format (HTTP_F)));
+	s.puts ("Expires: %s\r\n" %format (texp.format (HTTP_F)));
 	s.puts ("Content-length: %i\r\n\r\n" %format (outsz));
-	
 	s.sendfile (realpath, outsz);
 	env["sentbytes"] = outsz;
 	return -200;
