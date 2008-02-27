@@ -1,3 +1,7 @@
+0.9.9      Wed Feb 27 2007                           <grace@openpanel.com>
+
+           * Improvements to httpdfileshare.
+
 0.9.8      Thu Feb 21 2007                           <grace@openpanel.com>
 
            * Changed packaging.
