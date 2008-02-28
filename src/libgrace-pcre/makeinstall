@@ -1,0 +1,22 @@
+#!/bin/sh
+if [ ! -f configure.paths ]; then
+  echo "No configure.paths found, please run ./configure" >&2
+  exit 1
+fi
+
+. ./configure.paths
+
+path_bin="$CONFIG_BINPATH"
+path_lib="$CONFIG_LIBPATH"
+path_include="$CONFIG_INCLUDEPATH"
+
+
+if [ ! -d "$path_lib" ]; then
+  mkdir "$path_lib"
+fi
+
+if [ -e /usr/bin/install_name_tool ]; then
+  install_name_tool -id $path_lib/libgrace-pcre.dylib ../../lib/libgrace-pcre.dylib
+fi
+cp ../../lib/libgrace-pcre.* "$path_lib/"
+
