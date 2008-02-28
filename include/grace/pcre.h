@@ -41,6 +41,8 @@ protected:
 	pcre			*pobj;
 };
 
-string *$expr (const string &orig, const statstring &expr);
+//string *$expr (const string &orig, const statstring &expr);
+//string *$capture1 (const string &orig, const statstring &expr);
+//string *$replace (const string &orig, const string &expr, const string &with);
 
 #endif

@@ -34,6 +34,20 @@ int pcretestApp::main (void)
 	value v = RE_C.capture ("major asshole");
 	if (v[0] != "major") FAIL ("capture");
 	
+	pcregexp RE_D ("^exact$");
+	if (RE_D.match ("  exact")) FAIL ("exact1");
+	if (RE_D.match ("exact  ")) FAIL ("exact2");
+	if (! RE_D.match ("exact")) FAIL ("exact3");
+	
+	pcregexp RE_E ("^[[:space:]]*[[:alnum:]]+[[:space:]]*$");
+	if (RE_E.match ("$toot ")) FAIL ("classmatch1");
+	if (! RE_E.match ("  theword5 ")) FAIL ("classmatch2");
+	if (RE_E.match ("  test two  ")) FAIL ("classmatch3");
+
+	pcregexp RE_F ("wimp\\$");
+	if (RE_F.match ("wimp")) FAIL ("escape1");
+	if (! RE_F.match (" oh wimp$ guy!")) FAIL ("escape2");
+	
 	return 0;
 }
 
