@@ -1,0 +1,9 @@
+cxx
+ranlib
+shared
+pthread
+libdl
+libsocket
+libcrypt
+pcre
+
