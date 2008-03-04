@@ -16,7 +16,8 @@ unsigned int checksum (const char *str)
 	
 	const char *data = str;
 	
-	while (data[0] && data[1] && data[2] && data[3])
+	while ((*data & 0xff) && (*data & 0xff00) && 
+		   (*data & 0xff0000) && (*data & 0xff000000))
 	{
 		h += (*(unsigned int *) data) & 0xdfdfdfdf;
 		h *= m;
