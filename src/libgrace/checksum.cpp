@@ -2,39 +2,43 @@
 #include <sys/types.h>
 #include <grace/tolower.h>
 
-const unsigned char obox[32] = {1,27,5,17,3,19,12,4,18,11,26,25,22,2,15,6,24,
-								7,21,13,0,19,8,16,10,20,4,21,7,18,3,23};
-
 // ========================================================================
 // FUNCTION checksum
+// taken after 'murmurhash' http://tanjent.livejournal.com/756623.html
 // ========================================================================
-unsigned int checksum (const char *string)
+unsigned int checksum (const char *str)
 {
-	if (! string) return 0;
-	register int len,pos;
-	register char c;
-	len = strlen (string);
+	if (! str) return 0;
 	
-	register unsigned int result;
+	const unsigned int m = 0x7fd652ad;
+	unsigned int h = 0xdeadbeef;
+	const int r = 16;
 	
-	result = (((len&0xff)^0x88) << 24) + (((len&0xff)^0x24) << 16) +
-			  (((len&0xff)^0x41) << 8) + ((len&0xff)^0x12);
+	const char *data = str;
 	
-	for (pos=0;pos<len;++pos)
+	while (data[0] && data[1] && data[2] && data[3])
 	{
-		c = (char) _tolower((int) string[pos]);
-		if (c & 0xc0)
-		{
-			result ^= ((((c & 0xdf)^obox[(pos+7) & 0x1f]) & 0x3f) << obox[pos & 0x1f]);
-		}
-		else
-		{
-			result ^= (((c^obox[(pos+17) & 0x1f]) & 0x3f) <<
-					   obox[(pos^c) & 0x1f]);
-		}
-		result ^= c;
+		h += (*(unsigned int *) data) & 0xdfdfdfdf;
+		h *= m;
+		h ^= h >> r;
+		data += 4;
 	}
-	return result;
+	
+	if (*data)
+	{
+		h+= (*data & 0xdf); data++;
+		if (*data) { h+= (*data & 0xdf) << 8; data++; }
+		if (*data) { h+= (*data & 0xdf) << 16; data++; }
+		h *= m;
+		h ^= h >> r;
+	}
+	
+	h *= m;
+	h ^= h >> 10;
+	h *= m;
+	h ^= h >> 17;
+
+	return h;	
 }
 
 const unsigned char obox64[64] = {2,47,54,7,10,37,34,15,6,43,38,9,24,41,8,
