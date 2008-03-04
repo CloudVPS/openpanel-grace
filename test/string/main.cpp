@@ -229,6 +229,10 @@ int stringtestApp::main (void)
 	if (l.strlen()) FAIL("string::left()");
 	string r = str.right (0);
 	if (r.strlen()) FAIL("string::right()");
+
+	string mid = "lameass:sukzor";
+	mid = mid.copyuntil (":sukzor");
+	if (mid != "lameass") FAIL ("assign-copyuntil");
 	
 	return 0;
 }
