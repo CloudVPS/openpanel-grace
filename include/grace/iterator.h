@@ -1,6 +1,8 @@
 #ifndef _ITERATOR_H
 #define _ITERATOR_H 1
 
+#include <grace/generators.h>
+
 /// A template class implementing the iterator protocol. Its template
 /// arguments are the class of the parentobject  (the iterator base) and
 /// the class of the child objects. This class is used by the foreach
