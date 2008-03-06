@@ -1683,6 +1683,14 @@ public:
 					 /// value::exists().
 	value			*byvalue (void) const;
 	
+					 /// Join the string representations of all array
+					 /// values together into a new string.
+					 /// \param sep The separator between values
+					 /// \param left Optional left delimiter string.
+					 /// \param right Optional right delimiter stirng.
+	string			*join (const string &sep=" ", const string &left="",
+						   const string &right="");
+	
 					 /// Compare two value objects on a tree level.
 	bool			 treecmp (const value &other) const;
 

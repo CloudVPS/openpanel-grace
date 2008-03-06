@@ -1724,6 +1724,24 @@ value *value::byvalue (void) const
 }
 
 // ========================================================================
+// METHOD ::join
+// ========================================================================
+string *value::join (const string &sep, const string &l, const string &r)
+{
+	returnclass (string) res retain;
+	if (l) res = l;
+	bool first = true;
+	foreach (node, (*this))
+	{
+		if (! first) res.strcat (sep);
+		first = false;
+		res.strcat (node.sval());
+	}
+	if (r) res.strcat (r);
+	return &res;
+}
+
+// ========================================================================
 // METHOD ::treecmp
 // ========================================================================
 bool value::treecmp (const value &other) const
