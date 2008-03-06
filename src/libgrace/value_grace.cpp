@@ -42,6 +42,10 @@ void value::encodegrace (string &into, int indent)
 		{
 			into.printf ("%f", dval());
 		}
+		else if (itype == i_date)
+		{
+			into.printf ("(time_t) %i", ival());
+		}
 		else
 		{
 			into.strcat ('\"');
