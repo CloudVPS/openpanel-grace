@@ -2655,7 +2655,7 @@ void string::chomp (void)
 	
 	right++;
 	
-	(*this) = mid (left, (right-left)+1);
+	(*this) = mid (left, (right-left));
 }
 
 void string::chomp (const string &set)

@@ -19,7 +19,7 @@ APPOBJECT(stringtestApp);
 
 #define TESTSTR "The fat cat jumped over the lazy bitch."
 #define XMLSTR "Wow, <b>what big ears</b> you have there granny!"
-#define FAIL(foo) { ferr.printf (foo "\n"); return 1; }
+#define FAIL(foo) { ferr.writeln (foo); return 1; }
 
 int stringtestApp::main (void)
 {
@@ -141,8 +141,13 @@ int stringtestApp::main (void)
 	tstr.chomp();
 	if (tstr != "wtf")
 	{
-		fout.printf ("\"%s\"\n", tstr.str());
-		FAIL("chomp");
+		FAIL("chomp: '%s'" %format (tstr));
+	}
+	tstr = "a";
+	tstr.chomp();
+	if (tstr != "a")
+	{
+		FAIL("chomp2: '%s'" %format (tstr));
 	}
 	
 	tstr = "AB-CD";
