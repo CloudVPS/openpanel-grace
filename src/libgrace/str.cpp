@@ -2638,16 +2638,16 @@ void string::chomp (void)
 	
 	if (! data) return;
 	if (! size) return;
-	
-	while ((left<right)&&(isspace (data->v[left]))) left++;
-	if (left == right)
+
+	while ((left<=right)&&(isspace (data->v[left]))) left++;
+	if (left > right)
 	{
 		crop();
 		return;
 	}
 	
-	while ((right>left)&&(isspace (data->v[right]))) right--;
-	if (left == right)
+	while ((right>=left)&&(isspace (data->v[right]))) right--;
+	if (left > right)
 	{
 		crop();
 		return;
@@ -2655,7 +2655,7 @@ void string::chomp (void)
 	
 	right++;
 	
-	(*this) = mid (left, (right-left));
+	(*this) = mid (left, (right-left)+1);
 }
 
 void string::chomp (const string &set)

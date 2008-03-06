@@ -449,12 +449,14 @@ void termbuffer::advance (void)
 // ==========================================================================
 void termbuffer::set (const string &to)
 {
-	memset (curview, 0, len);
+	memset (curview, 0, len+1);
+	memset (buffer+prompt.strlen(), 0, size-prompt.strlen());
 	crsr = prompt.strlen();
 	len = prompt.strlen();
 	buffer[prompt.strlen()] = 0;
 	strcat (buffer, to.str());
 	len += to.strlen();
+	buffer[len] = 0;
 	crend();
 }
 
