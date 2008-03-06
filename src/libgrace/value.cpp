@@ -1707,6 +1707,23 @@ value *value::zip (void) const
 }
 
 // ========================================================================
+// METHOD ::byvalue
+// ========================================================================
+value *value::byvalue (void) const
+{
+	returnclass (value) res retain;
+	int i = 0;
+	
+	foreach (node, (*this))
+	{
+		if (node.sval()) res[node] = node.id();
+		else res[i] = node.id();
+		i++;
+	}
+	return &res;
+}
+
+// ========================================================================
 // METHOD ::treecmp
 // ========================================================================
 bool value::treecmp (const value &other) const

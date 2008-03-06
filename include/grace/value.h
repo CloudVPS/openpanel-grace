@@ -1675,6 +1675,14 @@ public:
 					 /// $("name", $("john")->$("steve"))
 	value			*zip (void) const;
 	
+					 /// Returns a value object that contains copies
+					 /// of the object's children, but with their
+					 /// keys and values switched. This can be useful
+					 /// to change, e.g., a split string array into
+					 /// a list of keys that can be probed through
+					 /// value::exists().
+	value			*byvalue (void) const;
+	
 					 /// Compare two value objects on a tree level.
 	bool			 treecmp (const value &other) const;
 
