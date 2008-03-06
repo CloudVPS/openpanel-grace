@@ -40,6 +40,8 @@ typedef union dtypes
  #define TVALUE(x)
 #endif
 
+// ACHTUNG: Unfortunately this list is duplicated in value::isbuiltin()
+//          due to initialization serialization madness.
 TYPENAME t_char 		TVALUE ("char");
 TYPENAME t_uchar 		TVALUE ("uchar");
 TYPENAME t_short 		TVALUE ("short");
@@ -607,6 +609,7 @@ public:
 	/// Assign to retained string.
 	inline value	&operator= (string *str)
 	{
+		clear ();
 		// By assigning s to str, it will get pointer-nuked, plz not
 		// to nuke it again ktxfreind!
 		s = str;
@@ -618,6 +621,7 @@ public:
 	/// Assign to int.
 	value	&operator= (int i)
 	{
+		clear ();
 		t.ival = i;
 		itype = i_int;
 		if (_type == t_unset) _type  = t_int;
@@ -628,6 +632,7 @@ public:
 	/// Assign to unsigned int.
 	inline value	&operator= (unsigned int i)
 	{
+		clear ();
 		t.uval = i;
 		itype = i_unsigned;
 		if (_type == t_unset) _type = t_unsigned;
@@ -637,6 +642,7 @@ public:
 	/// Assign to double precision float.
 	inline value	&operator= (double d)
 	{
+		clear ();
 		t.dval = d;
 		itype = i_double;
 		if (_type == t_unset) _type  = t_double;

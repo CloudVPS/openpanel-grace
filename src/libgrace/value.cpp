@@ -437,12 +437,14 @@ value::~value (void)
 // ========================================================================
 value &value::operator= (valuable &other)
 {
+	clear ();
 	other.tovalue (*this);
 	return *this;
 }
 
 value &value::operator= (valuable *other)
 {
+	clear ();
 	other->tovalue (*this);
 	delete other;
 	return *this;
@@ -450,6 +452,7 @@ value &value::operator= (valuable *other)
 
 value &value::settime (const timestamp &o)
 {
+	clear ();
 	itype = i_date;
 	t.uval = o.unixtime();
 	return *this;
@@ -1728,31 +1731,30 @@ void value::assign (currency *c)
 // ========================================================================
 bool value::isbuiltin (const statstring &type)
 {
-	static value tplist;
-	if (! tplist.count())
+	caseselector (type)
 	{
-		tplist[t_char] = true;
-		tplist[t_uchar] = true;
-		tplist[t_short] = true;
-		tplist[t_ushort] = true;
-		tplist[t_int] = true;
-		tplist[t_unsigned] = true;
-		tplist[t_bool] = true;
-		tplist[t_bool_true] = true;
-		tplist[t_bool_false] = true;
-		tplist[t_double] = true;
-		tplist[t_string] = true;
-		tplist[t_ipaddr] = true;
-		tplist[t_unset] = true;
-		tplist[t_long] = true;
-		tplist[t_ulong] = true;
-		tplist[t_array] = true;
-		tplist[t_dict] = true;
-		tplist[t_date] = true;
-		tplist[t_currency] = true;
+		incaseof ("void") : return true;
+		incaseof ("char") : return true;
+		incaseof ("uchar") : return true;
+		incaseof ("short") : return true;
+		incaseof ("ushort") : return true;
+		incaseof ("integer") : return true;
+		incaseof ("unsigned") : return true;
+		incaseof ("bool") : return true;
+		incaseof ("bool.true") : return true;
+		incaseof ("bool.false") : return true;
+		incaseof ("double") : return true;
+		incaseof ("string") : return true;
+		incaseof ("ipaddress") : return true;
+		incaseof ("long") : return true;
+		incaseof ("ulong") : return true;
+		incaseof ("array") : return true;
+		incaseof ("dict") : return true;
+		incaseof ("date") : return true;
+		incaseof ("currency") : return true;
+		defaultcase : return false;
 	}
-	
-	return tplist.exists (type);
+	return false;
 }
 
 // ========================================================================
