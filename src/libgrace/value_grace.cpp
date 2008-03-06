@@ -46,6 +46,10 @@ void value::encodegrace (string &into, int indent)
 		{
 			into.printf ("(time_t) %i", ival());
 		}
+		else if (itype == i_ipaddr)
+		{
+			into.printf ("(ipaddress) \"%s\"", cval());
+		}
 		else
 		{
 			into.strcat ('\"');
