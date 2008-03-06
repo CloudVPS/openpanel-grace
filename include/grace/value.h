@@ -1667,6 +1667,14 @@ public:
 					 /// \param count Max number of nodes to copy.
 	value			*splice (int pos, int count=-1) const;
 	
+					 /// 'zip' up a two dimentional dictionary or
+					 /// array, where the rowcount remains the
+					 /// same, but the two dimensions are swapped.
+					 /// $($("name","john"))->$($("name","steve")) will
+					 /// be turned into:
+					 /// $("name", $("john")->$("steve"))
+	value			*zip (void) const;
+	
 					 /// Compare two value objects on a tree level.
 	bool			 treecmp (const value &other) const;
 

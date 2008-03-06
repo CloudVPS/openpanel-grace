@@ -1674,6 +1674,39 @@ value *value::splice (int _pos, int _count) const
 }
 
 // ========================================================================
+// METHOD ::zip
+// ========================================================================
+value *value::zip (void) const
+{
+	returnclass (value) res retain;
+	int i = 0;
+	
+	foreach (node, (*this))
+	{
+		int j = 0;
+		const statstring &id = node.id();
+		foreach (child, node)
+		{
+			const statstring &cid = child.id();
+			if (cid)
+			{
+				if (id) res[cid][id] = child;
+				else res[cid][j] = child;
+			}
+			else
+			{
+				if (id) res[i][id] = child;
+				else res[i][j] = child;
+			}
+			j++;
+		}
+		i++;
+	}
+	
+	return &res;
+}
+
+// ========================================================================
 // METHOD ::treecmp
 // ========================================================================
 bool value::treecmp (const value &other) const
