@@ -13,8 +13,16 @@ public:
 	int *visitchild (int pos)
 	{
 		if (pos<0) return NULL;
-		curval = start + (stp*pos);
-		if (curval >= end) return NULL;
+		if (start < end)
+		{
+			curval = start + (stp*pos);
+			if (curval >= end) return NULL;
+		}
+		else
+		{
+			curval = start - (stp*pos);
+			if (curval <= end) return NULL;
+		}
 		return &curval;
 	}
 	
