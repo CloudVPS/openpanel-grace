@@ -361,6 +361,5 @@ string *value::tojson (void) const
 {
 	returnclass (string) res retain;
 	encodejson (res);
-	res.strcat ("\n");
 	return &res;
 }
