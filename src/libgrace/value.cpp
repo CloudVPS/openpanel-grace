@@ -437,14 +437,14 @@ value::~value (void)
 // ========================================================================
 value &value::operator= (valuable &other)
 {
-	clear ();
+	cleararray ();
 	other.tovalue (*this);
 	return *this;
 }
 
 value &value::operator= (valuable *other)
 {
-	clear ();
+	cleararray ();
 	other->tovalue (*this);
 	delete other;
 	return *this;
@@ -452,7 +452,7 @@ value &value::operator= (valuable *other)
 
 value &value::settime (const timestamp &o)
 {
-	clear ();
+	cleararray ();
 	itype = i_date;
 	t.uval = o.unixtime();
 	return *this;
@@ -460,14 +460,14 @@ value &value::settime (const timestamp &o)
 
 value &value::operator= (const timestamp &o)
 {
-	clear();
+	cleararray ();
 	_type = t_date;
 	return settime (o);
 }
 
 value &value::operator= (time_t o)
 {
-	clear();
+	cleararray ();
 	_type = t_date;
 	return settime (o);
 }
@@ -1461,6 +1461,25 @@ void value::clear (void)
 	}
 }
 
+void value::cleararray (void)
+{
+	if (arraysz)
+	{
+		for (unsigned int i=0; i<arraysz; ++i)
+		{
+			delete array[i];
+		}
+	}
+	if (array)
+	{
+		::free (array);
+		array = NULL;
+	}
+	arraysz = 0;
+	arrayalloc = 0;
+	ucount = 0;
+}
+
 // ========================================================================
 // METHOD ::alloc
 // ========================================================================
@@ -1752,6 +1771,7 @@ bool value::isbuiltin (const statstring &type)
 		incaseof ("dict") : return true;
 		incaseof ("date") : return true;
 		incaseof ("currency") : return true;
+		incaseof ("float") : return true;
 		defaultcase : return false;
 	}
 	return false;

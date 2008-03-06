@@ -477,6 +477,7 @@ public:
 	/// Assign to bool.
 	inline value	&operator= (bool bval)
 	{
+		cleararray ();
 		t.ival = bval ? 1 : 0;
 		itype = i_bool;
 		if (_type == t_unset) _type = t_bool;
@@ -486,6 +487,7 @@ public:
 	/// Assign to 64 bits signed.
 	inline value	&operator= (long long dval)
 	{
+		cleararray ();
 		t.lval = dval;
 		itype = i_long;
 		if (_type == t_unset) _type = t_long;
@@ -515,6 +517,7 @@ public:
 	/// Assign to unsigned 64 bits.
 	inline value	&operator= (unsigned long long val)
 	{
+		cleararray ();
 		t.ulval = val;
 		itype = i_ulong;
 		if (_type == t_unset) _type = t_ulong;
@@ -524,6 +527,7 @@ public:
 	/// Assign to c string.
 	inline value	&operator= (const char *str)
 	{
+		cleararray ();
 		s = str;
 		itype = i_string;
 		if (_type == t_unset) _type = t_string;
@@ -532,6 +536,7 @@ public:
 
 	inline value	&operator= (const unsigned char *str)
 	{
+		cleararray ();
 		s = str;
 		itype = i_string;
 		if (_type == t_unset) _type = t_string;
@@ -541,6 +546,7 @@ public:
 	/// Assign to string.
 	inline value	&operator= (const string &str)
 	{
+		cleararray ();
 		s = str;
 		itype = i_string;
 		if (_type == t_unset) _type= t_string;
@@ -550,6 +556,7 @@ public:
 	/// Assign to statstring.
 	inline value	&operator= (const statstring &str)
 	{
+		cleararray ();
 		s = str.sval();
 		itype = i_string;
 		if (_type == t_unset) _type= t_string;
@@ -558,6 +565,7 @@ public:
 
 	inline value	&operator= (statstring *str)
 	{
+		cleararray ();
 		s = str->sval();
 		itype = i_string;
 		if (_type == t_unset) _type= t_string;
@@ -569,6 +577,7 @@ public:
 	/// behind the decimal point.
 	inline void		 setcurrency (long long cnew)
 	{
+		cleararray ();
 		t.lval = cnew;
 		itype = i_currency;
 		if (_type == t_unset) _type = t_currency;
@@ -609,7 +618,7 @@ public:
 	/// Assign to retained string.
 	inline value	&operator= (string *str)
 	{
-		clear ();
+		cleararray ();
 		// By assigning s to str, it will get pointer-nuked, plz not
 		// to nuke it again ktxfreind!
 		s = str;
@@ -621,7 +630,7 @@ public:
 	/// Assign to int.
 	value	&operator= (int i)
 	{
-		clear ();
+		cleararray ();
 		t.ival = i;
 		itype = i_int;
 		if (_type == t_unset) _type  = t_int;
@@ -632,7 +641,7 @@ public:
 	/// Assign to unsigned int.
 	inline value	&operator= (unsigned int i)
 	{
-		clear ();
+		cleararray ();
 		t.uval = i;
 		itype = i_unsigned;
 		if (_type == t_unset) _type = t_unsigned;
@@ -642,7 +651,7 @@ public:
 	/// Assign to double precision float.
 	inline value	&operator= (double d)
 	{
-		clear ();
+		cleararray ();
 		t.dval = d;
 		itype = i_double;
 		if (_type == t_unset) _type  = t_double;
@@ -1142,6 +1151,9 @@ public:
 	
 					 /// Wipe out value and children.
 	void 			 clear (void);
+	
+					 /// Wipe out children.
+	void			 cleararray (void);
 	
 					 /// Continuation method for the valuebuilder
 					 /// syntax. The first node in an arraybuilder

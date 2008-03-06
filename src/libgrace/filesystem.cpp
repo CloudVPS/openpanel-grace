@@ -380,9 +380,9 @@ value *filesystem::getinfo (const string &_path)
 		}
 		
 		result["size"] = (unsigned int) (st.st_size & 0xffffffff);
-		result["atime"] = (unsigned int) st.st_atime;
-		result["mtime"] = (unsigned int) st.st_mtime;
-		result["ctime"] = (unsigned int) st.st_ctime;
+		result["atime"] = (time_t) st.st_atime;
+		result["mtime"] = (time_t) st.st_mtime;
+		result["ctime"] = (time_t) st.st_ctime;
 		if ((st.st_mode & S_IFMT) == S_IFDIR) p += "/";
 		p.printf (":<mime>");
 		if ((t = ::readlink (p.str(), linkbuf, 511)) >= 0)
@@ -943,9 +943,9 @@ value *filesystem::ls (const string &_path, bool longformat, bool showhidden)
 						res[nam]["fuid"] = (unsigned int) st.st_uid;
 						res[nam]["fgid"] = (unsigned int) st.st_gid;
 						res[nam]["size"] = (unsigned int) (st.st_size & 0xffffffff);
-						res[nam]["atime"] = (unsigned int) st.st_atime;
-						res[nam]["mtime"] = (unsigned int) st.st_mtime;
-						res[nam]["ctime"] = (unsigned int) st.st_ctime;
+						res[nam]["atime"] = (time_t) st.st_atime;
+						res[nam]["mtime"] = (time_t) st.st_mtime;
+						res[nam]["ctime"] = (time_t) st.st_ctime;
 						
 						if ((st.st_mode & S_IFMT) == S_IFDIR) pad += "/";
 						pad.printf (":<mime>");

@@ -101,6 +101,7 @@ unsigned int value::ipval (void)
 // ========================================================================
 value &value::setip (unsigned int addr)
 {
+	cleararray ();
 	itype = i_ipaddr;
 	if (_type == t_unset)
 		_type = t_ipaddr;
