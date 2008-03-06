@@ -192,9 +192,15 @@ value::value (const ipaddress &o)
 }
 
 // ========================================================================
-// CONSTRUCTOR (ipaddress)
+// CONSTRUCTOR (timestamp)
 // ========================================================================
 value::value (const timestamp &o)
+{
+	init ();
+	settime (o);
+}
+
+value::value (time_t o)
 {
 	init ();
 	settime (o);
@@ -450,6 +456,13 @@ value &value::settime (const timestamp &o)
 }
 
 value &value::operator= (const timestamp &o)
+{
+	clear();
+	_type = t_date;
+	return settime (o);
+}
+
+value &value::operator= (time_t o)
 {
 	clear();
 	_type = t_date;

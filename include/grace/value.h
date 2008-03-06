@@ -224,6 +224,9 @@ public:
 					 /// Copy-constructor (ipaddress)
 					 value (const class ipaddress &);
 					 
+					 /// Copy-constructor (unix timestamp)
+					 value (time_t);
+					 
 					 /// Copy-constructor (timestamp)
 					 value (const class timestamp &);
 					 
@@ -260,7 +263,7 @@ public:
 	/// Access by string key.
 	inline value	&operator[] (const char *str)
 	{
-		if (_type == t_unset)
+		if (isbuiltin (_type))
 			_type = t_dict;
 			
 		value *v = findchild (str);
@@ -419,6 +422,7 @@ public:
 	value	&operator= (class valuable *);
 	value	&operator= (const class ipaddress &);
 	value	&operator= (const class timestamp &);
+	value	&operator= (time_t);
 
 	/// Cast as bool.
 	inline			 operator bool (void) const
