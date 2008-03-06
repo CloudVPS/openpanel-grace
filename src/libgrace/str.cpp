@@ -789,12 +789,28 @@ void string::unescapexml (void)
 					i+=3;
 				}
 				else if ( (DAT(1) == '#') &&
+						  (DAT(3) == ';') )
+				{
+					c = ::atoi (old_data->v+(i+2));
+						 
+					strcat (c);
+					i+=3;
+				}
+				else if ( (DAT(1) == '#') &&
 						  (DAT(4) == ';') )
 				{
 					c = ::atoi (old_data->v+(i+2));
 						 
 					strcat (c);
 					i+=4;
+				}
+				else if ( (DAT(1) == '#') &&
+						  (DAT(5) == ';') )
+				{
+					c = ::atoi (old_data->v+(i+2));
+						 
+					strcat (c);
+					i+=5;
 				}
 				else if ( (DAT(1) =='a') &&
 					      (DAT(2) =='p') &&
