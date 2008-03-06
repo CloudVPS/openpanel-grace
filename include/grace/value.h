@@ -660,27 +660,6 @@ public:
 		return *this;
 	}
 	
-	/// Case-sensitive string comparison, limited by size.
-	/// \param st The other string.
-	/// \param sz The maximum size to compare, if 0 the comparison
-	///           stops at the size of the shortest of two strings.
-	inline int		 strncmp (const string &st, int sz = 0) const
-	{
-		return sval().strncmp (st, sz);
-	}
-	
-	/// Case-insensitive string comparison.
-	inline int		 strcasecmp (const string &st) const
-	{
-		return sval().strcasecmp (st);
-	}
-	
-	/// Case-insensitive string comparison, limited by size.
-	inline int		 strncasecmp (const string &st, int sz = 0) const
-	{
-		return sval().strncasecmp (st, sz);
-	}
-	
 						 /// Cast as string object. 
 	const string		&sval (void) const;
 
@@ -1477,7 +1456,6 @@ public:
 					 /// \param s The schema to use.
 	string			*tocxml (class xmlschema &s);
 	
-	// Apple plist format import/export
 					 /// Save in Apple's plist format.
 					 /// Requires the com.apple.plist.schema.xml schema.
 					 /// \param fn File name.
@@ -1521,6 +1499,30 @@ public:
 					 /// Returns the length of this node's string
 					 /// representation.
 	int				 strlen (void) const;
+	
+					 //@{
+					 /// Proxy function for string manipulation.
+	string			*left (int m) const { return sval().left (m); }
+	string			*right (int m) const { return sval().right (m); }
+	string			*mid (int p, int s=0) const { return sval().mid (p,s); }
+	string			*copyuntil (char x) const { return sval().copyuntil (x); }
+	string			*copyuntil (const string &x) const { return sval().copyuntil (x); }
+	string			*copyuntillast (char x) const { return sval().copyuntillast (x); }
+	string			*copyuntillast (const string &x) const { return sval().copyuntillast (x); }
+	string			*copyafter (char x) const { return sval().copyafter (x); }
+	string			*copyafter (const string &x) const { return sval().copyafter (x); }
+	string			*copyafterlast (char x) const { return sval().copyafterlast (x); }
+	string			*copyafterlast (const string &x) const { return sval().copyafterlast (x); }
+	int				 strcmp (const string &o) const { return sval().strcmp (o); }
+	int				 strncmp (const string &o, int sz=0) const { return sval().strncmp (o,sz); }
+	int				 strcasecmp (const string &o) const { return sval().strcasecmp (o); }
+	int				 strncasecmp (const string &o, int sz=0) const { return sval().strncasecmp (o,sz); }
+	bool			 globcmp (const string &str) const { return sval().globcmp (str); }
+	bool			 regcmp (const string &str) const { return sval().regcmp (str); }
+	int				 countchr (char c, int e=0) const { return sval().countchr (c,e); }
+	string			*encode64 (void) const { return sval().encode64(); }
+	string			*decode64 (void) const { return sval().decode64(); }
+					 //@}
 	
 					 /// Returns true if a child key exists.
 	bool			 exists (const char *) const;
