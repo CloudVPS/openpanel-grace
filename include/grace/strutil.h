@@ -61,7 +61,8 @@ public:
 	
 						 /// Split by a character, but mind backslash-
 						 /// escapes.
-	static value		*splitescaped (const string &str, char sep);
+	static value		*splitescaped (const string &str, char sep,
+									   const string &escapees="");
 	
 						 /// Split string into array of words.
 						 /// Looks for a specified separator sequence.

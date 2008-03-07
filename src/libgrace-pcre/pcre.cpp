@@ -173,7 +173,9 @@ string *pcregexp::replace (const string &orig, const string &with)
 string *$expr (const string &orig, const string &expr)
 {
 	char split = expr[1];
-	value arg = strutil::splitescaped (expr, split);
+	string esc;
+	esc.strcat (split);
+	value arg = strutil::splitescaped (expr, split, esc);
 	if (arg[0] != "s") return NULL;
 	pcregexp ex (arg[1]);
 	return ex.replace (orig, arg[2]);

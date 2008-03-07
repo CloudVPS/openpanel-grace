@@ -91,7 +91,7 @@ value *strutil::split (const string &str, const string &s)
 	return &res;
 }
 
-value *strutil::splitescaped (const string &str, char s)
+value *strutil::splitescaped (const string &str, char s, const string &escapees)
 {
 	returnclass (value) res retain;
 	
@@ -103,6 +103,10 @@ value *strutil::splitescaped (const string &str, char s)
 		char c = str[i];
 		if (c == '\\')
 		{
+			if (escapees && (escapees.strchr (str[i+1]) < 0))
+			{
+				ts.strcat (str[i]);
+			}
 			ts.strcat (str[i+1]);
 			i++;
 		}
