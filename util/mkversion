@@ -9,10 +9,10 @@ genversion() {
 	
 	ACTUALTAG=`hg id | cut -f2 -d" "`
 	if [ "$ACTUALTAG" = "$BRANCH" ]; then
-	  echo -n "${BRANCH}-${DISTRO}"
+	  $(which echo) -n "${BRANCH}-${DISTRO}"
 	else
 	  ACTUALID=`hg id | cut -f1 -d" " | sed -e "s/+$//"`
-	  echo -n "${BRANCH}-${DISTRO}-${ACTUALID}"
+	  $(which echo) -n "${BRANCH}-${DISTRO}-${ACTUALID}"
 	fi
 	DIFC=`hg diff | wc -l | sed -e "s/ //g"`
 	if [ "$DIFC" = "0" ]
