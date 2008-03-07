@@ -59,6 +59,10 @@ public:
 						 /// \param sep The separator character.
 	static value		*split (const string &str, char sep);
 	
+						 /// Split by a character, but mind backslash-
+						 /// escapes.
+	static value		*splitescaped (const string &str, char sep);
+	
 						 /// Split string into array of words.
 						 /// Looks for a specified separator sequence.
 						 /// \param str The string data.

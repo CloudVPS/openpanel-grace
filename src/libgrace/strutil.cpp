@@ -91,6 +91,40 @@ value *strutil::split (const string &str, const string &s)
 	return &res;
 }
 
+value *strutil::splitescaped (const string &str, char s)
+{
+	returnclass (value) res retain;
+	
+	int i = 0;
+	string ts;
+	
+	while (i < str.strlen())
+	{
+		char c = str[i];
+		if (c == '\\')
+		{
+			ts.strcat (str[i+1]);
+			i++;
+		}
+		else
+		{
+			if (c == s)
+			{
+				res.newval() = ts;
+				ts.crop ();
+			}
+			else
+			{
+				ts.strcat (c);
+			}
+		}
+		i++;
+	}
+	res.newval() = ts;
+
+	return &res;
+}
+
 // ========================================================================
 // STATIC METHOD ::crlfornot
 // -------------------------

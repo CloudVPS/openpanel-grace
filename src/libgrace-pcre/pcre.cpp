@@ -1,4 +1,6 @@
 #include <grace/pcre.h>
+#include <grace/strutil.h>
+#include <grace/file.h>
 
 pcredb::pcredb (void)
 {
@@ -166,4 +168,13 @@ string *pcregexp::replace (const string &orig, const string &with)
 	}
 	
 	return &res;
+}
+
+string *$expr (const string &orig, const string &expr)
+{
+	char split = expr[1];
+	value arg = strutil::splitescaped (expr, split);
+	if (arg[0] != "s") return NULL;
+	pcregexp ex (arg[1]);
+	return ex.replace (orig, arg[2]);
 }
