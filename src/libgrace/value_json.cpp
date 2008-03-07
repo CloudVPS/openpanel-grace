@@ -282,6 +282,7 @@ void value::encodejsonstring (string &into) const
 		else if (cc == '\t') into.strcat ("\\t");
 		else if (cc == '\"') into.strcat ("\\\"");
 		else if (cc == '\r') into.strcat ("\\r");
+		else if (cc == '\\') into.strcat ("\\\\");
 		else into.strcat (cc);
 	}
 }
@@ -298,6 +299,7 @@ void value::encodejsonid (string &into) const
 		else if (cc == '\t') into.strcat ("\\t");
 		else if (cc == '\"') into.strcat ("\\\"");
 		else if (cc == '\r') into.strcat ("\\r");
+		else if (cc == '\\') into.strcat ("\\\\");
 		else into.strcat (cc);
 	}
 }
