@@ -1098,7 +1098,7 @@ public:
 					 /// Make lowercase copy.
 	string			*lower (void) const
 					 {
-					 	string *res = new string (*this);
+					 	string *res = new (memory::retainable::onstack) string (*this);
 					 	res->ctolower();
 					 	return res;
 					 }
@@ -1106,8 +1106,8 @@ public:
 					 /// Make uppercase copy.
 	string			*upper (void) const
 					 {
-					 	string *res = new string (*this);
-					 	res->ctolower();
+					 	string *res = new (memory::retainable::onstack) string (*this);
+					 	res->ctoupper();
 					 	return res;
 					 }
 					 

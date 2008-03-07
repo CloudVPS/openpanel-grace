@@ -16,12 +16,12 @@ public:
 		if (start < end)
 		{
 			curval = start + (stp*pos);
-			if (curval >= end) return NULL;
+			if (curval > end) return NULL;
 		}
 		else
 		{
 			curval = start - (stp*pos);
-			if (curval <= end) return NULL;
+			if (curval < end) return NULL;
 		}
 		return &curval;
 	}
