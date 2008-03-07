@@ -1,3 +1,19 @@
+0.9.13     Fri Mar  7 2007                           <grace@openpanel.com>
+
+           * Add value::zip()
+           
+           * Add strutil::splitescaped()
+           
+           * Add $range(start:end) generator
+           
+           * Add value::byvalue()
+           
+           * Add value::join()
+
+0.9.12     Wed Mar  5 2007                           <grace@openpanel.com>
+
+           * Bugfixes
+
 0.9.11     Tue Mar  4 2007                           <grace@openpanel.com>
 
            * Changed hash used by statstring.
