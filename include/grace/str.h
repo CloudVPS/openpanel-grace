@@ -740,128 +740,55 @@ public:
 	
 					 /// Find string sequence. 
 					 /// \return Sequence position or \b -1 if not found.
-	inline int		 strchr (char c, int left=0) const
-					 {
-					 	if (left<0) return -1;
-					 	if (((unsigned int)left) >= size) return -1;
-						
-					    char *res = (char *) memchr (data->v+left, c, size-left);
-						
-						if (res) return (res - (char *) data->v);
-						return -1;
-					 }
+	int				 strchr (char c, int left=0) const;
 	
 					 /// Crop the string until the first occurence of
 					 /// a character. If none are found the string is
 					 /// left intact.
 					 /// \param c The character to look for
-	void			 cropat (char c)
-					 {
-					 	if (! size) return;
-					 	int isthere = strchr (c);
-					 	if (isthere<0) return;
-					 	crop (isthere);
-					 }
+	void			 cropat (char c);
 
 					 /// Crop the string until the first occurence of
 					 /// a sequence. If none are found the string is
 					 /// left intact.
 					 /// \param c The character sequence to look for
-	void			 cropat (const char *c)
-					 {
-					 	if (! c) return;
-					 	if (! size) return;
-					 	int isthere = strstr (c);
-					 	if (isthere<0) return;
-					 	crop (isthere);
-					 }
+	void			 cropat (const char *c);
 
 					 /// Crop the string until the last occurence of
 					 /// a character. If none are found the string is
 					 /// left intact.
 					 /// \param c The character to look for
-	void			 cropatlast (char c)
-					 {
-					 	if (! size) return;
-					 	int isthere, at;
-					 	isthere = at = strchr (c);
-					 	if (isthere<0) return;
-					 	while ( (isthere=strchr(c,at+1)) > 0 ) at = isthere;
-					 	crop (at);
-					 }
+	void			 cropatlast (char c);
 
 					 /// Crop the string until the last occurence of
 					 /// a sequence. If none are found the string is
 					 /// left intact.
 					 /// \param c The character sequence to look for
-	void			 cropatlast (const char *c)
-					 {
-					 	if (! c) return;
-					 	if (! size) return;
-					 	int isthere, at;
-					 	isthere = at = strstr (c);
-					 	if (isthere<0) return;
-					 	while ( (isthere=strstr(c,at+1)) > 0 ) at = isthere;
-					 	crop (at);
-					 }
+	void			 cropatlast (const char *c);
 	
 					 /// Crop the string to contain only the data to the
 					 /// right of the first occurence of a character.
 					 /// If the character is not found, the string is
 					 /// cropped to zero size.
-	void			 cropafter (char c)
-					 {
-					 	if (! size) return;
-					 	int isthere = strchr (c);
-					 	if (isthere<0) { crop(); return; }
-					 	++isthere;
-					 	crop (isthere - strlen());
-					 }
+	void			 cropafter (char c);
 	
 					 /// Crop the string to contain only the data to the
 					 /// right of the first occurence of a sequence.
 					 /// If the character is not found, the string is
 					 /// cropped to zero size.
-	void			 cropafter (const char *c)
-					 {
-					 	if (! c) return;
-					 	if (! size) return;
-					 	int isthere = strstr (c);
-					 	if (isthere<0) { crop(); return; }
-					 	isthere += ::strlen (c);
-					 	crop (isthere - strlen());
-					 }
+	void			 cropafter (const char *c);
 
 					 /// Crop the string to contain only the data to the
 					 /// right of the last occurence of a character.
 					 /// If the character is not found, the string is
 					 /// cropped to zero size.
-	void			 cropafterlast (char c)
-					 {
-					 	if (! size) return;
-					 	int isthere, at;
-					 	isthere = at = strchr (c);
-					 	if (isthere<0) { crop(); return; }
-					 	while ( (isthere=strchr(c,at+1)) >= 0 ) at = isthere;
-					 	++at;
-					 	crop (at - strlen());
-					 }
+	void			 cropafterlast (char c);
 
 					 /// Crop the string to contain only the data to the
 					 /// right of the last occurence of a sequence.
 					 /// If the character is not found, the string is
 					 /// cropped to zero size.
-	void			 cropafterlast (const char *c)
-					 {
-					 	if (! c) return;
-					 	if (! size) return;
-					 	int isthere, at;
-					 	isthere = at = strstr (c);
-					 	if (isthere<0) { crop(); return; }
-					 	while ( (isthere=strstr(c,at+1)) >= 0 ) at = isthere;
-					 	at += ::strlen (c);
-					 	crop (at - strlen());
-					 }
+	void			 cropafterlast (const char *c);
 	
 					 /// Split the string in two parts. Returns a new
 					 /// object containing the left half. The first
@@ -873,28 +800,7 @@ public:
 					 ///          string object is returned and the local
 					 ///          string data is left untouchd.
 					 /// \return Cut data.
-	inline string	*cutat (char c)
-					 {
-					 	returnclass (string) res retain;
-
-					 	if (! size) return &res;
-					 	int isthere = strchr (c);
-						if (isthere < 0) return &res;
-						
-						res = *this;
-						docopyonwrite();
-						res.crop (isthere);
-						
-						if ( ((unsigned int)isthere+1) >= size )
-						{
-							data->v[0] = size = 0;
-							return &res;
-						}
-						memmove (data->v, data->v + isthere+1, size - (isthere+1));
-						size -= (isthere+1);
-						data->v[size] = '\0';
-						return &res;
-					 }
+	string			*cutat (char c);
 					 
 					 /// Split the string in two parts. Returns a new
 					 /// object containing the left half. The last
@@ -909,32 +815,7 @@ public:
 					 /// Usage example:
 					 /// \verbinclude string_ex1.cpp
 					 /// \return Cut data.
-	inline string	*cutatlast (char c)
-					 {
-					 	returnclass (string) res retain;
-
-					 	if (! size) return &res;
-					 	int nextmatch;
-					 	int isthere = strchr (c);
-						if (isthere < 0) return &res;
-						
-						while ( (nextmatch = strchr (c, isthere+1)) >= 0 )
-							isthere = nextmatch;
-							
-						res = *this;
-						docopyonwrite();
-						res.crop (isthere);
-						
-						if ( ((unsigned int)isthere+1) >= size )
-						{
-							data->v[0] = size = 0;
-							return &res;
-						}
-						memmove (data->v, data->v + isthere+1, size - (isthere+1));
-						size -= (isthere+1);
-						data->v[size] = '\0';
-						return &res;
-					 }
+	string			*cutatlast (char c);
 					 
 					 /// Split the string in two parts. Returns a new
 					 /// object containing the left half. The first
@@ -946,29 +827,7 @@ public:
 					 ///          string object is returned and the local
 					 ///          string data is left untouched.
 					 /// \return Cut data.
-	inline string	*cutat (const char *c)
-					 {
-					 	returnclass (string) res retain;
-					 	int ssz = ::strlen (c);
-
-					 	if (! size) return &res;
-					 	int isthere = strstr (c);
-					 	if (isthere < 0) return &res;
-					 	
-					 	res = *this;
-					 	res.crop (isthere);
-						docopyonwrite();
-						
-						if ( ((unsigned int)isthere+1) >= size )
-						{
-							data->v[0] = size = 0;
-							return &res;
-						}
-					 	memmove (data->v, data->v + isthere+ssz, size - (isthere+ssz));
-					 	size -= (isthere+ssz);
-					 	data->v[size] = '\0';
-					 	return &res;
-					 }
+	string			*cutat (const char *c);
 
 					 /// Split the string in two parts. Returns a new
 					 /// object containing the left half. The last
@@ -980,34 +839,7 @@ public:
 					 ///          string object is returned and the local
 					 ///          string data is left untouched.
 					 /// \return Cut data.
-	inline string	*cutatlast (const char *c)
-					 {
-					 	returnclass (string) res retain;
-					 	int ssz = ::strlen (c);
-
-					 	if (! size) return &res;
-					 	int nextmatch;
-					 	int isthere = strstr (c);
-					 	if (isthere < 0) return &res;
-					 	
-					 	while ( (nextmatch = strstr (c, isthere+1))	>0 )
-					 		isthere = nextmatch;
-					 		
-					 	res = *this;
-					 	res.crop (isthere);
-						docopyonwrite();
-						
-						if ( ((unsigned int)isthere+1) >= size )
-						{
-							data->v[0] = size = 0;
-							return &res;
-						}
-						
-					 	memmove (data->v, data->v + isthere+ssz, size - (isthere+ssz));
-					 	size -= (isthere+ssz);
-					 	data->v[size] = '\0';
-					 	return &res;
-					 }
+	string			*cutatlast (const char *c);
 	
 					 /// Split the string in two parts. Returns a new
 					 /// object containing the right half.

@@ -2721,5 +2721,234 @@ char *string::visitchild (int pos) const
 	return data->v+pos;
 }
 
+// ========================================================================
+// METHOD ::strchr
+// ========================================================================
+int string::strchr (char c, int left) const
+{
+	if (left<0) return -1;
+	if (((unsigned int) left) >= size) return -1;
+	
+	char *res = (char*) memchr (data->v+left, c, size-left);
+	if (res) return (res - (char *) data->v);
+	return -1;
+}
+
+// ========================================================================
+// METHOD ::cropat
+// ========================================================================
+void string::cropat (char c)
+{
+	if (! size) return;
+	int isthere = strchr (c);
+	if (isthere<0) return;
+	crop (isthere);
+}
+
+void string::cropat (const char *c)
+{
+	if (! c) return;
+	if (! size) return;
+	int isthere = strstr (c);
+	if (isthere<0) return;
+	crop (isthere);
+}
+
+// ========================================================================
+// METHOD ::cropatlast
+// ========================================================================
+void string::cropatlast (char c)
+{
+	if (! size) return;
+	int isthere, at;
+	isthere = at = strchr (c);
+	if (isthere<0) return;
+	while ((isthere=strchr(c,at+1)) > 0) at = isthere;
+	crop (at);
+}
+
+void string::cropatlast (const char *c)
+{
+	if (! c) return;
+	if (! size) return;
+	int isthere, at;
+	isthere = at = strstr (c);
+	if (isthere<0) return;
+	while ((isthere=strstr(c,at+1)) > 0) at = isthere;
+	crop (at);
+}
+
+// ========================================================================
+// METHOD ::cropafter
+// ========================================================================
+void string::cropafter (char c)
+{
+	if (! size) return;
+	int isthere = strchr (c);
+	if (isthere<0)
+	{
+		crop();
+		return;
+	}
+	++isthere;
+	crop (isthere - strlen());
+}
+
+void string::cropafter (const char *c)
+{
+	if (! c) return;
+	if (! size) return;
+	int isthere = strstr (c);
+	if (isthere<0)
+	{
+		crop();
+		return;
+	}
+	isthere += ::strlen (c);
+	crop (isthere - strlen());
+}
+
+// ========================================================================
+// METHOD ::cropafterlast
+// ========================================================================
+void string::cropafterlast (char c)
+{
+	if (! size) return;
+	int isthere, at;
+	isthere = at = strchr (c);
+	if (isthere<0)
+	{
+		crop ();
+		return;
+	}
+	while ((isthere=strchr(c,at+1)) >= 0) at = isthere;
+	++at;
+	crop (at - strlen());
+}
+
+void string::cropafterlast (const char *c)
+{
+	if (! c) return;
+	if (! size) return;
+	int isthere, at;
+	isthere = at = strstr (c);
+	if (isthere<0) { crop(); return; }
+	while ( (isthere=strstr(c,at+1)) >= 0 ) at = isthere;
+	at += ::strlen (c);
+	crop (at - strlen());
+}
+
+// ========================================================================
+// METHOD ::cutat
+// ========================================================================
+string *string::cutat (char c)
+{
+	returnclass (string) res retain;
+	
+	if (! size) return &res;
+	int isthere = strchr (c);
+	if (isthere < 0) return &res;
+	
+	res = *this;
+	docopyonwrite();
+	res.crop (isthere);
+	
+	if (((unsigned int) isthere+1) >= size )
+	{
+	   data->v[0] = size = 0;
+	   return &res;
+	}
+	memmove (data->v, data->v + isthere+1, size - (isthere+1));
+	size -= (isthere+1);
+	data->v[size] = '\0';
+	return &res;
+}
+
+string *string::cutat (const char *c)
+{
+	returnclass (string) res retain;
+	int ssz = ::strlen (c);
+	
+	if (! size) return &res;
+	int isthere = strstr (c);
+	if (isthere < 0) return &res;
+	
+	res = *this;
+	res.crop (isthere);
+	docopyonwrite();
+	
+	if ( ((unsigned int)isthere+1) >= size )
+	{
+		data->v[0] = size = 0;
+		return &res;
+	}
+	memmove (data->v, data->v + isthere+ssz, size - (isthere+ssz));
+	size -= (isthere+ssz);
+	data->v[size] = '\0';
+	return &res;
+}
+
+// ========================================================================
+// METHOD ::cutatlast
+// ========================================================================
+string *string::cutatlast (char c)
+{
+	returnclass (string) res retain;
+	
+	if (! size) return &res;
+	int nextmatch;
+	int isthere = strchr (c);
+	if (isthere < 0) return &res;
+	
+	while ( (nextmatch = strchr (c, isthere+1)) >= 0 )
+		isthere = nextmatch;
+		
+	res = *this;
+	docopyonwrite();
+	res.crop (isthere);
+	
+	if ( ((unsigned int)isthere+1) >= size )
+	{
+		data->v[0] = size = 0;
+		return &res;
+	}
+	memmove (data->v, data->v + isthere+1, size - (isthere+1));
+	size -= (isthere+1);
+	data->v[size] = '\0';
+	return &res;
+}
+
+string *string::cutatlast (const char *c)
+{
+	returnclass (string) res retain;
+	int ssz = ::strlen (c);
+
+	if (! size) return &res;
+	int nextmatch;
+	int isthere = strstr (c);
+	if (isthere < 0) return &res;
+	
+	while ( (nextmatch = strstr (c, isthere+1))	>0 )
+		isthere = nextmatch;
+		
+	res = *this;
+	res.crop (isthere);
+	docopyonwrite();
+	
+	if ( ((unsigned int)isthere+1) >= size )
+	{
+		data->v[0] = size = 0;
+		return &res;
+	}
+	
+	memmove (data->v, data->v + isthere+ssz, size - (isthere+ssz));
+	size -= (isthere+ssz);
+	data->v[size] = '\0';
+	return &res;
+}
+
+// ========================================================================
+// METHOD ::
+// ========================================================================
 
 string emptystring;
