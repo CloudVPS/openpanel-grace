@@ -10,7 +10,7 @@ pcredb::~pcredb (void)
 {
 }
 
-pcre *pcredb::get (const statstring &expr)
+pcre *pcredb::get (const statstring &expr, int options)
 {
 	pcre *res = NULL;
 	
@@ -27,7 +27,7 @@ pcre *pcredb::get (const statstring &expr)
 	{
 		int erroffset;
 		const char *errptr;
-		res = pcre_compile (expr.str(), 0, &errptr, &erroffset, NULL);
+		res = pcre_compile (expr.str(), options, &errptr, &erroffset, NULL);
 		if (res)
 		{
 			expressions[expr] = res;
@@ -42,11 +42,13 @@ pcredb __PCREDB;
 pcregexp::pcregexp (void)
 {
 	pobj = NULL;
+	options = 0;
 }
 
-pcregexp::pcregexp (const statstring &expr)
+pcregexp::pcregexp (const statstring &expr, int o)
 {
 	pobj = NULL;
+	options = o;
 	set (expr);
 }
 
@@ -56,13 +58,18 @@ pcregexp::~pcregexp (void)
 
 pcregexp &pcregexp::operator= (const statstring &to)
 {
-	set (to);
+	return set (to);
 }
 
-void pcregexp::set (const statstring &to)
+pcregexp &pcregexp::set (const statstring &to)
 {
-	pcre *r = __PCREDB.get (to);
-	pobj = r;
+	pobj = __PCREDB.get (to, options);
+	return *this;
+}
+
+pcregexp &pcregexp::setoptions (int o)
+{
+	options = o;
 }
 
 #define MAXBACKREF 16
@@ -102,69 +109,82 @@ value *pcregexp::capture (const string &from)
 {
 	returnclass (value) res retain;
 	match (from, res);
-	return  &res;
+	return &res;
 }
 
-string *pcregexp::replace (const string &orig, const string &with)
+string *pcregexp::replace (const string &_orig, const string &with,
+						   bool replaceall)
 {
 	returnclass (string) res retain;
 	int thevector[MAXBACKREF*2];
 	value R;
 
+	string orig;
+	res = _orig;
 	int r;
-	r = pcre_exec (pobj, NULL, orig.str(), orig.strlen(),
-				   0, 0, thevector, MAXBACKREF*2);
+	bool doloop = true;
 	
-	if (r < 1)
+	while (doloop)
 	{
-		res = orig;
-		return &res;
-	}
-	
-	if (r > 1)
-	{
-		for (int i=1; i<r; ++i)
-		{
-			int pos = thevector[2*i];
-			int sz = thevector[(2*i)+1] - pos;
-			R.newval() = orig.mid (pos, sz);
-		}
-	}
-	
-	if (thevector[0])
-	{
-		res = orig.left (thevector[0]);
-	}
-	
-	if (with.strchr ('\\') >= 0)
-	{
-		int toi;
+		doloop = replaceall;
+		orig = res;
 		
-		const char *p = with.cval();
-		while (p && *p)
+		r = pcre_exec (pobj, NULL, orig.str(), orig.strlen(),
+					   0, 0, thevector, MAXBACKREF*2);
+		
+		if (r < 1)
 		{
-			if ((*p == '\\') && (toi = atoi (p+1)))
-			{
-				res.strcat (R[toi-1]);
-				p++;
-				while (isdigit (*p)) p++;
-			}
-			else
-			{
-				res.strcat (*p);
-				p++;
-			}
-			
+			return &res;
 		}
-	}
-	else
-	{
-		res.strcat (with);
-	}
-	
-	if (thevector[1] < orig.strlen())
-	{
-		res.strcat (orig.mid (thevector[1]));
+
+		res.crop();
+		R.clear ();
+		
+		if (r > 1)
+		{
+			for (int i=1; i<r; ++i)
+			{
+				int pos = thevector[2*i];
+				int sz = thevector[(2*i)+1] - pos;
+				R.newval() = orig.mid (pos, sz);
+			}
+		}
+		
+		if (thevector[0])
+		{
+			res = orig.left (thevector[0]);
+		}
+		
+		if (with.strchr ('\\') >= 0)
+		{
+			int toi;
+			
+			const char *p = with.cval();
+			while (p && *p)
+			{
+				if ((*p == '\\') && (toi = atoi (p+1)))
+				{
+					res.strcat (R[toi-1]);
+					p++;
+					while (isdigit (*p)) p++;
+				}
+				else
+				{
+					res.strcat (*p);
+					p++;
+				}
+				
+			}
+		}
+		else
+		{
+			res.strcat (with);
+		}
+		
+		if (thevector[1] < orig.strlen())
+		{
+			res.strcat (orig.mid (thevector[1]));
+		}
 	}
 	
 	return &res;
@@ -177,6 +197,36 @@ string *$expr (const string &orig, const string &expr)
 	esc.strcat (split);
 	value arg = strutil::splitescaped (expr, split, esc);
 	if (arg[0] != "s") return NULL;
-	pcregexp ex (arg[1]);
-	return ex.replace (orig, arg[2]);
+	
+	int opts = 0;
+	bool replaceall = false;
+	
+	string flags = arg[3];
+	for (int i=0; i<flags.strlen(); ++i)
+	{
+		switch (flags[i])
+		{
+			case 'i' : opts |= pcregexp::ignorecase; break;
+			case 'g' : replaceall = true; break;
+			default : break;
+		}
+	}
+	
+	pcregexp ex (arg[1], opts);
+	return ex.replace (orig, arg[2], replaceall);
+}
+
+string *$capture1 (const string &orig, const string &expr, int flags)
+{
+	returnclass (string) res retain;
+	pcregexp re (expr, flags);
+	value v = re.capture (orig);
+	res = v[0];
+	return &res;
+}
+
+value *$capture (const string &orig, const string &expr, int flags)
+{
+	pcregexp re (expr, flags);
+	return re.capture (orig);
 }
