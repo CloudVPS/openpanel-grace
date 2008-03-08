@@ -2710,4 +2710,16 @@ int string::countchr (char c, int endpos) const
 	return res;
 }
 
+// ========================================================================
+// METHOD ::visitchild
+// ========================================================================
+char *string::visitchild (int pos) const
+{
+	if (! data) return NULL;
+	if (pos<0) return NULL;
+	if (pos>=size) return NULL;
+	return data->v+pos;
+}
+
+
 string emptystring;

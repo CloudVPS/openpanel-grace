@@ -126,6 +126,10 @@ public:
 	// Through the [] operator, an index character can be selected out
 	// of the string.
 	// --------------------------------------------------------------------
+
+					 /// Implementation of the iterator protocol,
+					 /// makes string foreachable.
+	char			*visitchild (int pos) const;
 	
 					 //@{
 					 /// Array access.
