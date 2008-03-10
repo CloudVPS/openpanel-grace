@@ -35,7 +35,6 @@ public:
 					 	dollarendonly = PCRE_DOLLAR_ENDONLY,
 					 	dotall = PCRE_DOTALL,
 					 	extended = PCRE_EXTENDED,
-					 	firstline = PCRE_FIRSTLINE,
 					 	multiline = PCRE_MULTILINE,
 					 	ungreedy = PCRE_UNGREEDY
 					 };
