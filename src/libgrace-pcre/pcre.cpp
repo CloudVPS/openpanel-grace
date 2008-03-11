@@ -34,12 +34,15 @@ pcre *pcredb::get (const statstring &expr, int options)
 	
 	exclusivesection (expressions)
 	{
-		int erroffset;
-		const char *errptr;
-		res = pcre_compile (expr.str(), options, &errptr, &erroffset, NULL);
-		if (res)
+		if (! expressions.exists (expr))
 		{
-			expressions[expr] = res;
+			int erroffset;
+			const char *errptr;
+			res = pcre_compile (expr.str(), options, &errptr, &erroffset, NULL);
+			if (res)
+			{
+				expressions[expr] = res;
+			}
 		}
 	}
 	
