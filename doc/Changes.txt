@@ -1,4 +1,12 @@
-0.9.13     Fri Mar  7 2007                           <grace@openpanel.com>
+0.9.14     Tue Mar 11 2008
+
+           * Improved usability of libgrace-pcre
+           
+           * Remove pointless inlining in class string
+           
+           * Fix json encoding bug.
+
+0.9.13     Fri Mar  7 2008                           <grace@openpanel.com>
 
            * Add value::zip()
            
@@ -10,27 +18,27 @@
            
            * Add value::join()
 
-0.9.12     Wed Mar  5 2007                           <grace@openpanel.com>
+0.9.12     Wed Mar  5 2008                           <grace@openpanel.com>
 
            * Bugfixes
 
-0.9.11     Tue Mar  4 2007                           <grace@openpanel.com>
+0.9.11     Tue Mar  4 2008                           <grace@openpanel.com>
 
            * Changed hash used by statstring.
 
-0.9.10     Thu Feb 28 2007                           <grace@openpanel.com>
+0.9.10     Thu Feb 28 2008                           <grace@openpanel.com>
 
            * Add libgrace-pcre.
 
-0.9.9      Wed Feb 27 2007                           <grace@openpanel.com>
+0.9.9      Wed Feb 27 2008                           <grace@openpanel.com>
 
            * Improvements to httpdfileshare.
 
-0.9.8      Thu Feb 21 2007                           <grace@openpanel.com>
+0.9.8      Thu Feb 21 2008                           <grace@openpanel.com>
 
            * Changed packaging.
 
-0.9.7      Tue Feb 19 2007                           <grace@openpanel.com>
+0.9.7      Tue Feb 19 2008                           <grace@openpanel.com>
 
            * Optimized string::trim() and family.
            
@@ -45,17 +53,17 @@
              
            * Improved handling of class timestammp.
 
-0.9.6      Thu Feb 14 2007                           <grace@openpanel.com>
+0.9.6      Thu Feb 14 2008                           <grace@openpanel.com>
 
            * Fix interaction between class value and class ipaddress
 
            * Fix bug in parsing a currency value out of a string.
 
-0.9.5      Tue Feb 12 2007                           <grace@openpanel.com>
+0.9.5      Tue Feb 12 2008                           <grace@openpanel.com>
 
            * Fix keyboard readahead in class terminal.
 
-0.9.4      Fri Feb  8 2007                           <grace@openpanel.com>
+0.9.4      Fri Feb  8 2008                           <grace@openpanel.com>
 
            * Support JSON-encoding through %format.
 
