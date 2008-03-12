@@ -1,3 +1,7 @@
+0.9.15     Wed Mar 12 2008                           <grace@openpanel.com>
+
+           * Got rid of some more inlining mess.
+
 0.9.14     Tue Mar 11 2008
 
            * Improved usability of libgrace-pcre
