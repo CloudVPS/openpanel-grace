@@ -465,11 +465,131 @@ value &value::operator= (const timestamp &o)
 	return settime (o);
 }
 
+value &value::operator= (int i)
+{
+	cleararray ();
+	t.ival = i;
+	itype = i_int;
+	if (_type == t_unset) _type  = t_int;
+	return *this;
+}
+
+value &value::operator= (unsigned int i)
+{
+	cleararray ();
+	t.uval = i;
+	itype = i_unsigned;
+	if (_type == t_unset) _type = t_unsigned;
+	return *this;
+}
+
+value &value::operator= (double d)
+{
+	cleararray ();
+	t.dval = d;
+	itype = i_double;
+	if (_type == t_unset) _type = t_double;
+	return *this;
+}
+
 value &value::operator= (time_t o)
 {
 	cleararray ();
 	_type = t_date;
 	return settime (o);
+}
+
+value &value::operator= (bool bval)
+{
+	cleararray ();
+	t.ival = bval ? 1 : 0;
+	itype = i_bool;
+	if (isbuiltin (_type)) _type = t_bool;
+	return *this;
+}
+
+value &value::operator= (long long dval)
+{
+	cleararray ();
+	t.lval = dval;
+	itype = i_long;
+	if (isbuiltin (_type)) _type = t_long;
+	return *this;
+}
+
+value &value::operator= (const currency &c)
+{
+	assign (c);
+	return *this;
+}
+
+value &value::operator= (currency &c)
+{
+	assign (c);
+	return *this;
+}
+
+value &value::operator= (unsigned long long val)
+{
+	cleararray ();
+	t.ulval = val;
+	itype = i_ulong;
+	if (isbuiltin (_type)) _type = t_ulong;
+	return *this;
+}
+
+value &value::operator= (const char *str)
+{
+	cleararray ();
+	s = str;
+	itype = i_string;
+	if (isbuiltin (_type)) _type = t_string;
+	return *this;
+}
+
+value &value::operator= (const unsigned char *str)
+{
+	cleararray ();
+	s = str;
+	itype = i_string;
+	if (isbuiltin (_type)) _type = t_string;
+	return *this;
+}
+
+value &value::operator= (const string &str)
+{
+	cleararray ();
+	s = str;
+	itype = i_string;
+	if (isbuiltin (_type)) _type = t_string;
+	return *this;
+}
+
+value &value::operator= (string *str)
+{
+	cleararray();
+	s = str;
+	itype = i_string;
+	if (isbuiltin (_type)) _type = t_string;
+}
+
+value &value::operator= (const statstring &str)
+{
+	cleararray ();
+	s = str.sval();
+	itype = i_string;
+	if (isbuiltin (_type)) _type = t_string;
+	return *this;
+}
+
+value &value::operator= (statstring *str)
+{
+	cleararray ();
+	s = str->sval();
+	itype = i_string;
+	if (isbuiltin (_type)) _type= t_string;
+	delete str;
+	return *this;
 }
 
 // ========================================================================
@@ -1879,6 +1999,496 @@ bool value::isempty (void) const
 	if (array) return false;
 	if (attrib) return false;
 	return true;
+}
+
+// ========================================================================
+// METHOD ::operator[]
+// ========================================================================
+const value &value::operator[] (const char *str) const
+{
+	value *v;
+
+	v = findchild (str);
+	if (!v) return emptyvalue;
+	return *v;
+}
+
+value &value::operator[] (const char *str)
+{
+	if (isbuiltin (_type)) _type = t_dict;
+	value *v = findchild (str);
+	return *v;
+}
+
+const value &value::operator[] (const string &str) const
+{
+	value *v;
+
+	v = findchild (str.str());
+	if (!v) return emptyvalue;
+	return *v;
+}
+
+value &value::operator[] (const string &str)
+{
+	if (_type == t_unset)
+		_type = t_dict;
+		
+	value *v = findchild (str.str());
+	return *v;
+}
+
+const value &value::operator[] (const statstring &str) const
+{
+	value *v;
+	
+	v = findchild ((unsigned int) str.key(), (const char *) str.str());
+	if (! v) return emptyvalue;
+	return *v;
+}
+
+value &value::operator[] (const statstring &str)
+{
+	if (isbuiltin (_type)) _type = t_dict;
+	
+	value *v;
+	v = findchild ((unsigned int) str.key(), (const char *) str.str());
+	return *v;
+}
+
+value &value::operator[] (const value &va)
+{
+	value *v;
+	if (va.type() == t_int)
+	{
+		if (isbuiltin (_type)) _type = t_array;
+		v = getposition (va.uval());
+	}
+	else
+	{
+		if (isbuiltin (_type)) _type = t_dict;
+		v = findchild (va.sval());
+	}
+	
+	return *v;
+}
+
+const value &value::operator[] (const value &va) const
+{
+	value *v;
+	if (va.type() == t_int)
+	{
+		v = getposition (va.uval());
+	}
+	else
+	{
+		v = findchild (va.sval());
+	}
+	
+	if (! v) return emptyvalue;
+	return *v;
+}
+
+// ========================================================================
+// METHOD ::operator()
+// ========================================================================
+const value &value::operator() (const statstring &ki) const
+{
+	if (! attrib) return emptyvalue;
+	return (*attrib)[ki];
+}
+
+value &value::operator() (const statstring &ki)
+{
+	if (! attrib) attrib = new value;
+	return (*attrib)[ki];
+}
+
+// ========================================================================
+// METHOD ::setattrib
+// ========================================================================
+void value::setattrib (const statstring &ki, const string &val)
+{
+	if (! attrib) attrib = new value;
+	(*attrib)[ki] = val;
+}
+
+void value::setattrib (const statstring &ki, int val)
+{
+	if (! attrib) attrib = new value;
+	(*attrib)[ki] = val;
+}
+
+void value::setattrib (const statstring &ki, const char *val)
+{
+	if (! attrib) attrib = new value;
+	(*attrib)[ki] = val;
+}
+
+void value::setattrib (const statstring &ki, bool val)
+{
+	if (! attrib) attrib = new value;
+	(*attrib)[ki] = val;
+}
+
+// ========================================================================
+// METHOD ::operator<<
+// ========================================================================
+value &value::operator<< (value *v)
+{
+	for (int i=0; i<(*v).count(); ++i)
+	{
+		(*this)[(*v)[i].name()] = (*v)[i];
+	}
+	delete v;
+	return *this;
+}
+
+value &value::operator<< (const value &v)
+{
+	for (int i=0; i<v.count(); ++i)
+	{
+		(*this)[v[i].name()] = v[i];
+	}
+	return *this;
+}
+
+// ========================================================================
+// METHOD ::operator+=
+// ========================================================================
+value &value::operator+= (const string &str)
+{
+	newval() = str;
+	return *this;
+}
+
+value &value::operator+= (const value &v)
+{
+	if (! v.id()) newval() = v;
+	else (*this)[v.id()] = v;
+	return *this;
+}
+
+// ========================================================================
+// METHOD ::operator<
+// ========================================================================
+bool value::operator< (const value &other) const
+{
+	switch (other.itype)
+	{
+		case i_string:
+			return (::strcmp (cval(), other.cval()) <0);
+		case i_int:
+			return (ival() < other.ival());
+		case i_unsigned:
+		case i_date:
+			return (uval() < other.uval());
+		case i_currency:
+		case i_long:
+			return (lval() < other.lval());
+		case i_ulong:
+			return (ulval() < other.ulval());
+		
+		default:
+			return (dval() < other.dval());
+	}
+}
+
+bool value::operator< (const value &other)
+{
+	switch (other.itype)
+	{
+		case i_string:
+			return (::strcmp (cval(), other.cval()) <0);
+		case i_int:
+			return (ival() < other.ival());
+		case i_unsigned:
+		case i_date:
+			return (uval() < other.uval());
+		case i_currency:
+		case i_long:
+			return (lval() < other.lval());
+		case i_ulong:
+			return (ulval() < other.ulval());
+		
+		default:
+			return (dval() < other.dval());
+	}
+}
+
+// ========================================================================
+// METHOD ::operator<=
+// ========================================================================
+bool value::operator<= (const value &other) const
+{
+	switch (other.itype)
+	{
+		case i_string:
+			return (::strcmp (cval(), other.cval()) <=0);
+		case i_int:
+			return (ival() <= other.ival());
+		case i_unsigned:
+		case i_date:
+			return (uval() <= other.uval());
+		case i_currency:
+		case i_long:
+			return (t.lval <= other.t.lval);
+		case i_ulong:
+			return (ulval() <= other.ulval());
+		
+		default:
+			return (dval() <= other.dval());
+	}
+}
+
+bool value::operator<= (const value &other)
+{
+	switch (other.itype)
+	{
+		case i_string:
+			return (::strcmp (cval(), other.cval()) <=0);
+		case i_int:
+			return (ival() <= other.ival());
+		case i_unsigned:
+		case i_date:
+			return (uval() <= other.uval());
+		case i_currency:
+		case i_long:
+			return (t.lval <= other.t.lval);
+		case i_ulong:
+			return (ulval() <= other.ulval());
+		
+		default:
+			return (dval() <= other.dval());
+	}
+}
+
+// ========================================================================
+// METHOD ::operator>=
+// ========================================================================
+bool value::operator>= (const value &other) const
+{
+	switch (other.itype)
+	{
+		case i_string:
+			return (::strcmp (cval(), other.cval()) >=0);
+		case i_int:
+			return (ival() >= other.ival());
+		case i_unsigned:
+		case i_date:
+			return (uval() >= other.uval());
+		case i_currency:
+		case i_long:
+			return (t.lval >= other.t.lval);
+		case i_ulong:
+			return (ulval() >= other.ulval());
+		
+		default:
+			return (dval() >= other.dval());
+	}
+}
+
+bool value::operator>= (const value &other)
+{
+	switch (other.itype)
+	{
+		case i_string:
+			return (::strcmp (cval(), other.cval()) >=0);
+		case i_int:
+			return (ival() >= other.ival());
+		case i_unsigned:
+		case i_date:
+			return (uval() >= other.uval());
+		case i_currency:
+		case i_long:
+			return (t.lval >= other.t.lval);
+		case i_ulong:
+			return (ulval() >= other.ulval());
+		
+		default:
+			return (dval() >= other.dval());
+	}
+}
+
+// ========================================================================
+// METHOD ::operator>
+// ========================================================================
+bool value::operator> (const value &other) const
+{
+	switch (other.itype)
+	{
+		case i_string:
+			return (::strcmp (cval(), other.cval()) >0);
+		case i_int:
+			return (ival() > other.ival());
+		case i_unsigned:
+		case i_date:
+			return (uval() > other.uval());
+		case i_currency:
+		case i_long:
+			return (lval() > other.lval());
+		case i_ulong:
+			return (ulval() > other.ulval());
+		
+		default:
+			return (dval() > other.dval());
+	}
+}
+
+bool value::operator> (const value &other)
+{
+	switch (other.itype)
+	{
+		case i_string:
+			return (::strcmp (cval(), other.cval()) >0);
+		case i_int:
+			return (ival() > other.ival());
+		case i_unsigned:
+		case i_date:
+			return (uval() > other.uval());
+		case i_currency:
+		case i_long:
+			return (lval() > other.lval());
+		case i_ulong:
+			return (ulval() > other.ulval());
+		
+		default:
+			return (dval() > other.dval());
+	}
+}
+
+// ========================================================================
+// METHOD ::operator==
+// ========================================================================
+bool value::operator== (const value &other) const
+{
+	switch (other.itype)
+	{
+		case i_string:
+			return (::strcmp (cval(), other.cval()) ==0);
+		case i_int:
+			return (ival() == other.ival());
+		case i_unsigned:
+		case i_date:
+			return (uval() == other.uval());
+		case i_currency:
+		case i_long:
+			return (t.lval == other.t.lval);
+		case i_ulong:
+			return (ulval() == other.ulval());
+		
+		default:
+			return (dval() == other.dval());
+	}
+}
+
+bool value::operator== (const value &other)
+{
+	switch (other.itype)
+	{
+		case i_string:
+			return (::strcmp (cval(), other.cval()) ==0);
+		case i_int:
+			return (ival() == other.ival());
+		case i_unsigned:
+		case i_date:
+			return (uval() == other.uval());
+		case i_currency:
+		case i_long:
+			return (t.lval == other.t.lval);
+		case i_ulong:
+			return (ulval() == other.ulval());
+		
+		default:
+			return (dval() == other.dval());
+	}
+}
+
+// ========================================================================
+// METHOD ::operator!=
+// ========================================================================
+bool value::operator!= (const value &other) const
+{
+	switch (other.itype)
+	{
+		case i_string:
+			return (::strcmp (cval(), other.cval()) !=0);
+		case i_int:
+			return (ival() != other.ival());
+		case i_unsigned:
+		case i_date:
+			return (uval() != other.uval());
+		case i_currency:
+		case i_long:
+			return (t.lval != other.t.lval);
+		case i_ulong:
+			return (ulval() != other.ulval());
+		
+		default:
+			return (dval() != other.dval());
+	}
+}
+
+bool value::operator!= (const value &other)
+{
+	switch (other.itype)
+	{
+		case i_string:
+			return (::strcmp (cval(), other.cval()) !=0);
+		case i_int:
+			return (ival() != other.ival());
+		case i_unsigned:
+		case i_date:
+			return (uval() != other.uval());
+		case i_currency:
+		case i_long:
+			return (t.lval != other.t.lval);
+		case i_ulong:
+			return (ulval() != other.ulval());
+		
+		default:
+			return (dval() != other.dval());
+	}
+}
+
+// ========================================================================
+// METHOD ::setcurrency
+// ========================================================================
+void value::setcurrency (long long cnew)
+{
+	cleararray ();
+	t.lval = cnew;
+	itype = i_currency;
+	if (isbuiltin (_type)) _type = t_currency;
+}
+
+long long value::getcurrency (void) const
+{
+	switch (itype)
+	{
+		case i_currency:
+			return t.lval;
+		
+		case i_double:
+			return (unsigned long long) (t.dval * 1000.0);
+		
+		case i_string:
+			return parsecurrency (s);
+
+		case i_int:
+			return (t.ival * 1000LL);
+		
+		case i_unsigned:
+			return ((long long)t.uval) * 1000LL;
+		
+		case i_long:
+		case i_ulong:
+			return t.lval * 1000LL;
+		
+		default:
+			return 0LL;
+	}
+	return 0LL; // unreachable
 }
 
 const value emptyvalue;

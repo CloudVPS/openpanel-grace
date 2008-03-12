@@ -163,521 +163,215 @@ friend class iterator<const value,const value>;
 friend class visitor<const value>;
 friend class validator;
 public:
-					 /// Constructor.
-					 value (void);
-					 
-					 /// Constructor with integer key argument.
-					 value (creatorlabel, unsigned int);
-					 
-					 /// Constructor with string key or type argument.
-					 value (creatorlabel, const char *);
-					 
-					 /// Constructor with string key or type argument.
-					 value (creatorlabel, const char *, unsigned int);
-					 
-					 /// Constructor with string key or type argument.
-					 value (creatorlabel, const string &);
-					 
-					 /// Copy-constructor.
-					 value (value &);
-					 
-					 /// Const copy-constructor.
-					 value (const value &);
-					 
-					 /// Copy-constructor (deletes original).
-					 value (value *);
-					 
-					 /// Copy-constructor (from string).
-					 value (const char *);
-					 
-					 /// Copy-constructor (from double).
-					 value (double);
-					 
-					 /// Copy-constructor (from a valuable)
-					 value (const class valuable &);
-					 
-					 /// Copy-constructor (from a retained valuable)
-					 value (class valuable *);
-					 
-					 /// Copy-constructor (from a string)
-					 value (const string &s);
-					 
-					 /// Copy-constructor (from a retained string)
-					 value (string *s);
-					 
-					 /// Copy-constructor from a statstring
-					 value (const statstring &s);
-					 
-					 /// Copy-constructor (from an integer)
-					 value (int);
-					 
-					 /// Copy-constructor (unsigned integer)
-					 value (unsigned int);
-					 
-					 /// Copyy-constructor (long long)
-					 value (long long);
-					 
-					 /// Copy-constructor (unsigned long long)
-					 value (unsigned long long);
-					 
-					 /// Copy-constructor (bool)
-					 value (bool);
-					 
-					 /// Copy-constructor (ipaddress)
-					 value (const class ipaddress &);
-					 
-					 /// Copy-constructor (unix timestamp)
-					 value (time_t);
-					 
-					 /// Copy-constructor (timestamp)
-					 value (const class timestamp &);
-					 
-					 /// Destructor.
-					~value (void);
-	
-					 /// Options for xml encoding.
-	enum			 xmlargs {
-						compact = true, ///< Compacted output.
-						nocompact = false ///< Indented output.
-					 };
-
-					 /// Returns true if the provided type string
-					 /// represents a grace built-in.
-	static bool		 isbuiltin (const statstring &type);
-	
-	/// Access by array index.
-	const value		&operator[] (int i) const;
-
-	/// Access by array index.
-	value			&operator[] (int i);
-
-	/// Access by string key.
-	inline const value	&operator[] (const char *str) const
-	{
-		static value emptyval;
-		value *v;
-
-		v = findchild (str);
-		if (!v) return emptyval;
-		return *v;
-	}
-
-	/// Access by string key.
-	inline value	&operator[] (const char *str)
-	{
-		if (isbuiltin (_type))
-			_type = t_dict;
-			
-		value *v = findchild (str);
-		return *v;
-	}
-
-	/// Access by string key.
-	inline const value	&operator[] (const string &str) const
-	{
-		static value emptyval;
-		value *v;
-
-		v = findchild (str.str());
-		if (!v) return emptyval;
-		return *v;
-	}
-
-	/// Access by string key.
-	inline value	&operator[] (const string &str)
-	{
-		if (_type == t_unset)
-			_type = t_dict;
-			
-		value *v = findchild (str.str());
-		return *v;
-	}
-	
-	/// Access by string key.
-	inline const value	&operator[] (const statstring &str) const
-	{
-		static value emptyval;
-		value *v;
-
-		v = findchild ((unsigned int) str.key(),
-					   (const char *) str.str());
-		if (!v) return emptyval;
-		return *v;
-	}
-
-	/// Access by string key.
-	inline value	&operator[] (const statstring &str)
-	{
-		if (_type == t_unset)
-			_type = t_dict;
-			
-		value *v = findchild ((unsigned int) str.key(),
-							  (const char *) str.str());
-		return *v;
-	}
-	
-	/// Access by value key (int or string).
-	inline value	&operator[] (const value &va)
-	{
-		static value emptyval;
-		value *v;
-
-		if (va.type() == t_int)
-		{
-			if (_type == t_unset)
-				_type = t_array;
-			
-			v = getposition ((unsigned int) va.ival());
-		}
-		else
-		{
-			if (_type == t_unset)
-				_type = t_string;
-				
-			v = findchild (va.sval());
-		}
+						 /// Constructor.
+						 value (void);
+						 
+						 /// Constructor with integer key argument.
+						 value (creatorlabel, unsigned int);
+						 
+						 /// Constructor with string key or type argument.
+						 value (creatorlabel, const char *);
+						 
+						 /// Constructor with string key or type argument.
+						 value (creatorlabel, const char *, unsigned int);
+						 
+						 /// Constructor with string key or type argument.
+						 value (creatorlabel, const string &);
+						 
+						 /// Copy-constructor.
+						 value (value &);
+						 
+						 /// Const copy-constructor.
+						 value (const value &);
+						 
+						 /// Copy-constructor (deletes original).
+						 value (value *);
+						 
+						 /// Copy-constructor (from string).
+						 value (const char *);
+						 
+						 /// Copy-constructor (from double).
+						 value (double);
+						 
+						 /// Copy-constructor (from a valuable)
+						 value (const class valuable &);
+						 
+						 /// Copy-constructor (from a retained valuable)
+						 value (class valuable *);
+						 
+						 /// Copy-constructor (from a string)
+						 value (const string &s);
+						 
+						 /// Copy-constructor (from a retained string)
+						 value (string *s);
+						 
+						 /// Copy-constructor from a statstring
+						 value (const statstring &s);
+						 
+						 /// Copy-constructor (from an integer)
+						 value (int);
+						 
+						 /// Copy-constructor (unsigned integer)
+						 value (unsigned int);
+						 
+						 /// Copyy-constructor (long long)
+						 value (long long);
+						 
+						 /// Copy-constructor (unsigned long long)
+						 value (unsigned long long);
+						 
+						 /// Copy-constructor (bool)
+						 value (bool);
+						 
+						 /// Copy-constructor (ipaddress)
+						 value (const class ipaddress &);
+						 
+						 /// Copy-constructor (unix timestamp)
+						 value (time_t);
+						 
+						 /// Copy-constructor (timestamp)
+						 value (const class timestamp &);
+						 
+						 /// Destructor.
+						~value (void);
 		
-		if (! v) return emptyval;
-		
-		return *v;
-	}
+						 /// Options for xml encoding.
+	enum				 xmlargs {
+							compact = true, ///< Compacted output.
+							nocompact = false ///< Indented output.
+						 };
 
-	/// Access by value key (int or string).
-	inline value	&operator[] (const value &va) const
-	{
-		static value emptyval;
-		value *v;
-		if (va.type() == t_int)
-		{			
-			v = getposition ((unsigned int) va.ival());
-		}
-		else
-		{
-			v = findchild (va.sval());
-		}
-
-		if (! v) return emptyval;
-		return *v;
-	}
+						 /// Returns true if the provided type string
+						 /// represents a grace built-in.
+	static bool			 isbuiltin (const statstring &type);
 	
-	/// Access to object's attributes.
-	inline const value &operator() (const statstring &ki) const
-	{
-		if (! attrib) return *this;
-		return (*attrib)[ki];
-	}
+						 /// Access by array index.
+	const value			&operator[] (int i) const;
 
-	/// Access to object's attributes.
-	/// Although this operator casts to a value object, attributes
-	/// should not have children of their own or XML encoding will
-	/// not be possible.
-	/// \param ki Key for the attribute.
-	inline value	   &operator() (const statstring &ki)
-	{
-		if (! attrib) attrib = new value;
-		return (*attrib)[ki];
-	}
+						 /// Access by array index.
+	value				&operator[] (int i);
+
+						 /// Access by string key.
+	const value			&operator[] (const char *str) const;
+
+						 /// Access by string key.
+	value				&operator[] (const char *str);
+
+						 /// Access by string key.
+	const value			&operator[] (const string &str) const;
+
+						 /// Access by string key.
+	value				&operator[] (const string &str);
 	
-	/// Directly set a keyed attribute.
-	/// \param ki Attribute's key.
-	/// \param val Attribute's value.
-	inline void setattrib (const statstring &ki, const string &val)
-	{
-		if (! attrib) attrib = new value;
-		(*attrib)[ki] = val;
-	}
+						 /// Access by string key.
+	const value			&operator[] (const statstring &str) const;
 
-	/// Directly set a keyed attribute.
-	/// \param ki Attribute's key.
-	/// \param val Attribute's value.
-	inline void setattrib (const statstring &ki, int val)
-	{
-		if (! attrib) attrib = new value;
-		(*attrib)[ki] = val;
-	}
-
-	/// Directly set a keyed attribute.
-	/// \param ki Attribute's key.
-	/// \param val Attribute's value.
-	inline void setattrib (const statstring &ki, const char *val)
-	{
-		if (! attrib) attrib = new value;
-		(*attrib)[ki] = val;
-	}
-
-	/// Directly set a keyed attribute.
-	/// \param ki Attribute's key.
-	/// \param val Attribute's value.
-	inline void setattrib (const statstring &ki, bool val)
-	{
-		if (! attrib) attrib = new value;
-		(*attrib)[ki] = val;
-	}
-
-			 /// Set as an IPv4 address. Address is in host format.	
-	value	&setip (unsigned int);
-	value	&settime (const class timestamp &);
+						 /// Access by string key.
+	value				&operator[] (const statstring &str);
 	
-	value	&operator= (const value &v);
-	value	&operator= (value *v);
-	value	&operator= (class valuable &);
-	value	&operator= (class valuable *);
-	value	&operator= (const class ipaddress &);
-	value	&operator= (const class timestamp &);
-	value	&operator= (time_t);
+						 /// Access by value key (int or string).
+	const value			&operator[] (const value &va) const;
+	
+						 /// Access by value key (int or string).
+	value				&operator[] (const value &va);
+
+						 /// Access to object's attributes.
+	const value			&operator() (const statstring &ki) const;
+
+						 /// Access to object's attributes.
+						 /// Although this operator casts to a value object,
+						 /// attributes should not have children of their own 
+						 /// or XML encoding will not be possible.
+						 /// \param ki Key for the attribute.
+	value				&operator() (const statstring &ki);
+	
+						 /// Directly set a keyed attribute.
+						 /// \param ki Attribute's key.
+						 /// \param val Attribute's value.
+	void				 setattrib (const statstring &ki, const string &val);
+
+						 /// Directly set a keyed attribute.
+						 /// \param ki Attribute's key.
+						 /// \param val Attribute's value.
+	void				 setattrib (const statstring &ki, int val);
+
+						 /// Directly set a keyed attribute.
+						 /// \param ki Attribute's key.
+						 /// \param val Attribute's value.
+	void				 setattrib (const statstring &ki, const char *val);
+
+						 /// Directly set a keyed attribute.
+						 /// \param ki Attribute's key.
+						 /// \param val Attribute's value.
+	void				 setattrib (const statstring &ki, bool val);
+
+						 /// Set as an IPv4 address. Address is in host format.	
+	value				&setip (unsigned int);
+	value				&settime (const class timestamp &);
+	
+	value				&operator= (const value &v);
+	value				&operator= (value *v);
+	value				&operator= (class valuable &);
+	value				&operator= (class valuable *);
+	value				&operator= (const class ipaddress &);
+	value				&operator= (const class timestamp &);
+	value				&operator= (time_t);
+	value				&operator= (bool bval);
+	value				&operator= (long long dval);
+	value				&operator= (const class currency &c);
+	value				&operator= (class currency &c);
+	value				&operator= (unsigned long long val);
+	value				&operator= (const char *str);
+	value				&operator= (const unsigned char *str);
+	value				&operator= (const string &str);
+	value				&operator= (string *str);
+	value				&operator= (const statstring &str);
+	value				&operator= (statstring *str);
+	value				&operator= (int i);
+	value				&operator= (unsigned int i);
+	value				&operator= (double d);
+
+	value				&operator<< (value *v);
+	value				&operator<< (const value &v);
 
 	/// Cast as bool.
-	inline			 operator bool (void) const
-	{
-		return bval();
-	}
+	inline operator bool (void) const { return bval(); }
 	
 	/// Cast as 64 bits signed.
-	inline			 operator long long (void) const
-	{
-		return lval();
-	}
+	inline operator long long (void) const { return lval(); }
 	
 	/// Cast as 64 bits unsigned.
-	inline			 operator unsigned long long (void) const
-	{
-		return ulval();
-	}
+	inline operator unsigned long long (void) const { return ulval(); }
 	
 	/// Cast as int.
-	inline			 operator int (void) const
-	{
-		return ival();
-	}
+	inline operator int (void) const { return ival(); }
 	
 	/// Cast as unsigned int.
-	inline			 operator unsigned int (void) const
-	{
-		return uval();
-	}
+	inline operator unsigned int (void) const { return uval(); }
 	
 	/// Cast as const string.
-	inline			 operator const string & (void) const
-	{
-		return sval();
-	}
+	inline operator const string & (void) const { return sval(); }
 	
 	/// Cast as c string.
-	inline			 operator const char * (void) const
-	{
-		return cval();
-	}
+	inline operator const char * (void) const { return cval(); }
 	
 	/// Cast as double precision float.
-	inline			 operator double (void) const
-	{
-		return dval();
-	}
+	inline operator double (void) const { return dval(); }
 	
-	/// Assign to bool.
-	inline value	&operator= (bool bval)
-	{
-		cleararray ();
-		t.ival = bval ? 1 : 0;
-		itype = i_bool;
-		if (_type == t_unset) _type = t_bool;
-		return *this;
-	}
+						 /// Assign to a currency object.
+	void				 assign (const class currency &);
 	
-	/// Assign to 64 bits signed.
-	inline value	&operator= (long long dval)
-	{
-		cleararray ();
-		t.lval = dval;
-		itype = i_long;
-		if (_type == t_unset) _type = t_long;
-		return *this;
-	}
+						 /// Assign to a currency object.
+	void				 assign (class currency *);
 	
-	/// Assign to fixed point currency.
-	inline value	&operator= (const class currency &c)
-	{
-		assign (c);
-		return *this;
-	}
+						 /// Set the value as a fixed point decimal number
+						 /// with three digits behind the decimal point.
+	void				 setcurrency (long long cnew);
 	
-	/// Assign to fixed point currency.
-	inline value	&operator= (class currency &c)
-	{
-		assign (c);
-		return *this;
-	}
-	
-					 /// Assign to a currency object.
-	void			 assign (const class currency &);
-	
-					 /// Assign to a currency object.
-	void			 assign (class currency *);
-	
-	/// Assign to unsigned 64 bits.
-	inline value	&operator= (unsigned long long val)
-	{
-		cleararray ();
-		t.ulval = val;
-		itype = i_ulong;
-		if (_type == t_unset) _type = t_ulong;
-		return *this;
-	}
-	
-	/// Assign to c string.
-	inline value	&operator= (const char *str)
-	{
-		cleararray ();
-		s = str;
-		itype = i_string;
-		if (_type == t_unset) _type = t_string;
-		return *this;
-	}
-
-	inline value	&operator= (const unsigned char *str)
-	{
-		cleararray ();
-		s = str;
-		itype = i_string;
-		if (_type == t_unset) _type = t_string;
-		return *this;
-	}
-	
-	/// Assign to string.
-	inline value	&operator= (const string &str)
-	{
-		cleararray ();
-		s = str;
-		itype = i_string;
-		if (_type == t_unset) _type= t_string;
-		return *this;
-	}
-	
-	/// Assign to statstring.
-	inline value	&operator= (const statstring &str)
-	{
-		cleararray ();
-		s = str.sval();
-		itype = i_string;
-		if (_type == t_unset) _type= t_string;
-		return *this;
-	}
-
-	inline value	&operator= (statstring *str)
-	{
-		cleararray ();
-		s = str->sval();
-		itype = i_string;
-		if (_type == t_unset) _type= t_string;
-		delete str;
-		return *this;
-	}
-	
-	/// Set the value as a fixed point decimal number with three digits
-	/// behind the decimal point.
-	inline void		 setcurrency (long long cnew)
-	{
-		cleararray ();
-		t.lval = cnew;
-		itype = i_currency;
-		if (_type == t_unset) _type = t_currency;
-	}
-	
-	/// Get the value as a fixed point decimal number with three digits
-	/// behind the decimal point, giving a resolution of 0.1 cents of an
-	/// arbitrary currency.
-	inline long long getcurrency (void) const
-	{
-		switch (itype)
-		{
-			case i_currency:
-				return t.lval;
-			
-			case i_double:
-				return (unsigned long long) (t.dval * 1000.0);
-			
-			case i_string:
-				return parsecurrency (s);
-	
-			case i_int:
-				return (t.ival * 1000LL);
-			
-			case i_unsigned:
-				return ((long long)t.uval) * 1000LL;
-			
-			case i_long:
-			case i_ulong:
-				return t.lval * 1000LL;
-			
-			default:
-				return 0LL;
-		}
-		return 0LL; // unreachable
-	}
-	
-	/// Assign to retained string.
-	inline value	&operator= (string *str)
-	{
-		cleararray ();
-		// By assigning s to str, it will get pointer-nuked, plz not
-		// to nuke it again ktxfreind!
-		s = str;
-		itype = i_string;
-		if (_type == t_unset) _type = t_string;
-		return *this;
-	}
-	
-	/// Assign to int.
-	value	&operator= (int i)
-	{
-		cleararray ();
-		t.ival = i;
-		itype = i_int;
-		if (_type == t_unset) _type  = t_int;
-		return *this;
-		
-	}
-	
-	/// Assign to unsigned int.
-	inline value	&operator= (unsigned int i)
-	{
-		cleararray ();
-		t.uval = i;
-		itype = i_unsigned;
-		if (_type == t_unset) _type = t_unsigned;
-		return *this;
-	}
-	
-	/// Assign to double precision float.
-	inline value	&operator= (double d)
-	{
-		cleararray ();
-		t.dval = d;
-		itype = i_double;
-		if (_type == t_unset) _type  = t_double;
-		return *this;
-	}
-	
-	/// Merge children of other value into current tree.
-	inline value	&operator<< (value *v)
-	{
-		for (int i=0; i<(*v).count(); ++i)
-		{
-			(*this)[(*v)[i].name()] = (*v)[i];
-		}
-		delete v;
-		return *this;
-	}
-
-	/// Merge children of other value into current tree.
-	inline value	&operator<< (const value &v)
-	{
-		for (int i=0; i<v.count(); ++i)
-		{
-			(*this)[v[i].name()] = v[i];
-		}
-		return *this;
-	}
+						 /// Get the value as a fixed point decimal number with
+						 /// three digits behind the decimal point, giving a 
+						 /// resolution of 0.1 cents of an arbitrary currency.
+	long long			 getcurrency (void) const;
 	
 						 /// Cast as string object. 
 	const string		&sval (void) const;
@@ -715,323 +409,40 @@ public:
 						 /// Cast as boolean.
 	bool				 bval (void) const; 
 
-	/// Return registered type.
-	/// This can either be a statstring reflection of an intrinsic type
-	/// like "string" or "integer", but it can also be a custom 'class.
-	inline const statstring	 &type (void) const
-	{
-		return _type;
-	}
+						 /// Return registered type.
+						 /// This can either be a statstring reflection of
+						 /// an intrinsic type like "string" or "integer", 
+						 /// but it can also be a custom 'class'.
+	inline const statstring	 &type (void) const { return _type; }
 	
-	/// Set registered type string.
-	/// \param t The registered type (i.e. "string" or "myclass").
-	inline void		 type (const dtenum &t)
-	{
-		_type = t;
-	}
+						 /// Set type string.
+						 /// \param t The registered type (i.e. "string"
+						 /// or "myclass").
+	inline void			 type (const dtenum &t) { _type = t; }
 	
-	/// Return total child count.
-	inline int		 count (void) const
-	{
-		return arraysz;
-	}
+						 /// Return total child count.
+	inline int			 count (void) const { return arraysz; }
 		
-	/// Return count of numbered array members.
-	/// Only child nodes that have no key are counted.
-	inline int		 arraysize (void) const
-	{
-		return ucount;
-	}
+						 /// Return count of numbered array members.
+						 /// Only child nodes that have no key are counted.
+	inline int			 arraysize (void) const { return ucount; }
+
+	value				&operator+= (const string &str);
+	value				&operator+= (const value &v);
 	
-	/// Add unkeyed string child.
-	inline value &operator+= (const string &str)
-	{
-		newval() = str;
-		return (*this);
-	}
+	bool				 operator< (const value &other) const;
+	bool				 operator< (const value &other);
+	bool				 operator<= (const value &other) const;
+	bool				 operator<= (const value &other);
+	bool				 operator>= (const value &other) const;
+	bool				 operator>= (const value &other);
+	bool				 operator> (const value &other) const;
+	bool				 operator> (const value &other);
 	
-	/// Add keyed value as a child.
-	inline value &operator+= (value &v)
-	{
-		(*this)[v.name()] = v;
-		return (*this);
-	}
-	
-	/// Comparison by value.
-	inline bool operator< (const value &other) const
-	{
-		switch (other.itype)
-		{
-			case i_string:
-				return (::strcmp (cval(), other.cval()) <0);
-			case i_int:
-				return (ival() < other.ival());
-			case i_unsigned:
-			case i_date:
-				return (uval() < other.uval());
-			case i_currency:
-			case i_long:
-				return (lval() < other.lval());
-			case i_ulong:
-				return (ulval() < other.ulval());
-			
-			default:
-				return (dval() < other.dval());
-		}
-	}
-
-	/// Comparison by value.
-	inline bool operator< (const value &other)
-	{
-		switch (other.itype)
-		{
-			case i_string:
-				return (::strcmp (cval(), other.cval()) <0);
-			case i_int:
-				return (ival() < other.ival());
-			case i_unsigned:
-			case i_date:
-				return (uval() < other.uval());
-			case i_currency:
-			case i_long:
-				return (lval() < other.lval());
-			case i_ulong:
-				return (ulval() < other.ulval());
-			
-			default:
-				return (dval() < other.dval());
-		}
-	}
-
-	/// Comparison by value.
-	inline bool operator> (const value &other) const
-	{
-		switch (other.itype)
-		{
-			case i_string:
-				return (::strcmp (cval(), other.cval()) >0);
-			case i_int:
-				return (ival() > other.ival());
-			case i_unsigned:
-			case i_date:
-				return (uval() > other.uval());
-			case i_currency:
-			case i_long:
-				return (lval() > other.lval());
-			case i_ulong:
-				return (ulval() > other.ulval());
-			
-			default:
-				return (dval() > other.dval());
-		}
-	}
-
-	/// Comparison by value.
-	inline bool operator> (const value &other)
-	{
-		switch (other.itype)
-		{
-			case i_string:
-				return (::strcmp (cval(), other.cval()) >0);
-			case i_int:
-				return (ival() > other.ival());
-			case i_unsigned:
-			case i_date:
-				return (uval() > other.uval());
-			case i_currency:
-			case i_long:
-				return (lval() > other.lval());
-			case i_ulong:
-				return (ulval() > other.ulval());
-			
-			default:
-				return (dval() > other.dval());
-		}
-	}
-
-	/// Comparison by value.
-	inline bool operator<= (const value &other)
-	{
-		switch (other.itype)
-		{
-			case i_string:
-				return (::strcmp (cval(), other.cval()) <=0);
-			case i_int:
-				return (ival() <= other.ival());
-			case i_unsigned:
-			case i_date:
-				return (uval() <= other.uval());
-			case i_currency:
-			case i_long:
-				return (t.lval <= other.t.lval);
-			case i_ulong:
-				return (ulval() <= other.ulval());
-			
-			default:
-				return (dval() <= other.dval());
-		}
-	}
-
-	/// Comparison by value.
-	inline bool operator<= (const value &other) const
-	{
-		switch (other.itype)
-		{
-			case i_string:
-				return (::strcmp (cval(), other.cval()) <=0);
-			case i_int:
-				return (ival() <= other.ival());
-			case i_unsigned:
-			case i_date:
-				return (uval() <= other.uval());
-			case i_currency:
-			case i_long:
-				return (t.lval <= other.t.lval);
-			case i_ulong:
-				return (ulval() <= other.ulval());
-			
-			default:
-				return (dval() <= other.dval());
-		}
-	}
-
-	/// Comparison by value.
-	inline bool operator>= (const value &other) const
-	{
-		switch (other.itype)
-		{
-			case i_string:
-				return (::strcmp (cval(), other.cval()) >=0);
-			case i_int:
-				return (ival() >= other.ival());
-			case i_unsigned:
-			case i_date:
-				return (uval() >= other.uval());
-			case i_currency:
-			case i_long:
-				return (t.lval >= other.t.lval);
-			case i_ulong:
-				return (ulval() >= other.ulval());
-			
-			default:
-				return (dval() >= other.dval());
-		}
-	}
-
-	/// Comparison by value.
-	inline bool operator>= (const value &other)
-	{
-		switch (other.itype)
-		{
-			case i_string:
-				return (::strcmp (cval(), other.cval()) >=0);
-			case i_int:
-				return (ival() >= other.ival());
-			case i_unsigned:
-			case i_date:
-				return (uval() >= other.uval());
-			case i_currency:
-			case i_long:
-				return (t.lval >= other.t.lval);
-			case i_ulong:
-				return (ulval() >= other.ulval());
-			
-			default:
-				return (dval() >= other.dval());
-		}
-	}
-
-	/// Comparison by value.
-	inline bool operator== (const value &other) const
-	{
-		switch (other.itype)
-		{
-			case i_string:
-				return (::strcmp (cval(), other.cval()) ==0);
-			case i_int:
-				return (ival() == other.ival());
-			case i_unsigned:
-			case i_date:
-				return (uval() == other.uval());
-			case i_currency:
-			case i_long:
-				return (t.lval == other.t.lval);
-			case i_ulong:
-				return (ulval() == other.ulval());
-			
-			default:
-				return (dval() == other.dval());
-		}
-	}
-
-	/// Comparison by value.
-	inline bool operator== (const value &other)
-	{
-		switch (other.itype)
-		{
-			case i_string:
-				return (::strcmp (cval(), other.cval()) ==0);
-			case i_int:
-				return (ival() == other.ival());
-			case i_unsigned:
-			case i_date:
-				return (uval() == other.uval());
-			case i_currency:
-			case i_long:
-				return (t.lval == other.t.lval);
-			case i_ulong:
-				return (ulval() == other.ulval());
-			
-			default:
-				return (dval() == other.dval());
-		}
-	}
-
-	/// Comparison by value.
-	inline bool operator!= (const value &other) const
-	{
-		switch (other.itype)
-		{
-			case i_string:
-				return (::strcmp (cval(), other.cval()) !=0);
-			case i_int:
-				return (ival() != other.ival());
-			case i_unsigned:
-			case i_date:
-				return (uval() != other.uval());
-			case i_currency:
-			case i_long:
-				return (t.lval != other.t.lval);
-			case i_ulong:
-				return (ulval() != other.ulval());
-			
-			default:
-				return (dval() != other.dval());
-		}
-	}
-
-	/// Comparison by value.
-	inline bool operator!= (const value &other)
-	{
-		switch (other.itype)
-		{
-			case i_string:
-				return (::strcmp (cval(), other.cval()) !=0);
-			case i_int:
-				return (ival() != other.ival());
-			case i_unsigned:
-			case i_date:
-				return (uval() != other.uval());
-			case i_currency:
-			case i_long:
-				return (t.lval != other.t.lval);
-			case i_ulong:
-				return (ulval() != other.ulval());
-			
-			default:
-				return (dval() != other.dval());
-		}
-	}
+	bool				 operator== (const value &other) const;
+	bool				 operator== (const value &other);
+	bool				 operator!= (const value &other) const;
+	bool				 operator!= (const value &other);
 
 	/// Case sensitive compare to c string.
 	inline bool operator== (const char *other) const
