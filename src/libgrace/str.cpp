@@ -10,6 +10,7 @@
 
 #include <grace/str.h>
 #include <grace/regexpression.h>
+#include <grace/defaults.h>
 
 #include <string.h>
 #include <unistd.h>
@@ -1632,6 +1633,12 @@ void string::crop (int sz)
 	
 	if (size > (unsigned int) _sz)
 	{
+		if ((size - _sz) < tune::str::cropcopylimit)
+		{
+			size = _sz;
+			return;
+		}
+		
 		if (data->refcount)
 		{
 			refblock *newdata = (refblock *) malloc ((size_t) alloc);

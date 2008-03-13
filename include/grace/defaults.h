@@ -162,7 +162,17 @@ namespace tune
 		/// \var int tune::tcplistener::backlog
 		/// Maximum backlog [32].
 		parameter int backlog defaultvalue (32);
-	}	
+	}
+	
+	/// String management options
+	namespace str
+	{
+		/// \var int tune::str::cropcopylimit
+		/// Maximum difference between old and new size that will
+		/// allow strutil::crop() to only resize a reference and
+		/// not make a fresh copy.
+		parameter int cropcopylimit defaultvalue (1024);
+	}
 	
 	/// Tuning settings for the smtpd.
 	namespace smtpd
