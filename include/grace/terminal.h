@@ -26,6 +26,8 @@
 #define KEYCODE_WORDLEFT 2
 #define KEYCODE_ESCAPE 27
 #define KEYCODE_RETURN 10
+#define KEYCODE_HISTORYNEXT 14
+#define KEYCODE_HISTORYPREV 16
 
 typedef void (*tbidlecb)(void *);
 
@@ -481,6 +483,14 @@ public:
 					
 					case KEYCODE_WORDRIGHT:
 						termbuf.wordright();
+						break;
+						
+					case KEYCODE_HISTORYNEXT:
+						termbuf.crdown();
+						break;
+					
+					case KEYCODE_HISTORYPREV:
+						termbuf.crup();
 						break;
 						
 					case KEYCODE_ESCAPE:
