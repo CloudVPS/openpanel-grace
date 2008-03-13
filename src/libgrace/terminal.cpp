@@ -614,7 +614,7 @@ void cliutil::splitwords (const string &src, int atpos, value &into)
 	}
 	
 	while (i<into.count()) into.rmindex (i);
-	if ( (atpos>0) && (src[atpos-1] == ' ') ) into.newval() == "";
+	//if ( (atpos>0) && (src[atpos-1] == ' ') ) into.newval() == "";
 }
 
 // ==========================================================================
