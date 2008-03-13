@@ -2634,8 +2634,6 @@ string *string::cutafter (const string &s)
 	if (pos < 0) return NULL;
 	
 	res = mid (pos+s.strlen());
-	docopyonwrite();
-	data->v[offs+pos] = 0;
 	size = pos;
 	return res;
 }
@@ -2649,8 +2647,6 @@ string *string::cutafter (char c)
 	if (pos < 0) return NULL;
 	
 	res = mid (pos+1);
-	docopyonwrite();
-	data->v[offs+pos] = 0;
 	size = pos;
 	return res;
 }
@@ -2675,8 +2671,6 @@ string *string::cutafterlast (const string &s)
 	}
 	
 	res = mid (pos+s.strlen());
-	docopyonwrite();
-	data->v[offs+pos] = 0;
 	size = pos;
 	return res;
 }
@@ -2698,8 +2692,6 @@ string *string::cutafterlast (char c)
 	}
 	
 	res = mid (pos+1);
-	docopyonwrite();
-	data->v[offs+pos] = 0;
 	size = pos;
 	return res;
 }
@@ -2717,14 +2709,14 @@ void string::chomp (void)
 	if (! data) return;
 	if (! size) return;
 
-	while ((left<=right)&&(isspace (data->v[left]))) left++;
+	while ((left<=right)&&(isspace (data->v[offs+left]))) left++;
 	if (left > right)
 	{
 		crop();
 		return;
 	}
 	
-	while ((right>=left)&&(isspace (data->v[right]))) right--;
+	while ((right>=left)&&(isspace (data->v[offs+right]))) right--;
 	if (left > right)
 	{
 		crop();
@@ -2732,7 +2724,7 @@ void string::chomp (void)
 	}
 	
 	right++;
-	offs = left;
+	offs += left;
 	size = right-left;
 }
 
@@ -2913,18 +2905,16 @@ string *string::cutat (char c)
 	int isthere = strchr (c);
 	if (isthere < 0) return &res;
 	
-	res = *this;
-	docopyonwrite();
-	res.crop (isthere);
+	res = left (isthere);
 	
 	if (((unsigned int) isthere+1) >= size )
 	{
-	   data->v[0] = size = 0;
+	   crop ();
 	   return &res;
 	}
-	memmove (data->v+offs, data->v + offs+isthere+1, size - (isthere+1));
+	
+	offs += (isthere+1);
 	size -= (isthere+1);
-	data->v[offs+size] = '\0';
 	return &res;
 }
 
@@ -2937,18 +2927,16 @@ string *string::cutat (const char *c)
 	int isthere = strstr (c);
 	if (isthere < 0) return &res;
 	
-	res = *this;
-	res.crop (isthere);
-	docopyonwrite();
+	res = left (isthere);
 	
-	if ( ((unsigned int)isthere+1) >= size )
+	if ( ((unsigned int)isthere+ssz) >= size )
 	{
-		data->v[0] = size = 0;
+		crop ();
 		return &res;
 	}
-	memmove (data->v + offs, data->v + offs + isthere+ssz, size - (isthere+ssz));
-	size -= (isthere+ssz);
-	data->v[offs+size] = '\0';
+	
+	offs += (isthere + ssz);
+	size -= (isthere + ssz);
 	return &res;
 }
 
@@ -2966,19 +2954,17 @@ string *string::cutatlast (char c)
 	
 	while ( (nextmatch = strchr (c, isthere+1)) >= 0 )
 		isthere = nextmatch;
-		
-	res = *this;
-	docopyonwrite();
-	res.crop (isthere);
+	
+	res = left (isthere);
 	
 	if ( ((unsigned int)isthere+1) >= size )
 	{
-		data->v[0] = size = 0;
+		crop ();
 		return &res;
 	}
-	memmove (data->v+offs, data->v + offs + isthere+1, size - (isthere+1));
-	size -= (isthere+1);
-	data->v[offs+size] = '\0';
+	
+	offs += (isthere + 1);
+	size -= (isthere + 1);
 	return &res;
 }
 
@@ -2995,19 +2981,16 @@ string *string::cutatlast (const char *c)
 	while ( (nextmatch = strstr (c, isthere+1))	>0 )
 		isthere = nextmatch;
 		
-	res = *this;
-	res.crop (isthere);
-	docopyonwrite();
+	res = left (isthere);
 	
-	if ( ((unsigned int)isthere+1) >= size )
+	if ( ((unsigned int)isthere+ssz) >= size )
 	{
-		data->v[0] = size = 0;
+		crop ();
 		return &res;
 	}
 	
-	memmove (data->v+offs, data->v + offs + isthere+ssz, size - (isthere+ssz));
-	size -= (isthere+ssz);
-	data->v[size+offs] = '\0';
+	offs += (isthere + ssz);
+	size -= (isthere + ssz);
 	return &res;
 }
 

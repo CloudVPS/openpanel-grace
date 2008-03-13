@@ -131,7 +131,7 @@ int strutil1App::main (void)
 	
 	v = strutil::parsenv (nvs);
 	
-	if (v["name"] != "John") FAIL("parsenv1");
+	if (v["name"] != "John") FAIL("parsenv1: %s" %format (v["name"]));
 	if (v["address"] != "1 Brick Road") FAIL("parsenv2");
 	if (v["type"] != "upper class") FAIL("parsenv3");
 	if (v["answer"] != "42") FAIL("parsenv4");

@@ -516,6 +516,7 @@ value *strutil::parsenv (const string &line, char split, char nvsplit)
 		
 		left.chomp ();
 		right.chomp ();
+
 		if ((right[0] == '\"') && (right[-1] == '\"'))
 		{
 			for (int i=1; i<right.strlen()-1; ++i)
@@ -525,6 +526,7 @@ value *strutil::parsenv (const string &line, char split, char nvsplit)
 			}
 		}
 		else val = right;
+
 		
 		res[left] = val;
 	}
