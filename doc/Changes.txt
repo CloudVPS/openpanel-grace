@@ -1,3 +1,12 @@
+0.9.16     Thu Mar 13 2008                           <grace@openpanel.com>
+
+           * A string object can now contain a substring of another
+             string object without keeping a private copy.
+             
+           * Added support for Bitvise Tunnelier's braindead interpretation
+             of vt100/xterm emulation (sending <ESC>+'O' where grownups
+             send <ESC>+'[').
+
 0.9.15     Wed Mar 12 2008                           <grace@openpanel.com>
 
            * Got rid of some more inlining mess.
