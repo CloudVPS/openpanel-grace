@@ -609,7 +609,7 @@ void cliutil::splitwords (const string &src, int atpos, value &into)
 		tsz += v.strlen() + 1;
 		if (v.strchr (' ') >= 0)
 		{
-			if (v.strchr ('\"') < 0) tsz += 2;
+			if ((v.strchr ('\"') < 0) && (v.strchr ('\'') < 0)) tsz += 2;
 		}
 	}
 	
