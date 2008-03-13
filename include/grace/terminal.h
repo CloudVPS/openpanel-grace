@@ -543,7 +543,7 @@ public:
 							}
 							else
 							{
-								termbuf.insert ("^[");
+								termbuf.insert ("^[[");
 								termbuf.insert (kib);
 								termbuf.insert (kic);
 							}
