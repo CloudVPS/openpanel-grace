@@ -170,7 +170,6 @@ int stringtestApp::main (void)
 	tstr = " \n\tHELLOW\nWORLD\n\t";
 	tstr = tstr.ltrim ("\n\t ");
 	if(tstr != "HELLOW\nWORLD\n\t") {
-		sleep (10);
 		FAIL("ltrim: %S" %format(tstr));
 	}
 	
