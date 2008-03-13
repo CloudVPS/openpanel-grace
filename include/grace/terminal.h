@@ -498,6 +498,10 @@ public:
 						else
 						{
 							kic = termbuf.getkey();
+							// skip useless xterm 'O' escape disguising
+							// a proper cursor movement.
+							if (kic == 'O') kic = termbuf.getkey();
+							
 							if (kic == 'C') termbuf.crright();
 							else if (kic == 'D') termbuf.crleft();
 							else if (kic == 'A') termbuf.crup();
