@@ -1635,6 +1635,7 @@ void string::crop (int sz)
 	{
 		if ((size - _sz) < tune::str::cropcopylimit)
 		{
+			if (sz<0) offs = (size - _sz);
 			size = _sz;
 			return;
 		}
