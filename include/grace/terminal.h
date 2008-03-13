@@ -495,7 +495,7 @@ public:
 						
 					case KEYCODE_ESCAPE:
 						kib = termbuf.getkey();
-						if (kib != '[')
+						if ((kib != '[') && (kib != 'O'))
 						{
 							if (kib == 'f') termbuf.wordright();
 							else if (kib == 'b') termbuf.wordleft();
@@ -508,9 +508,6 @@ public:
 						else
 						{
 							kic = termbuf.getkey();
-							// skip useless xterm 'O' escape disguising
-							// a proper cursor movement.
-							if (kic == 'O') kic = termbuf.getkey();
 							
 							if (kic == 'C') termbuf.crright();
 							else if (kic == 'D') termbuf.crleft();
