@@ -1517,7 +1517,7 @@ int string::strncmp (const string &s, int sz) const
 	
 	METASTRCMP((int)data->v[offs+i],
 			   (int)s.data->v[s.offs+i],
-			   i>=size, i>=rsz);
+			   (i>=size)||(i>=rsz), i>=rsz);
 }
 
 // ========================================================================

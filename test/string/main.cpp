@@ -150,6 +150,12 @@ int stringtestApp::main (void)
 		FAIL("chomp2: '%s'" %format (tstr));
 	}
 	
+	tstr = "hello there";
+	if (tstr.strncmp ("hello",5))
+	{
+		FAIL ("strncmp: %i" %format (tstr.strncmp ("hello",5)));
+	}
+	
 	tstr = "AB-CD";
 	tstr = tstr.stripchar ('-');
 	if(tstr != "ABCD") FAIL("stripchar");
