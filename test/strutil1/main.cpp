@@ -17,7 +17,7 @@ public:
 
 APPOBJECT(strutil1App);
 
-#define FAIL(bar) { ferr.printf (bar); return 1; }
+#define FAIL(bar) { ferr.writeln (bar); return 1; }
 
 int strutil1App::main (void)
 {
@@ -136,6 +136,13 @@ int strutil1App::main (void)
 	if (v["type"] != "upper class") FAIL("parsenv3");
 	if (v["answer"] != "42") FAIL("parsenv4");
 	if (v["test"] != "1;2;3") FAIL("parsenv5");
+	
+	splitme = "          inet addr:10.90.90.240  Bcast:10.90.90.255  Mask:255.255.255.0";
+	v = strutil::splitspace (splitme);
+	
+	string ip = v[1];
+	ip.cropafterlast (':');
+	if (ip != "10.90.90.240") FAIL ("cropafterlast: %s" %format (ip));
 	
 	return 0;
 }
