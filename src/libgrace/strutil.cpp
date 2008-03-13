@@ -240,7 +240,10 @@ value *strutil::splitquoted (const string &str, char s, bool forxml)
 	
 	char quot = 0;
 	
-	if (! str.strlen()) return &res;
+	if (! str.strlen())
+	{
+		return &res;
+	}
 	
 	while (right <= sz)
 	{

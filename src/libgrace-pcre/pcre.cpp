@@ -180,12 +180,13 @@ string *pcregexp::replace (const string &_orig, const string &with,
 		{
 			res.strcat (with);
 		}
-		
+
 		if (thevector[1] < orig.strlen())
 		{
 			res.strcat (orig.mid (thevector[1]));
 		}
 	}
+	
 	
 	return &res;
 }

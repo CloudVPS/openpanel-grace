@@ -79,7 +79,7 @@ int stringtestApp::main (void)
 	
 	tstr.escape();
 	tstr.unescape();
-	if (tstr != XMLSTR) FAIL("escape-unescape");
+	if (tstr != XMLSTR) FAIL("escape-unescape: '%s'" %format (tstr));
 	
 	string result;
 
@@ -169,11 +169,14 @@ int stringtestApp::main (void)
 	// Test trimming
 	tstr = " \n\tHELLOW\nWORLD\n\t";
 	tstr = tstr.ltrim ("\n\t ");
-	if(tstr != "HELLOW\nWORLD\n\t") FAIL("ltrim");
+	if(tstr != "HELLOW\nWORLD\n\t") {
+		sleep (10);
+		FAIL("ltrim: %S" %format(tstr));
+	}
 	
 	//Right trim
 	tstr = tstr.rtrim ("\n\t ");
-	if(tstr != "HELLOW\nWORLD") FAIL("rtrim");
+	if(tstr != "HELLOW\nWORLD") FAIL("rtrim: %S" %format (tstr));
 	
 		// Test trimming
 	tstr = " \n\tHELLOW\nWORLD\n\t";
@@ -238,6 +241,10 @@ int stringtestApp::main (void)
 	string mid = "lameass:sukzor";
 	mid = mid.copyuntil (":sukzor");
 	if (mid != "lameass") FAIL ("assign-copyuntil");
+
+	tstr = "HELO localhost";
+	int ires;
+	if ((ires=tstr.strncasecmp ("HELO ", 5) != 0)) FAIL("strncasecmp %i" %format (ires));
 	
 	return 0;
 }

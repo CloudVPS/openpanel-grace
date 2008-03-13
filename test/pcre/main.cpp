@@ -18,13 +18,13 @@ public:
 
 APPOBJECT(pcretestApp);
 
-#define FAIL(foo) { ferr.printf (foo "\n"); return 1; }
+#define FAIL(foo) { ferr.writeln (foo); return 1;}
 
 int pcretestApp::main (void)
 {
 	pcregexp RE_A ("^(one|two|three) (one|two|three)$");
 	string t = RE_A.replace ("one two","\\2 \\1");
-	if (t != "two one") FAIL ("replace backref");
+	if (t != "two one") FAIL ("replace backref: %s" %format (t));
 	
 	pcregexp RE_B (".*lam.*");
 	if (! RE_B.match ("klamboe")) FAIL ("matchpositive");

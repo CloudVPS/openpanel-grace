@@ -35,9 +35,10 @@ int strutil1App::main (void)
 	splitme = "one two three four";
 	
 	v = strutil::splitspace (splitme);
-	if (v[0] != "one") FAIL("splitspace");
-	if (v[1] != "two") FAIL("splitspace");
-	if (v[3] != "four") FAIL("splitspace");
+	const string &sss = v[0].sval();
+	if (v[0] != "one") FAIL("splitspace1");
+	if (v[1] != "two") FAIL("splitspace2");
+	if (v[3] != "four") FAIL("splitspace3");
 	
 	splitme = "one,two,three,four";
 	v = strutil::split (splitme, ',');

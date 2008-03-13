@@ -142,9 +142,9 @@ public:
 					 	if (n < 0)
 					 	{
 					 		if ((-n) > ((int)size)) return 0;
-					 		return data->v[size+n];
+					 		return data->v[offs+size+n];
 					 	}
-						return data->v[n];
+						return data->v[offs+n];
 					 }
 					 
 	inline char &operator[] (int n)
@@ -160,10 +160,10 @@ public:
 					 	if (n < 0)
 					 	{
 					 		if ((-n) > ((int)size)) return nul;
-					 		return data->v[size+n];
+					 		return data->v[offs+size+n];
 					 	}
 					 	
-						return data->v[n];
+						return data->v[offs+n];
 					 }
 					 //@}
 					 	
@@ -234,6 +234,7 @@ public:
 					 		crop (0);
 					 		return *this;
 					 	}
+					 	
 					 	strcpy (*str);
 					 	delete str;
 						return *this;
@@ -298,9 +299,7 @@ public:
 					 /// Cast to c-string.
 	inline			 operator const char * (void) const
 					 {
-					 	if (data)
-							return data->v;
-						return (const char *) "";
+					 	return str();
 					 }
 	
 	// --------------------------------------------------------------------
@@ -658,24 +657,31 @@ public:
 						 	 
 							 refblock *old = data;
 							 data = (refblock *) malloc ((size_t) alloc);
-							 bcopy (old->v, data->v, size);
+							 bcopy (old->v+offs, data->v, size);
 							 old->refcount--;
 							 data->refcount = 0;
 							 data->v[size] = 0;
 							 data->threadref = me;
+							 offs = 0;
 						 }
 					 }
 					 
 					 /// Cast to c string.
 	inline const char *str (void) const
 					 {
-					 	return (data ? data->v : "");
+					 	if (data && data->v[offs+size])
+					 	{
+						 	string *o = (string *) this;
+					 		o->docopyonwrite ();
+						 	if (data) o->data->v[offs+size] = 0;
+						}
+					 	return (data ? data->v+offs : "");
 					 }
 					 
 					 /// Cast to c string (alternative name).
 	inline const char *cval (void) const
 					 {
-						 return (data ? data->v : "");
+					 	return str();
 					 }
 
 					 /// Validate string against a set of 'legal' characters.
@@ -920,7 +926,7 @@ public:
 					 {
 						docopyonwrite();
 					 	for (unsigned int i=0; i<size; ++i)
-							data->v[i] = tolower (data->v[i]);
+							data->v[offs+i] = tolower (data->v[offs+i]);
 					 }
 					 
 					 /// Convert buffer to upper case.
@@ -928,7 +934,7 @@ public:
 					 {
 						docopyonwrite();
 					 	for (unsigned int i=0; i<size; ++i)
-							data->v[i] = toupper (data->v[i]);
+							data->v[offs+i] = toupper (data->v[offs+i]);
 					 }
 	
 					 /// Make lowercase copy.
@@ -951,7 +957,7 @@ public:
 	void			 capitalize (void)
 					 {
 					 	ctolower();
-					 	data->v[0] = toupper (data->v[0]);
+					 	data->v[offs] = toupper (data->v[offs]);
 					 }
 					 
 					 /// Cast to integer.
@@ -970,6 +976,7 @@ public:
 
 protected:
 	unsigned int	 size; ///< Size of the string data.
+	unsigned int	 offs; ///< Offset of the string in the data block.
 	unsigned int	 alloc; ///< Allocated array size.
 	refblock		*data; ///< Reference block for our string data.
 	

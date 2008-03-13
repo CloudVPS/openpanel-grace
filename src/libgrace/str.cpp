@@ -133,6 +133,7 @@ string::string (unsigned int sz) : retainable()
 {
 	data = NULL;
 	size = 0;
+	offs = 0;
 	alloc = sz + sizeof (refblock);
 	data = (refblock *) malloc ((size_t) alloc);
 	data->refcount = 0;
@@ -153,6 +154,7 @@ string::string (const char *s) : retainable()
 	{
 		// Copy the c-string
 		
+		offs = 0;
 		size = ::strlen (s);
 		alloc = GROW(size+1+sizeof (refblock));
 		data = (refblock *) malloc ((size_t) alloc);
@@ -166,6 +168,7 @@ string::string (const char *s) : retainable()
 	
 		size = 0;
 		alloc = 0;
+		offs = 0;
 		data = NULL;
 	}
 }
@@ -182,7 +185,7 @@ string::string (const unsigned char *ss)
 	if (s != NULL)
 	{
 		// Copy the c-string
-		
+		offs = 0;
 		size = ::strlen (s);
 		alloc = GROW(size+1+sizeof (refblock));
 		data = (refblock *) malloc ((size_t) alloc);
@@ -195,6 +198,7 @@ string::string (const unsigned char *ss)
 		// Allocate as empty
 	
 		size = 0;
+		offs = 0;
 		alloc = 0;
 		data = NULL;
 	}
@@ -212,6 +216,7 @@ string::string (const string &s) : retainable()
 	// Verify the string is not empty
 	size = 0;
 	alloc = 0;
+	offs = 0;
 	data = NULL;
 	
 	if ((size = s.strlen()))
@@ -223,6 +228,7 @@ string::string (const string &s) : retainable()
 			strclone (s);
 			return;
 		}
+		offs = s.offs;
 		alloc = s.alloc;
 		size = s.size;
 		data = s.data;
@@ -233,6 +239,7 @@ string::string (const string &s) : retainable()
 		// Allocate as empty
 	
 		size = 0;
+		offs = 0;
 		alloc = 0;
 		data = NULL;
 	}
@@ -250,6 +257,7 @@ string::string (const statstring &s) : retainable()
 	size = 0;
 	alloc = 0;
 	data = NULL;
+	offs = 0;
 	
 	if (s && (size = s.sval().strlen()))
 	{
@@ -269,6 +277,7 @@ string::string (const statstring &s) : retainable()
 		alloc = s.sval().alloc;
 		size = s.sval().size;
 		data = s.sval().data;
+		offs = s.sval().offs;
 		data->refcount++;
 		data->threadref = me;
 	}
@@ -294,11 +303,12 @@ string::string (string *s) : retainable()
 		size = s->size;
 		alloc = s->alloc;
 		data = s->data;
+		offs = s->offs;
 		destroyvalue (s);
 	}
 	else
 	{
-		size = alloc = 0;
+		size = alloc = offs = 0;
 		data = NULL;
 		if (s) delete s;
 	}
@@ -642,18 +652,20 @@ CONTINUE:;
 void string::escape (void)
 {
 	unsigned char c;
-	int   old_size;
+	unsigned int   old_size, old_offs;
 	refblock *old_data = data;
 	old_size = size;
+	old_offs = offs;
 	
 	if (old_data)
 	{
 		data = NULL;
 		size = 0;
 		alloc = 0;
+		offs = 0;
 		for (int i=0; i<old_size; ++i)
 		{
-			c = (unsigned char) old_data->v[i];
+			c = (unsigned char) old_data->v[i+old_offs];
 			if ( (c=='%') || (c=='\\') || (c=='\"') || (c=='\'') )
 			{
 				strcat ('\\');
@@ -663,11 +675,11 @@ void string::escape (void)
 			{
 				strcat ('\\');
 				strcat ('n');
-				if (old_data->v[i+1]=='\r') ++i;
+				if (old_data->v[i+old_offs+1]=='\r') ++i;
 			}
 			else if (c=='\r')
 			{
-				if (old_data->v[i+1] != '\n')
+				if (old_data->v[i+old_offs+1] != '\n')
 				{
 					strcat ('\\');
 					strcat ('r');
@@ -698,9 +710,10 @@ void string::escape (void)
 void string::escapexml (void)
 {
 	unsigned char c;
-	int   old_size;
+	unsigned int old_size, old_offs;
 	refblock *old_data = data;
 	old_size = size;
+	old_offs = offs;
 	
 	if (old_data)
 	{
@@ -709,7 +722,7 @@ void string::escapexml (void)
 		alloc = 0;
 		for (int i=0; i<old_size; ++i)
 		{
-			c = (unsigned char) old_data->v[i];
+			c = (unsigned char) old_data->v[i+old_offs];
 			if (c == '&')
 			{
 				strcat ("&amp;");
@@ -750,21 +763,23 @@ void string::escapexml (void)
 void string::unescapexml (void)
 {
 	char c;
-	int   old_size;
+	unsigned int old_size, old_offs;
 	refblock *old_data = data;
 	old_size = size;
+	old_offs = offs;
 	
 	if (old_data)
 	{
 		data = NULL;
 		size = 0;
 		alloc = 0;
+		offs = 0;
 		for (int i=0; i<old_size; ++i)
 		{
-			c = old_data->v[i];
+			c = old_data->v[i+old_offs];
 			if (c == '&')
 			{
-				#define DAT(foo) (((i+foo)<old_size) ? old_data->v[i+foo] : 0)
+				#define DAT(foo) (((i+foo)<old_size) ? old_data->v[i+old_offs+foo] : 0)
 				
 				if ( (DAT(1) == 'a') &&
 					 (DAT(2) == 'm') &&
@@ -791,7 +806,7 @@ void string::unescapexml (void)
 				else if ( (DAT(1) == '#') &&
 						  (DAT(3) == ';') )
 				{
-					c = ::atoi (old_data->v+(i+2));
+					c = ::atoi (old_data->v+old_offs+(i+2));
 						 
 					strcat (c);
 					i+=3;
@@ -799,7 +814,7 @@ void string::unescapexml (void)
 				else if ( (DAT(1) == '#') &&
 						  (DAT(4) == ';') )
 				{
-					c = ::atoi (old_data->v+(i+2));
+					c = ::atoi (old_data->v+old_offs+(i+2));
 						 
 					strcat (c);
 					i+=4;
@@ -807,7 +822,7 @@ void string::unescapexml (void)
 				else if ( (DAT(1) == '#') &&
 						  (DAT(5) == ';') )
 				{
-					c = ::atoi (old_data->v+(i+2));
+					c = ::atoi (old_data->v+old_offs+(i+2));
 						 
 					strcat (c);
 					i+=5;
@@ -853,9 +868,10 @@ void string::unescapexml (void)
 void string::unescape (void)
 {
 	char c;
-	int   old_size;
+	unsigned int old_size, old_offs;
 	refblock *old_data = data;
 	old_size = size;
+	old_offs = offs;
 	
 	if (old_data)
 	{
@@ -864,18 +880,18 @@ void string::unescape (void)
 		alloc = 0;
 		for (int i=0; i<old_size; ++i)
 		{
-			c = old_data->v[i];
+			c = old_data->v[i+old_offs];
 			if (c == '%')
 			{
-				if (old_data->v[i+1] == '%')
+				if (old_data->v[i+old_offs+1] == '%')
 				{
 					strcat ('%');
 					++i;
 				}
 				else if (i+2 < old_size)
 				{
-					c = (fromhex (old_data->v[i+1]) << 4) +
-						 fromhex (old_data->v[i+2]);
+					c = (fromhex (old_data->v[i+old_offs+1]) << 4) +
+						 fromhex (old_data->v[i+old_offs+2]);
 						 
 					strcat (c);
 					i+=2;
@@ -885,7 +901,7 @@ void string::unescape (void)
 			{
 				if (i+1 < old_size)
 				{
-					switch (old_data->v[i+1])
+					switch (old_data->v[i+old_offs+1])
 					{
 						case 'r':
 							strcat ('\r');
@@ -898,7 +914,7 @@ void string::unescape (void)
 							break;
 							
 						default:
-							strcat (old_data->v[i+1]);
+							strcat (old_data->v[i+old_offs+1]);
 						    ++i;
 							break;
 					}
@@ -932,11 +948,12 @@ void string::strcat (char s)
 		if (data->refcount)
 		{
 			refblock *newdata = (refblock *) malloc ((size_t) alloc);
-			bcopy (data, newdata, alloc);
+			bcopy (data->v+offs, newdata->v, size+1);
 			newdata->refcount = 0;
 			data->refcount--;
 			data = newdata;
 			data->threadref = getref();
+			offs = 0;
 		}
 		
 		++size;
@@ -954,33 +971,14 @@ void string::strcat (char s)
 			
 			// Is this a copy-on-write refblock?
 			
-			if (data->refcount)
-			{
-				// Copy
-			
-				refblock *old = data;
-				
-				data = (refblock *)
-							malloc ((size_t) alloc);
-							
-				bcopy (data->v, old->v, size);
-				old->refcount--;
-				data->refcount = 0;
-				data->threadref = getref();
-			}
-			else
-			{
-				// Enlarge
-				
 				data = (refblock *)
 					realloc (data, (size_t) alloc);
-			}
 		}
 		
 		// Append new data
 		
-		data->v[size-1] = s;
-		data->v[size] = '\0';
+		data->v[offs+size-1] = s;
+		if (! data->refcount) data->v[offs+size] = '\0';
 	}
 	else
 	{
@@ -991,6 +989,7 @@ void string::strcat (char s)
 		if (alloc<16) alloc = 16;
 		data = (refblock *) malloc ((size_t) alloc);
 		size = 1;
+		offs = 0;
 		data->refcount = 0;
 		data->threadref = getref();
 		data->v[0] = s;
@@ -1010,11 +1009,12 @@ void string::insert (const string &s)
 		if (data->refcount)
 		{
 			refblock *newdata = (refblock *) malloc ((size_t) alloc);
-			bcopy (data, newdata, alloc);
+			bcopy (data->v+offs, newdata->v, size+1);
 			newdata->refcount = 0;
 			data->refcount--;
 			data = newdata;
 			data->threadref = getref();
+			offs = 0;
 		}
 		
 		unsigned int oldsize = size;
@@ -1028,10 +1028,10 @@ void string::insert (const string &s)
 		}
 		
 		if (oldsize)
-			memmove (data->v + newsize, data->v, oldsize);
+			memmove (data->v + offs + newsize, data->v + offs, oldsize);
 			
 		if (newsize)
-			memmove (data->v, s.str(), newsize);
+			memmove (data->v + offs, s.str(), newsize);
 			
 		data->v[size] = '\0';
 	}
@@ -1058,11 +1058,12 @@ void string::strcat (const string &s)
 		if (data->refcount)
 		{
 			refblock *newdata = (refblock *) malloc ((size_t) alloc);
-			bcopy (data, newdata, alloc);
+			bcopy (data->v+offs, newdata->v, size+1);
 			newdata->refcount = 0;
 			data->refcount--;
 			data = newdata;
 			data->threadref = getref();
+			offs = 0;
 		}
 		
 		unsigned int oldsize = size;
@@ -1074,7 +1075,7 @@ void string::strcat (const string &s)
 			data = (refblock *) realloc (data, alloc);
 		}
 		
-		memmove (data->v + oldsize, s.str(), s.strlen());
+		memmove (data->v + offs + oldsize, s.str(), s.strlen());
 		data->v[size] = '\0';
 	}
 	else
@@ -1111,11 +1112,12 @@ void string::strcat (const char *s, size_t sz)
 	if (data && data->refcount)
 	{
 		refblock *newdata = (refblock *) malloc ((size_t) alloc);
-		bcopy (data, newdata, alloc);
+		bcopy (data->v+offs, newdata->v, size+1);
 		newdata->refcount = 0;
 		data->refcount--;
 		data = newdata;
 		data->threadref = getref();
+		offs = 0;
 	}
 	
 	unsigned int oldsize = size;
@@ -1132,7 +1134,7 @@ void string::strcat (const char *s, size_t sz)
 			data->threadref = getref();
 		}
 	}
-	memmove (data->v + oldsize, s, sz);
+	memmove (data->v + offs + oldsize, s, sz);
 	data->v[size] = '\0';
 }
 
@@ -1156,11 +1158,12 @@ void string::strcat (const char *s)
 		{
 			testTwo = true;
 			refblock *newdata = (refblock *) malloc ((size_t) alloc);
-			bcopy (data, newdata, alloc);
+			bcopy (data->v+offs, newdata->v, size+1);
 			newdata->refcount = 0;
 			data->refcount--;
 			data = newdata;
 			data->threadref = getref();
+			offs = 0;
 		}
 	
 		unsigned int oldsize = size;
@@ -1175,7 +1178,7 @@ void string::strcat (const char *s)
 			alloc =  GROW(size+1+sizeof (refblock));
 			data = (refblock *) realloc (data, alloc);
 		}
-		memmove (data->v + oldsize, s, size-oldsize);
+		memmove (data->v + offs + oldsize, s, size-oldsize);
 		data->v[size] = '\0';
 	}
 	else
@@ -1206,6 +1209,7 @@ void string::strcpy (const char *s)
 	}
 	
 	size = ::strlen (s);
+	offs = 0;
 	if ((size+1+sizeof (refblock)) >= alloc)
 	{
 		alloc = GROW(size+1+sizeof (refblock));
@@ -1220,7 +1224,7 @@ void string::strcpy (const char *s)
 			data->threadref = getref();
 		}
 	}
-	::strcpy (data->v, s);
+	::strcpy (data->v+offs, s);
 }
 
 // ========================================================================
@@ -1234,6 +1238,8 @@ void string::strcpy (const string &s)
 	if (data && (data == s.data))
 	{
 		if (! data->refcount) data->refcount = 1;
+		offs = s.offs;
+		size = s.size;
 		return;
 	}
 	
@@ -1266,6 +1272,7 @@ void string::strcpy (const string &s)
 	size = s.strlen();
 	alloc = s.alloc;
 	data = s.data;
+	offs = s.offs;
 }
 
 // ========================================================================
@@ -1296,12 +1303,13 @@ void string::strclone (const string &s)
 		data = (refblock *) malloc (alloc);
 		data->refcount = 0;
 		data->threadref = getref();
-		::memmove (data->v, s.data->v, size+1);
+		::memmove (data->v, s.data->v+s.offs, size+1);
 	}
 	else
 	{
 		data = NULL;
 	}
+	offs = 0;
 }
 
 // ========================================================================
@@ -1319,6 +1327,7 @@ void string::strcpy (const char *src, size_t sz)
 	}
 	
 	size = sz;
+	offs = 0;
 	if ((size+1+sizeof (refblock)) >= alloc)
 	{
 		alloc = GROW(size+1+sizeof (refblock));
@@ -1333,8 +1342,8 @@ void string::strcpy (const char *src, size_t sz)
 			data->threadref = getref();
 		}
 	}
-	::memmove (data->v, src, sz);
-	data->v[sz] = 0;
+	::memmove (data->v+offs, src, sz);
+	data->v[offs+sz] = 0;
 }
 
 // ========================================================================
@@ -1343,21 +1352,21 @@ void string::strcpy (const char *src, size_t sz)
 // Search for the occurence of a specified c-string after <offs> characters
 // into the string data.
 // ========================================================================
-int string::strstr (const char *substr, size_t slen, int offs) const
+int string::strstr (const char *substr, size_t slen, int offset) const
 {
 	if (data == NULL) return -1;
-	if (offs >= (int) size) return -1;
-	if (offs < 0) return -1;
+	if (offset >= (int) size) return -1;
+	if (offset < 0) return -1;
 
-	char *ptr = (data->v) + offs;
+	char *ptr = (data->v) + offs + offset;
 	
 	while ((ptr = (char *)
 		   (memchr (ptr, substr[0], size - (/*slen + */(ptr - data->v))))))
 	{
 		if (! memcmp (ptr, substr, slen))
-			return (ptr - data->v);
+			return (ptr - (data->v + offs));
 		++ptr;
-		if (((unsigned int)(ptr - data->v)) >= size) return -1;
+		if (((unsigned int)(ptr - (data->v+offs))) >= size) return -1;
 	}
 	return -1;
 }
@@ -1367,13 +1376,13 @@ int string::strstr (const char *substr, size_t slen, int offs) const
 // ---------------
 // Variation for c-string of unknown size
 // ========================================================================
-int string::strstr (const char *substr, int offs) const
+int string::strstr (const char *substr, int offset) const
 {
 	if (substr == NULL) return -1;
 	size_t slen = ::strlen (substr);
 	if (! slen) return -1;
 
-	return strstr (substr, slen, offs);
+	return strstr (substr, slen, offset);
 }
 
 // ========================================================================
@@ -1381,11 +1390,11 @@ int string::strstr (const char *substr, int offs) const
 // ---------------
 // Variation for string argument.
 // ========================================================================
-int string::strstr (const string &substr, int offs) const
+int string::strstr (const string &substr, int offset) const
 {
 	if (substr.strlen() == 0) return -1;
 	
-	return strstr (substr.str(), substr.strlen(), offs);
+	return strstr (substr.str(), substr.strlen(), offset);
 }
 
 // ========================================================================
@@ -1393,6 +1402,20 @@ int string::strstr (const string &substr, int offs) const
 // ---------------
 // Compares the string to a c-string for equality
 // ========================================================================
+#define METASTRCMP(left,right,leftdone,rightdone) { \
+	int res = 0; \
+	int i = 0; \
+	while ((!(leftdone)) && (!(rightdone)) && \
+		   ((res = ((int) left) - ((int) right)) == 0)) i++; \
+	if (res) { return res; } \
+	if (leftdone) { \
+		if (rightdone) return 0; \
+		return -1; \
+	} else { \
+		if (rightdone) return 1; \
+		return 0; \
+	} }
+
 int string::strcmp (const char *s) const
 {
 	if (! data)
@@ -1402,7 +1425,7 @@ int string::strcmp (const char *s) const
 	}
 	if (! s ) return -1;
 	
-	return ::strcmp (data->v, s);
+	METASTRCMP((int)data->v[offs+i], s[i], i>=size, !s[i]);
 }
 
 // ========================================================================
@@ -1412,7 +1435,16 @@ int string::strcmp (const char *s) const
 // ========================================================================
 int string::strcmp (const string &s) const
 {
-	return strcmp (s.str());
+	unsigned int osize = s.size;
+	unsigned int i = 0;
+	int dif;
+	
+	if (! size) return s.strlen();
+	if (data == s.data) return 0;
+	
+	METASTRCMP((int)data->v[offs+i],
+			   (int)s.data->v[s.offs+i],
+			   i>=size, i>=osize);
 }
 
 // ========================================================================
@@ -1422,14 +1454,23 @@ int string::strcmp (const string &s) const
 // ========================================================================
 int string::strcasecmp (const string &s) const
 {
-	if (! size) return (s.strlen());
-	return ::strcasecmp (data->v, s.str());
+	unsigned int osize = s.size;
+	unsigned int i = 0;
+	int dif;
+	
+	if (! size) return s.strlen();
+	if (data == s.data) return 0;
+	
+	METASTRCMP((int)tolower(data->v[offs+i]),
+			   (int)tolower(s.data->v[s.offs+i]),
+			   i >= size, i>= osize);
 }
 
 int string::strcasecmp (const char *s) const
 {
 	if (! size) return (*s != 0);
-	return ::strcasecmp (data->v, s);
+	METASTRCMP((int)tolower(data->v[offs+i]), (int)tolower(s[i]),
+							i>=size, !s[i]);
 }
 
 // ========================================================================
@@ -1445,8 +1486,16 @@ int string::strncasecmp (const string &s, int sz) const
 	{
 		rsz = s.strlen();
 	}
+	else if (rsz > s.strlen())
+	{
+		return 1;
+	}
+
 	if (rsz > size) return -1;
-	return ::strncasecmp (data->v, s.str(), rsz);
+	
+	METASTRCMP((int)tolower(data->v[offs+i]),
+			   (int)tolower(s.data->v[s.offs+i]),
+			   (i>=size)||(i>=rsz), i>=rsz);
 }
 
 // ========================================================================
@@ -1462,8 +1511,12 @@ int string::strncmp (const string &s, int sz) const
 	{
 		rsz = s.strlen();
 	}
+	else if (rsz > s.strlen()) return 1;
 	if (rsz > size) return -1;
-	return ::strncmp (data->v, s.str(), rsz);
+	
+	METASTRCMP((int)data->v[offs+i],
+			   (int)s.data->v[s.offs+i],
+			   i>=size, i>=rsz);
 }
 
 // ========================================================================
@@ -1509,21 +1562,18 @@ string *string::mid (int pos, int psz) const
 {
 	if (! data) return NULL;
 	
-	if ((psz<0)||(pos > (int) size)) return new string("");
+	if ((psz<0)||(pos > (int) size)) return new string;
 	int sz = psz;
 	if (!sz) sz = (size-pos);
 	if ((pos+sz) > (int) size) sz = (size-pos);
 	
 	string *res = new (memory::retainable::onstack) string;
-	res->alloc = GROW(sz+1+sizeof (refblock));
-	res->data = (refblock *) malloc ((size_t) res->alloc);
-	res->data->refcount = 0;
-	res->data->threadref = getref();
-	bcopy ((data->v)+pos, res->data->v, sz);
-	res->data->v[sz] = 0;
-	
+	res->data = data;
+	data->refcount++;
 	res->size = sz;
-
+	res->offs = pos+offs;
+	res->alloc = alloc;
+	
 	return res;
 }
 
@@ -1568,13 +1618,13 @@ void string::crop (int sz)
 		{
 			data->refcount--;
 			data = NULL;
-			alloc = size = 0;
+			alloc = size = offs = 0;
 		}
 		else
 		{
 			free (data);
 			data = NULL;
-			alloc = size = 0;
+			alloc = size = offs = 0;
 		}
 		
 		return;
@@ -1630,15 +1680,6 @@ void string::pad (int psz, char p)
 	
 	if ((sz+sizeof(refblock)) >= alloc)
 	{
-		if (data->refcount)
-		{
-			refblock *newdata = (refblock *) malloc ((size_t) alloc);
-			bcopy (data, newdata, alloc);
-			newdata->refcount = 0;
-			data->refcount--;
-			data = newdata;
-			data->threadref = getref();
-		}
 		alloc = GROW(sz + sizeof (refblock) +1);
 		data = (refblock *) realloc (data, alloc * sizeof(char *));
 	}
@@ -1648,7 +1689,7 @@ void string::pad (int psz, char p)
 		{
 			if (size<sz)
 			{
-				memmove (data->v + (sz-size), data->v, size);
+				memmove (data->v + offs + (sz-size), data->v + offs, size);
 				for (unsigned int i=0; i < (unsigned int)(sz-size); ++i)
 				{
 					data->v[i] = p;
@@ -1659,11 +1700,11 @@ void string::pad (int psz, char p)
 		{
 			for (unsigned int i=size; i < (unsigned int) sz; ++i)
 			{
-				data->v[i] = p;
+				data->v[offs+i] = p;
 			}
 		}
 	}
-	data->v[sz] = '\0';
+	data->v[offs+sz] = '\0';
 	size = sz;
 }
 
@@ -1672,12 +1713,13 @@ void string::pad (int psz, char p)
 // ========================================================================
 size_t string::binput32u (size_t offset, unsigned int val)
 {
+	docopyonwrite ();
 	size_t crsr = offset+4;
 	if (crsr > size) pad (crsr, 0);
-	data->v[offset]   = (val & 0xff000000) >> 24;
-	data->v[offset+1] = (val & 0x00ff0000) >> 16;
-	data->v[offset+2] = (val & 0x0000ff00) >> 8;
-	data->v[offset+3] = (val & 0x000000ff);
+	data->v[offs+offset]   = (val & 0xff000000) >> 24;
+	data->v[offs+offset+1] = (val & 0x00ff0000) >> 16;
+	data->v[offs+offset+2] = (val & 0x0000ff00) >> 8;
+	data->v[offs+offset+3] = (val & 0x000000ff);
 	if (crsr > size) size = crsr;
 	return crsr;
 }
@@ -1687,12 +1729,13 @@ size_t string::binput32u (size_t offset, unsigned int val)
 // ========================================================================
 size_t string::binput32 (size_t offset, int val)
 {
+	docopyonwrite ();
 	size_t crsr = offset+4;
 	if (crsr > size) pad (crsr, 0);
-	data->v[offset]   = (val & 0xff000000) >> 24;
-	data->v[offset+1] = (val & 0x00ff0000) >> 16;
-	data->v[offset+2] = (val & 0x0000ff00) >> 8;
-	data->v[offset+3] = (val & 0x000000ff);
+	data->v[offs+offset]   = (val & 0xff000000) >> 24;
+	data->v[offs+offset+1] = (val & 0x00ff0000) >> 16;
+	data->v[offs+offset+2] = (val & 0x0000ff00) >> 8;
+	data->v[offs+offset+3] = (val & 0x000000ff);
 	if (crsr > size) size = crsr;
 	return crsr;
 }
@@ -1702,16 +1745,17 @@ size_t string::binput32 (size_t offset, int val)
 // ========================================================================
 size_t string::binput64 (size_t offset, long long val)
 {
+	docopyonwrite ();
 	size_t crsr = offset+8;
 	if (crsr > size) pad (crsr, 0);
-	data->v[offset]   = (unsigned char) ((val & 0xff00000000000000LL) >> 56);
-	data->v[offset+1] = (unsigned char) ((val & 0x00ff000000000000LL) >> 48);
-	data->v[offset+2] = (unsigned char) ((val & 0x0000ff0000000000LL) >> 40);
-	data->v[offset+3] = (unsigned char) ((val & 0x000000ff00000000LL) >> 32);
-	data->v[offset+4] = (unsigned char) ((val & 0x00000000ff000000LL) >> 24);
-	data->v[offset+5] = (unsigned char) ((val & 0x0000000000ff0000LL) >> 16);
-	data->v[offset+6] = (unsigned char) ((val & 0x000000000000ff00LL) >> 8);
-	data->v[offset+7] = (unsigned char) ((val & 0x00000000000000ffLL));
+	data->v[offs+offset]   = (unsigned char) ((val & 0xff00000000000000LL) >> 56);
+	data->v[offs+offset+1] = (unsigned char) ((val & 0x00ff000000000000LL) >> 48);
+	data->v[offs+offset+2] = (unsigned char) ((val & 0x0000ff0000000000LL) >> 40);
+	data->v[offs+offset+3] = (unsigned char) ((val & 0x000000ff00000000LL) >> 32);
+	data->v[offs+offset+4] = (unsigned char) ((val & 0x00000000ff000000LL) >> 24);
+	data->v[offs+offset+5] = (unsigned char) ((val & 0x0000000000ff0000LL) >> 16);
+	data->v[offs+offset+6] = (unsigned char) ((val & 0x000000000000ff00LL) >> 8);
+	data->v[offs+offset+7] = (unsigned char) ((val & 0x00000000000000ffLL));
 	if (crsr > size) size = crsr;
 	return crsr;
 }
@@ -1729,10 +1773,11 @@ size_t string::binput64u (size_t offset, unsigned long long val)
 // ========================================================================
 size_t string::binput16u (size_t offset, unsigned short val)
 {
+	docopyonwrite ();
 	size_t crsr = offset+2;
 	if (crsr > size) pad (crsr, 0);
-	data->v[offset]   = (val & 0xff00) >> 8;
-	data->v[offset+1] = (val & 0x00ff);
+	data->v[offs+offset]   = (val & 0xff00) >> 8;
+	data->v[offs+offset+1] = (val & 0x00ff);
 	if (crsr > size) size = crsr;
 	return crsr;
 }
@@ -1742,9 +1787,10 @@ size_t string::binput16u (size_t offset, unsigned short val)
 // ========================================================================
 size_t string::binput8u (size_t offset, unsigned char val)
 {
+	docopyonwrite ();
 	size_t crsr = offset+1;
 	if (crsr > size) pad (crsr, 0);
-	data->v[offset] = val;
+	data->v[offset+offs] = val;
 	if (crsr > size) size = crsr;
 	return crsr;
 }
@@ -1754,9 +1800,10 @@ size_t string::binput8u (size_t offset, unsigned char val)
 // ========================================================================
 size_t string::binput8 (size_t offset, char val)
 {
+	docopyonwrite ();
 	size_t crsr = offset+1;
 	if (crsr > size) pad (crsr, 0);
-	data->v[offset] = val;
+	data->v[offs+offset] = val;
 	if (crsr > size) size = crsr;
 	return crsr;
 }
@@ -1766,12 +1813,13 @@ size_t string::binput8 (size_t offset, char val)
 // ========================================================================
 size_t string::binputopc (size_t offset, const char *opcode)
 {
+	docopyonwrite ();
 	size_t crsr = offset+4;
 	if (crsr > size) pad (crsr, 0);
-	data->v[offset] = opcode[0];
-	data->v[offset+1] = opcode[1];
-	data->v[offset+2] = opcode[2];
-	data->v[offset+3] = opcode[3];
+	data->v[offs+offset] = opcode[0];
+	data->v[offs+offset+1] = opcode[1];
+	data->v[offs+offset+2] = opcode[2];
+	data->v[offs+offset+3] = opcode[3];
 	if (crsr > size) size = crsr;
 	return crsr;
 }
@@ -1844,7 +1892,7 @@ size_t string::binputstr (size_t offset, const char *opcode,
 	crsr = binputopc (crsr, opcode);
 	crsr = binput32u (crsr, value.strlen());
 	if ((crsr+value.strlen()) > size) pad (crsr + value.strlen(), 0);
-	memmove (data->v+crsr, value.str(), value.strlen());
+	memmove (data->v+offs+crsr, value.str(), value.strlen());
 	crsr += value.strlen();
 	if (crsr > size) size = crsr;
 	return crsr;
@@ -1856,7 +1904,7 @@ size_t string::binputstr (size_t offset, const char *opcode,
 size_t string::binget8 (size_t offset, char &into) const
 {
 	if ((offset+1)>size) return 0;
-	into = data->v[offset];
+	into = data->v[offs+offset];
 	return offset+1;
 }
 
@@ -1866,7 +1914,7 @@ size_t string::binget8 (size_t offset, char &into) const
 size_t string::binget8u (size_t offset, unsigned char &into) const
 {
 	if ((offset+1)>size) return 0;
-	into = data->v[offset];
+	into = data->v[offs+offset];
 	return offset+1;
 }
 
@@ -1876,7 +1924,7 @@ size_t string::binget8u (size_t offset, unsigned char &into) const
 size_t string::binget16 (size_t offset, short &into) const
 {
 	if ((offset+2) > size) return 0;
-	into = ((data->v[offset]&0xff) << 8) | (data->v[offset+1] & 0xff);
+	into = ((data->v[offs+offset]&0xff) << 8) | (data->v[offs+offset+1] & 0xff);
 	return offset+2;
 }
 
@@ -1886,7 +1934,7 @@ size_t string::binget16 (size_t offset, short &into) const
 size_t string::binget16u (size_t offset, unsigned short &into) const
 {
 	if ((offset+2) > size) return 0;
-	into = ((data->v[offset]&0xff) << 8) | (data->v[offset+1] & 0xff);
+	into = ((data->v[offs+offset]&0xff) << 8) | (data->v[offs+offset+1] & 0xff);
 	return offset+2;
 }
 
@@ -1896,10 +1944,10 @@ size_t string::binget16u (size_t offset, unsigned short &into) const
 size_t string::binget32 (size_t offset, int &into) const
 {
 	if ((offset+4) > size) return 0;
-	into = ((data->v[offset] & 0xff) << 24) |
-		   ((data->v[offset+1] & 0xff) << 16) |
-		   ((data->v[offset+2] & 0xff) << 8) | 
-		   (data->v[offset+3] & 0xff);
+	into = ((data->v[offs+offset] & 0xff) << 24) |
+		   ((data->v[offs+offset+1] & 0xff) << 16) |
+		   ((data->v[offs+offset+2] & 0xff) << 8) | 
+		   (data->v[offs+offset+3] & 0xff);
 	return offset+4;
 }
 
@@ -1909,10 +1957,10 @@ size_t string::binget32 (size_t offset, int &into) const
 size_t string::binget32u (size_t offset, unsigned int &into) const
 {
 	if ((offset+4) > size) return 0;
-	into = ((data->v[offset] & 0xff) << 24) |
-		   ((data->v[offset+1] & 0xff) << 16) |
-		   ((data->v[offset+2] & 0xff) << 8) | 
-		   (data->v[offset+3] & 0xff);
+	into = ((data->v[offs+offset] & 0xff) << 24) |
+		   ((data->v[offs+offset+1] & 0xff) << 16) |
+		   ((data->v[offs+offset+2] & 0xff) << 8) | 
+		   (data->v[offs+offset+3] & 0xff);
 	return offset+4;
 }
 
@@ -1922,14 +1970,14 @@ size_t string::binget32u (size_t offset, unsigned int &into) const
 size_t string::binget64 (size_t offset, long long &into) const
 {
 	if (offset+8 > size) return 0;
-	into = ((long long)(data->v[offset] & 0xff) << 56) |
-		   ((long long)(data->v[offset+1] & 0xff) << 48) |
-		   ((long long)(data->v[offset+2] & 0xff) << 40) | 
-		   ((long long)(data->v[offset+3] & 0xff) << 32) |
-		   ((long long)(data->v[offset+4] & 0xff) << 24) | 
-		   ((long long)(data->v[offset+5] & 0xff) << 16) |
-		   ((long long)(data->v[offset+6] & 0xff) << 8) | 
-		   ((long long)(data->v[offset+7]  & 0xff));
+	into = ((long long)(data->v[offs+offset] & 0xff) << 56) |
+		   ((long long)(data->v[offs+offset+1] & 0xff) << 48) |
+		   ((long long)(data->v[offs+offset+2] & 0xff) << 40) | 
+		   ((long long)(data->v[offs+offset+3] & 0xff) << 32) |
+		   ((long long)(data->v[offs+offset+4] & 0xff) << 24) | 
+		   ((long long)(data->v[offs+offset+5] & 0xff) << 16) |
+		   ((long long)(data->v[offs+offset+6] & 0xff) << 8) | 
+		   ((long long)(data->v[offs+offset+7]  & 0xff));
 	return offset+8;
 }
 
@@ -1939,14 +1987,14 @@ size_t string::binget64 (size_t offset, long long &into) const
 size_t string::binget64u (size_t offset, unsigned long long &into) const
 {
 	if (offset+8 > size) return 0;
-	into = ((unsigned long long)(data->v[offset] & 0xff) << 56) |
-		   ((unsigned long long)(data->v[offset+1] & 0xff) << 48) |
-		   ((unsigned long long)(data->v[offset+2] & 0xff) << 40) | 
-		   ((unsigned long long)(data->v[offset+3] & 0xff) << 32) |
-		   ((unsigned long long)(data->v[offset+4] & 0xff) << 24) | 
-		   ((unsigned long long)(data->v[offset+5] & 0xff) << 16) |
-		   ((unsigned long long)(data->v[offset+6] & 0xff) << 8) | 
-		   ((unsigned long long)(data->v[offset+7]  & 0xff));
+	into = ((unsigned long long)(data->v[offs+offset] & 0xff) << 56) |
+		   ((unsigned long long)(data->v[offs+offset+1] & 0xff) << 48) |
+		   ((unsigned long long)(data->v[offs+offset+2] & 0xff) << 40) | 
+		   ((unsigned long long)(data->v[offs+offset+3] & 0xff) << 32) |
+		   ((unsigned long long)(data->v[offs+offset+4] & 0xff) << 24) | 
+		   ((unsigned long long)(data->v[offs+offset+5] & 0xff) << 16) |
+		   ((unsigned long long)(data->v[offs+offset+6] & 0xff) << 8) | 
+		   ((unsigned long long)(data->v[offs+offset+7]  & 0xff));
 	return offset+8;
 }
 
@@ -1956,6 +2004,7 @@ size_t string::binget64u (size_t offset, unsigned long long &into) const
 size_t string::binputvint (size_t offset, unsigned int val)
 {
 	size_t vintsz;
+	docopyonwrite ();
 	
 	if (val < 0x40) vintsz = 1;
 	else if (val < 0x4000) vintsz = 2;
@@ -1969,25 +2018,25 @@ size_t string::binputvint (size_t offset, unsigned int val)
 	switch (vintsz)
 	{
 		case 1:
-			data->v[offset] = val & 0x3f;
+			data->v[offs+offset] = val & 0x3f;
 			break;
 		
 		case 2:
-			data->v[offset  ] = 0x40 | (val >> 8);
-			data->v[offset+1] = val & 0xff;
+			data->v[offs+offset  ] = 0x40 | (val >> 8);
+			data->v[offs+offset+1] = val & 0xff;
 			break;
 		
 		case 3:
-			data->v[offset  ] = 0x80 | (val >> 16);
-			data->v[offset+1] = (val & 0xff00) >> 8;
-			data->v[offset+2] = val & 0xff;
+			data->v[offs+offset  ] = 0x80 | (val >> 16);
+			data->v[offs+offset+1] = (val & 0xff00) >> 8;
+			data->v[offs+offset+2] = val & 0xff;
 			break;
 		
 		case 4:
-			data->v[offset  ] = 0x80 | (val >> 24);
-			data->v[offset+1] = (val & 0xff0000) >> 16;
-			data->v[offset+2] = (val & 0x00ff00) >> 8;
-			data->v[offset+3] = val & 0xff;
+			data->v[offs+offset  ] = 0x80 | (val >> 24);
+			data->v[offs+offset+1] = (val & 0xff0000) >> 16;
+			data->v[offs+offset+2] = (val & 0x00ff00) >> 8;
+			data->v[offs+offset+3] = val & 0xff;
 			break;
 	}
 
@@ -2008,24 +2057,24 @@ size_t string::bingetvint (size_t offset, unsigned int &val) const
 	switch (data->v[offset] & 0xc0)
 	{
 		case 0x00:
-			val = (data->v[offset] & 0xff);
+			val = (data->v[offs+offset] & 0xff);
 			return offset+1;
 			
 		case 0x40:
-			val = ((data->v[offset] & 0x3f) << 8) | (data->v[offset+1] &0xff);
+			val = ((data->v[offs+offset] & 0x3f) << 8) | (data->v[offset+1] &0xff);
 			return offset+2;
 		
 		case 0x80:
-			val = ((data->v[offset] & 0x3f) << 16) |
-				  ((data->v[offset+1] & 0xff) << 8) |
-				  ( data->v[offset+2] & 0xff);
+			val = ((data->v[offs+offset] & 0x3f) << 16) |
+				  ((data->v[offs+offset+1] & 0xff) << 8) |
+				  ( data->v[offs+offset+2] & 0xff);
 			return offset+3;
 		
 		case 0xc0:
-			val = ((data->v[offset] & 0x3f) << 24) |
-				  ((data->v[offset+1] & 0xff) << 16) |
-				  ((data->v[offset+2] & 0xff) << 8) |
-				  ( data->v[offset+3] & 0xff);
+			val = ((data->v[offs+offset] & 0x3f) << 24) |
+				  ((data->v[offs+offset+1] & 0xff) << 16) |
+				  ((data->v[offs+offset+2] & 0xff) << 8) |
+				  ( data->v[offs+offset+3] & 0xff);
 			return offset+4;
 	}
 	return 0;
@@ -2036,12 +2085,13 @@ size_t string::bingetvint (size_t offset, unsigned int &val) const
 // ========================================================================
 size_t string::binputieee (size_t offset, double dat)
 {
+	docopyonwrite ();
 	double net;
 	if ((offset+8)>size) pad (offset+8, 0);
 	net = grace::htond (dat);
 	for (int i=0; i<8; ++i)
 	{
-		data->v[offset+i] = ((char *)&net)[i];
+		data->v[offs+offset+i] = ((char *)&net)[i];
 	}
 	return offset+8;
 }
@@ -2056,7 +2106,7 @@ size_t string::bingetieee (size_t offset, double &dat) const
 	if ((offset+8)>size) return 0;
 	for (int i=0; i<8; ++i)
 	{
-		((char *)&net)[i] = data->v[offset+i];
+		((char *)&net)[i] = data->v[offs+offset+i];
 	}
 	dat = grace::ntohd (net);
 	return offset+8;
@@ -2075,7 +2125,7 @@ size_t string::binputvstr (size_t offset, const string &str)
 	
 	if ((cr+slen)>size) pad (cr+slen, 0);
 	
-	::memmove (data->v+cr, str.str(), slen);
+	::memmove (data->v+cr+offs, str.str(), slen);
 	cr += slen;
 	return cr;
 }
@@ -2096,7 +2146,7 @@ size_t string::bingetvstr (size_t offset, string &into) const
 	
 	if ((crsr + strsz) > size) return 0;
 	
-	into.strcpy (data->v+crsr, strsz);
+	into.strcpy (data->v+crsr+offs, strsz);
 	crsr += strsz;
 	return crsr;
 }
@@ -2130,7 +2180,7 @@ string *string::encode64 (void) const
 		{
 			unsigned int ix = pos+i;
 			if (ix < strlen())
-				inbuf[i] = data->v[ix];
+				inbuf[i] = data->v[offs+ix];
 			else
 				inbuf[i] = 0;
 		}
@@ -2180,7 +2230,7 @@ string *string::decode64 (void) const
 
 		char c;
 		
-		c = data->v[srcpos++];
+		c = data->v[offs+srcpos++];
 		if (! c) break;
 		
 		if ( (c >='A') && (c<='Z') ) c = c-'A';
@@ -2245,7 +2295,7 @@ bool string::validate (const string &set) const
 	
 	for (unsigned int i=0; i<size; ++i)
 	{
-		if (set.strchr (data->v[i]) < 0) return false;
+		if (set.strchr (data->v[offs+i]) < 0) return false;
 	}
 	return true;
 }
@@ -2265,9 +2315,9 @@ string *string::filter (const string &set) const
 	
 	for (unsigned int i=0; i<size; ++i)
 	{
-		if (set.strchr (data->v[i]) >= 0)
+		if (set.strchr (data->v[offs+i]) >= 0)
 		{
-			res.strcat (data->v[i]);
+			res.strcat (data->v[offs+i]);
 		}
 	}
 	return &res;
@@ -2300,8 +2350,8 @@ string *string::stripchar  (char stripchar)
 	
 	for (unsigned int i=0; i<size; ++i)
 	{
-		if (data->v[i] != stripchar)
-			res.strcat (data->v[i]);
+		if (data->v[offs+i] != stripchar)
+			res.strcat (data->v[offs+i]);
 	}
 	return &res;
 }
@@ -2321,9 +2371,9 @@ string *string::stripchars	(const string &stripset)
 	
 	for (unsigned int i=0; i<size; ++i)
 	{
-		if ( stripset.strchr (data->v[i]) == -1)
+		if ( stripset.strchr (data->v[offs+i]) == -1)
 		{
-			res.strcat (data->v[i]);
+			res.strcat (data->v[offs+i]);
 		}
 	}
 	return &res;
@@ -2343,10 +2393,10 @@ string *string::trim (const string &set) const
 	if (! data) return NULL;
 	if (! size) return NULL;
 	
-	while ((left<right)&&(set.strchr (data->v[left]) >= 0)) left++;
+	while ((left<right)&&(set.strchr (data->v[offs+left]) >= 0)) left++;
 	if (left == (right+1)) return NULL;
 	
-	while ((right>left)&&(set.strchr (data->v[right]) >= 0)) right--;
+	while ((right>left)&&(set.strchr (data->v[offs+right]) >= 0)) right--;
 	if (left == (right+1)) return NULL;
 	
 	right++;
@@ -2366,7 +2416,7 @@ string *string::ltrim (const string &set) const
 	if(! set)  return NULL;
 	
 	int left = 0;
-	while ((left<size) && (set.strchr (data->v[left]) >= 0)) left++;
+	while ((left<size) && (set.strchr (data->v[offs+left]) >= 0)) left++;
 	if (left == size) return NULL;
 	
 	return mid (left);
@@ -2384,7 +2434,10 @@ string *string::rtrim (const string &set) const
 	if(! set)  return NULL;
 	
 	int right = size-1;
-	while ((right>0) && (set.strchr (data->v[right]) >= 0)) right--;
+	while ((right>0) && (set.strchr (data->v[offs+right]) >= 0))
+	{
+		right--;
+	}
 	
 	if (right<size) right++;
 	if (right < 1) return NULL;
@@ -2407,9 +2460,9 @@ void string::replace (const string &set, char with)
 	
 	for (unsigned int i=0; i<size; ++i)
 	{
-		if (set.strchr (data->v[i]) >= 0)
+		if (set.strchr (data->v[offs+i]) >= 0)
 		{
-			data->v[i] = with;
+			data->v[offs+i] = with;
 		}
 	}
 }
@@ -2419,6 +2472,7 @@ void string::replace (const value &set)
 	string res (strlen()+16);
 	
 	charmatch M;
+	str();
 	
 	foreach (node, set)
 	{
@@ -2431,7 +2485,7 @@ void string::replace (const value &set)
 	
 	for (unsigned int i=0; i<size; ++i)
 	{
-		charmatch *m = M.match (data->v+i, size-i);
+		charmatch *m = M.match (data->v+offs+i, size-i);
 		if (m)
 		{
 			res.strcat (*(m->replace));
@@ -2573,7 +2627,7 @@ string *string::cutafter (const string &s)
 	
 	res = mid (pos+s.strlen());
 	docopyonwrite();
-	data->v[pos] = 0;
+	data->v[offs+pos] = 0;
 	size = pos;
 	return res;
 }
@@ -2588,7 +2642,7 @@ string *string::cutafter (char c)
 	
 	res = mid (pos+1);
 	docopyonwrite();
-	data->v[pos] = 0;
+	data->v[offs+pos] = 0;
 	size = pos;
 	return res;
 }
@@ -2614,7 +2668,7 @@ string *string::cutafterlast (const string &s)
 	
 	res = mid (pos+s.strlen());
 	docopyonwrite();
-	data->v[pos] = 0;
+	data->v[offs+pos] = 0;
 	size = pos;
 	return res;
 }
@@ -2637,7 +2691,7 @@ string *string::cutafterlast (char c)
 	
 	res = mid (pos+1);
 	docopyonwrite();
-	data->v[pos] = 0;
+	data->v[offs+pos] = 0;
 	size = pos;
 	return res;
 }
@@ -2670,8 +2724,8 @@ void string::chomp (void)
 	}
 	
 	right++;
-	
-	(*this) = mid (left, (right-left));
+	offs = left;
+	size = right-left;
 }
 
 void string::chomp (const string &set)
@@ -2690,6 +2744,7 @@ void string::init (bool first)
 		size = 0;
 		alloc = 0;
 		data = NULL;
+		offs = 0;
 	}
 	else
 	{
@@ -2706,7 +2761,7 @@ int string::countchr (char c, int endpos) const
 	int res = 0;
 	int end = endpos ? endpos : size;
 	
-	for (int i=0; i < end; ++i) if (data->v[i] == c) ++res;
+	for (int i=0; i < end; ++i) if (data->v[offs+i] == c) ++res;
 	return res;
 }
 
@@ -2718,7 +2773,7 @@ char *string::visitchild (int pos) const
 	if (! data) return NULL;
 	if (pos<0) return NULL;
 	if (pos>=size) return NULL;
-	return data->v+pos;
+	return data->v+offs+pos;
 }
 
 // ========================================================================
@@ -2729,8 +2784,9 @@ int string::strchr (char c, int left) const
 	if (left<0) return -1;
 	if (((unsigned int) left) >= size) return -1;
 	
-	char *res = (char*) memchr (data->v+left, c, size-left);
-	if (res) return (res - (char *) data->v);
+	char *res = (char*) memchr (data->v+left+offs, c, size-left);
+	
+	if (res) return (res - ((char *) data->v+offs));
 	return -1;
 }
 
@@ -2858,9 +2914,9 @@ string *string::cutat (char c)
 	   data->v[0] = size = 0;
 	   return &res;
 	}
-	memmove (data->v, data->v + isthere+1, size - (isthere+1));
+	memmove (data->v+offs, data->v + offs+isthere+1, size - (isthere+1));
 	size -= (isthere+1);
-	data->v[size] = '\0';
+	data->v[offs+size] = '\0';
 	return &res;
 }
 
@@ -2882,9 +2938,9 @@ string *string::cutat (const char *c)
 		data->v[0] = size = 0;
 		return &res;
 	}
-	memmove (data->v, data->v + isthere+ssz, size - (isthere+ssz));
+	memmove (data->v + offs, data->v + offs + isthere+ssz, size - (isthere+ssz));
 	size -= (isthere+ssz);
-	data->v[size] = '\0';
+	data->v[offs+size] = '\0';
 	return &res;
 }
 
@@ -2912,9 +2968,9 @@ string *string::cutatlast (char c)
 		data->v[0] = size = 0;
 		return &res;
 	}
-	memmove (data->v, data->v + isthere+1, size - (isthere+1));
+	memmove (data->v+offs, data->v + offs + isthere+1, size - (isthere+1));
 	size -= (isthere+1);
-	data->v[size] = '\0';
+	data->v[offs+size] = '\0';
 	return &res;
 }
 
@@ -2941,9 +2997,9 @@ string *string::cutatlast (const char *c)
 		return &res;
 	}
 	
-	memmove (data->v, data->v + isthere+ssz, size - (isthere+ssz));
+	memmove (data->v+offs, data->v + offs + isthere+ssz, size - (isthere+ssz));
 	size -= (isthere+ssz);
-	data->v[size] = '\0';
+	data->v[size+offs] = '\0';
 	return &res;
 }
 
