@@ -4,6 +4,9 @@
 #include <grace/strutil.h>
 #include <grace/filesystem.h>
 
+// ========================================================================
+// METHOD ::encodegrace
+// ========================================================================
 void value::encodegrace (string &into, int indent)
 {
 	string dent;
@@ -95,6 +98,9 @@ void value::encodegrace (string &into, int indent)
 	}
 }
 
+// ========================================================================
+// METHOD ::tograce
+// ========================================================================
 string *value::tograce (void)
 {
 	returnclass (string) res retain;

@@ -67,17 +67,21 @@ int httpApp::main (void)
 	}
 	
 	hs.authentication ("me","password");
-	restr_local = hs.get ("http://localhost:4269/restricted.dat");
-	if (! restr_local.strlen ())
+	
+	for (int i=0; i<1000; ++i)
 	{
-		ferr.printf ("FAIL restricted local: %i\n", hs.status);
-		return 4;
-	}
-	restr_default = hs.get ("http://127.0.0.1:4269/restricted.dat");
-	if (! restr_default.strlen ())
-	{
-		ferr.printf ("FAIL restricted default\n");
-		return 5;
+		restr_local = hs.get ("http://localhost:4269/restricted.dat");
+		if (! restr_local.strlen ())
+		{
+			ferr.printf ("FAIL restricted local: %i\n", hs.status);
+			return 4;
+		}
+		restr_default = hs.get ("http://127.0.0.1:4269/restricted.dat");
+		if (! restr_default.strlen ())
+		{
+			ferr.printf ("FAIL restricted default\n");
+			return 5;
+		}
 	}
 	
 	hs.sock().close();

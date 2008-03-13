@@ -2,14 +2,23 @@
 #include <grace/strutil.h>
 #include <grace/file.h>
 
+// ========================================================================
+// CONSTRUCTOR pcredb
+// ========================================================================
 pcredb::pcredb (void)
 {
 }
 
+// ========================================================================
+// DESTRUCTOR pcredb
+// ========================================================================
 pcredb::~pcredb (void)
 {
 }
 
+// ========================================================================
+// METHOD pcredb::get
+// ========================================================================
 pcre *pcredb::get (const statstring &expr, int options)
 {
 	pcre *res = NULL;
@@ -25,12 +34,15 @@ pcre *pcredb::get (const statstring &expr, int options)
 	
 	exclusivesection (expressions)
 	{
-		int erroffset;
-		const char *errptr;
-		res = pcre_compile (expr.str(), options, &errptr, &erroffset, NULL);
-		if (res)
+		if (! expressions.exists (expr))
 		{
-			expressions[expr] = res;
+			int erroffset;
+			const char *errptr;
+			res = pcre_compile (expr.str(), options, &errptr, &erroffset, NULL);
+			if (res)
+			{
+				expressions[expr] = res;
+			}
 		}
 	}
 	
@@ -39,6 +51,9 @@ pcre *pcredb::get (const statstring &expr, int options)
 
 pcredb __PCREDB;
 
+// ========================================================================
+// CONSTRUCTOR pcregexp
+// ========================================================================
 pcregexp::pcregexp (void)
 {
 	pobj = NULL;
@@ -52,21 +67,33 @@ pcregexp::pcregexp (const statstring &expr, int o)
 	set (expr);
 }
 
+// ========================================================================
+// DESTRUCTOR pcregexp
+// ========================================================================
 pcregexp::~pcregexp (void)
 {
 }
 
+// ========================================================================
+// METHOD pcregexp::operator=
+// ========================================================================
 pcregexp &pcregexp::operator= (const statstring &to)
 {
 	return set (to);
 }
 
+// ========================================================================
+// METHOD pcregexp::set
+// ========================================================================
 pcregexp &pcregexp::set (const statstring &to)
 {
 	pobj = __PCREDB.get (to, options);
 	return *this;
 }
 
+// ========================================================================
+// METHOD pcregexp::setoptions
+// ========================================================================
 pcregexp &pcregexp::setoptions (int o)
 {
 	options = o;
@@ -74,6 +101,9 @@ pcregexp &pcregexp::setoptions (int o)
 
 #define MAXBACKREF 16
 
+// ========================================================================
+// METHOD pcregexp::match
+// ========================================================================
 bool pcregexp::match (const string &to, value *outref)
 {
 	if (! pobj) return true;
@@ -105,6 +135,9 @@ bool pcregexp::match (const string &to, value &outref)
 	return match (to, &outref);
 }
 
+// ========================================================================
+// METHOD pcregexp::capture
+// ========================================================================
 value *pcregexp::capture (const string &from)
 {
 	returnclass (value) res retain;
@@ -112,6 +145,9 @@ value *pcregexp::capture (const string &from)
 	return &res;
 }
 
+// ========================================================================
+// METHOD pcregexp::replace
+// ========================================================================
 string *pcregexp::replace (const string &_orig, const string &with,
 						   bool replaceall)
 {
@@ -191,6 +227,9 @@ string *pcregexp::replace (const string &_orig, const string &with,
 	return &res;
 }
 
+// ========================================================================
+// FUNCTION $expr
+// ========================================================================
 string *$expr (const string &orig, const string &expr)
 {
 	char split = expr[1];
@@ -217,6 +256,9 @@ string *$expr (const string &orig, const string &expr)
 	return ex.replace (orig, arg[2], replaceall);
 }
 
+// ========================================================================
+// FUNCTION $capture1
+// ========================================================================
 string *$capture1 (const string &orig, const string &expr, int flags)
 {
 	returnclass (string) res retain;
@@ -226,6 +268,9 @@ string *$capture1 (const string &orig, const string &expr, int flags)
 	return &res;
 }
 
+// ========================================================================
+// FUNCTION $capture
+// ========================================================================
 value *$capture (const string &orig, const string &expr, int flags)
 {
 	pcregexp re (expr, flags);
