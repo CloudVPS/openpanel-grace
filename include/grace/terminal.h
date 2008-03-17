@@ -162,7 +162,7 @@ public:
 					 {
 					 	string *res = new (memory::retainable::onstack) string
 					 							(buffer + prompt.strlen());
-						res->chomp ();
+						//res->chomp ();
 						return res;
 					 }
 					 
@@ -940,14 +940,19 @@ public:
 		curcmd = "";
 		
 		ln = tb.getline();
+		int offs = ln.strlen();
 		
 		if ( (ki==9) && (tb.crsrpos() > ln.strlen()) )
 		{
 			return 0;
 		}
-		
-		cliutil::splitwords (ln, ki ? tb.crsrpos() : ln.strlen(), split);
+
+		ln = ln.ltrim ();
+		offs = offs - ln.strlen();
 		if (! ki) ln = ln.rtrim ();
+		
+		cliutil::splitwords (ln, ki ? tb.crsrpos()-offs : ln.strlen(), split);
+		
 		if (ki == '?')
 		{
 			// check out if we're in the middle of something quoted.
@@ -966,7 +971,9 @@ public:
 					}
 				}
 			}
-			split.newval();
+			
+			if (isspace (ln[-1]))
+				split.newval();
 		}
 		
 		for (i=0; i< (split.count()-1); ++i)
