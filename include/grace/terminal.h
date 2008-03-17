@@ -5,6 +5,7 @@
 #include <grace/str.h>
 #include <grace/strutil.h>
 #include <grace/defaults.h>
+#include <grace/application.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -949,11 +950,6 @@ public:
 		if (! ki) ln = ln.rtrim ();
 		if (ki == '?')
 		{
-			if (ln[-1]=='\"')
-			{
-				tb.insert (ki);
-				return 0;
-			}
 			// check out if we're in the middle of something quoted.
 			if (split.count())
 			{
