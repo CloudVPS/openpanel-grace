@@ -1,3 +1,7 @@
+0.9.17     Wed Mar 19 2008                           <grace@openpanel.com>
+
+           * Improvements to command line handling code.
+
 0.9.16     Thu Mar 13 2008                           <grace@openpanel.com>
 
            * A string object can now contain a substring of another
