@@ -65,6 +65,25 @@ int stringtestApp::main (void)
 	
 	if (! tstr2.globcmp ("The*j?mp*lazy*")) FAIL("globcmp");
 	
+	tstr = "Hello.world";
+	cutdata = tstr.cutat (".");
+	if (cutdata != "Hello") FAIL ("cutat-charstr1");
+	if (tstr != "world") FAIL ("cutat-charstr2");
+	
+	tstr = "This.is.a.test";
+	cutdata = tstr.cutatlast (".");
+	if (cutdata != "This.is.a") FAIL ("cutatlast-charstr1");
+	if (tstr != "test") FAIL ("cutatlast-charstr2");
+	
+	tstr = "One.two.three.four";
+	cutdata = tstr.cutafter (".");
+	if (cutdata != "two.three.four") FAIL ("cutafter-charstr1");
+	if (tstr != "One") FAIL ("cutafter-charstr2");
+	tstr = "One.two.three.four";
+	cutdata = tstr.cutafterlast (".");
+	if (cutdata != "four") FAIL ("cutafterlast-charstr1");
+	if (tstr != "One.two.three") FAIL ("cutafterlast-charstr2");
+	
 	tstr = tstr2;
 	if (tstr != tstr2) FAIL("copy-back");
 	
