@@ -274,8 +274,8 @@ namespace errortext
 		sparameter html_body defaultvalue ("<html><body>%s</body></html>");
 		sparameter html_illuri defaultvalue ("<h2>Illegal URI Requested</h2>");
 		sparameter html_401 defaultvalue ("<h2>Please Authenticate</h2>");
-		sparameter html_404 defaultvalue ("<h2>404 Not Found</h2>Look eslewhere.");
-		sparameter html_404_vhost defaultvalue ("<h2>404 Site Not Found</h2>Either this server is misconfigured or the DNS entry for %Z is not pointer the right way.");
+		sparameter html_404 defaultvalue ("<h2>404 Not Found</h2>Look elsewhere.");
+		sparameter html_404_vhost defaultvalue ("<h2>404 Site Not Found</h2>Either this server is misconfigured or the DNS entry for %Z is not pointing the right way.");
 		sparameter html_413 defaultvalue ("<h2>POST object-size too large</h2>");
 		sparameter html_500_method defaultvalue ("<h2>500 Unknown method</h2>");
 		sparameter html_spage defaultvalue ("<h2>Processing Error</h2>Execution error in serverpage::run");
