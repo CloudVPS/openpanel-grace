@@ -123,6 +123,102 @@ string *operator% (const char *args, const value &arglist)
 					}
 					goto CONTINUE;
 					
+				// mysql escape
+				case 'M':
+					{
+						const string &kstr = KEYORARG.sval();
+						char quot;
+						
+						if (kstr.strchr ('\'') >= 0)
+						{
+							quot = '\"';
+						}
+						else
+						{
+							quot = '\'';
+						}
+						
+						res.strcat (quot);
+						
+						for (int ii=0; ii<kstr.strlen(); ++ii)
+						{
+							char c = kstr[ii];
+							switch (c)
+							{
+								case 0 :
+									res.strcat ("\\0");
+									break;
+								
+								case '\\' :
+									res.strcat ("\\\\");
+									break;
+								
+								case '\"' :
+									if (quot == '\"')
+									{
+										res.strcat ("\"\"");
+									}
+									else
+									{
+										res.strcat (c);
+									}
+									break;
+								
+								default:
+									res.strcat (c);
+									break;
+							}
+						}
+						
+						res.strcat (quot);
+					}
+					*copy_p = 0;
+					goto CONTINUE;
+					
+				// ansi sql escape
+				case 'Q':
+					{
+						const string &kstr = KEYORARG.sval();
+						char quot;
+						
+						if (kstr.strchr ('\'') >= 0)
+						{
+							quot = '\"';
+						}
+						else
+						{
+							quot = '\'';
+						}
+						
+						res.strcat (quot);
+						
+						for (int ii=0; ii<kstr.strlen(); ++ii)
+						{
+							char c = kstr[ii];
+							switch (c)
+							{
+								case '\"' :
+									if (quot == '\"')
+									{
+										res.strcat ("\"\"");
+									}
+									else
+									{
+										res.strcat (c);
+									}
+									break;
+								
+								default:
+									res.strcat (c);
+									break;
+							}
+						}
+						
+						res.strcat (quot);
+					}
+					*copy_p = 0;
+					goto CONTINUE;
+					
 				case 'P':
 					ip = KEYORARG.ipval();
 					sprintf (sprintf_out, "%i.%i.%i.%i",
