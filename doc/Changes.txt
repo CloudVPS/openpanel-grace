@@ -1,3 +1,9 @@
+0.9.18     Wed Apr 16 2008                           <grace@openpanel.com>
+
+           * Added %M/%Q for mysql/sql escaping.
+
+           * Some minor tweaks.
+
 0.9.17     Wed Mar 19 2008                           <grace@openpanel.com>
 
            * Improvements to command line handling code.
