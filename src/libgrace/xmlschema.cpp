@@ -1397,7 +1397,7 @@ const string &xmlschema::precedentclass (const char *opcode)
 // ========================================================================
 const char *xmlschema::resolvecode (const statstring &forclass)
 {
-	static char *nullcode = "VOID";
+	static const char *nullcode = "VOID";
 	if (! schema.exists (forclass)) return nullcode;
 	return schema[forclass][key::xml_code].cval();
 }

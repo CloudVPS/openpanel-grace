@@ -492,7 +492,7 @@ bool file::printf (const char *fmtx, ...)
 					
 					case 'S':
 						copy_p = va_arg(ap, char *);
-						if (!copy_p) copy_p = "(null)";
+						if (!copy_p) copy_p = (char *) "(null)";
 						
 						while (*copy_p)
 						{
@@ -515,7 +515,7 @@ bool file::printf (const char *fmtx, ...)
 					case 's':
 					    sz = atoi (copy+1);
 						copy_p = va_arg(ap, char *);
-						if (!copy_p) copy_p = "(null)";
+						if (!copy_p) copy_p = (char *) "(null)";
 						if (sz != 0)
 						{
 							int asz = sz;
@@ -539,7 +539,7 @@ bool file::printf (const char *fmtx, ...)
 								copy_s.crop (sz);
 							
 							out.strcat (copy_s);
-							copy_p = "";
+							copy_p = (char *) "";
 						}
 DUP:
 						out.strcat (copy_p);
