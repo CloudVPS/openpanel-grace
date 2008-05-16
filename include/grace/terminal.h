@@ -136,6 +136,8 @@ public:
 					 /// Print formatted text to the terminal display.
 	void			 tprintf (const char *, ...);
 	
+	void			 tprintf (const string &s) { tprintf (s.cval()); }
+	
 					 /// Send a string to the terminal display.
 	void			 tputs (const string &);
 	
