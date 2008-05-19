@@ -938,7 +938,7 @@ string *file::read (size_t psz)
 			nonblocking = false;
 		}
 	}
-
+	
 	char buf[defaults::sz::file::readbuf];
 	while ( (! feof) && (buffer.backlog() < sz) )
 	{

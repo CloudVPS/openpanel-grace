@@ -38,9 +38,9 @@ sslclientcodec::sslclientcodec (void)
 	inbuf.start = inbuf.end = inbuf.buf;
 	inbuf.size = 16384;
 	
-	insock.buf = new unsigned char[16384];
+	insock.buf = new unsigned char[32768];
 	insock.start = insock.end = insock.buf;
-	insock.size = 16384;
+	insock.size = 32768;
 	
 	outsock.buf = new unsigned char[16384];
 	outsock.start = outsock.end = outsock.buf;
@@ -140,6 +140,7 @@ bool sslclientcodec::addinput (const char *data, size_t sz)
 bool sslclientcodec::fetchinput (ringbuffer &into)
 {
 	int rc;
+	unsigned int room = 0;
 	unsigned char myerror[256], alertLevel, alertDescription;
 	
 	alertLevel = 0;
@@ -164,18 +165,33 @@ bool sslclientcodec::fetchinput (ringbuffer &into)
 again:
 	rc = matrixSslDecode (ssl, &insock, &inbuf, myerror, &alertLevel,
 						  &alertDescription);
+
 	switch (rc)
 	{
 		case SSL_SUCCESS:
 			//::printf ("fetchinput SSL_SUCCESS\n");
 			if (insock.end - insock.start) goto again;
 			return false;
+		
+		case SSL_PARTIAL:
+			//::printf ("%08x partial\n", this);
+			if (inbuf.start == inbuf.end) return true;
 			
+			//::printf ("%08x start=%08x end=%08x size=%i\n", this, inbuf.start, inbuf.end, inbuf.end-inbuf.start);
+
 		case SSL_PROCESS_DATA:
 			//::printf ("%08x fetchinput SSL_PROCESS_DATA\n", this);
+			/*room = into.room();
+			if (room< (inbuf.end-inbuf.start))
+			{
+				into.add ((const char *) inbuf.start, room);
+				inbuf.start += room;
+				return true;
+			} */
+			
 			into.add ((const char *) inbuf.start, inbuf.end-inbuf.start);
 			inbuf.start = inbuf.end = inbuf.buf;
-			if (insock.end - insock.start) goto again;
+			//if (insock.end - insock.start) goto again;
 			return false;
 			
 		case SSL_SEND_RESPONSE:
@@ -197,6 +213,7 @@ again:
 			//::printf ("%08x fetchinput SSL_ERROR\n", this);
 			err.crop();
 			err.printf ("MatrixSSL Protocol Error: %s", myerror);
+			//::printf ("%s\n", err.str());
 			inbuf.start = inbuf.end = inbuf.buf;
 			throw (EX_SSL_PROTOCOL_ERROR);
 			
@@ -210,10 +227,6 @@ again:
 						alertLevel, alertDescription);
 			throw (EX_SSL_CLIENT_ALERT);
 		
-		case SSL_PARTIAL:
-			//::printf ("%08x partial\n", this);
-			return true;
-			
 		case SSL_FULL:
 			//::printf ("full\n");
 			throw (EX_SSL_BUFFER_SNAFU);

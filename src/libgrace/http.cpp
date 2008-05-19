@@ -7,6 +7,7 @@
 
 #include <grace/http.h>
 #include <grace/defaults.h>
+#include <grace/application.h>
 
 // ========================================================================
 // CONSTRUCTOR
@@ -481,6 +482,7 @@ bool httpsocket::getChunked (string &into)
 bool httpsocket::getData (string &into, size_t contentLength)
 {
 	if (! _host.strlen()) return false;
+	//::printf ("getdata content-length %i\n", contentLength);
 	if (contentLength)
 	{
 		size_t bytesLeft = contentLength;
@@ -582,6 +584,7 @@ string *httpsocket::getResult (value *hdr)
 					return &result;
 				}
 			}
+			//::printf ("***>%s<***\n", line.str());
 			
 			mySplit = strutil::split (line, ' ');
 		
@@ -607,6 +610,8 @@ string *httpsocket::getResult (value *hdr)
 				{
 					if (headers->count() < 48)
 						(*headers) << strutil::parsehdr (line);
+		
+				//::printf ("***>%s<***\n", line.str());
 				}
 			}
 		}
@@ -615,6 +620,8 @@ string *httpsocket::getResult (value *hdr)
 		
 		if (headers->exists ("Content-Length"))
 			csz = (*headers)["Content-Length"].uval();
+
+		//::printf ("hdr: content-length %i\n", csz);
 
 		if (headers->exists ("Transfer-Encoding"))
 		{
