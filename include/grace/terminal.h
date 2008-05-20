@@ -232,6 +232,8 @@ protected:
 	string			 prompt; ///< The prompt string.
 	tbidlecb		 idlecb; ///< Optional idle callback.
 	void			*idlearg; ///< Argument for idle callback.
+
+	unsigned int	 utf8expect; ///< Expected UTF-8 characters.
 	
 	value			 events; ///< Queue of console events.
 	lock<int>		 eventlock; ///< Lock on the event queue.
@@ -422,6 +424,8 @@ public:
 		termbuf.clear ();
 		termbuf.draw ();
 		
+		unsigned int utf8expect = 0;
+		
 		bool done = false;
 		int ki, kib, kic;
 		bool handled;
@@ -431,6 +435,24 @@ public:
 			ki = termbuf.getkey();
 			handled = false;
 			
+			if ((ki & 0xc0) == 0xc0)
+			{
+				if ((ki & 0xe0) == 0xc0) utf8expect = 2;
+				else if ((ki & 0xf0) == 0xe0) utf8expect = 3;
+				else if ((ki & 0xf8) == 0xf0) utf8expect = 4;
+				
+				termbuf.insert (ki);
+				utf8expect--;
+				
+				while (utf8expect)
+				{
+					termbuf.insert (termbuf.getkey());
+					utf8expect--;
+				}
+				
+				termbuf.draw ();
+				continue;
+			}
 			keyresponse *r = first;
 			while ((!basicmode) && r)
 			{
@@ -560,7 +582,8 @@ public:
 				}
 			}
 			
-			termbuf.draw();
+			if (utf8expect) utf8expect--;
+			else termbuf.draw();
 		}
 		
 		termbuf.tprintf ("\n");

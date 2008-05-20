@@ -27,6 +27,7 @@ termbuffer::termbuffer (file &in, file &out, int _size, int _wsize)
 	struct winsize sz;
 	len = 0;
 	engaged = false;
+	utf8expect = 0;
 	
 	size = _size;
 	
@@ -65,6 +66,28 @@ termbuffer::~termbuffer (void)
 {
 	free (buffer);
 	free (curview);
+}
+
+unsigned int _calcutfpos (const char *buf, unsigned int crsr)
+{
+	unsigned int res = 0;
+	for (int i=0; i<crsr; ++i) if ((buf[i] & 0xc0) != 0x80) res++;
+	return res;
+}
+
+unsigned int _calcunipos (const char *buf, unsigned int ucrsr)
+{
+	unsigned int res = 0;
+	unsigned int pos = 0;
+	
+	while (buf[res] && (pos < ucrsr))
+	{
+		res++;
+		while (buf[res] & 0xc0 == 0x80) res++;
+		pos++;
+	}
+	
+	return res;
 }
 
 // ==========================================================================
@@ -165,28 +188,36 @@ void termbuffer::backspace (void)
 	// Nothing to backspace before the prompt.
 	if (crsr <= prompt.strlen()) return;
 	
-	// We're at the end?
-	if (crsr == len)
+	do
 	{
-		buffer[crsr-1] = 0;
-		len--;
-		crsr--;
-	}
-	else // No, shift everything.
-	{
-		memmove (buffer + crsr-1, buffer+crsr, len-crsr);
-		len--;
-		crsr--;
-		buffer[len] = 0;
-	}
-	
-	// Does the viewport need to move along?
-	if (crsr < wcrsr)
-	{
-		if (crsr > (wsize-6))
-			wcrsr = crsr - (wsize-6);
-		else wcrsr = 0;
-	}
+		// We're at the end?
+		if (crsr == len)
+		{
+			buffer[crsr-1] = 0;
+			len--;
+			crsr--;
+		}
+		else // No, shift everything.
+		{
+			memmove (buffer + crsr-1, buffer+crsr, len-crsr);
+			len--;
+			crsr--;
+			buffer[len] = 0;
+		}
+		
+		unsigned int rcrsr = _calcutfpos (buffer, crsr);
+		unsigned int rwcrsr = _calcutfpos (buffer, wcrsr);
+		
+		// Does the viewport need to move along?
+		if (rcrsr < rwcrsr)
+		{
+			if (rcrsr > (wsize-6))
+			{
+				wcrsr = _calcunipos (buffer, rcrsr - (wsize-6));
+			}
+			else wcrsr = 0;
+		}
+	} while ( (buffer[crsr-1] & 0xc0) == 0x80 );
 }
 
 // ==========================================================================
@@ -199,9 +230,12 @@ void termbuffer::del (void)
 	if (crsr < prompt.strlen()) return;
 	if (crsr == len) return;
 	
-	memmove (buffer+crsr, buffer+crsr+1, len-(crsr+1));
-	len--;
-	buffer[len] = 0;
+	do
+	{
+		memmove (buffer+crsr, buffer+crsr+1, len-(crsr+1));
+		len--;
+		buffer[len] = 0;
+	} while ((crsr < len) && (buffer[crsr] & 0xc0 == 0x80));
 }
 
 // ==========================================================================
@@ -219,13 +253,21 @@ void termbuffer::eraseword (void)
 // ==========================================================================
 void termbuffer::crleft (void)
 {
-	if (crsr > prompt.strlen()) crsr--;
-	else return;
-	
-	if (crsr < wcrsr)
+	do
 	{
-		if (crsr > (wsize-6))
-			wcrsr = crsr - (wsize-6);
+		if (crsr > prompt.strlen()) crsr--;
+		else return;
+	} while (crsr && (buffer[crsr-1] & 0xc0 == 0x80));
+	
+	unsigned int rcrsr = _calcutfpos (buffer, crsr);
+	unsigned int rwcrsr = _calcutfpos (buffer, wcrsr);
+		
+	if (rcrsr < rwcrsr)
+	{
+		if (rcrsr > (wsize-6))
+		{
+			wcrsr = _calcunipos (buffer, rcrsr - (wsize-6));
+		}
 		else wcrsr = 0;
 	}
 }
@@ -235,15 +277,18 @@ void termbuffer::crleft (void)
 // ==========================================================================
 void termbuffer::crright (void)
 {
-	if (crsr < len)
+	do
 	{
-		crsr++;
-	}
-	else
-	{
-		tputc (7); // beep
-		return;
-	}
+		if (crsr < len)
+		{
+			crsr++;
+		}
+		else
+		{
+			tputc (7); // beep
+			return;
+		}
+	} while (buffer[crsr] & 0xc0 == 0x80);
 	
 	advance();
 }
@@ -254,8 +299,13 @@ void termbuffer::crright (void)
 void termbuffer::crend (void)
 {
 	crsr = len;
-	if (crsr > (wsize-4))
-		wcrsr = crsr - (wsize - 4);
+
+	unsigned int rcrsr = _calcutfpos (buffer, crsr);
+		
+	if (rcrsr > (wsize-4))
+	{
+		wcrsr = _calcunipos (buffer, rcrsr - (wsize - 4));
+	}
 	else
 	{
 		wcrsr = 0;
@@ -357,7 +407,18 @@ void termbuffer::insert (char c)
 		buffer[crsr++] = c;
 	}
 	
-	advance();
+	if ((c & 0xc0) == 0xc0)
+	{
+		if ((c & 0xe0) == 0xc0) utf8expect = 2;
+		else if ((c & 0xf0) == 0xe0) utf8expect = 3;
+		else if ((c & 0xf8) == 0xf0) utf8expect = 4;
+	}
+	
+	if (utf8expect) utf8expect--;
+	else
+	{
+		advance();
+	}
 }
 
 // ==========================================================================
@@ -423,12 +484,16 @@ void termbuffer::wordright (void)
 void termbuffer::advance (void)
 {
 	char *ptr;
-	if (crsr < wcrsr)
+
+	unsigned int rcrsr = _calcutfpos (buffer, crsr);
+	unsigned int rwcrsr = _calcutfpos (buffer, wcrsr);
+
+	if (rcrsr < rwcrsr)
 	{
 		wcrsr = crsr;
 		return;
 	}
-	if ( (crsr - wcrsr) > (wsize-2) )
+	if ( (rcrsr - rwcrsr) > (wsize-2) )
 	{
 		// try to jump a word if this scrolls less than 32
 		// positions.
@@ -439,7 +504,7 @@ void termbuffer::advance (void)
 		}
 		else // Mo suitable word boundary, just scroll 16 chars.
 		{
-			wcrsr += 16;
+			wcrsr = _calcunipos (buffer, rwcrsr += 16);
 		}
 	}
 }
@@ -481,17 +546,27 @@ void termbuffer::setpos (int cpos, int npos)
 	}
 }
 
+void __tbdraw_breakme (void ) {}
+
 // ==========================================================================
 // METHOD termbuffer::draw
 // ==========================================================================
 void termbuffer::draw (void)
 {
+	unsigned int rocrsr = _calcutfpos (buffer, ocrsr);
+	unsigned int rcrsr = _calcutfpos (buffer, crsr);
+	unsigned int rwcrsr = _calcutfpos (buffer, wcrsr);
+	unsigned int rowcrsr = _calcutfpos (buffer, owcrsr);
+	
 	unsigned int xc;
-	unsigned int cpos = ocrsr - owcrsr;
+	unsigned int cpos = rocrsr - rowcrsr;
+	unsigned int rxc = 0;
 
 	for (xc=0; xc<(wsize-1); ++xc)
 	{
-		if ((xc+wcrsr) >= len)
+		__tbdraw_breakme();
+		
+		if ((rxc+wcrsr) >= len)
 		{
 			if (curview[xc] != ' ')
 			{
@@ -502,16 +577,25 @@ void termbuffer::draw (void)
 				
 			}
 		}
-		else if (curview[xc] != buffer[xc+wcrsr])
+		else if (curview[xc] != buffer[rxc+wcrsr])
 		{
+			curview[xc] = buffer[rxc+wcrsr];
+
 			setpos (cpos, xc);
-			tputc (buffer[xc+wcrsr]);
-			curview[xc] = buffer[xc+wcrsr];
+			do
+			{
+				tputc (buffer[rxc+wcrsr]);
+				rxc++;
+			} while ((buffer[rxc+wcrsr] & 0xc0) == 0x80);
+			
 			cpos = xc+1;
 		}
+		else do { rxc++; } while ((buffer[rxc+wcrsr] & 0xc0) == 0x80);
 	}
 	
-	setpos (cpos, crsr - wcrsr);
+	__tbdraw_breakme();
+	
+	setpos (cpos, rcrsr - rwcrsr);
 
 	ocrsr = crsr;
 	owcrsr = wcrsr;
