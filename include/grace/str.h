@@ -344,6 +344,63 @@ public:
 						return size;
 					 }
 					 
+					 /// Naive calculation of the effective length in
+					 /// characters if the string contains UTF-8
+					 /// data. Double wide characters are not currently
+					 /// included in this calculation.
+	unsigned int	 utf8len (void) const
+					 {
+					 	unsigned int res = 0;
+					 	if (size<2) return size;
+					 	for (unsigned int i=0; i<size; ++i)
+					 	{
+					 		if ((data->v[i] & 0xc0) != 0x80) res++;
+					 	}
+					 	return res;
+					 }
+					 
+					 /// Find the byte-position of a specific character
+					 /// position inside a string possibly represented
+					 /// as UTF-8. Double wide characters are not taken
+					 /// into account.
+	unsigned int	 utf8pos (int i) const
+					 {
+					 	if (! i) return 0;
+					 	if (! size) return 0;
+					 	
+					 	int ii = i;
+					 	unsigned int crsr;
+					 	
+					 	if (i<0)
+					 	{
+					 		crsr = size-1;
+					 		while (crsr && ii)
+					 		{
+					 			if (data->v[crsr] & 0xc0 != 0x80) ii++;
+					 			crsr--;
+					 		}
+					 		return crsr;
+					 	}
+					 	
+					 	crsr = 0;
+					 	while ((crsr<size) && ii)
+					 	{
+					 		if (data->v[crsr] & 0xc0 != 0x80) ii--;
+					 		crsr++;
+					 	}
+					 	return crsr;
+					 }
+					 
+					 /// Pad the string to a specific count of
+					 /// UTF-8 characters.
+	void			 utf8pad (int i, char with = ' ')
+					 {
+					 	unsigned int u8len = utf8len();
+					 	unsigned int u8dif = strlen() - u8len;
+					 	if (u8len < i) pad (i+u8dif, with);
+					 	else crop (utf8pos (i));
+					 }
+					 
 					 /// Add string data (C-string).
 	void			 strcat (const char *);
 	
