@@ -310,9 +310,13 @@ tryagain:
 	while (true)
 	{
 		if (! _useproxy)
+		{
 			if (!_sock.puts ("GET /%s HTTP/1.1\r\n" %format (rawuri))) break;
+		}
 		else
+		{
 			if (!_sock.puts ("GET %s HTTP/1.1\r\n" %format (url.str()))) break;
+		}
 	
 		if (! postheaders.exists ("Host"))
 		{
