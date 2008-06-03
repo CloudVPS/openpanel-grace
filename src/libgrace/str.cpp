@@ -1364,6 +1364,7 @@ int string::strstr (const char *substr, size_t slen, int offset) const
 	while ((ptr = (char *)
 		   (memchr (ptr, substr[0], size - (/*slen + */(ptr - data->v))))))
 	{
+		if ( (ptr - ptr->data->v) >= size ) return -1;
 		if (! memcmp (ptr, substr, slen))
 			return (ptr - (data->v + offs));
 		++ptr;

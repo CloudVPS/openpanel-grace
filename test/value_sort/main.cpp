@@ -27,6 +27,27 @@ int value_sortApp::main (void)
 	
 	data.sort (recordSort, "title");
 	data.savexml ("record.xml");
+	
+	data = $("sheen",1) ->
+		   $("apple",2) ->
+		   $("thirsty", 3) ->
+		   $("bastard", 4);
+	
+	data.sort (naturalLabelSort);
+	data.rmval ("apple");
+	
+	if (data.count() == 4)
+	{
+		ferr.writeln ("ERR: count");
+		return 1;
+	}
+	
+	if (data.exists ("apple"))
+	{
+		ferr.writeln ("ERR: rmval");
+		return 1;
+	}
+	
 	return 0;
 }
 
