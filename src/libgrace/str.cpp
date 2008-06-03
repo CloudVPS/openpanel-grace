@@ -1360,9 +1360,10 @@ int string::strstr (const char *substr, size_t slen, int offset) const
 	if (offset < 0) return -1;
 
 	char *ptr = (data->v) + offs + offset;
+	char *oldptr = ptr - offset;
 	
 	while ((ptr = (char *)
-		   (memchr (ptr, substr[0], size - 1 - (/*slen + */(ptr - data->v))))))
+		   (memchr (ptr, substr[0], size - (/*slen + */(ptr - data->v))))))
 	{
 		if (! memcmp (ptr, substr, slen))
 			return (ptr - (data->v + offs));
