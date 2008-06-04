@@ -1362,13 +1362,12 @@ int string::strstr (const char *substr, size_t slen, int offset) const
 	char *ptr = (data->v) + offs + offset;
 	char *oldptr = ptr - offset;
 	
-	while ((ptr = (char *)
-		   (memchr (ptr, substr[0], size - (/*slen + */(ptr - oldptr))))))
+	while ((ptr = (char *)(memchr (ptr, substr[0], size - (ptr - oldptr)))))
 	{
-		if (! memcmp (ptr, substr, slen))
-			return (ptr - (data->v + offs));
+		if (! memcmp (ptr, substr, slen)) return (ptr - (data->v + offs));
+			
 		++ptr;
-		if (((unsigned int)(ptr - (data->v+offs))) >= size) return -1;
+		if (((unsigned int)(ptr - oldptr)) >= size) return -1;
 	}
 	return -1;
 }
