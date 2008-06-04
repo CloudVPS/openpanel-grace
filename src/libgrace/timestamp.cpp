@@ -68,7 +68,6 @@ void timestamp::init (void)
 	tmval.tm_mday = tmval.tm_mon = tmval.tm_year =
 	tmval.tm_wday = tmval.tm_yday = tmval.tm_isdst = 0;
 	tmset = false;
-	timezone = 0;
 	tvval.tv_sec = 0;
 	tvval.tv_usec = 0;
 	
@@ -93,6 +92,8 @@ void timestamp::init (void)
 #endif
 		__system_timezone_set = true;
 	}
+
+	timezone = __system_local_timezone;
 }
 
 // ========================================================================
@@ -104,6 +105,7 @@ void timestamp::copy (const timestamp &orig)
 	
 	tvval.tv_sec = orig.tvval.tv_sec;
 	tvval.tv_usec = orig.tvval.tv_usec;
+	timezone = orig.timezone;
 	
 	if (orig.tmset)
 	{
@@ -124,7 +126,7 @@ void timestamp::copy (const timestamp &orig)
 // ========================================================================
 time_t timestamp::unixtime (void) const
 {
-	return (tvval.tv_sec);
+	return (tvval.tv_sec - timezone + __system_local_timezone);
 }
 
 // ========================================================================
@@ -134,10 +136,10 @@ const struct tm &timestamp::tm (void) const
 {
 	if (tmset) return tmval;
 	
-	time_t tmp;
-	tmp = tvval.tv_sec;// - timezone;
-	
-	localtime_r ((const time_t *) &tmp, (struct tm *) &tmval);
+	localtime_r ((const time_t *) &tvval.tv_sec, (struct tm *) &tmval);
+#ifdef HAVE_GMTOFF
+	((timestamp *)this)->tmval.tm_gmtoff = timezone;
+#endif
 	return tmval;
 }
 
@@ -145,10 +147,10 @@ const struct tm &timestamp::tm (void)
 {
 	if (tmset) return tmval;
 	
-	time_t tmp;
-	tmp = tvval.tv_sec;// - timezone;
-	
-	localtime_r ((const time_t *) &tmp, (struct tm *) &tmval);
+	localtime_r ((const time_t *) &tvval.tv_sec, (struct tm *) &tmval);
+#ifdef HAVE_GMTOFF
+	tmval.tm_gmtoff = timezone;
+#endif
 	tmset = true;
 	return tmval;
 }
@@ -184,11 +186,17 @@ const string &timestamp::ctime (void)
 // ========================================================================
 const string &timestamp::iso (void)
 {
+	if (timezone != __system_local_timezone)
+		return format ("%Y-%m-%dT%H:%M:%SZ%z");
+		
 	return format ("%Y-%m-%dT%H:%M:%S");
 }
 
 const string &timestamp::iso (void) const
 {
+	if (timezone != __system_local_timezone)
+		return format ("%Y-%m-%dT%H:%M:%SZ%z");
+		
 	return format ("%Y-%m-%dT%H:%M:%S");
 }
 
@@ -206,7 +214,31 @@ const string &timestamp::isodate (void)
 const string &timestamp::format (const string &formatstr) const
 {
 	if (stset && (stformat == formatstr)) return stval;
+	
+	string fstr = formatstr;
+	bool addtz = false;
+	if (formatstr.strstr ("%z") >= 0)
+	{
+		string tstr = fstr.cutat ("%z");
+		string res;
+		if (tstr) res = format (tstr);
+		if (timezone<0)
+		{
+			res.strcat ("-%02i%02i" % ::format ((-timezone)/3600,
+											   (-timezone %60)/60));
+		}
+		else
+		{
+			res.strcat ("+%02i%02i" % ::format ((timezone)/3600,
+											   (timezone %60)/60));
+		}
 		
+		if (fstr) res.strcat (format (fstr));
+		(string &) stval = res;
+		
+		return stval;
+	}
+	
 	char tmp[256];
 	tm();
 	
@@ -219,14 +251,35 @@ const string &timestamp::format (const string &formatstr) const
 const string &timestamp::format (const string &formatstr)
 {
 	if (stset && (stformat == formatstr)) return stval;
+	string fstr = formatstr;
 	
 	stset = true;
-	stformat = formatstr;
+	
+	if (formatstr.strstr ("%z") >= 0)
+	{
+		string tstr = fstr.cutat ("%z");
+		string res;
+		if (tstr) res = format (tstr);
+		if (timezone<0)
+		{
+			res.strcat ("-%02i%02i" % ::format ((-timezone)/3600,
+											   (-timezone %60)/60));
+		}
+		else
+		{
+			res.strcat ("+%02i%02i" % ::format ((timezone)/3600,
+											   (timezone %60)/60));
+		}
+		
+		if (fstr) res.strcat (format (fstr));
+		stval = res;
+		return stval;
+	}
 	
 	char tmp[256];
 	tm();
 	
-	strftime (tmp, 255, stformat.str(), &tmval);
+	strftime (tmp, 255, fstr.str(), &tmval);
 	stval = tmp;
 	
 	return stval;
@@ -242,6 +295,8 @@ void timestamp::iso (const string &isodate)
 	string tzpart;
 	string in = isodate;
 	
+	init ();
+
 	if (in.strchr ('T') >= 0)
 	{
 		datepart = in.cutat ('T');
@@ -249,13 +304,21 @@ void timestamp::iso (const string &isodate)
 		{
 			timepart = in.cutat ('Z');
 			tzpart = in;
+			
+			if (tzpart[0] == '+') tzpart = tzpart.mid (1);
+			
+			timezone = tzpart.toint();
+			timezone = ((timezone/100)*3600) + ((timezone%100)*60);
 		}
-		else timepart = in;
+		else
+		{
+			timepart = in;
+			timezone = __system_local_timezone;
+		}
 	}
 	else datepart = in;
 
 	if (datepart.strlen() != 10) return;
-	init ();
 	
 	tmval.tm_year = ::atoi (datepart.str()) - 1900;
 	tmval.tm_mon = ::atoi (datepart.str()+5) - 1;
@@ -268,11 +331,11 @@ void timestamp::iso (const string &isodate)
 		tmval.tm_sec = ::atoi (timepart.str() + 6);
 	}
 #ifdef HAVE_GMTOFF
-	tmval.tm_gmtoff = 0;
+	tmval.tm_gmtoff = timezone;
 #endif
     //timezone = __system_local_timezone;
-	tmset = false;
-	tvval.tv_sec = timegm (&tmval) - __system_local_timezone;
+	tmset = true;
+	tvval.tv_sec = timelocal (&tmval); // + timezone - __system_local_timezone;
 	tvval.tv_usec = 0;
 }
 
@@ -310,12 +373,13 @@ void timestamp::ctime (const string &timestr)
 	tmval.tm_min = ::atoi (tstr+15);
 	tmval.tm_sec = ::atoi (tstr+18);
 	tmval.tm_year = ::atoi (tstr+21) - 1900;
+	timezone = __system_local_timezone;
 #ifdef HAVE_GMTOFF
-	tmval.tm_gmtoff = 0;
+	tmval.tm_gmtoff = timezone;
 #endif
     //timezone = __system_local_timezone;
 	tmset = true;
-	tvval.tv_sec = timegm (&tmval) - __system_local_timezone;
+	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;
 }
 
@@ -387,16 +451,17 @@ void timestamp::rfc822 (const string &timestr)
 		seconds = (3600 * hours) + minutes;
 		if (negative) seconds = -seconds;
 		
+		timezone = __system_local_timezone;
 #ifdef HAVE_GMTOFF
-		tmval.tm_gmtoff = 0;
+		tmval.tm_gmtoff = timezone;
 #endif
 		offs = seconds;
 		//timezone = seconds;
 	}
 
 	tmset = true;
-	tvval.tv_sec = timegm (&tmval) - seconds;
-	tvval.tv_usec = 0;
+	tvval.tv_sec = mktime (&tmval);
+	tvval.tv_usec = 0; 
 }
 
 // ========================================================================
@@ -407,6 +472,7 @@ void timestamp::unixtime (time_t in)
 	init();
 	tvval.tv_sec = in;
 	tvval.tv_usec = 0;
+	timezone = __system_local_timezone;
 }
 
 // ========================================================================
@@ -417,6 +483,7 @@ void timestamp::timeofday (timeval in)
 	init();
 	tvval 	= in;
 	//tvval.tv_sec += __system_local_timezone;
+	timezone = __system_local_timezone;
 }
 
 // ========================================================================
@@ -429,6 +496,11 @@ void timestamp::tm (const struct tm &in)
 	tmset = true;
 	tvval.tv_sec = mktime (&tmval);
 	tvval.tv_usec = 0;
+#ifdef HAVE_GMTOFF
+	timezone = tmval.tm_gmtoff;
+#else
+	timezone = __system_local_timezone;
+#endif
 }
 
 void timestamp::tm (const struct tm *in)
@@ -454,11 +526,11 @@ timestamp &timestamp::operator+= (timeval add)
 	unsigned long long given;
 	unsigned long long ntime;
 													
-	init();											
-													
 	current = (tvval.tv_sec * 1000000LL) 
 				 + tvval.tv_usec;
 									 
+	init();											
+													
 	given   = (add.tv_sec * 1000000LL) 
 				 + add.tv_usec;
 
@@ -489,11 +561,11 @@ timestamp &timestamp::operator-= (timeval sub)
 	unsigned long long given;
 	unsigned long long ntime;
 													
-	init();													
-													
 	current = (tvval.tv_sec * 1000000LL) 
 				 + tvval.tv_usec;
-									 
+
+	init();													
+																						 
 	given   = (sub.tv_sec * 1000000LL) 
 				 + sub.tv_usec;
 
