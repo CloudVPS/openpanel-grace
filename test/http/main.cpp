@@ -2,7 +2,7 @@
 #include <grace/http.h>
 #include <grace/httpd.h>
 
-extern "C" void grace_init (void) { __THREADED = true; puts ("grace_init!"); }
+extern "C" void grace_init (void) { __THREADED = true; }
 
 class httpApp : public application
 {
@@ -19,6 +19,8 @@ public:
 };
 
 APPOBJECT(httpApp);
+
+void __breakme (void) {}
 
 int httpApp::main (void)
 {
@@ -38,7 +40,6 @@ int httpApp::main (void)
 	httpdfileshare	srv_fshare (srv, "*", "docroot");
 	
 	srv.start ();
-	sleep (1);
 	
 	httpsocket hs;
 	
@@ -68,13 +69,24 @@ int httpApp::main (void)
 	
 	hs.authentication ("me","password");
 	
-	for (int i=0; i<1000; ++i)
+	for (int i=0; i<10; ++i)
 	{
 		restr_local = hs.get ("http://localhost:4269/restricted.dat");
 		if (! restr_local.strlen ())
 		{
-			ferr.printf ("FAIL restricted local: %i\n", hs.status);
-			return 4;
+			ferr.printf ("FAIL restricted local: %i %s\n", hs.status, hs.error.str());
+			restr_local = hs.get ("http://localhost:4269/restricted.dat");
+			if (! restr_local.strlen ())
+			{
+				ferr.printf ("FAIL restricted local: %i\n", hs.status);
+				__breakme ();
+				return 4;
+			}
+			else
+			{
+				ferr.printf ("FAIL: restricted local once\n");
+				return 9;
+			}
 		}
 		restr_default = hs.get ("http://127.0.0.1:4269/restricted.dat");
 		if (! restr_default.strlen ())
@@ -94,7 +106,6 @@ int httpApp::main (void)
 	ferr.printf ("Shutting down...\n");	
 	srv.shutdown();
 	ferr.printf ("Shutdown completed...\n");
-	
 	return 0;
 }
 

@@ -340,8 +340,12 @@ tryagain:
 			
 		if (! _sock.puts ("\r\n")) break;
 		
-		return getResult (hdr);
+		string *r = getResult (hdr);
+		if (status !=0) return r;
+		delete r;
+		break;
 	}
+	
 	++attempt;
 	_host.crop ();
 	_port = 0;
