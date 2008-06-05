@@ -290,7 +290,7 @@ regexpression::regexpression (const string &statement)
 	strcpy (tmp, stm);
 	
 	char *left, *right;
-	char sep = (*tmp == 's') ? ';' : '|';
+	char sep = ';'; // (*tmp == 's') ? ';' : '|';
 	
 	left = right = tmp;
 	while (*left)
