@@ -1,3 +1,19 @@
+0.9.21     Fri Jun  6 2008                           <grace@openpanel.com>
+
+           * Fixed a problem where httpsocket would sometimes deal
+             badly with a dropped connection when it was using
+             HTTP keepalive.
+             
+           * Fixed a bug in string::strstr that would overflow
+             memory bounds in some circumstances.
+             
+           * Fixed timezone handling inside class timestamp.
+           
+           * Fixed a bug in httpsocket GET handler (it never sent
+             a valid HTTP request due to control flow misalignment).
+             
+           * Fixed a parser bug in system regular expression handling.
+
 0.9.20     Fri May 23 2008                           <grace@openpanel.com>
 
            * Rudimentary support for formatting UTF-8 text in terminal
