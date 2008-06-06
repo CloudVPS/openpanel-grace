@@ -20,23 +20,10 @@ class tcpsocket : public file
 {
 public:
 				 /// Constructor.
-				 tcpsocket (void) : file()
-				 {
-				 	peer_pid = 0;
-				 	peer_uid = 65534;
-				 	peer_gid = 65534;
-				 	peer_addr = 0;
-				 	peer_port = 0;
-				 	ti_established = core.time.now();
-
-					// Is ignored by connect when string is empty
-					localbindaddr = "";
-				 }
+				 tcpsocket (void);
 				 
 				 /// Destructor.
-				~tcpsocket (void)
-				 {
-				 }
+				~tcpsocket (void);
 	
 				 /// Connect to an IPv4 host by name.
 				 /// Returns true if connection succeeded.
@@ -130,47 +117,14 @@ protected:
 				 /// object's filno and eof status. Copies the original's
 				 /// buffer contents. Then gets rid of the original.
 				 /// \param s Pointer to the original object.
-	inline void	 derive (tcpsocket *s)
-				 {
-				 	buffer.flush();
-				 	filno = s->filno;
-					feof = s->feof;
-					peer_pid = s->peer_pid;
-					peer_uid = s->peer_uid;
-					peer_gid = s->peer_gid;
-					peer_addr = s->peer_addr;
-					peer_name = s->peer_name;
-					peer_port = s->peer_port;
-					err = s->err;
-					errcode = s->errcode;
-					ti_established = s->ti_established;
-					s->filno = -1;
-					s->feof = true;
-					//buffer = s->buffer;
-					delete s;
-				 }
+	void		 derive (tcpsocket *s);
 
 				 /// Backend implementation of all derivation methods.
 				 /// Flushes the internal buffer. Takes over the other
 				 /// object's filno and eof status. Copies the original's
 				 /// buffer contents. 
 				 /// \param s Reference to the original object.
-	inline void	 derive (tcpsocket &s)
-				 {
-				 	buffer.flush();
-				 	filno = s.filno;
-					feof = s.feof;
-					peer_pid = s.peer_pid;
-					peer_uid = s.peer_uid;
-					peer_gid = s.peer_gid;
-					peer_addr = s.peer_addr;
-					peer_name = s.peer_name;
-					peer_port = s.peer_port;
-					err = s.err;
-					errcode = s.errcode;
-					ti_established = s.ti_established;
-					buffer = s.buffer;
-				 }
+	void		 derive (tcpsocket &s);
 };
 
 /// Listening TCP socket.

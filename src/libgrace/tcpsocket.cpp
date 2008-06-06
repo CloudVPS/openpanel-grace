@@ -98,6 +98,29 @@ void __grace_internal_freehostent (struct hostent *he)
 }
 
 // ========================================================================
+// CONSTRUCTOR tcpsocket
+// ========================================================================
+tcpsocket::tcpsocket (void)
+	: file ()
+{
+	peer_pid = 0;
+	peer_uid = 65534;
+	peer_gid = 65534;
+	peer_addr = 0;
+	peer_port = 0;
+	ti_established = core.time.now();
+	
+	localbindaddr = "";
+}
+
+// ========================================================================
+// DESTRUCTOR tcpsocket
+// ========================================================================
+tcpsocket::~tcpsocket (void)
+{
+}
+
+// ========================================================================
 // METHOD ::connect
 // ----------------
 // Attempt to connect to a specified host and port. This operation
@@ -487,6 +510,46 @@ tcpsocket &tcpsocket::operator= (tcpsocket *s)
 	if (! s) return *this;
 	derive (s);
 	return (*this);
+}
+
+// ========================================================================
+// METHOD tcpsocket::derive
+// ========================================================================
+void tcpsocket::derive (tcpsocket *s)
+{
+	buffer.flush();
+	filno = s->filno;
+	feof = s->feof;
+	peer_pid = s->peer_pid;
+	peer_uid = s->peer_uid;
+	peer_gid = s->peer_gid;
+	peer_addr = s->peer_addr;
+	peer_name = s->peer_name;
+	peer_port = s->peer_port;
+	err = s->err;
+	errcode = s->errcode;
+	ti_established = s->ti_established;
+	s->filno = -1;
+	s->feof = true;
+	//buffer = s->buffer;
+	delete s;
+}
+
+void tcpsocket::derive (tcpsocket &s)
+{
+	buffer.flush();
+	filno = s.filno;
+	feof = s.feof;
+	peer_pid = s.peer_pid;
+	peer_uid = s.peer_uid;
+	peer_gid = s.peer_gid;
+	peer_addr = s.peer_addr;
+	peer_name = s.peer_name;
+	peer_port = s.peer_port;
+	err = s.err;
+	errcode = s.errcode;
+	ti_established = s.ti_established;
+	buffer = s.buffer;
 }
 
 // ========================================================================

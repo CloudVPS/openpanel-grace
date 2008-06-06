@@ -19,12 +19,123 @@
 #include <grace/case.h>
 
 // ========================================================================
+// CONSTRUCTOR httpd
+// ========================================================================
+httpd::httpd (const string &DomainSocket, int inmint, int inmaxt)
+   : thread ("httpd"),
+     listener (DomainSocket)
+{
+	if (inmaxt < inmint) inmaxt = inmint;
+	_maxpostsize = defaults::lim::httpd::postsize;
+	minthr = inmint;
+	maxthr = inmaxt;
+	eventmask = 0;
+	load.o = 0;
+	first = NULL;
+	firsthandler = NULL;
+	_shutdown = false;
+}
+
+httpd::httpd (int listenport, int inmint, int inmaxt)
+	: thread ("httpd"),
+	  listener (listenport)
+{
+	if (inmaxt < inmint) inmaxt = inmint;
+	_maxpostsize = defaults::lim::httpd::postsize;
+	minthr = inmint;
+	maxthr = inmaxt;
+	eventmask = 0;
+	load.o = 0;
+	first = NULL;
+	firsthandler = NULL;
+	_shutdown = false;
+}
+
+httpd::httpd (void)
+	: thread ("httpd"),
+	  listener ()
+{
+	_maxpostsize = defaults::lim::httpd::postsize;
+	minthr = 2;
+	maxthr = 4;
+	eventmask = 0;
+	load.o = 0;
+	first = NULL;
+	firsthandler = NULL;
+	_shutdown = false;
+}
+
+// ========================================================================
 // DESTRUCTOR httpd
 // ----------------
 // Nothing interesting to do (yet)
 // ========================================================================
 httpd::~httpd (void)
 {
+}
+
+// ========================================================================
+// METHOD httpd::listento
+// ========================================================================
+void httpd::listento (int port)
+{
+	listener.listento (port);
+}
+
+void httpd::listento (ipaddress addr, int port)
+{
+	listener.listento (addr, port);
+}
+
+void httpd::listento (const string &path)
+{
+	listener.listento (path);
+}
+
+// ========================================================================
+// METHOD httpd::getload
+// ========================================================================
+int httpd::getload (void)
+{
+	int res;
+	sharedsection (load) res = load;
+	return res;
+}
+
+// ========================================================================
+// METHOD httpd::setdefaultdocument
+// ========================================================================
+void httpd::setdefaultdocument (int sti, const string &file)
+{
+	string thepath = file;
+	statstring st = "%i" %format (sti);
+	
+	if ( (file.strchr ('/') < 0) &&
+		 (file.strchr (':') < 0) )
+	{
+		thepath = systempath();
+		thepath.strcat ('/');
+		thepath.strcat (file);
+	}
+	defaultdocuments[st] = thepath;
+}
+
+// ========================================================================
+// METHOD httpd::havedefault
+// ========================================================================
+bool httpd::havedefault (int sti)
+{
+	statstring st = "%i" %format (sti);
+	return defaultdocuments.exists (st);
+}
+
+// ========================================================================
+// METHOD httpd::defaultdocument
+// ========================================================================
+const string &httpd::defaultdocument (int sti)
+{
+	statstring st = "%i" %format (sti);
+	return defaultdocuments[st].sval();
 }
 
 // ========================================================================
@@ -418,6 +529,23 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 	}
 	
 	keepalive = false;
+}
+
+// ========================================================================
+// CONSTRUCTOR httpdworker
+// ========================================================================
+httpdworker::httpdworker (httpd *pop)
+	: groupthread (pop->workers, "httpdworker")
+{
+	parent = pop;
+	spawn ();
+}
+
+// ========================================================================
+// DESTRUCTOR httpdworker
+// ========================================================================
+httpdworker::~httpdworker (void)
+{
 }
 
 // ========================================================================
@@ -881,6 +1009,30 @@ httpdeventhandler::httpdeventhandler (httpd &pparent,
 int httpdeventhandler::handle (const value &ev)
 {
 	return 0;
+}
+
+// ========================================================================
+// CONSTRUCTOR httpdlogger
+// ========================================================================
+httpdlogger::httpdlogger (httpd &parent, const string &accesslog,
+						  const string &errorlog, unsigned int maxsz)
+	: httpdeventhandler (parent, HTTPD_ACCESS|HTTPD_ERROR)
+{
+	accessPath = accesslog;
+	errorPath = errorlog;
+	
+	faccess.o.openappend (accesslog);
+	if (errorlog)
+	{
+		ferror.o.openappend (errorlog);
+	}
+}
+
+// ========================================================================
+// DESTRUCTOR httpdlogger
+// ========================================================================
+httpdlogger::~httpdlogger (void)
+{
 }
 
 // ========================================================================

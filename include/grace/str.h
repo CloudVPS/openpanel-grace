@@ -348,58 +348,17 @@ public:
 					 /// characters if the string contains UTF-8
 					 /// data. Double wide characters are not currently
 					 /// included in this calculation.
-	unsigned int	 utf8len (void) const
-					 {
-					 	unsigned int res = 0;
-					 	if (size<2) return size;
-					 	for (unsigned int i=0; i<size; ++i)
-					 	{
-					 		if ((data->v[i] & 0xc0) != 0x80) res++;
-					 	}
-					 	return res;
-					 }
+	unsigned int	 utf8len (void) const;
 					 
 					 /// Find the byte-position of a specific character
 					 /// position inside a string possibly represented
 					 /// as UTF-8. Double wide characters are not taken
 					 /// into account.
-	unsigned int	 utf8pos (int i) const
-					 {
-					 	if (! i) return 0;
-					 	if (! size) return 0;
-					 	
-					 	int ii = i;
-					 	unsigned int crsr;
-					 	
-					 	if (i<0)
-					 	{
-					 		crsr = size-1;
-					 		while (crsr && ii)
-					 		{
-					 			if (data->v[crsr] & 0xc0 != 0x80) ii++;
-					 			crsr--;
-					 		}
-					 		return crsr;
-					 	}
-					 	
-					 	crsr = 0;
-					 	while ((crsr<size) && ii)
-					 	{
-					 		if (data->v[crsr] & 0xc0 != 0x80) ii--;
-					 		crsr++;
-					 	}
-					 	return crsr;
-					 }
+	unsigned int	 utf8pos (int i) const;
 					 
 					 /// Pad the string to a specific count of
 					 /// UTF-8 characters.
-	void			 utf8pad (int i, char with = ' ')
-					 {
-					 	unsigned int u8len = utf8len();
-					 	unsigned int u8dif = strlen() - u8len;
-					 	if (u8len < i) pad (i+u8dif, with);
-					 	else crop (utf8pos (i));
-					 }
+	void			 utf8pad (int i, char with = ' ');
 					 
 					 /// Add string data (C-string).
 	void			 strcat (const char *);
@@ -979,43 +938,19 @@ public:
 	string			*copyafterlast (char c) const;
 	
 					 /// Convert buffer to lowercase.
-	void			 ctolower (void)
-					 {
-						docopyonwrite();
-					 	for (unsigned int i=0; i<size; ++i)
-							data->v[offs+i] = tolower (data->v[offs+i]);
-					 }
+	void			 ctolower (void);
 					 
 					 /// Convert buffer to upper case.
-	void			 ctoupper (void)
-					 {
-						docopyonwrite();
-					 	for (unsigned int i=0; i<size; ++i)
-							data->v[offs+i] = toupper (data->v[offs+i]);
-					 }
+	void			 ctoupper (void);
 	
 					 /// Make lowercase copy.
-	string			*lower (void) const
-					 {
-					 	string *res = new (memory::retainable::onstack) string (*this);
-					 	res->ctolower();
-					 	return res;
-					 }
+	string			*lower (void) const;
 
 					 /// Make uppercase copy.
-	string			*upper (void) const
-					 {
-					 	string *res = new (memory::retainable::onstack) string (*this);
-					 	res->ctoupper();
-					 	return res;
-					 }
+	string			*upper (void) const;
 					 
 					 /// Convert buffer's first character to upper case.
-	void			 capitalize (void)
-					 {
-					 	ctolower();
-					 	data->v[offs] = toupper (data->v[offs]);
-					 }
+	void			 capitalize (void);
 					 
 					 /// Cast to integer.
 					 /// \param base Optional math base to use.
@@ -1042,59 +977,12 @@ protected:
 class charmatch
 {
 public:
-					 charmatch (void)
-					 {
-					 	lenflag = 0;
-					 	replace = NULL;
-					 	memset (array, 0, 256 * sizeof (charmatch *));
-					 }
-					~charmatch (void)
-					 {
-					 	if (replace) delete replace;
-					 	for (int i=0; i<256; ++i)
-					 	{
-					 		if (array[i]) delete array[i];
-					 	}
-					 }
-					 
-	charmatch		*match (const char *str, int ln)
-					 {
-					 	if (lenflag) return this;
-					 	if (! ln) return NULL;
-					 	
-					 	charmatch *m = array[(int)str[0]];
-					 	if (m)
-					 	{
-				 			return m->match (str+1, ln-1);
-					 	}
-					 	return m;
-					 }
-					 
-	void			 addmatch (const char *seq, int pos,
-							  int ln, const string &rep)
-					 {
-					 	if (pos==ln)
-					 	{
-					 		replace = new string (rep);
-					 		lenflag = ln;
-					 		return;
-					 	}
-					 	
-					 	int c = seq[pos];
-					 	if (array[c] == NULL)
-					 	{
-					 		array[c] = new charmatch;
-					 	}
-					 	
-					 	array[c]->addmatch (seq, pos+1, ln, rep);
-					 }
-	
-	const string	&replacement (void)
-					 {
-					 	static string empty;
-					 	if (replace) return *replace;
-					 	return empty;
-					 }
+					 charmatch (void);
+					~charmatch (void);
+					
+	charmatch		*match (const char *str, int ln);
+	void			 addmatch (const char *s, int p, int l, const string &rep);
+	const string	&replacement (void);
 	
 	int				 lenflag;
 	charmatch		*array[256];

@@ -597,28 +597,14 @@ public:
 						 /// \param parent Link to parent httpd.
 						 /// \param accesslog Path to access logfile.
 						 /// \param errorlog Path to error logfile (empty for none)
-						 /// \param maxsz Maximum size of a logfile before rotating.
+						 /// \param ms Maximum size of a logfile before rotating.
 						 httpdlogger (httpd &parent,
 						 			  const string &accesslog,
 						 			  const string &errorlog="",
-						 			  unsigned int maxsz = defaults::sz::logfile)
-						 	: httpdeventhandler (parent,
-						 						 HTTPD_ACCESS|HTTPD_ERROR)
-						 {
-						 	accessPath = accesslog;
-						 	errorPath = errorlog;
-						 	
-						 	faccess.o.openappend (accesslog);
-						 	if (errorlog.strlen())
-						 	{
-						 		ferror.o.openappend (errorlog);
-						 	}
-						 }
+						 			  unsigned int ms = defaults::sz::logfile);
 						 
 						 /// Destructor.
-						~httpdlogger (void)
-						 {
-						 }
+						~httpdlogger (void);
 
 						 /// Implementation.
 						 /// Writes access events to the access log file.
@@ -654,81 +640,45 @@ public:
 					 /// Constructor, create httpd object
 					 //  using a Unix Domain Socket for 
 					 /// communication
-					 /// \param DomainSocket (filename)
-					 /// \param inmint Minimum number of threads
-					 /// \param inmaxt Maximum number of threads
-					 httpd (const string &DomainSocket,
-					 		int inmint=2, int inmaxt=4)
-					 	: thread ("httpd"), listener (DomainSocket)
-					 {
-					 	if (inmaxt < inmint) inmaxt = inmint;
-					 	_maxpostsize = defaults::lim::httpd::postsize;
-					 	minthr = inmint;
-					 	maxthr = inmaxt;
-					 	eventmask = 0;
-					 	load.o = 0;
-					 	first = NULL;
-					 	firsthandler = NULL;
-					 	_shutdown = false;
-					 }
-					 
+					 /// \param path listening socket path
+					 /// \param mint Minimum number of threads
+					 /// \param maxt Maximum number of threads
+					 httpd (const string &path, int mint=2, int maxt=4);
 
 					 /// Constructor.
 					 /// \param listenport The tcp port to listen to
 					 /// \param inmint Minimum number of threads.
 					 /// \param inmaxt Maximum number of threads.
-					 httpd (int listenport,
-					 		int inmint=2, int inmaxt=4)
-					 	: thread ("httpd"), listener (listenport)
-					 {
-					 	if (inmaxt < inmint) inmaxt = inmint;
-					 	_maxpostsize = defaults::lim::httpd::postsize;
-					 	minthr = inmint;
-					 	maxthr = inmaxt;
-					 	eventmask = 0;
-					 	load.o = 0;
-					 	first = NULL;
-					 	firsthandler = NULL;
-					 	_shutdown = false;
-					 }
-					 
+					 httpd (int listenport, int inmint=2, int inmaxt=4);
+
 					 /// Delayed initialization constructor.
 					 /// For situations where you want to define the
 					 /// listenport later.
-					 httpd (void)
-					 	: thread ("httpd"), listener ()
-					 {
-					 	_maxpostsize = defaults::lim::httpd::postsize;
-					 	minthr = 2;
-					 	maxthr = 4;
-					 	eventmask = 0;
-					 	load.o = 0;
-					 	first = NULL;
-					 	firsthandler = NULL;
-					 	_shutdown = false;
-					 }
+					 httpd (void);
 					 
 					 /// Set listen-port post-facto.
-					 /// Only useful if you used the constructor
-					 /// without a listenport argument.
-	void			 listento (int port)
-					 {
-					 	listener.listento (port);
-					 }
+					 /// If the httpd object was created through
+					 /// the constructor without a listenport, this
+					 /// function binds the listening socket to
+					 /// a specific port.
+					 /// \param port The port number.
+	void			 listento (int port);
 	
-	void			 listento (ipaddress addr, int port)
-					 {
-					 	listener.listento (addr, port);
-					 }
+					 /// Set listen-port and address post-facto.
+					 /// If the httpd object was created through
+					 /// the constructor without a listenport, this
+					 /// function binds the listening socket to
+					 /// a specific ip address and port.
+					 /// \param addr The listening address.
+					 /// \param port The listening port.
+	void			 listento (ipaddress addr, int port);
 					 
 					 /// Sey Unix listen socket
 					 /// Only usefull if you used the constructor
 					 /// without arguments
-	void			 listento (const string &unixsock)
-					 {
-					 	listener.listento (unixsock);
-					 }
-					 
+	void			 listento (const string &unixsock);
+
+					 /// Destructor.					 
 					~httpd (void);
 
 					 /// Start the server process. Threads are not
@@ -739,32 +689,13 @@ public:
 	
 					 /// Get current server load.
 					 /// \return Number of open connections.
-	int				 getload (void)
-					 {
-					 	int res;
-					 	load.lockr();
-					 	res = load.o;
-					 	load.unlock();
-					 	return res;
-					 }
+	int				 getload (void);
 					 
 					 /// Set a default document. Links a file path to
 					 /// a HTTP status code.
 					 /// \param sti The status code
 					 /// \param file The path to the default file.
-	void			 setdefaultdocument (int sti, const string &file)
-					 {
-					 	string st; st.printf ("%i", sti);
-					 	string thepath = file;
-					 	if ( (file.strchr ('/') < 0) &&
-					 		 (file.strchr (':') < 0) )
-					 	{
-					 		thepath = systempath();
-					 		thepath.strcat ('/');
-					 		thepath.strcat (file);
-					 	}
-					 	defaultdocuments[st] = thepath;
-					 }
+	void			 setdefaultdocument (int sti, const string &file);
 
 	// ---------------------------------------------------------------------
 	// Property methods
@@ -831,20 +762,12 @@ public:
 					 /// \param sti The http status code.
 					 /// \return \b true if there is a default document
 					 ///         defined for the status.
-	bool			 havedefault (int sti)
-					 {
-					 	string st; st.printf ("%i", sti);
-					 	return (defaultdocuments.exists (st));
-					 }
+	bool			 havedefault (int sti);
 					 
 					 /// Default document path.
 					 /// \param sti The http status code.
 					 /// \return Path to the default document for provided status.
-	const string	&defaultdocument (int sti)
-					 {
-					 	string st; st.printf ("%i", sti);
-					 	return defaultdocuments[st].sval();
-					 }
+	const string	&defaultdocument (int sti);
 	
 					 /// Shut down all threads.
 	void			 shutdown (void);
@@ -880,17 +803,10 @@ class httpdworker : public groupthread
 public:
 					 /// Construcotr. Spawns the thread.
 					 /// \param pop Parent httpd object.
-					 httpdworker (httpd *pop)
-					 	: groupthread (pop->workers, "httpdworker")
-					 {
-					 	parent = pop;
-					 	spawn ();
-					 }
+					 httpdworker (httpd *pop);
 					 
 					 /// Destructor.
-					~httpdworker (void)
-					 {
-					 }
+					~httpdworker (void);
 					 
 					 /// Thread implementation.
 					 /// Does a non-blocking accept on the parent's

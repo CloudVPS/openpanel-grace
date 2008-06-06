@@ -1102,6 +1102,62 @@ void string::strcat (const value &v)
 }
 
 // ========================================================================
+// METHOD string::utf8len
+// ========================================================================
+unsigned int string::utf8len (void) const
+{
+	unsigned int res = 0;
+	if (size<2) return size;
+	for (unsigned int i=0; i<size; ++i)
+	{
+		if ((data->v[i] & 0xc0) != 0x80) res++;
+	}
+	return res;
+}
+
+// ========================================================================
+// METHOD string::utf8pad
+// ========================================================================
+void string::utf8pad (int i, char with)
+{
+	unsigned int u8len = utf8len();
+	unsigned int u8dif = strlen() - u8len;
+	if (u8len < i) pad (i+u8dif, with);
+	else crop (utf8pos (i));
+}
+
+// ========================================================================
+// METHOD string::utf8pos
+// ========================================================================
+unsigned int string::utf8pos (int i) const
+{
+	if (! i) return 0;
+	if (! size) return 0;
+	
+	int ii = i;
+	unsigned int crsr;
+	
+	if (i<0)
+	{
+		crsr = size-1;
+		while (crsr && ii)
+		{
+			if (data->v[crsr] & 0xc0 != 0x80) ii++;
+			crsr--;
+		}
+		return crsr;
+	}
+	
+	crsr = 0;
+	while ((crsr<size) && ii)
+	{
+		if (data->v[crsr] & 0xc0 != 0x80) ii--;
+		crsr++;
+	}
+	return crsr;
+}
+
+// ========================================================================
 // METHOD ::strcat
 // ---------------
 // A c-string variation that expects the size of the c-string to be known.
@@ -2623,6 +2679,55 @@ string *string::copyafterlast (const string &s) const
 }
 
 // ========================================================================
+// METHOD ::ctolower
+// ========================================================================
+void string::ctolower (void)
+{
+	docopyonwrite();
+	for (unsigned int i=0; i<size; ++i)
+		data->v[offs+i] = tolower (data->v[offs+i]);
+}
+
+// ========================================================================
+// METHOD ::ctoupper
+// ========================================================================
+void string::ctoupper (void)
+{
+	docopyonwrite();
+	for (unsigned int i=0; i<size; ++i)
+		data->v[offs+i] = toupper (data->v[offs+i]);
+}
+
+// ========================================================================
+// METHOD ::lower
+// ========================================================================
+string *string::lower (void) const
+{
+	string *res = new (memory::retainable::onstack) string (*this);
+	res->ctolower();
+	return res;
+}
+
+// ========================================================================
+// METHOD ::upper
+// ========================================================================
+string *string::upper (void) const
+{
+	string *res = new (memory::retainable::onstack) string (*this);
+	res->ctoupper();
+	return res;
+}
+
+// ========================================================================
+// METHOD ::capitalize
+// ========================================================================
+void string::capitalize (void)
+{
+	ctolower();
+	data->v[offs] = toupper (data->v[offs]);
+}
+
+// ========================================================================
 // METHOD ::cutafter
 // ========================================================================
 string *string::cutafter (const string &s)
@@ -2995,7 +3100,74 @@ string *string::cutatlast (const char *c)
 }
 
 // ========================================================================
-// METHOD ::
+// CONSTRUCTOR charmatch
+// ========================================================================
+charmatch::charmatch (void)
+{
+	lenflag = 0;
+	replace = NULL;
+	memset (array, 0, 256 * sizeof (charmatch *));
+}
+
+// ========================================================================
+// DESTRUCTOR charmatch
+// ========================================================================
+charmatch::~charmatch (void)
+{
+	if (replace) delete replace;
+	for (int i=0; i<256; ++i)
+	{
+		if (array[i]) delete array[i];
+	}
+}
+
+// ========================================================================
+// METHOD charmatch::match
+// ========================================================================
+charmatch *charmatch::match (const char *str, int ln)
+{
+	if (lenflag) return this;
+	if (! ln) return NULL;
+	
+	charmatch *m = array[(int)str[0]];
+	if (m)
+	{
+		return m->match (str+1, ln-1);
+	}
+	return m;
+}
+
+// ========================================================================
+// METHOD charmatch::addmatch
+// ========================================================================
+void charmatch::addmatch (const char *seq, int pos, int ln, const string &rep)
+{
+	if (pos == ln)
+	{
+		replace = new string (rep);
+		lenflag = ln;
+		return;
+	}
+	
+	int c = seq[pos];
+	if (array[c] == NULL)
+	{
+		array[c] = new charmatch;
+	}
+	
+	array[c]->addmatch (seq, pos+1, ln, rep);
+}
+
+// ========================================================================
+// METHOD charmatch::replacement
+// ========================================================================
+const string &charmatch::replacement (void)
+{
+	if (replace) return *replace;
+	return emptystring;
+}
+
+// ========================================================================
 // ========================================================================
 
 string emptystring;
