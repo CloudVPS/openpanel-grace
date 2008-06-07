@@ -577,6 +577,37 @@ bool filesystem::chmod (const string &path, int perms)
 }
 
 // ========================================================================
+// METHOD ::pwdize
+// ========================================================================
+string *filesystem::pwdize (const string &str)
+{
+	returnclass (string) res retain;
+	
+	if (str[0] == '/')
+	{
+		res = str;
+		return &res;
+	}
+	
+	if (str.strchr (':') >= 0)
+	{
+		res =str;
+		return &res;
+	}
+	
+	if ((str[0] == '.')&&(str[1] == '/'))
+	{
+	   res.printf ("%s/%s", pwd().str(),
+							   str.str() + 2);
+	}
+	else
+	{
+	   res.printf ("%s/%s", pwd().str(), str.str());
+	}
+	return &res;
+}
+
+// ========================================================================
 // METHOD ::chgrp
 // ========================================================================
 bool filesystem::chgrp (const string &path, const string &gr)
@@ -1075,6 +1106,38 @@ string *filesystem::getresource (const string &p, const string &rsrc, const stri
 }
 
 // ========================================================================
+// METHOD ::pwd
+// ========================================================================
+string &filesystem::pwd (void)
+{
+	if (! _cwd.get())
+	{
+		char cwdbuffer[1024];
+		string tstr = ::getcwd (cwdbuffer, 1023);
+		_cwd = tstr;
+	}
+	
+	return _cwd.get();
+}
+
+// ========================================================================
+// METHOD ::load
+// ========================================================================
+string *filesystem::load (const string &_vpath)
+{
+	returnclass (string) b retain;
+	file f;
+	
+	f.openread (_vpath);
+	while (! f.eof())
+	{
+		b.strcat (f.read (8192));
+	}
+	f.close();
+	return &b;
+}
+
+// ========================================================================
 // METHOD ::size
 // -------------
 // Report 32-bit size of a file in the filesystem. Accepts alias paths.
@@ -1197,6 +1260,7 @@ bool filesystem::save (const string &_vpath, const string &_data,
 	if (! f.puts (_data))
 	{
 		f.close();
+		fs.rm (tmpnam);
 		return false;
 	}
 	f.close();
@@ -1206,6 +1270,20 @@ bool filesystem::save (const string &_vpath, const string &_data,
 		return false;
 	}
 	
+	return true;
+}
+
+bool filesystem::save (const string &_vpath, const string &_data)
+{
+	file f;
+
+	if (! f.openwrite (_vpath)) return false;
+	if (! f.puts (_data))
+	{
+		f.close();
+		return false;
+	}
+	f.close();
 	return true;
 }
 

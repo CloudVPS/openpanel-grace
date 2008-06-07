@@ -77,33 +77,7 @@ public:
 					 /// absolute path. 
 					 /// \param str The relative/alias path.
 					 /// \return New string object with the absolute path.
-	inline string	*pwdize (const string &str)
-					 {
-					 	returnclass (string) res retain;
-
-						if (str[0] == '/')
-						{
-							res = str;
-							return &res;
-						}
-						
-						if (str.strchr (':') >= 0)
-						{
-							res =str;
-							return &res;
-						}
-						
-						if ((str[0] == '.')&&(str[1] == '/'))
-						{
-						   res.printf ("%s/%s", pwd().str(),
-												   str.str() + 2);
-						}
-						else
-						{
-						   res.printf ("%s/%s", pwd().str(), str.str());
-						}
-						return &res;
-					 }
+	string			*pwdize (const string &str);
 	
 					 /// Set filesystem mask.
 					 /// \param msk The mask.
@@ -188,53 +162,19 @@ public:
 					 
 					 /// Get current directory path.
 					 /// \return Reference to the path variable.
-	string			&pwd (void)
-					 {
-					 	if (! _cwd.get())
-					 	{
-					 		char cwdbuffer[1024];
-					 		string tstr = ::getcwd (cwdbuffer, 1023);
-					 		_cwd = tstr;
-					 	}
-					 	
-					 	return _cwd.get();
-					 }
-	
+	string			&pwd (void);
+
 					 /// Load a file. Returns a pointer
 					 /// to a newly allocated string object.
 					 /// \param _vpath Relative or absolute path of the file.
 					 /// \return New string object with the file contents.
-	inline string	*load (const string &_vpath)
-					 {
-					 	returnclass (string) b retain;
-					 	file f;
-					 	
-					 	f.openread (_vpath);
-					 	while (! f.eof())
-					 	{
-					 		b.strcat (f.read (8192));
-					 	}
-					 	f.close();
-					 	return &b;
-					 }
+	string			*load (const string &_vpath);
 					 
 					 /// Save a string object into a file.
 					 /// \param _vpath Relative or absolute path for the file.
 					 /// \param _data The string to be saved.
 					 /// \return Status, \b true if succesfully saved.
-	inline bool		 save (const string &_vpath, const string &_data)
-					 {
-					 	file f;
-					 	
-					 	if (! f.openwrite (_vpath)) return false;
-					 	if (! f.puts (_data))
-					 	{
-					 		f.close();
-					 		return false;
-					 	}
-					 	f.close();
-					 	return true;
-					 }
+	bool			 save (const string &_vpath, const string &_data);
 					 
 	bool			 save (const string &p, const string &d,
 						   flag::savetype tp);

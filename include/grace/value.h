@@ -916,7 +916,11 @@ public:
 	
 					 /// Save to the SHOX object format.
 					 /// \param fname Filename to save.
-	bool			 saveshox (const string &fname) const;
+					 /// \param tp Optional save type, set to flag::atomic
+					 ///           to do an atomic save (flush to tempfile
+					 ///           followed by a rename).
+	bool			 saveshox (const string &fname,
+							   flag::savetype tp = flag::normal) const;
 	
 					 /// Convert from SHOX string data.
 					 /// \param shox The shox-encoded data.
