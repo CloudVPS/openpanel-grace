@@ -13,11 +13,18 @@ void value::encodegrace (string &into, int indent)
 	if (! count())
 	{
 		int j = 0;
+		dent.pad (indent, ' ');
+		
+		if (! isbuiltin (type()))
+		{
+			into.strcat ("\n");
+			into.strcat ("%s$type(\"%S\")" %format (dent, type()));
+			j = 1;
+		}
 		if (attrib) foreach (a, (*attrib))
 		{
 			if (j) into.strcat (" ->");
 			into.strcat ("\n");
-			dent.pad (indent, ' ');
 			into.strcat ("%s$attr(\"" %format (dent));
 			a.encodejsonid (into);
 			into.strcat ("\",");
@@ -64,11 +71,19 @@ void value::encodegrace (string &into, int indent)
 	else
 	{
 		int j = 0;
+		dent.pad (indent, ' ');
+		
+		if (! isbuiltin (type()))
+		{
+			into.strcat ("\n");
+			into.strcat ("%s$type(\"%S\")" %format (dent, type()));
+			j = 1;
+		}
+		
 		if (attrib) foreach (a, (*attrib))
 		{
 			if (j) into.strcat (" ->");
 			into.strcat ("\n");
-			dent.pad (indent, ' ');
 			into.strcat ("%s$attr(\"" %format (dent));
 			a.encodejsonid (into);
 			into.strcat ("\",");

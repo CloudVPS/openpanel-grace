@@ -17,76 +17,40 @@
 // ========================================================================
 void xmlschema::netdbschema (void)
 {
-	// -------------------------------------------------------------------
-	//  <xml.class name="grace.netdb.host">
-	//    <xml.type>dict</xml.type>
-	//    <xml.code>ndbH</xml.code>
-	//    <xml.proplist>
-	//      <xml.member class="host.name" id="name"/>
-	//      <xml.member class="host.address" id="address"/>
-	//    </xml.proplist>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-	
-	schema[key::grace_netdb_host].type (key::xml_class);
-	schema[-1][key::xml_type] = "dict";
-	schema[-1][key::xml_code] = "ndbH";
-	
-	schema[-1][key::xml_proplist][key::host_name].type (key::xml_member);
-	schema[-1][-1][-1].setattrib (key::id, "name");
-	schema[-1][-1][key::host_address].type (key::xml_member);
-	schema[-1][-1][-1].setattrib (key::id, "address");
-	
-	// -------------------------------------------------------------------
-	//  <xml.class name="host.name">
-	//    <xml.type>array</xml.type>
-	//    <xml.code>ndHN</xml.code>
-	//    <xml.proplist>
-	//      <xml.member class="hostname"/>
-	//    </xml.proplist>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-	
-	schema[key::host_name].type (key::xml_class);
-	schema[-1][key::xml_type] = "array";
-	schema[-1][key::xml_code] = "ndHN";
-	
-	schema[-1][key::xml_proplist][key::hostname].type (key::xml_member);
-	
-	// -------------------------------------------------------------------
-	//  <xml.class name="hostname">
-	//    <xml.type>string</xml.type><xml.code>ndHn</xml.code>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::hostname].type (key::xml_class);
-	schema[-1][key::xml_type] = "string";
-	schema[-1][key::xml_code] = "ndHn";
-
-	// -------------------------------------------------------------------
-	//  <xml.class name="host.address">
-	//    <xml.type>array</xml.type>
-	//    <xml.code>ndAD</xml.code>
-	//    <xml.proplist>
-	//      <xml.member class="address"/>
-	//    </xml.proplist>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::host_address].type (key::xml_class);
-	schema[-1][key::xml_type] = "array";
-	schema[-1][key::xml_code] = "ndAD";
-	schema[-1][key::xml_proplist][key::address].type (key::xml_member);
-	
-	// -------------------------------------------------------------------
-	//  <xml.class name="address">
-	//    <xml.type>ipaddress</xml.type><xml.code>ndAd</xml.code>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::address].type (key::xml_class);
-	schema[-1][key::xml_type] = "ipaddress";
-	schema[-1][key::xml_code] = "ndAd";
+	schema =	$type("xml.schema") ->
+				$("grace.netdb.host",
+					$type("xml.class") ->
+					$("xml.type","dict") ->
+					$("xml.code","ndbH") ->
+					$("xml.proplist",
+						$("host.name",
+							$type("xml.member") ->
+							$attr("id","name")) ->
+						$("host.address",
+							$type("xml.member") ->
+							$attr("id","address")))) ->
+				$("host.name",
+					$type("xml.class") ->
+					$("xml.type","array") ->
+					$("xml.code","ndHN") ->
+					$("xml.proplist",
+						$("hostname",
+							$type("xml.member")))) ->
+				$("hostname",
+					$type("xml.class") ->
+					$("xml.type","string") ->
+					$("xml.code","ndHn")) ->
+				$("host.address",
+					$type("xml.class") ->
+					$("xml.type","array") ->
+					$("xml.code","ndAD") ->
+					$("xml.proplist",
+						$("address",
+							$type("xml.member")))) ->
+				$("address",
+					$type("xml.class") ->
+					$("xml.type","ipaddress") ->
+					$("xml.code","ndAd"));
 }
 
 // ========================================================================
@@ -97,120 +61,60 @@ void xmlschema::netdbschema (void)
 // ========================================================================
 void xmlschema::runoptschema (void)
 {
-	// -------------------------------------------------------------------
-	//  <xml.class name="grace.runoptions">
-	//    <xml.type>dict</xml.type>
-	//    <xml.code>OPTV</xml.code>
-	//    <xml.proplist>
-	//      <xml.member class="grace.option"/>
-	//    </xml.proplist>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::grace_runoptions].type (key::xml_class);
-	schema[-1][key::xml_type] = "dict";
-	schema[-1][key::xml_code] = "OPTV";
-	schema[-1][key::xml_proplist][key::grace_option].type (key::xml_member);
-
-	// -------------------------------------------------------------------
- 	// <xml.class name="grace.option">
- 	//   <xml.type>dict</xml.type>
- 	//   <xml.code>OPTN</xml.code>
- 	//   <xml.attributes>
- 	//     <xml.attribute label="id" mandatory="true" isindex="true">
- 	//       <xml.type>string</xml.type>
- 	//       <xml.code>OPTX</xml.code>
- 	//     </xml.attribute>
- 	//   </xml.attributes>
- 	//   <xml.proplist>
- 	//     <xml.member class="grace.long" id="long"/>
- 	//     <xml.member class="grace.argc" id="argc"/>
- 	//     <xml.member class="grace.default" id="default"/>
- 	//     <xml.member class="grace.help" id="help"/>
- 	//     <xml.member class="grace.hide" id="hide"/>
- 	//   </xml.proplist>
- 	// </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::grace_option].type (key::xml_class);
-	schema[-1][key::xml_type] = "dict";
-	schema[-1][key::xml_code] = "OPTN";
-	
-	schema[-1][key::id].type (key::xml_attribute);
-	schema[-1][-1].setattrib ("mandatory",true);
-	schema[-1][-1].setattrib ("isindex",true);
-	schema[-1][-1][key::xml_type] = "string";
-	schema[-1][-1][key::xml_code] = "OPTX";
-	
-	schema[-1][key::xml_proplist][key::grace_long].type (key::xml_member);
-	schema[-1][-1][-1].setattrib (key::id,(const char *) "long");
-	
-	schema[-1][-1][key::grace_argc].type (key::xml_member);
-	schema[-1][-1][-1].setattrib (key::id,(const char *) "argc");
-	
-	schema[-1][-1][key::grace_default].type (key::xml_member);
-	schema[-1][-1][-1].setattrib (key::id,(const char *) "default");
-	
-	schema[-1][-1][key::grace_help].type (key::xml_member);
-	schema[-1][-1][-1].setattrib (key::id,(const char *) "help");
-	
-	schema[-1][-1][key::grace_hide].type (key::xml_member);
-	schema[-1][-1][-1].setattrib (key::id,(const char *) "hide");
-
-	// -------------------------------------------------------------------
-	//  <xml.class name="grace.long">
-	//    <xml.type>string</xml.type>
-	//    <xml.code>OLNG</xml.code>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-  
-	schema[key::grace_long].type (key::xml_class);
-	schema[-1][key::xml_type] = "string";
-	schema[-1][key::xml_code] = "OLNG";
-	
-	// -------------------------------------------------------------------
-	//  <xml.class name="grace.argc">
-	//    <xml.type>integer</xml.type>
-	//    <xml.code>OARC</xml.code>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::grace_argc].type (key::xml_class);
-	schema[-1][key::xml_type] = "integer";
-	schema[-1][key::xml_code] = "OARC";
-
-	// -------------------------------------------------------------------
-	//  <xml.class name="grace.default">
-	//    <xml.type>string</xml.type>
-	//    <xml.code>ODFL</xml.code>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::grace_default].type (key::xml_class);
-	schema[-1][key::xml_type] = "string";
-	schema[-1][key::xml_code] = "ODFL";
-
-	// -------------------------------------------------------------------
-	//  <xml.class name="grace.help">
-	//    <xml.type>string</xml.type>
-	//    <xml.code>OHLP</xml.code>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::grace_help].type (key::xml_class);
-	schema[-1][key::xml_type] = "string";
-	schema[-1][key::xml_code] = "OHLP";
-
-	// -------------------------------------------------------------------
-	//  <xml.class name="grace.hide">
-	//    <xml.type>bool</xml.type>
-	//    <xml.code>OHID</xml.code>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::grace_hide].type (key::xml_class);
-	schema[-1][key::xml_type] = "bool";
-	schema[-1][key::xml_code] = "OHID";
+	schema =	$type("xml.schema") ->
+				$("grace.runoptions",
+					$type("xml.class") ->
+					$("xml.type","dict") ->
+					$("xml.code","OPTV") ->
+					$("xml.proplist",
+						$("grace.option",
+							$type("xml.member")))) ->
+				$("grace.option",
+					$type("xml.class") ->
+					$("xml.type","dict") ->
+					$("xml.code","OPTN") ->
+					$("id",
+						$type("xml.attribute") ->
+						$attr("mandatory","true") ->
+						$attr("isindex","true") ->
+						$("xml.type","string") ->
+						$("xml.code","OPTX")) ->
+					$("xml.proplist",
+						$("grace.long",
+							$type("xml.member") ->
+							$attr("id","long")) ->
+						$("grace.argc",
+							$type("xml.member") ->
+							$attr("id","argc")) ->
+						$("grace.default",
+							$type("xml.member") ->
+							$attr("id","default")) ->
+						$("grace.help",
+							$type("xml.member") ->
+							$attr("id","help")) ->
+						$("grace.hide",
+							$type("xml.member") ->
+							$attr("id","hide")))) ->
+				$("grace.long",
+					$type("xml.class") ->
+					$("xml.type","string") ->
+					$("xml.code","OLNG")) ->
+				$("grace.argc",
+					$type("xml.class") ->
+					$("xml.type","integer") ->
+					$("xml.code","OARC")) ->
+				$("grace.default",
+					$type("xml.class") ->
+					$("xml.type","string") ->
+					$("xml.code","ODFL")) ->
+				$("grace.help",
+					$type("xml.class") ->
+					$("xml.type","string") ->
+					$("xml.code","OHLP")) ->
+				$("grace.hide",
+					$type("xml.class") ->
+					$("xml.type","bool") ->
+					$("xml.code","OHID"));
 }
 
 // ========================================================================
@@ -220,517 +124,268 @@ void xmlschema::runoptschema (void)
 // ========================================================================
 void xmlschema::validatorschema (void)
 {
-	// -------------------------------------------------------------------
-	// <xml.class name="grace.validator">
-	//   <xml.type>dict</xml.type>
-	//   <xml.proplist>
-	//     <xml.member class="datarule"/>
-	//   </xml.proplist>
-	// </xml.class>
-	// -------------------------------------------------------------------
-	
-	schema[key::grace_validator].type (key::xml_class);
-	schema[-1][key::xml_type] = "dict";
-	schema[-1][key::xml_proplist][key::datarule].type (key::xml_member);
-	
-	// -------------------------------------------------------------------
-	//   <xml.class name="datarule">
-	//     <xml.type>array</xml.type>
-	//     <xml.attributes>
-	//       <xml.attribute label="id" mandatory="true" isindex="true">
-	//         <xml.type>string</xml.type>
-	//       </xml.attribute>
-	//     </xml.attributes>
-	//     <xml.proplist>
-	//       <xml.member class="match.mandatory"/>
-	//       <xml.member class="and"/>
-	//       <xml.member class="or"/>
-	//       <xml.member class="match.child"/>
-	//       <xml.member class="match.id"/>
-	//       <xml.member class="match.class"/>
-	//       <xml.member class="match.type"/>
-	//       <xml.member class="match.data"/>
-	//       <xml.member class="match.attribute"/>
-	//       <xml.member class="match.hasindex"/>
-	//       <xml.member class="match.rule"/>
-	//     </xml.proplist>
-	//   </xml.class>
-	// -------------------------------------------------------------------
+	schema =	$type("xml.schema") ->
+				$("grace.validator",
+					$type("xml.class") ->
+					$("xml.type","dict") ->
+					$("xml.proplist",
+						$("datarule",
+							$type("xml.member")))) ->
+				$("datarule",
+					$type("xml.class") ->
+					$("xml.type","array") ->
+					$("xml.attributes",
+						$("id",
+							$type("xml.attribute") ->
+							$attr("mandatory","true") ->
+							$attr("isindex","true"))) ->
+					$("xml.proplist",
+						$("match.mandatory",$type("xml.member")) ->
+						$("and",$type("xml.member")) ->
+						$("or",$type("xml.member")) ->
+						$("match.child",$type("xml.member")) ->
+						$("match.id",$type("xml.member")) ->
+						$("match.class",$type("xml.member")) ->
+						$("match.type",$type("xml.member")) ->
+						$("match.data",$type("xml.member")) ->
+						$("match.attribute",$type("xml.member")) ->
+						$("match.hasindex",$type("xml.member")) ->
+						$("match.rule",$type("xml.member")))) ->
+				$("match.mandatory",
+					$type("xml.class") ->
+					$("xml.type","array") ->
+					$("xml.proplist",
+						$("optional",$type("xml.member")) ->
+						$("mandatory",$type("xml.member")) ->
+						$("or",$type("xml.member")))) ->
+				$("optional",
+					$type("xml.class") ->
+					$("xml.type","array") ->
+					$("xml.attributes",
+						$("type",
+							$type("xml.attribute") ->
+							$attr("mandatory","true") ->
+							$("xml.type","string")) ->
+						$("key",
+							$type("xml.attribute") ->
+							$attr("mandatory","true") ->
+							$("xml.type","string"))) ->
+					$("xml.proplist",
+						$("mandatory",$type("xml.member")))) ->
+				$("mandatory",
+					$type("xml.class") ->
+					$("xml.type","void") ->
+					$("xml.attributes",
+						$("type",
+							$type("xml.attribute") ->
+							$attr("mandatory","true") ->
+							$("xml.type","string")) ->
+						$("key",
+							$type("xml.attribute") ->
+							$("xml.type","string")) ->
+						$("errorcode",
+							$type("xml.attribute") ->
+							$("xml.type","string")) ->
+						$("errortext",
+							$type("xml.attribute") ->
+							$("xml.type","string")))) ->
+				$("and",
+					$type("xml.class") ->
+					$("xml.type","array") ->
+					$("xml.attributes",
+						$("id",
+							$type("xml.attribute") ->
+							$attr("mandatory","true") ->
+							$attr("isindex","true"))) ->
+					$("xml.proplist",
+						$("and",$type("xml.member")) ->
+						$("or",$type("xml.member")) ->
+						$("match.child",$type("xml.member")) ->
+						$("match.id",$type("xml.member")) ->
+						$("match.class",$type("xml.member")) ->
+						$("match.type",$type("xml.member")) ->
+						$("match.data",$type("xml.member")) ->
+						$("match.attribute",$type("xml.member")) ->
+						$("match.hasindex",$type("xml.member")) ->
+						$("match.rule",$type("xml.member")))) ->
+				$("or",
+					$type("xml.class") ->
+					$("xml.type","array") ->
+					$("xml.attributes",
+						$("id",
+							$type("xml.attribute") ->
+							$attr("mandatory","true") ->
+							$attr("isindex","true"))) ->
+					$("xml.proplist",
+						$("and",$type("xml.member")) ->
+						$("or",$type("xml.member")) ->
+						$("match.child",$type("xml.member")) ->
+						$("match.id",$type("xml.member")) ->
+						$("mandatory",$type("xml.member")) ->
+						$("optional",$type("xml.member")) ->
+						$("match.class",$type("xml.member")) ->
+						$("match.type",$type("xml.member")) ->
+						$("match.data",$type("xml.member")) ->
+						$("match.attribute",$type("xml.member")) ->
+						$("match.hasindex",$type("xml.member")) ->
+						$("match.rule",$type("xml.member")))) ->
+				$("match.child",
+					$type("xml.class") ->
+					$("xml.type","array") ->
+					$("xml.attributes",
+						$("id",
+							$type("xml.attribute") ->
+							$attr("mandatory","true") ->
+							$attr("isindex","true")) ->
+						$("errorcode",
+							$type("xml.attribute") ->
+							$("xml.type","string")) ->
+						$("errortext",
+							$type("xml.attribute") ->
+							$("xml.type","string"))) ->
+					$("xml.proplist",
+						$("and",$type("xml.member")) ->
+						$("or",$type("xml.member")) ->
+						$("match.child",$type("xml.member")) ->
+						$("match.id",$type("xml.member")) ->
+						$("match.class",$type("xml.member")) ->
+						$("match.type",$type("xml.member")) ->
+						$("match.data",$type("xml.member")) ->
+						$("match.attribute",$type("xml.member")) ->
+						$("match.hasindex",$type("xml.member")) ->
+						$("match.rule",$type("xml.member")))) ->
+				$("match.attribute",
+					$type("xml.class") ->
+					$("xml.type","array") ->
+					$("xml.attributes",
+						$("id",
+							$type("xml.attribute") ->
+							$attr("mandatory","true") ->
+							$attr("isindex","true")) ->
+						$("errorcode",
+							$type("xml.attribute") ->
+							$("xml.type","string")) ->
+						$("errortext",
+							$type("xml.attribute") ->
+							$("xml.type","string"))) ->
+					$("xml.proplist",
+						$("and",$type("xml.member")) ->
+						$("or",$type("xml.member")) ->
+						$("match.id",$type("xml.member")) ->
+						$("match.class",$type("xml.member")) ->
+						$("match.type",$type("xml.member")) ->
+						$("match.data",$type("xml.member")))) ->
+				$("match.id",
+					$type("xml.class") ->
+					$("xml.type","string")) ->
+				$("match.class",
+					$type("xml.class") ->
+					$("xml.type","string")) ->
+				$("match.type",
+					$type("xml.class") ->
+					$("xml.type","string")) ->
+				$("match.data",
+					$type("xml.class") ->
+					$("xml.type","array") ->
+					$("xml.proplist",
+						$("text",$type("xml.member")) ->
+						$("regexp",$type("xml.member")) ->
+						$("lt",$type("xml.member")) ->
+						$("gt",$type("xml.member")) ->
+						$("minsize",$type("xml.member")) ->
+						$("maxsize",$type("xml.member")))) ->
+				$("text",
+					$type("xml.class") ->
+					$("xml.type","string")) ->
+				$("regexp",
+					$type("xml.class") ->
+					$("xml.type","string")) ->
+				$("lt",
+					$type("xml.class") ->
+					$("xml.type","integer")) ->
+				$("gt",
+					$type("xml.class") ->
+					$("xml.type","integer")) ->
+				$("minsize",
+					$type("xml.class") ->
+					$("xml.type","integer")) ->
+				$("maxsize",
+					$type("xml.class") ->
+					$("xml.type","integer")) ->
+				$("match.hasindex",
+					$type("xml.class") ->
+					$("xml.type","void")) ->
+				$("match.rule",
+					$type("xml.class") ->
+					$("xml.type","string"));
 
-	schema[key::datarule].type (key::xml_class);
-	schema[-1][key::xml_type] = "array";
-	schema[-1][key::xml_attributes][key::id].type (key::xml_attribute);
-	schema[-1][-1][-1](key::mandatory) = true;
-	schema[-1][-1][-1](key::isindex) = true;
-	
-	schema[-1][key::xml_proplist][key::match_mandatory].type (key::xml_member);
-	schema[-1][-1][key::land].type (key::xml_member);
-	schema[-1][-1][key::lor].type (key::xml_member);
-	schema[-1][-1][key::match_child].type (key::xml_member);
-	schema[-1][-1][key::match_id].type (key::xml_member);
-	schema[-1][-1][key::match_class].type (key::xml_member);
-	schema[-1][-1][key::match_type].type (key::xml_member);
-	schema[-1][-1][key::match_data].type (key::xml_member);
-	schema[-1][-1][key::match_attribute].type (key::xml_member);
-	schema[-1][-1][key::match_hasindex].type (key::xml_member);
-	schema[-1][-1][key::match_rule].type (key::xml_member);
-
-	// -------------------------------------------------------------------
-	//   <xml.class name="match.mandatory">
-	//     <xml.type>array</xml.type>
-	//     <xml.proplist>
-	//       <xml.member class="optional"/>
-	//       <xml.member class="mandatory"/>
-	//	     <xml.member class="or"/>
-	//     </xml.proplist>
-	//   </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::match_mandatory].type (key::xml_class);
-	schema[-1][key::xml_type] = "array";
-	schema[-1][key::xml_proplist][key::optional].type (key::xml_member);
-	schema[-1][-1][key::mandatory].type (key::xml_member);
-	schema[-1][-1][key::lor].type (key::xml_member);
-
-	// -------------------------------------------------------------------
-	//   <xml.class name="optional">
-	//     <xml.type>array</xml.type>
-	//     <xml.attributes>
-	//       <xml.attribute label="type" mandatory="true">
-	//         <xml.type>string</xml.type>
-	//       </xml.attribute>
-	//       <xml.attribute label="key" mandatory="true">
-	//         <xml.type>string</xml.type>
-	//       </xml.attribute>
-	//     </xml.attributes>
-	//     <xml.proplist>
-	//       <xml.member class="mandatory"/>
-	//     </xml.proplist>
-	//   </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::optional].type (key::xml_class);
-	schema[-1][key::xml_type] = "array";
-	schema[-1][key::xml_attributes][key::type].type (key::xml_attribute);
-	schema[-1][-1][-1](key::mandatory) = true;
-	schema[-1][-1][-1][key::xml_type] = "string";
-	schema[-1][-1][key::key].type (key::xml_attribute);
-	schema[-1][-1][-1](key::mandatory) = true;
-	schema[-1][-1][-1][key::xml_type] = "string";
-
-	schema[-1][key::xml_proplist][key::mandatory].type (key::xml_member);
-
-	// -------------------------------------------------------------------
-	//   <xml.class name="mandatory">
-	//     <xml.type>void</xml.type>
-	//     <xml.attributes>
-	//       <xml.attribute label="type" mandatory="true">
-	//         <xml.type>string</xml.type>
-	//       </xml.attribute>
-	//       <xml.attribute label="key" mandatory="true">
-	//         <xml.type>string</xml.type>
-	//       </xml.attribute>
-	//       <xml.attribute label="errorcode"><xml.type>integer</xml.type></xml.attribute>
-	//       <xml.attribute label="errortext"><xml.type>string</xml.type></xml.attribute>
-	//     </xml.attributes>
-	//   </xml.class>
-	// -------------------------------------------------------------------
-	
-	schema[key::mandatory].type (key::xml_class);
-	schema[-1][key::xml_type] = "void";
-	schema[-1][key::xml_attributes][key::type].type (key::xml_attribute);
-	schema[-1][-1][-1](key::mandatory) = true;
-	schema[-1][-1][-1][key::xml_type] = "string";
-	schema[-1][-1][key::key].type (key::xml_attribute);
-	schema[-1][-1][-1][key::xml_type] = "string";
-	schema[-1][-1][key::errorcode].type (key::xml_attribute);
-	schema[-1][-1][-1][key::xml_type] = "string";
-	schema[-1][-1][key::errortext].type (key::xml_attribute);
-	schema[-1][-1][-1][key::xml_type] = "string";
-	
-	// -------------------------------------------------------------------
-	//   <xml.class name="and">
-	//     <xml.type>array</xml.type>
-	//     <xml.proplist>
-	//       <xml.member class="and"/>
-	//       <xml.member class="or"/>
-	//       <xml.member class="match.child"/>
-	//       <xml.member class="match.id"/>
-	//       <xml.member class="match.class"/>
-	//       <xml.member class="match.type"/>
-	//       <xml.member class="match.data"/>
-	//       <xml.member class="match.attribute"/>
-	//       <xml.member class="match.hasindex"/>
-	//       <xml.member class="match.rule"/>
-	//     </xml.proplist>
-	//   </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::land].type (key::xml_class);
-	schema[-1][key::xml_type] = "array";
-	schema[-1][key::xml_attributes][key::id].type (key::xml_attribute);
-	schema[-1][-1][-1](key::mandatory) = true;
-	schema[-1][-1][-1](key::isindex) = true;
-	
-	schema[-1][key::xml_proplist][key::land].type (key::xml_member);
-	schema[-1][-1][key::lor].type (key::xml_member);
-	schema[-1][-1][key::match_child].type (key::xml_member);
-	schema[-1][-1][key::match_id].type (key::xml_member);
-	schema[-1][-1][key::match_class].type (key::xml_member);
-	schema[-1][-1][key::match_type].type (key::xml_member);
-	schema[-1][-1][key::match_data].type (key::xml_member);
-	schema[-1][-1][key::match_attribute].type (key::xml_member);
-	schema[-1][-1][key::match_hasindex].type (key::xml_member);
-	schema[-1][-1][key::match_rule].type (key::xml_member);
-
-	// -------------------------------------------------------------------
-	//   <xml.class name="or">
-	//     <xml.type>array</xml.type>
-	//     <xml.proplist>
-	//       <xml.member class="and"/>
-	//       <xml.member class="or"/>
-	//       <xml.member class="match.child"/>
-	//       <xml.member class="match.id"/>
-	//       <xml.member class="match.class"/>
-	//       <xml.member class="match.type"/>
-	//       <xml.member class="match.data"/>
-	//       <xml.member class="match.attribute"/>
-	//       <xml.member class="match.hasindex"/>
-	//       <xml.member class="match.rule"/>
-	//     </xml.proplist>
-	//   </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::lor].type (key::xml_class);
-	schema[-1][key::xml_type] = "array";
-	schema[-1][key::xml_attributes][key::id].type (key::xml_attribute);
-	schema[-1][-1][-1](key::mandatory) = true;
-	schema[-1][-1][-1](key::isindex) = true;
-	
-	schema[-1][key::xml_proplist][key::land].type (key::xml_member);
-	schema[-1][-1][key::lor].type (key::xml_member);
-	schema[-1][-1][key::match_child].type (key::xml_member);
-	schema[-1][-1][key::match_id].type (key::xml_member);
-	schema[-1][-1][key::mandatory].type (key::xml_member);
-	schema[-1][-1][key::optional].type (key::xml_member);
-	schema[-1][-1][key::match_class].type (key::xml_member);
-	schema[-1][-1][key::match_type].type (key::xml_member);
-	schema[-1][-1][key::match_data].type (key::xml_member);
-	schema[-1][-1][key::match_attribute].type (key::xml_member);
-	schema[-1][-1][key::match_hasindex].type (key::xml_member);
-	schema[-1][-1][key::match_rule].type (key::xml_member);
-
-	// -------------------------------------------------------------------
-	//   <xml.class name="match.child">
-	//     <xml.type>array</xml.type>
-	//     <xml.attributes>
-	//       <xml.attribute label="errorcode"><xml.type>integer</xml.type></xml.attribute>
-	//       <xml.attribute label="errortext"><xml.type>string</xml.type></xml.attribute>
-	//     </xml.attributes>
-	//     <xml.proplist>
-	//       <xml.member class="and"/>
-	//       <xml.member class="or"/>
-	//       <xml.member class="match.child"/>
-	//       <xml.member class="match.id"/>
-	//       <xml.member class="match.class"/>
-	//       <xml.member class="match.type"/>
-	//       <xml.member class="match.data"/>
-	//       <xml.member class="match.attribute"/>
-	//       <xml.member class="match.hasindex"/>
-	//       <xml.member class="match.rule"/>
-	//     </xml.proplist>
-	//   </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::match_child].type (key::xml_class);
-	schema[-1][key::xml_type] = "array";
-	schema[-1][key::xml_attributes][key::id].type (key::xml_attribute);
-	schema[-1][-1][-1](key::mandatory) = true;
-	schema[-1][-1][-1](key::isindex) = true;
-	schema[-1][key::xml_attributes][key::errorcode].type (key::xml_attribute);
-	schema[-1][-1][-1][key::xml_type] = "string";
-	schema[-1][-1][key::errortext].type (key::xml_attribute);
-	schema[-1][-1][-1][key::xml_type] = "string";
-	
-	schema[-1][key::xml_proplist][key::land].type (key::xml_member);
-	schema[-1][-1][key::lor].type (key::xml_member);
-	schema[-1][-1][key::match_child].type (key::xml_member);
-	schema[-1][-1][key::match_id].type (key::xml_member);
-	schema[-1][-1][key::match_class].type (key::xml_member);
-	schema[-1][-1][key::match_type].type (key::xml_member);
-	schema[-1][-1][key::match_data].type (key::xml_member);
-	schema[-1][-1][key::match_attribute].type (key::xml_member);
-	schema[-1][-1][key::match_hasindex].type (key::xml_member);
-	schema[-1][-1][key::match_rule].type (key::xml_member);
-
-	// -------------------------------------------------------------------
-	//   <xml.class name="match.attribute">
-	//     <xml.type>array</xml.type>
-	//     <xml.attributes>
-	//       <xml.attribute label="errorcode"><xml.type>integer</xml.type></xml.attribute>
-	//       <xml.attribute label="errortext"><xml.type>string</xml.type></xml.attribute>
-	//     </xml.attributes>
-	//     <xml.proplist>
-	//       <xml.member class="and"/>
-	//       <xml.member class="or"/>
-	//       <xml.member class="match.id"/>
-	//       <xml.member class="match.class"/>
-	//       <xml.member class="match.type"/>
-	//       <xml.member class="match.data"/>
-	//     </xml.proplist>
-	//   </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::match_attribute].type (key::xml_class);
-	schema[-1][key::xml_type] = "array";
-	schema[-1][key::xml_attributes][key::id].type (key::xml_attribute);
-	schema[-1][-1][-1](key::mandatory) = true;
-	schema[-1][-1][-1](key::isindex) = true;
-	schema[-1][key::xml_attributes][key::errorcode].type (key::xml_attribute);
-	schema[-1][-1][-1][key::xml_type] = "string";
-	schema[-1][-1][key::errortext].type (key::xml_attribute);
-	schema[-1][-1][-1][key::xml_type] = "string";
-	
-	schema[-1][key::xml_proplist][key::land].type (key::xml_member);
-	schema[-1][-1][key::lor].type (key::xml_member);
-	schema[-1][-1][key::match_id].type (key::xml_member);
-	schema[-1][-1][key::match_class].type (key::xml_member);
-	schema[-1][-1][key::match_type].type (key::xml_member);
-	schema[-1][-1][key::match_data].type (key::xml_member);
-
-	// -------------------------------------------------------------------
-	//   <xml.class name="match.id">
-	//     <xml.type>string</xml.type>
-	//   </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::match_id].type (key::xml_class);
-	schema[-1][key::xml_type] = "string";
-
-	// -------------------------------------------------------------------
-	//   <xml.class name="match.class">
-	//     <xml.type>string</xml.type>
-	//   </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::match_class].type (key::xml_class);
-	schema[-1][key::xml_type] = "string";
-
-	// -------------------------------------------------------------------
-	//   <xml.class name="match.type">
-	//     <xml.type>string</xml.type>
-	//   </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::match_type].type (key::xml_class);
-	schema[-1][key::xml_type] = "string";
-
-	// -------------------------------------------------------------------
-	//   <xml.class name="match.data">
-	//     <xml.type>array</xml.type>
-	//     <xml.proplist>
-	//       <xml.member class="text"/>
-	//       <xml.member class="regexp"/>
-	//       <xml.member class="lt"/>
-	//       <xml.member class="gt"/>
-	//       <xml.member class="minsize"/>
-	//       <xml.member class="maxsize"/>
-	//     </xml.proplist>
-	//   </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::match_data].type (key::xml_class);
-	schema[-1][key::xml_type] = "array";
-	schema[-1][key::xml_proplist][key::text].type (key::xml_member);
-	schema[-1][-1][key::regexp].type (key::xml_member);
-	schema[-1][-1][key::lt].type (key::xml_member);
-	schema[-1][-1][key::gt].type (key::xml_member);
-	schema[-1][-1][key::minsize].type (key::xml_member);
-	schema[-1][-1][key::maxsize].type (key::xml_member);
-	
-	// -------------------------------------------------------------------
-	//   <xml.class name="text"><xml.type>string</xml.type></xml.class>
-	//   <xml.class name="regexp"><xml.type>string</xml.type></xml.class>
-	//   <xml.class name="lt"><xml.type>integer</xml.type></xml.class>
-	//   <xml.class name="gt"><xml.type>integer</xml.type></xml.class>
-	//   <xml.class name="minsize"><xml.type>integer</xml.type></xml.class>
-	//   <xml.class name="maxsize"><xml.type>integer</xml.type></xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::text].type (key::xml_class);
-	schema[-1][key::xml_type] = "string";
-
-	schema[key::regexp].type (key::xml_class);
-	schema[-1][key::xml_type] = "string";
-
-	schema[key::lt].type (key::xml_class);
-	schema[-1][key::xml_type] = "integer";
-
-	schema[key::gt].type (key::xml_class);
-	schema[-1][key::xml_type] = "integer";
-
-	schema[key::minsize].type (key::xml_class);
-	schema[-1][key::xml_type] = "integer";
-
-	schema[key::maxsize].type (key::xml_class);
-	schema[-1][key::xml_type] = "integer";
-	
-	// -------------------------------------------------------------------
-	//   <xml.class name="match.hasindex"><xml.type>void</xml.type></xml.class>
-	//   <xml.class name="match.rule"><xml.type>string</xml.type></xml.class>
-	// -------------------------------------------------------------------
-	
-	schema[key::match_hasindex].type (key::xml_class);
-	schema[-1][key::xml_type] = "void";
-	
-	schema[key::match_rule].type (key::xml_class);
-	schema[-1][key::xml_type] = "string";
 }
 
 void xmlschema::plistschema (void)
 {
-	// -------------------------------------------------------------------
-	//  <xml.class name="plist">
-	//    <xml.type>container</xml.type>
-	//    <xml.attributes>
-	//      <xml.attribute label="version">
-	//        <xml.type>string</xml.type>
-	//      </xml.attribute>
-	//    </xml.attributes>
-	//    <xml.container>
-	//      <xml.container.valueclass/>
-	//      <xml.container.idclass>key</xml.container.idclass>
-	//      <xml.container.types>
-	//        <xml.container.type id="dict">dict</xml.container.type>
-	//      </xml.container.types>
-	//    </xml.container>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-
-	schema[key::plist].type (key::xml_class);
-	schema[-1][key::xml_type] = "container";
-	
-	schema[-1][key::xml_attributes][key::version].type (key::xml_attribute);
-	schema[-1][-1][-1][key::xml_type] = "string";
-	
-	schema[-1][key::xml_container][key::xml_container_idclass] = "key";
-	schema[-1][-1][key::xml_container_types][key::dict] = "dict";
-	
-	// -------------------------------------------------------------------
-	//  <xml.class name="dict" contained="true">
-	//    <xml.type>container</xml.type>
-	//    <xml.container>
-	//      <xml.container.valueclass/>
-	//      <xml.container.idclass>key</xml.container.idclass>
-	//      <xml.container.types>
-	//        <xml.container.type id="dict">dict</xml.container.type>
-	//        <xml.container.type id="array">array</xml.container.type>
-	//        <xml.container.type id="integer">integer</xml.container.type>
-	//        <xml.container.type id="string">string</xml.container.type>
-	//        <xml.container.type id="date">timestamp</xml.container.type>
-	//        <xml.container.type id="float">real</xml.container.type>
-	//        <xml.container.type id="bool.true">true</xml.container.type>
-	//        <xml.container.type id="bool.false">false</xml.container.type>
-	//      </xml.container.types>
-	//    </xml.container>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-	
-	schema[key::dict].type (key::xml_class);
-	schema[-1](key::contained) = true;
-	schema[-1][key::xml_type] = "container";
-	schema[-1][key::xml_container][key::xml_container_idclass] = "key";
-	schema[-1][-1][key::xml_container_types][key::dict] = "dict";
-	schema[-1][-1][-1][key::array] = "array";
-	schema[-1][-1][-1][key::integer] = "integer";
-	schema[-1][-1][-1][key::tstring] = "string";
-	schema[-1][-1][-1][key::date] = "timestamp";
-	schema[-1][-1][-1][key::tfloat] = "real";
-	schema[-1][-1][-1][key::booltrue] = "true";
-	schema[-1][-1][-1][key::boolfalse] = "false";
-	
-	// -------------------------------------------------------------------
-	//  <xml.class name="array" contained="true">
-	//    <xml.type>container</xml.type>
-	//    <xml.container>
-	//      <xml.container.valueclass/>
-	//      <xml.container.idclass/>
-	//      <xml.container.types>
-	//        <xml.container.type id="dict">dict</xml.container.type>
-	//        <xml.container.type id="array">array</xml.container.type>
-	//        <xml.container.type id="integer">integer</xml.container.type>
-	//        <xml.container.type id="string">string</xml.container.type>
-	//        <xml.container.type id="date">timestamp</xml.container.type>
-	//        <xml.container.type id="float">real</xml.container.type>
-	//        <xml.container.type id="bool.true">true</xml.container.type>
-	//        <xml.container.type id="bool.false">false</xml.container.type>
-	//      </xml.container.types>
-	//    </xml.container>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-	schema[key::array].type (key::xml_class);
-	schema[-1](key::contained) = true;
-	schema[-1][key::xml_type] = "container";
-	schema[-1][key::xml_container][key::xml_container_types][key::dict] = "dict";
-	schema[-1][-1][-1][key::array] = "array";
-	schema[-1][-1][-1][key::integer] = "integer";
-	schema[-1][-1][-1][key::tstring] = "string";
-	schema[-1][-1][-1][key::date] = "timestamp";
-	schema[-1][-1][-1][key::tfloat] = "real";
-	schema[-1][-1][-1][key::booltrue] = "true";
-	schema[-1][-1][-1][key::boolfalse] = "false";
-	
-	// -------------------------------------------------------------------
-	//  <xml.class name="integer" contained="true">
-	//    <xml.type>integer</xml.type>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-	schema[key::integer].type (key::xml_class);
-	schema[-1](key::contained) = true;
-	schema[-1][key::xml_type] = "integer";
-
-	// -------------------------------------------------------------------
-	//  <xml.class name="string" contained="true">
-	//    <xml.type>string</xml.type>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-	schema[key::tstring].type (key::xml_class);
-	schema[-1](key::contained) = true;
-	schema[-1][key::xml_type] = "string";
-
-	// -------------------------------------------------------------------
-	//  <xml.class name="timestamp" contained="true">
-	//    <xml.type>date</xml.type>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-	schema[key::timestamp].type (key::xml_class);
-	schema[-1](key::contained) = true;
-	schema[-1][key::xml_type] = "date";
-
-	// -------------------------------------------------------------------
-	//  <xml.class name="real" contained="true">
-	//    <xml.type>float</xml.type>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-	schema[key::real].type (key::xml_class);
-	schema[-1](key::contained) = true;
-	schema[-1][key::xml_type] = "float";
-
-	// -------------------------------------------------------------------
-	//  <xml.class name="true" contained="true">
-	//    <xml.type>bool.true</xml.type>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-	schema["true"].type (key::xml_class);
-	schema[-1](key::contained) = true;
-	schema[-1][key::xml_type] = "bool.true";
-
-	// -------------------------------------------------------------------
-	//  <xml.class name="false" contained="true">
-	//    <xml.type>bool.false</xml.type>
-	//  </xml.class>
-	// -------------------------------------------------------------------
-	schema["false"].type (key::xml_class);
-	schema[-1](key::contained) = true;
-	schema[-1][key::xml_type] = "bool.false";
+	schema =	$type("xml.schema") ->
+				$("plist",
+					$type("xml.class") ->
+					$("xml.type","container") ->
+					$("xml.attributes",
+						$("version",
+							$type("xml.attribute") ->
+							$("xml.type","string"))) ->
+					$("xml.container",
+						$("xml.container.idclass","key") ->
+						$("xml.container.types",
+							$("dict","dict")))) ->
+				$("dict",
+					$type("xml.class") ->
+					$attr("contained","true") ->
+					$("xml.type","container") ->
+					$("xml.container",
+						$("xml.container.idclass","key") ->
+						$("xml.container.types",
+							$("dict","dict") ->
+							$("array","array") ->
+							$("integer","integer") ->
+							$("string","string") ->
+							$("date","timestamp") ->
+							$("float","real") ->
+							$("bool.true","true") ->
+							$("bool.flase","false")))) ->
+				$("array",
+					$type("xml.class") ->
+					$attr("contained","true") ->
+					$("xml.type","container") ->
+					$("xml.container",
+						$("xml.container.types",
+							$("dict","dict") ->
+							$("array","array") ->
+							$("integer","integer") ->
+							$("string","string") ->
+							$("date","timestamp") ->
+							$("float","real") ->
+							$("bool.true","true") ->
+							$("bool.flase","false")))) ->
+				$("integer",
+					$type("xml.class") ->
+					$attr("contained","true") ->
+					$("xml.type","integer")) ->
+				$("string",
+					$type("xml.class") ->
+					$attr("contained","true") ->
+					$("xml.type","string")) ->
+				$("timestamp",
+					$type("xml.class") ->
+					$attr("contained","true") ->
+					$("xml.type","date")) ->
+				$("real",
+					$type("xml.class") ->
+					$attr("contained","true") ->
+					$("xml.type","float")) ->
+				$("true",
+					$type("xml.class") ->
+					$attr("contained","true") ->
+					$("xml.type","bool.true")) ->
+				$("false",
+					$type("xml.class") ->
+					$attr("contained","true") ->
+					$("xml.type","bool.false"));
 }
