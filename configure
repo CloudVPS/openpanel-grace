@@ -1,0 +1,9 @@
+#!/bin/sh
+for script in src/*/configure; do
+  xpath=`echo "$script" | sed -e "s@/configure\\$@@"`
+  oldwd=$(pwd)
+  echo "# Configuring $xpath"
+  cd "$xpath"
+  ./configure $*
+  cd "$oldwd"
+done
