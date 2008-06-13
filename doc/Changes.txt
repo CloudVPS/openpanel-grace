@@ -1,3 +1,13 @@
+0.9.22     Fri Jun 13 2008                           <grace@openpanel.com>
+
+           * Removed a lot of unnecessarily inlined code.
+           
+           * Added flag::savetype default argument to value::saveshox().
+           
+           * Added a top-level Makefile and configure script.
+           
+           * Built-in schemas are now grace-encoded in the source.
+           
 0.9.21     Fri Jun  6 2008                           <grace@openpanel.com>
 
            * Fixed a problem where httpsocket would sometimes deal
