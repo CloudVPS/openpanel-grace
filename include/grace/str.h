@@ -689,7 +689,7 @@ public:
 					 	{
 						 	string *o = (string *) this;
 					 		o->docopyonwrite ();
-						 	if (data) o->data->v[offs+size] = 0;
+						 	o->data->v[offs+size] = 0;
 						}
 					 	return (data ? data->v+offs : "");
 					 }
