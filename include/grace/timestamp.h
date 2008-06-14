@@ -21,7 +21,7 @@ enum intervaltype
 	years = -2
 };
 
-/// Representation of a date/time value.
+/// Representation of a date/time value, set in a specific timezone.
 class timestamp
 {
 public:
@@ -37,9 +37,10 @@ public:
 					 /// Constructor (init from unix timestamp).
 					 timestamp (time_t);
 					 
-					 /// Constructor (init from timeval)
+					 /// Constructor (init from timeval).
 					 timestamp (timeval);
 					 
+					 /// Constructor (init from a const value).
 					 timestamp (const class value &);
 	
 					 /// Internal initialization method.
@@ -50,6 +51,7 @@ public:
 	
 					 /// Cast to unix time structure.
 	const struct tm	&tm (void) const;
+					 /// Cast to unix time structure.
 	const struct tm &tm (void);
 	
 					 /// Convert to RFC822 format.
@@ -138,6 +140,8 @@ public:
 					 /// \param ikind Type of time units.
 	static time_t	 interval (int iv, intervaltype ikind = seconds);
 
+					 //@{
+					 /// Assignment operator.
 	timestamp		&operator= (time_t orig)
 					 {
 					 	unixtime (orig);
@@ -170,6 +174,7 @@ public:
 					 	
 					 	return *this;
 					 }
+					 //@}
 					
 					 /// Get current time
 					 /// in useconds
@@ -181,13 +186,16 @@ public:
 							 + tvval.tv_usec);
 					 }
 	
+					 //@{ Get specific elements.
 	int				 month (void) { return tm().tm_mon +1; }
 	int				 mday (void) { return tm().tm_mday; }
 	int				 year (void) { return tm().tm_year +1900; }
 	int				 hour (void) { return tm().tm_hour; }
 	int				 minute (void) { return tm().tm_min; }
 	int				 second (void) { return tm().tm_sec; }
+					 //@}
 					 
+					 //@{ Math operator.
 	timestamp		&operator += (time_t);
 	timestamp		&operator -= (time_t);
 	timestamp		&operator += (timeval);
@@ -213,7 +221,9 @@ public:
 	
 	timestamp		*operator- (time_t) const;
 	timestamp		*operator- (timeval) const;
+					 //@}
 	
+					 //@{ Comparator.
 	bool			 operator< (const timestamp &other) const
 					 {
 					 	unsigned long long current;
@@ -361,7 +371,6 @@ public:
 						return ( current > given );						
 					 }
 	
-	
 	bool			 operator< (time_t other) const
 					 {	
 						return ( tvval.tv_sec < other );						
@@ -382,7 +391,7 @@ public:
 					 {
 						return ( tvval.tv_sec > other );
 					 }
-	
+					 //@}
 	
 protected:
 
