@@ -8,7 +8,6 @@
 //      012345678 TAB-O-METER should measure 4
 //      ^	^
 
-
 #include <grace/value.h>
 #include <grace/file.h>
 #include <grace/stack.h>
@@ -71,12 +70,12 @@ bool value::fromshox (const string &shox)
 	offs = shox.bingetvint (offs, t_uint);
 	if (! offs) return false;
 	
+	statstring tstat;
+	string t;
+
 	// read all stringdict strings
 	for (unsigned int i=0; i<t_uint; ++i)
 	{
-		statstring tstat;
-		string t;
-		
 		offs = shox.bingetvstr (offs, t);
 		if (! offs) return false;
 		
@@ -257,6 +256,7 @@ string *value::toshox (void) const
 // ========================================================================
 void value::printshox (string &outstr, stringdict &sdict) const
 {
+	// Encode the id (if set)
 	if (_name)
 	{
 		outstr.binputvint (outstr.strlen(), sdict.get (_name) +1);
@@ -266,6 +266,8 @@ void value::printshox (string &outstr, stringdict &sdict) const
 		outstr.binputvint (outstr.strlen(), 0);
 	}
 	
+	// Encode the type-indicator, which is a logical OR of the
+	// itype and three extra shox-specific flags.
 	unsigned char xtype = itype;
 	if (! value::isbuiltin (_type)) xtype |= SHOX_HAS_CLASSNAME;
 	if (attrib && attrib->count()) xtype |= SHOX_HAS_ATTRIB;
@@ -273,11 +275,13 @@ void value::printshox (string &outstr, stringdict &sdict) const
 	
 	outstr.binput8u (outstr.strlen(), xtype);
 	
+	// If set, encode the class.
 	if (xtype & SHOX_HAS_CLASSNAME)
 	{
 		outstr.binputvint (outstr.strlen(), sdict.get (_type) +1);
 	}
 	
+	// If set, encode the attributes
 	if (xtype & SHOX_HAS_ATTRIB)
 	{
 		outstr.binputvint (outstr.strlen(), attrib->count());
@@ -288,6 +292,7 @@ void value::printshox (string &outstr, stringdict &sdict) const
 		}
 	}
 	
+	// If any, encode children.
 	if (xtype & SHOX_HAS_CHILDREN)
 	{
 		outstr.binputvint (outstr.strlen(), arraysz);
@@ -297,7 +302,7 @@ void value::printshox (string &outstr, stringdict &sdict) const
 			array[i]->printshox (outstr, sdict);
 		}
 	}
-	else
+	else // Otherwise, encode the data.
 	{
 		switch (itype)
 		{
