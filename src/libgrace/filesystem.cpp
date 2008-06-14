@@ -878,27 +878,34 @@ value *filesystem::ls (const string &_path, bool longformat, bool showhidden)
 	char linkbuf[512];
 	int t;
 	
+	// If no path is set, assign the current working directory.
 	if (_path) path = _path;
 	else path = pwd();
 	
+	// Convert the current working directory from relative to absolute.
 	path = pwdize (path);
 	
+	// Do some magic to find out if there was an alias path element
 	int cpos, spos;
 	cpos = path.strchr (':');
 	spos = path.strchr ('/');
 	
+	// If there's no colon (or there is one, but there's also a slash
+	// and it appears earlier), we'll only have to look at a single
+	// known directory.
 	if ( (cpos<0) || ((spos>=0)&&(spos<cpos)) )
 	{
 		paths.newval() = path;
 	}
-	else
+	else // Ok, we have an alias path, resolve it.
 	{
-		value tmp;
-		
-		tmp = strutil::split (path, ':');
-		paths = getpaths (tmp[0]);
-		suffix = tmp[1];
+		string alias = path.copyuntil (':');
+		suffix = path.copyafter (':');
+		paths = getpaths (alias);
 	}
+	
+	string fpath; // Temporary storage for the full path of a file
+	string nam; // Temporary storage for a filename.
 	
 	foreach (e, paths)
 	{
@@ -906,77 +913,78 @@ value *filesystem::ls (const string &_path, bool longformat, bool showhidden)
 		struct stat st;
 		DIR *d;
 		
-		if (suffix.strlen())
-			path = "%s/%s" %format (e, suffix);
-		else
-			path = e;
-				
+		if (suffix) path = "%s/%s" %format (e, suffix);
+		else path = e;
+			
 		d = ::opendir(path.str());
 		if (d)
 		{
 			while ((dir = readdir(d)))
 			{
-				string nam,fpath;
 				nam = dir->d_name;
-				
 				if ((nam[0] == '.') && (!showhidden)) continue;
 				if ((nam.strstr (":<mime>") >= 0) && (!showhidden)) continue;
 				
-				/*if (paths.count()>1)*/
-					fpath.printf ("%s/%s", path.str(), nam.str());
-				/*else
-					fpath = nam;*/
-								
+				// Get the full path for this file.
+				fpath = "%s/%s" %format (path,nam);
+				
+				// Is there an earlier version of this file?
 				if (! res.exists(nam))
+				{
+					// No, just fill it in.
 					res[nam]["path"] = fpath;
+				}
 				else
 				{
+					// Yes, append it.
 					string tp = "%s,%s" %format (res[nam]["path"], fpath);
 					res[nam]["path"] = tp;
 				}
 				
+				// Fill in extra information on demand.
 				if (longformat)
 				{
 					string nam;
 					string pad;
 					nam = dir->d_name;
+					value &resref = res[nam];
 					
 					pad = "%s/%s" %format (path, nam);
 					if (! lstat (pad, &st))
 					{
-						res[nam]["inode"] = (long long) st.st_ino;
-						res[nam]["nlink"] = (int) st.st_nlink;
+						resref["inode"] = (long long) st.st_ino;
+						resref["nlink"] = (int) st.st_nlink;
 						switch (st.st_mode & S_IFMT)
 						{
 							case S_IFSOCK:
-								res[nam]["type"] = fsSocket; break;
+								resref["type"] = fsSocket; break;
 							case S_IFLNK:
-								res[nam]["type"] = fsSoftLink;
+								resref["type"] = fsSoftLink;
 								if (( t = ::readlink (pad.str(), linkbuf, 511))>=0)
 								{
 									linkbuf[t] = 0;
-									res[nam]["link"] = linkbuf;
+									resref["link"] = linkbuf;
 								}
 								break;
 							case S_IFREG:
-								res[nam]["type"] = fsFile; break;
+								resref["type"] = fsFile; break;
 							case S_IFBLK:
-								res[nam]["type"] = fsBlockDevice; break;
+								resref["type"] = fsBlockDevice; break;
 							case S_IFCHR:
-								res[nam]["type"] = fsCharacterDevice; break;
+								resref["type"] = fsCharacterDevice; break;
 							case S_IFDIR:
-								res[nam]["type"] = fsDirectory;
+								resref["type"] = fsDirectory;
 								break;
 							default:
-								res[nam]["type"] = fsUnknown; break;
+								resref["type"] = fsUnknown; break;
 						}
-						res[nam]["mode"] = (unsigned int) st.st_mode & 07777;
-						res[nam]["fuid"] = (unsigned int) st.st_uid;
-						res[nam]["fgid"] = (unsigned int) st.st_gid;
-						res[nam]["size"] = (unsigned int) (st.st_size & 0xffffffff);
-						res[nam]["atime"] = (time_t) st.st_atime;
-						res[nam]["mtime"] = (time_t) st.st_mtime;
-						res[nam]["ctime"] = (time_t) st.st_ctime;
+						resref["mode"] = (unsigned int) st.st_mode & 07777;
+						resref["fuid"] = (unsigned int) st.st_uid;
+						resref["fgid"] = (unsigned int) st.st_gid;
+						resref["size"] = (unsigned int) (st.st_size & 0xffffffff);
+						resref["atime"] = (time_t) st.st_atime;
+						resref["mtime"] = (time_t) st.st_mtime;
+						resref["ctime"] = (time_t) st.st_ctime;
 						
 						if ((st.st_mode & S_IFMT) == S_IFDIR) pad += "/";
 						pad.printf (":<mime>");
@@ -984,11 +992,11 @@ value *filesystem::ls (const string &_path, bool longformat, bool showhidden)
 						if ((t = ::readlink (pad.str(), linkbuf, 511)) >= 0)
 						{
 							linkbuf[t] = 0;
-							res[nam]["mime"] = linkbuf;
+							resref["mime"] = linkbuf;
 							
 							if ((st.st_mode & S_IFMT) == S_IFDIR)
 							{
-								res[nam]["type"] = fsBundle;
+								resref["type"] = fsBundle;
 							}
 						}
 					}
@@ -1197,12 +1205,13 @@ value *filesystem::getpaths (const statstring &pvol)
 	if (pathvol.exists (pvol)) res = pathvol[pvol];
 	else
 	{
-		res[0] = "/%s" %format (pvol);
-		res[1] = "/usr/%s" %format (pvol);
-		res[2] = "/usr/local/%s" %format (pvol);
+		res = $("/%s" %format (pvol)) ->
+			  $("/usr/%s" %format (pvol)) ->
+			  $("/usr/local/%s" %format (pvol));
+
 		if (getenv ("HOME"))
 		{
-			res[3] = "%s/.%s" %format (getenv("HOME"), pvol);
+			res.newval() = "%s/.%s" %format (getenv("HOME"), pvol);
 		}
 	}
 	return &res;
