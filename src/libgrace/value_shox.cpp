@@ -22,11 +22,9 @@
 // ========================================================================
 // METHOD ::loadshox
 // ========================================================================
-void value::loadshox (const string &fname)
+bool value::loadshox (const string &fname)
 {
-	string shox;
-	shox = fs.load (fname);
-	if (shox.strlen()) fromshox (shox);
+	return fromshox (fs.load (fname));
 }
 
 // ========================================================================
@@ -42,33 +40,36 @@ bool value::saveshox (const string &fname, flag::savetype tp) const
 // ========================================================================
 // METHOD ::fromshox
 // ========================================================================
-void value::fromshox (const string &shox)
+bool value::fromshox (const string &shox)
 {
 	clear();
 
 	stringdict sdict;
 	
 	// Verify the 'magic' header
-	if (shox.strlen() < 8) return;
+	if (shox.strlen() < 8) return false;
 	if ((shox[0] != 'S')||(shox[1] != 'H') ||
 		(shox[2] != 'o')||(shox[3] != 'X'))
 	{
-		return;
+		return false;
 	}
 	
-	size_t offs = 6;
-	unsigned int t_uint;
-	unsigned short t_ushort;
+	// We're skipping over offset 4, which contains the SHoX version
+	// of the written file, hardly as interesting as the required
+	// version at offset 6.
+	size_t offs = 6; // We'll use this as a cursor.
+	unsigned int t_uint; // Temp unsigned int variable.
+	unsigned short t_ushort; // Temp unsigned short variable.
 	
 	// Read the 'required version' block at offset 6, we're 01.00
 	// ourselves.
 	offs = shox.binget16u (offs, t_ushort);
-	if (! offs) return; // read error
-	if (t_ushort > 0x0100) return; // wrong version
+	if (! offs) return false; // read error
+	if (t_ushort > 0x0100) return false; // wrong version
 	
 	// read the number of stringdict entries
 	offs = shox.bingetvint (offs, t_uint);
-	if (! offs) return;
+	if (! offs) return false;
 	
 	// read all stringdict strings
 	for (unsigned int i=0; i<t_uint; ++i)
@@ -77,7 +78,7 @@ void value::fromshox (const string &shox)
 		string t;
 		
 		offs = shox.bingetvstr (offs, t);
-		if (! offs) return;
+		if (! offs) return false;
 		
 		tstat = t;
 		sdict.get (tstat);
@@ -87,17 +88,17 @@ void value::fromshox (const string &shox)
 	// this key is ignored (and actually expected to be 0 although
 	// this is not checked or enforced).
 	unsigned int ik;
-	if (! (offs = shox.bingetvint (offs, ik))) return;
+	if (! (offs = shox.bingetvint (offs, ik))) return false;
 	
 	// The readshox function parses every other aspect of a serialized
 	// value in the stream except for the key-id.
-	readshox (sdict, offs, shox);
+	return readshox (sdict, offs, shox);
 }
 
 // ========================================================================
 // METHOD ::readshox
 // ========================================================================
-void value::readshox (stringdict &sdict, size_t &offs, const string &shox)
+bool value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 {
 	unsigned char dtype;
 	unsigned int ikey;
@@ -108,11 +109,11 @@ void value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 	statstring tskey;
 	
 	// Read the type indicator.
-	if (! (offs = shox.binget8u (offs, dtype))) return;
+	if (! (offs = shox.binget8u (offs, dtype))) return false;
 	
 	if (dtype & SHOX_HAS_CLASSNAME) // bit 7: object has custom class
 	{
-		if (! (offs = shox.bingetvint (offs, ikey))) return;
+		if (! (offs = shox.bingetvint (offs, ikey))) return false;
 		_type = sdict.get(ikey-1);
 	}
 	
@@ -122,12 +123,12 @@ void value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 		if (! attrib) attrib = new value;
 		
 		// Read the number of attributes for the object
-		if (! (offs = shox.bingetvint (offs, attrcount))) return;
+		if (! (offs = shox.bingetvint (offs, attrcount))) return false;
 		
 		for (i=0; i<attrcount; ++i)
 		{
 			// Get the key-id (which is an sdict index) out of the stream.
-			if (! (offs = shox.bingetvint (offs, ikey))) return;
+			if (! (offs = shox.bingetvint (offs, ikey))) return false;
 			
 			// If the key is '0' we deserialize an object with no id,
 			// otherwise initialize it with the id looked up in the sdict.
@@ -137,20 +138,20 @@ void value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 			
 			// Recurse to read the data into the node.
 			crsr->readshox (sdict, offs, shox);
-			if (! offs) return;
+			if (! offs) return false;
 		}
 	}
 	
 	if (dtype & SHOX_HAS_CHILDREN) // bit 5: object has children
 	{
 		// Read the child count int.
-		if (! (offs = shox.bingetvint (offs, chcount))) return;
+		if (! (offs = shox.bingetvint (offs, chcount))) return false;
 		
 		for (i=0; i<chcount; ++i)
 		{
 			// Figure out if there is a key.
 			statstring skey;
-			if (! (offs = shox.bingetvint (offs, ikey))) return;
+			if (! (offs = shox.bingetvint (offs, ikey))) return false;
 			if (ikey)
 			{
 				// Yes, find the actual string key
@@ -161,7 +162,7 @@ void value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 			
 			// Recurse to read the object data.
 			crsr->readshox (sdict, offs, shox);
-			if (! offs) return;
+			if (! offs) return false;
 		}
 	}
 	else // No children, read data member.
@@ -180,44 +181,46 @@ void value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 				break;
 			
 			case i_int:
-				if (! (offs = shox.binget32 (offs, vint))) return;
+				if (! (offs = shox.binget32 (offs, vint))) return false;
 				t.ival = vint;
 				break;
 			
 			case i_ipaddr:
 			case i_date:
 			case i_unsigned:
-				if (! (offs = shox.binget32u (offs, vunsigned))) return;
+				if (! (offs = shox.binget32u (offs, vunsigned))) return false;
 				t.uval = vunsigned;
 				break;
 				
 			case i_double:
-				if (! (offs = shox.bingetieee (offs, vdouble))) return;
+				if (! (offs = shox.bingetieee (offs, vdouble))) return false;
 				t.dval = vdouble;
 				break;
 			
 			case i_long:
-				if (! (offs = shox.binget64 (offs, vlong))) return;
+				if (! (offs = shox.binget64 (offs, vlong))) return false;
 				t.lval = vlong;
 				break;
 			
 			case i_ulong:
-				if (! (offs = shox.binget64u (offs, vulong))) return;
+				if (! (offs = shox.binget64u (offs, vulong))) return false;
 				t.ulval = vulong;
 				break;
 			
 			case i_bool:
-				if (! (offs = shox.binget8u (offs, ucval))) return;
+				if (! (offs = shox.binget8u (offs, ucval))) return false;
 				t.uval = ucval;
 				break;
 				
 			case i_string:
-				if (! (offs = shox.bingetvstr (offs, s))) return;
+				if (! (offs = shox.bingetvstr (offs, s))) return false;
 				break;
 		}
 		
 		itype = (dtype & 0x1f);
 	}
+	
+	return true;
 }
 
 // ========================================================================

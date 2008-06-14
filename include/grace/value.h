@@ -912,7 +912,7 @@ public:
 
 					 /// Load from the SHOX object format.
 					 /// \param fname Filename to load.
-	void			 loadshox (const string &fname);
+	bool			 loadshox (const string &fname);
 	
 					 /// Save to the SHOX object format.
 					 /// \param fname Filename to save.
@@ -924,7 +924,7 @@ public:
 	
 					 /// Convert from SHOX string data.
 					 /// \param shox The shox-encoded data.
-	void			 fromshox (const string &shox);
+	bool			 fromshox (const string &shox);
 	
 					 /// Convert to SHOX string data.
 	string			*toshox (void) const;
@@ -1169,7 +1169,7 @@ protected:
 					 };
 	
 					 /// Internal method for SHoX parsing.
-	void			 readshox (class stringdict &, size_t &, const string &);
+	bool			 readshox (class stringdict &, size_t &, const string &);
 					 
 					 /// Internal method for SHoX serialization.
 	void			 printshox (string &, stringdict &) const;
