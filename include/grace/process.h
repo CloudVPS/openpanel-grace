@@ -61,52 +61,7 @@ public:
 					 /// fork().
 					 /// \param name The process title.
 					 /// \param withStdErr The stderr flag.
-	void			 init (const string &name, bool withStdErr)
-					 {
-					 	static lock<bool> forklock;
-						int inpipe[2], outpipe[2];
-					 	
-						 _pid = -1;
-						 _running = false;
-						 _name = name;
-						 
-						 pipe (inpipe);
-						 pipe (outpipe);
-						 
-						 try {STRINGREF().treelock.lockw();} catch (...) {}
-						 _pid = fork();
-						 /*if (_pid)*/ try {STRINGREF().treelock.unlock();} catch (...) {}
-
-						 if (_pid == 0)
-						 {
-						 	::close (0);
-						 	::close (1);
-						 	::close (2);
-						 	dup2 (outpipe[0], 0);
-						 	dup2 (inpipe[1], 1);
-						 	if (! withStdErr) open ("/dev/null",O_WRONLY);
-						 	else dup2 (inpipe[1], 2);
-						 	fin.openread (0);
-						 	fout.openwrite (1);
-						 	ferr.openwrite (2);
-						 	for (int fd=3; fd<256; ++fd)
-						 		::close (fd);
-						 	
-						 	_running = true;
-						 }
-						 else if (_pid < 0)
-						 {
-							 _pid = -1;
-						 }
-						 else
-						 {
-						 	_inf.openread (inpipe[0]);
-						 	_outf.openwrite (outpipe[1]);
-						 	::close (inpipe[1]);
-						 	::close (outpipe[0]);
-							_running = true;
-						 }
-					 }
+	void			 init (const string &name, bool withStdErr);
 					 
 					 /// Destructor.
 					 /// Will kill the child process.
@@ -137,6 +92,11 @@ public:
 					 	{
 					 		_exit (main());
 					 	}
+					 }
+
+	bool			 waitforline (string &into, int ti, int maxsz=1024)
+					 {
+					 	return _inf.waitforline (into, ti, maxsz);
 					 }
 
 					 /// Get a line of text from the process' output stream.
@@ -171,6 +131,11 @@ public:
 	string			*read (size_t sz)
 					 {
 				 		return _inf.read (sz);
+					 }
+					 
+	string			*read (size_t sz, unsigned int ti)
+					 {
+					 	return _inf.read (sz, ti);
 					 }
 					 
 					 /// End-of-file. 
