@@ -130,7 +130,8 @@ void application::init (int Argc, char *Argv[])
 				else
 				{
 					appath = appath.cutatlast ('/');
-					appath.printf ("/%s", linkbuffer);
+					appath.strcat ('/');
+					appath.strcat (linkbuffer);
 				}
 			}
 			else maybelink = false;
@@ -179,23 +180,23 @@ void application::init (int Argc, char *Argv[])
 	fs.pathvol["app"].newval() = appath;
 	
 	temppath = appath;
-	temppath.printf ("/Contents/Resources");
+	temppath.strcat ("/Contents/Resources");
 	temppath = fs.transr (temppath);
 	fs.pathvol["rsrc"].newval() = temppath;
 
 	temppath = appath;
-	temppath.printf ("/Contents/Tools");
+	temppath.strcat ("/Contents/Tools");
 	temppath = fs.transr (temppath);
 	fs.pathvol["tools"].newval() = temppath;
 
 	temppath.crop (0);
 	temppath = appath;
-	temppath.printf ("/Contents/Schemas");
+	temppath.strcat ("/Contents/Schemas");
 	temppath = fs.transr (temppath);
 	fs.pathvol["schema"].newval() = temppath;
 	
 	temppath = appath;
-	temppath.printf ("/Contents/Configuration Defaults");
+	temppath.strcat ("/Contents/Configuration Defaults");
 	temppath = fs.transr (temppath);
 	fs.pathvol["defaults"].newval() = temppath;
 	fs.pathvol["conf"].newval() = temppath;

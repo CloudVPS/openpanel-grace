@@ -135,7 +135,7 @@ void xmlschema::nstranstype (value &nsNames, statstring &type)
 		{
 			// Replace namespace by the new one
 			// Store it in the cache
-			newType.printf ("%s:%s", nsNames[t2].cval(), t1.str());
+			newType = "%s:%s" %format (nsNames[t2], t1);
 			nsNames[otype] = newType;
 			type = newType;
 		}
@@ -152,7 +152,7 @@ void xmlschema::nstranstype (value &nsNames, statstring &type)
 		{
 			if (nsNames["*"].sval().strlen()) // replace?
 			{
-				newType.printf ("%s:%s", nsNames["*"].cval(), t1.str());
+				newType = "%s:%s" %format (nsNames["*"], t1);
 				nsNames[otype] = newType;
 				type = newType;
 			}
@@ -240,11 +240,10 @@ void xmlschema::nstransattr (value &nsNames, statstring &attr, const value &v)
 			{
 				do {
 					aliasval.crop(0);
-					orgtype.crop(0);
-					orgtype.printf ("%s:%s", atName.str(), probe.obj().name());
+					orgtype = "%s:%s" %format (atName, probe.obj().id());
 					if (nsReplace.strlen())
 					{
-						aliasval.printf ("%s:", nsReplace.str());
+						aliasval = "%s:" %format (nsReplace);
 					}
 					aliasval.strcat (probe.obj()("alias").sval());
 					nsNames[orgtype] = aliasval;
@@ -267,7 +266,7 @@ void xmlschema::nstransattr (value &nsNames, statstring &attr, const value &v)
 			nsNew = nsNames[nsName];
 			if (nsNew.strlen())
 			{
-				newAttr.printf ("%s:%s", nsNew.str(), atName.str());
+				newAttr = "%s:%s" %format (nsNew, atName);
 				attr = newAttr;
 				nsNames[oldAttr] = newAttr;
 			}

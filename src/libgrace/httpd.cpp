@@ -373,7 +373,7 @@ unsigned int httpd::sendfile (tcpsocket &s, const string &fn)
 	if (! fs.exists (fn)) return 0;
 	unsigned int sz = fs.size (fn);
 	
-	s.printf ("Content-length: %i\r\n\r\n", sz);
+	s.puts ("Content-length: %i\r\n\r\n" %format (sz));
 	s.sendfile (fn, sz);
 	return sz;
 }
@@ -444,7 +444,7 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 				{
 					s.puts ("%s: %s\r\n" %format (hdr.id(), hdr));
 				}
-				s.printf ("\r\n");
+				s.puts ("\r\n");
 				s.puts (outbody);
 				
 				

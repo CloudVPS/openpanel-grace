@@ -26,7 +26,7 @@ smtpsocket::smtpsocket (void)
 	myuid = core.userdb.getuid();
 	pw = core.userdb.getpwuid (myuid);
 	
-	myaddress.printf ("%s@%s", pw["username"].cval(), hostname.str());
+	myaddress = "%s@%s" %format (pw["username"], hostname);
 	setsender (myaddress, "Mail System");
 }
 
@@ -168,7 +168,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		// ------------------------------------------------------------------
 		// Send HELO and parse reply.
 		// ------------------------------------------------------------------
-		sock.printf ("HELO %s\r\n", hostname.str());
+		sock.puts ("HELO %s\r\n" %format (hostname));
 		line = sock.gets();
 		if (line.toint() != 250)
 		{
@@ -185,7 +185,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		// ------------------------------------------------------------------
 		// Send MAIL FROM and parse reply.
 		// ------------------------------------------------------------------
-		sock.printf ("MAIL FROM: <%s>\r\n", sender.str());
+		sock.puts ("MAIL FROM: <%s>\r\n" %format (sender));
 		line = sock.gets();
 		if (line.toint() != 250)
 		{
@@ -204,7 +204,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		// ------------------------------------------------------------------
 		foreach (rcp, rcptto)
 		{
-			sock.printf ("RCPT TO: <%s>\r\n", rcp.cval());
+			sock.puts ("RCPT TO: <%s>\r\n" %format (rcp));
 			line = sock.gets();
 			if (line.toint() != 250)
 			{
@@ -221,7 +221,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		// ------------------------------------------------------------------
 		// Indicate start of DATA block, parse reply.
 		// ------------------------------------------------------------------
-		sock.printf ("DATA\r\n");
+		sock.puts ("DATA\r\n");
 		line = sock.gets();
 		if (line.toint() != 354)
 		{
@@ -237,32 +237,31 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		// ------------------------------------------------------------------
 		if (! headers.exists ("From"))
 		{
-			sock.printf ("From: \"%S\" <%s>\r\n", sendername.str(),
-						 sender.str());
+			sock.puts ("From: \"%S\" <%s>\r\n" %format (sendername,sender));
 		}
 		if (! headers.exists ("To"))
 		{
 			if (rcptto.count() == 1)
 			{
-				sock.printf ("To: %s\r\n", rcptto[0].cval());
+				sock.puts ("To: %s\r\n" %format (rcptto[0]));
 			}
 			else
 			{
-				sock.printf ("To: Undisclosed Recipients\r\n");
+				sock.puts ("To: Undisclosed Recipients\r\n");
 			}
 		}
 		foreach (hdr, headers)
 		{
-			sock.printf ("%s: %s\r\n", hdr.name(), hdr.cval());
+			sock.puts ("%s: %s\r\n" %format (hdr.id(), hdr));
 		}
-		sock.printf ("\r\n");
+		sock.puts ("\r\n");
 		
 		// ------------------------------------------------------------------
 		// Send body followed by dot-on-a-single-line. Parse reply.
 		// ------------------------------------------------------------------
 		nbody = strutil::regexp (body, "s@\r\n\\.\r\n@\r\n..\r\n@g");
 		sock.puts (nbody);
-		sock.printf ("\r\n.\r\n");
+		sock.puts ("\r\n.\r\n");
 		
 		line = sock.gets();
 		if (line.toint() != 250)
@@ -278,7 +277,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 		// End transaction.
 		// ------------------------------------------------------------------
 		transactionComplete = true;
-		sock.printf ("QUIT\r\n");
+		sock.puts ("QUIT\r\n");
 		line = sock.gets();
 		sock.close();
 	}

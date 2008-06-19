@@ -357,18 +357,18 @@ void daemon::log (log::priority prio, const string &modulename,
 	// Fill the cache if it is empty
 	if (! prioNames.exists ("debug"))
 	{
-		prioNames["debug"] = log::debug;
-		prioNames["info"]  = log::info;
-		prioNames["warning"] = log::warning;
-		prioNames["error"] = log::error;
-		prioNames["critical"] = log::critical;
-		prioNames["alert"] = log::alert;
-		prioNames["emergency"] = log::emergency;
-		prioNames["application"] = log::application;
-		prioNames["allinfo"] = 255 - log::debug;
-		prioNames["allerror"] = log::error | log::critical
-								 | log::alert | log::emergency;
-		prioNames["all"] = 255;
+		prioNames = $("debug", log::debug) ->
+					$("info", log::info) ->
+					$("warning", log::warning) ->
+					$("error", log::error) ->
+					$("critical", log::critical) ->
+					$("alert", log::alert) ->
+					$("emergency", log::emergency) ->
+					$("appliation", log::application) ->
+					$("allinfo", 255 - log::debug) ->
+					$("allerror", log::error | log::critical |
+								  log::alert | log::emergency) ->
+					$("all", 255);
 	}
 
 	// If no logtargets were manually defined, get the desired
@@ -592,7 +592,7 @@ void logthread::run (void)
 				}
 				else // no, file target
 				{
-					int prio= ev[logproperty::priority];
+					int prio = ev[logproperty::priority];
 					string prioName;
 					string tstr;
 					string modName;
