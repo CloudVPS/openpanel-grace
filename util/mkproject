@@ -61,12 +61,14 @@ writefile() {
 # Create the project directory
 # ===========================================================================
 mkprojectdir() {
+  echo "Creating $DIRNAME"
   mkdir "$DIRNAME" || fail "Could not create directory"
   echo "${APPDOMAIN}.${APPCNAME}" | writefile .appid
   echo "$APPNAME" | writefile .appname
   
+  mkdir "${DIRNAME}/rsrc"
+  
   if [ "$BUILDTYPE" = "app" ]; then
-    mkdir "${DIRNAME}/rsrc"
     template conf_xml | writefile rsrc/${APPDOMAIN}.${APPCNAME}.conf.xml
     template schema_xml | writefile rsrc/${APPDOMAIN}.${APPCNAME}.schema.xml
     template validator_xml | writefile rsrc/${APPDOMAIN}.${APPCNAME}.validator.xml
@@ -74,12 +76,17 @@ mkprojectdir() {
     template makefile_app | writefile Makefile
   else
     template makefile_noapp | writefile Makefile
+    template appconf | writefile rsrc/${APPNAME}.conf
   fi
   
   template ${DOMAIN}_header_${BUILDTYPE} | writefile ${APPCNAME}.h
   template ${DOMAIN}_main_${BUILDTYPE} | writefile main.cpp
+  template makeinstall_${BUILDTYPE} | writefile makeinstall 755
   template configure_in | writefile configure.in
   template configure | writefile configure 755
+  cd "$DIRNAME"
+  which mkconfig >/dev/null 2>&1 && mkconfig
+  cd ..
 }
  
 # ===========================================================================
@@ -255,7 +262,7 @@ int %APPCNAME%App::main (void)
 	}
 	
 	daemonize ();
-	log::write (log::info, "main", "Started");
+	log::write (log::info, "main", "%APPNAME% started");
 	value ev;
 	
 	while (true)
@@ -264,6 +271,7 @@ int %APPCNAME%App::main (void)
 		if (ev.type() == "shutdown") break;
 	}
 
+	log::write (log::info, "main", "Shutting down");
 	stoplog();
 	return 0;
 }
@@ -414,14 +422,14 @@ int %APPCNAME%App::main (void)
 	conf.addwatcher ("system/eventlog", &%APPCNAME%App::confLog);
 	
 	// Load will fail if watchers did not valiate.
-	if (! conf.load ("%APPDOMAIN%.%APPCNAME%", conferr))
+	if (! conf.loadini ("etc:%APPNAME%.conf", conferr))
 	{
 		ferr.writeln ("%% Error loading configuration: %s" %format (conferr));
 		return 1;
 	}
 	
 	daemonize ();
-	log::write (log::info, "main", "Started");
+	log::write (log::info, "main", "%APPNAME% started");
 	value ev;
 	
 	while (true)
@@ -430,6 +438,7 @@ int %APPCNAME%App::main (void)
 		if (ev.type() == "shutdown") break;
 	}
 
+	log::write (log::info, "main", "Shutting down");
 	stoplog();
 	return 0;
 }
@@ -562,6 +571,9 @@ clean:
 	
 allclean: clean
 	rm -f makeinclude configure.paths platform.h
+	
+install: all
+	./makeinstall
 
 makeinclude:
 	@echo please run ./configure
@@ -589,6 +601,9 @@ clean:
 
 allclean: clean
 	rm -f makeinclude configure.paths platform.h
+	
+install: all
+	./makeinstall
 
 makeinclude:
 	@echo please run ./configure
@@ -598,6 +613,46 @@ SUFFIXES: .cpp .o
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $<
 ### END TEMPLATE makefile_noapp
+
+
+#############################################################################
+### TEMPLATE makeinstall_noapp
+#!/bin/sh
+. configure.paths
+
+install -m 755 %APPNAME% $CONFIG_BINPATH/%APPNAME%
+
+if [ `whoami` = "root" ]; then
+  etcpath=/etc
+else
+  if [ -d "${HOME}/.etc" ]; then
+    etcpath="${HOME}/.etc"
+  else
+    mkdir -p "${HOME}/etc"
+    etcpath="${HOME}/etc"
+  fi
+  mkdir -p "${HOME}/var/run"
+fi
+
+if [ ! -e "${etcpath}/%APPNAME%.conf" ]; then
+  cp rsrc/%APPNAME%.conf "$etcpath"/%APPNAME%.conf
+fi
+### END TEMPLATE makeinstall_noapp
+
+#############################################################################
+### TEMPLATE makeinstall_app
+#!/bin/sh
+. configure.paths
+
+cp -r %APPNAME%.app $CONFIG_BINPATH/
+ln -s %APPNAME%.app/exec $CONFIG_BINPATH/%APPNAME%
+### END TEMPLATE makeinstall_app
+
+#############################################################################
+### TEMPLATE appconf
+[system]
+logfile = "event.log"
+### END TEMPLATE appconf
 
 #############################################################################
 ### TEMPLATE configure_in

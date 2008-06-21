@@ -224,6 +224,16 @@ void application::init (int Argc, char *Argv[])
 		fs.pathvol["conf"].newval() = temppath;
 	}
 
+	fs.pathvol["etc"].newval() = "/etc";
+	if (fs.exists ("home:etc"))
+	{
+		fs.pathvol["etc"].newval() = "%s/etc" %format (env["HOME"]);
+	}
+	else if (fs.exists ("home:.etc"))
+	{
+		fs.pathvol["etc"].newval() = "%s/.etc" %format (env["HOME"]);
+	}
+
 	string appnamLower = appnam;
 	appnamLower.ctolower();
 		
