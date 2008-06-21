@@ -969,7 +969,7 @@ int httpdbasicauth::run (string &uri, string &postbody,
 				$attr("class", "error") ->
 				$("ip", s.peer_name) ->
 				$("text", errortext::httpd::authfail
-										%format (username, realm, uri)));
+						  %format (username, realm, uri)));
 		}
 		return 401;
 	}
