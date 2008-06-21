@@ -300,7 +300,7 @@ bool %APPCNAME%App::confLog (config::action act, keypath &kp,
 		case config::create:
 			// Set the event log target and daemonize.
 			fout.writeln ("%% Event log: %s\n" %format (nval));
-			addlogtarget (log::file, nval.sval(), 0xff, 1024*1024);
+			addlogtarget (log::file, nval.sval(), log::all, 1024*1024);
 			return true;
 	}
 	
@@ -467,7 +467,7 @@ bool %APPCNAME%App::confLog (config::action act, keypath &kp,
 		case config::create:
 			// Set the event log target and daemonize.
 			fout.writeln ("%% Event log: %s\n" %format (nval));
-			addlogtarget (log::file, nval.sval(), 0xff, 1024*1024);
+			addlogtarget (log::file, nval.sval(), log::all, 1024*1024);
 			return true;
 	}
 	
