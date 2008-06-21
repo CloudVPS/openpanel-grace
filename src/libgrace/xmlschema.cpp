@@ -20,9 +20,7 @@
 // ========================================================================
 xmlschema::xmlschema (const string &name)
 {
-	xmlschema xmlroot (XMLRootSchemaType);
-	string schemacode;
-	schema.loadxml (name,xmlroot);
+	schema.loadxml (name,xmlschema::root());
 }
 
 xmlschema &xmlschema::root (void)
@@ -67,8 +65,7 @@ xmlschema &xmlschema::plist (void)
 // ========================================================================
 void xmlschema::load (const string &name)
 {
-	xmlschema xmlroot (XMLRootSchemaType);
-	schema.loadxml (name,xmlroot);
+	schema.loadxml (name,xmlschema::root());
 	
 	foreach (cl, schema)
 	{

@@ -239,8 +239,7 @@ void application::init (int Argc, char *Argv[])
 		
 	if (fs.exists ("rsrc:grace.runoptions.xml"))
 	{
-		xmlschema runOptionsSchema (XMLRunOptionsSchemaType);
-		opt.loadxml ("rsrc:grace.runoptions.xml", runOptionsSchema);
+		opt.loadxml ("rsrc:grace.runoptions.xml", xmlschema::runopt());
 	}
 	
 	if (fs.exists ("rsrc:resources.xml"))

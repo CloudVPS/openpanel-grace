@@ -42,8 +42,7 @@ validator::~validator (void)
 // ========================================================================
 bool validator::load (const string &fn)
 {
-	xmlschema vSchema (XMLValidatorSchemaType);
-	schema.loadxml (fn, vSchema);
+	schema.loadxml (fn, xmlschema::validator());
 	return (schema.count());
 }
 
