@@ -51,6 +51,16 @@ public:
 							forbid = false,
 							allow = true
 						 };
+
+						 //@{
+						 /// Singleton access to built-in schemas
+	static xmlschema	&root (void);
+	static xmlschema	&base (void);
+	static xmlschema	&runopt (void);
+	static xmlschema	&validator (void);
+	static xmlschema	&netdb (void);
+	static xmlschema	&plist (void);
+						 //@}
 	
 						 /// Set up the built-in root schema.
 	void				 xmlrootschema (void);

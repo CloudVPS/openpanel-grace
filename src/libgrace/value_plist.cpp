@@ -24,9 +24,8 @@
 // ========================================================================
 string *value::toplist (bool compact)
 {
-	xmlschema schema (XMLPlistSchemaType);
 	type ("plist");
-	return toxml (compact,schema);
+	return toxml (compact,xmlschema::plist());
 }
 
 // ========================================================================
@@ -34,9 +33,8 @@ string *value::toplist (bool compact)
 // ========================================================================
 void value::saveplist (const string &filename, bool compact)
 {
-	xmlschema schema (XMLPlistSchemaType);
 	type ("plist");
-	savexml (filename, compact, schema);
+	savexml (filename, compact, xmlschema::plist());
 }
 
 // ========================================================================
@@ -44,8 +42,7 @@ void value::saveplist (const string &filename, bool compact)
 // ========================================================================
 void value::fromplist (const string &xml)
 {
-	xmlschema schema (XMLPlistSchemaType);
-	fromxml (xml, schema);
+	fromxml (xml, xmlschema::plist());
 }
 
 // ========================================================================
@@ -53,6 +50,5 @@ void value::fromplist (const string &xml)
 // ========================================================================
 void value::loadplist (const string &filename)
 {
-	xmlschema schema (XMLPlistSchemaType);
-	loadxml (filename, schema);
+	loadxml (filename, xmlschema::plist());
 }
