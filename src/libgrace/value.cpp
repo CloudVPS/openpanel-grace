@@ -1318,44 +1318,46 @@ void value::rmval (unsigned int ki, const char *key, int pindex)
 				i = arraysz;
 			}
 		}
-		if (rearrange)
+		if (rearrange) relinktree ();
+	}
+}
+
+
+void value::relinktree (void)
+{
+	unsigned int i;
+	for (i=0; i<arraysz; ++i)
+	{
+		array[i]->lower = array[i]->higher = NULL;
+	}
+	
+	for (i=ucount+1; i<arraysz; ++i)
+	{
+		value *nobj = array[i];
+		value *crsr = array[ucount];
+		
+		while (crsr)
 		{
-			unsigned int i;
-			
-			for (i=ucount; i<arraysz; ++i)
+			if (nobj->key < crsr->key)
 			{
-				array[i]->lower = array[i]->higher = NULL;
-			}
-			
-			for (i=ucount+1; i<arraysz; ++i)
-			{
-				value *nobj = array[i];
-				value *crsr = array[ucount];
-				
-				while (crsr)
+				if (crsr->lower)
+					crsr = crsr->lower;
+				else
 				{
-					if (nobj->key < crsr->key)
-					{
-						if (crsr->lower)
-							crsr = crsr->lower;
-						else
-						{
-							crsr->lower = nobj;
-							crsr = NULL;
-							break;
-						}
-					}
-					else
-					{
-						if (crsr->higher)
-							crsr = crsr->higher;
-						else
-						{
-							crsr->higher = nobj;
-							crsr = NULL;
-							break;
-						}
-					}
+					crsr->lower = nobj;
+					crsr = NULL;
+					break;
+				}
+			}
+			else
+			{
+				if (crsr->higher)
+					crsr = crsr->higher;
+				else
+				{
+					crsr->higher = nobj;
+					crsr = NULL;
+					break;
 				}
 			}
 		}
@@ -1462,7 +1464,9 @@ value &value::insertval (int atpos, dtenum typ)
 				   (arraysz - (atpos+1)) * sizeof (value *));
 		array[atpos] = new value;
 		array[atpos]->_type = typ;
+		ucount++;
 	}
+	
 	return (*this)[atpos];
 }
 

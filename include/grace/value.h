@@ -1214,6 +1214,8 @@ protected:
 					 /// Access method for the visitor protocol.
 	value			*getposition (unsigned int) const;
 	
+	void			 relinktree (void);
+	
 public:
 					 
 	void			 init (bool first=true);

@@ -506,27 +506,67 @@ bool naturalLabelSort (value *l, value *r, const string &opt)
 // METHOD value::sort (compare, opt)
 // ---------------------------------
 // Uses the function 'compare' with optional string argument 'opt' to
-// quicksort the array. FIXME: quicksort stinks.
+// sort the array.
 // ========================================================================
 void value::sort (sortmethod cmpare, const string &opt)
 {
 	int hits = 1;
 	value *v;
+	value **narray = NULL;
+	unsigned int icount = 1;
+	unsigned int crsr, jump;
+	unsigned int min = 0;
+	unsigned int max = 1;
+
+	if (ucount && (arraysz != ucount)) return;
+	if (arraysz < 2) return;
 	
-	for (unsigned int x=0; (hits) && ((x+1)<arraysz); ++x)
+	narray = (value **) malloc (arrayalloc * sizeof(value *));
+	narray[0] = array[0];
+	
+	for (unsigned int x=1; x<arraysz; ++x)
 	{
-		hits = 0;
-		for (unsigned int y=0; ((y+1)<arraysz); ++y)
+		max = x;
+		min = 0;
+		value *insertme = array[x];
+		crsr = x >> 1;
+		
+		while (true)
 		{
-			if (cmpare (array[y], array[y+1], opt))
+			if (cmpare (insertme, narray[crsr], opt))
 			{
-				v = array[y];
-				array[y] = array[y+1];
-				array[y+1] = v;
-				++hits;
+				min = crsr;
+				if ((max-min) < 2)
+				{
+					if (max != x)
+					{
+						memmove (narray+max+1, narray+max, (x-max)*sizeof(value*));
+					}
+					narray[max] = insertme;
+					break;
+				}
+				crsr += ((max-min) >> 1);
+			}
+			else
+			{
+				max = crsr;
+				if ((max-min) <1 )
+				{
+					if (min != x)
+					{
+						memmove (narray+min+1, narray+min, (x-min)*sizeof(value*));
+					}
+					narray[min] = insertme;
+					break;
+				}
+				crsr -= ((1+max-min) >> 1);
 			}
 		}
 	}
+	
+	::free (array);
+	array = narray;
+	relinktree ();
 }
 
 void value::sort (sortmethod compare)
