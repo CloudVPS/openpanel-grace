@@ -1,95 +1,207 @@
 #!/bin/sh
 
-TEST=`echo -n`
-if [ -z "$TEST" ]; then
-  ECHON="echo -n"
-  NHL=""
-else
-  ECHON="echo"
-  NHL="\c"
-fi
+# ===========================================================================
+# Print an error and exit
+# ===========================================================================
+fail() {
+  echo "$*" >&2
+  exit 1
+}
 
-UN_OS=`uname -o 2>/dev/null || uname`
-UN_PROC=`( uname -i 2>/dev/null || uname -p 2>/dev/null || uname -m ) | cut -f1 -d,`
-
-if [ "$UN_OS" = "GNU/Linux" ]; then
-  UN_OS="Linux"
-fi
-
-if [ "$UN_PROC" = "unknown" ]; then
-  if [ "$UN_OS" = "Cygwin" ]; then
-    UN_PROC=i386
+# ===========================================================================
+# Write a string to stdout with no newline
+# ===========================================================================
+puts() {
+  if [ -z "$__ECHON" ]; then
+	echotest=`echo -n`
+	if [ -z "$echotest" ]; then
+	  __ECHON="echo -n"
+	  __NHL=""
+	else
+	  __ECHON="echo"
+	  __NHL="\c"
+	fi
   fi
-fi
+  $__ECHON "$*$__NHL"
+}
 
-ARCH="$UN_OS.$UN_PROC"
-
-appname="$1"
-appid="$2"
-if [ -z "$appname" ]; then
-  if [ -f .appname ]; then appname=`cat .appname`; fi
-  if [ -z "$appname" ]; then
-    echo "Usage: $0 <appname>" >&2
-    exit 1
+# ===========================================================================
+# Derive system's architecture signature
+# ===========================================================================
+getarch() {
+  UN_OS=`uname -o 2>/dev/null || uname`
+  UN_PROC=`( uname -i 2>/dev/null || uname -p 2>/dev/null || uname -m ) | cut -f1 -d,`
+  
+  if [ "$UN_OS" = "GNU/Linux" ]; then
+	UN_OS="Linux"
   fi
-fi
-if [ -z "$appid" ]; then
-  if [ -f .appid ]; then appid=`cat .appid`; fi
-fi
-if [ -z "$appid" ]; then
-  appid="arpa.private.applications.$appname"
-fi
-echo "  Application: $appname"
-echo "  Application-ID: $appid"
-rsrc="."
-if [ -d rsrc ]; then
-  rsrc="rsrc"
-fi
-$ECHON "* Copying executable...$NHL"
-mkdir -p "$appname.app"
-mkdir -p "$appname.app/Contents/${ARCH}"
-if [ -f "$appname.exe" ]; then
-  cp -p "$appname.exe" "$appname.app/Contents/${ARCH}/"
-  rm -f "$appname.exe"
-  cd "$appname.app"
-  rm -f "exec"
-  ln -s "Contents/${ARCH}/$appname.exe" exec
-  cd ..
-  rm -f "$appname"
-  ln -s "$appname.app/exec" "$appname"
-fi
-echo " OK"
-$ECHON "* Installing schemas...$NHL"
-mkdir -p "$appname.app/Contents/Schemas"
-cp -p $rsrc/*.schema.xml "$appname.app/Contents/Schemas/" >/dev/null 2>&1
-cp -p $rsrc/*.validator.xml "$appname.app/Contents/Schemas/" >/dev/null 2>&1
-echo " OK"
-$ECHON "* Installing resource files...$NHL"
-mkdir -p "$appname.app/Contents/Resources"
-cp -p $rsrc/*.rsrc.xml "$appname.app/Contents/Resources/" >/dev/null 2>&1
-cp -p $rsrc/grace.*.xml "$appname.app/Contents/Resources/" >/dev/null 2>&1
-cp -p $rsrc/resources.xml "$appname.app/Contents/Resources/" >/dev/null 2>&1
-cp -p $rsrc/*.tmpl "$appname.app/Contents/Resources/" >/dev/null 2>&1
-cp -p $rsrc/*.txt "$appname.app/Contents/Resources/" >/dev/null 2>&1
-cp -p $rsrc/*.*htm* "$appname.app/Contents/Resources/" >/dev/null 2>&1
-cp -p $rsrc/*.jpg $rsrc/*.png $rsrc/*.gif $rsrc/*.bmp $rsrc/*.png $rsrc/*.xpm "$appname.app/Contents/Resources/" >/dev/null 2>&1
-rm -f $appname.app/Contents/Resources/*.schema.xml >/dev/null 2>&1
-echo " OK"
-$ECHON "* Installing default configuration...$NHL"
-mkdir -p "$appname.app/Contents/Configuration Defaults"
-cp -p $rsrc/*.conf.xml "$appname.app/Contents/Configuration Defaults/" >/dev/null 2>&1
-echo " OK"
-if [ -d tools ]; then
-  $ECHON "* Installing tools...$NHL"
-  mkdir -p "$appname.app/Contents/Tools"
-  cp -p tools/* "$appname.app/Contents/Tools/" >/dev/null 2>&1
+  
+  if [ "$UN_PROC" = "unknown" ]; then
+	if [ "$UN_OS" = "Cygwin" ]; then
+	  UN_PROC=i386
+	fi
+  fi
+  
+  echo "$UN_OS.$UN_PROC"
+}
+
+# ===========================================================================
+# Get default from mkproject output
+# ===========================================================================
+getprojectdefaults() {
+  if [ -f .appname ]; then
+    appname=$(cat .appname)
+  fi
+  if [ -f .appid ]; then
+    appid=$(cat .appid)
+  fi
+}
+
+# ===========================================================================
+# Verify a string for a given suffix
+# ===========================================================================
+endswith() {
+  what="$1"
+  with="$2"
+  orly=`echo "$1" | sed -e "s/.*${with}$/YES/"`
+  if [ "$orly" = "YES" ]; then
+    return 0
+  fi
+  return 1
+}
+
+# ===========================================================================
+# Create a .app bundle directory
+# ===========================================================================
+mkappdir() {
+  puts "> Creating ${1}..."
+  dstnam=$(echo "$1" | sed -e "s/\.app$//")
+  if [ -d "$1" ]; then
+    rm -rf "$1"
+  fi
+  rm -f "$dstnam"
+  mkdir -p "$1"
   echo " OK"
+}
+
+# ===========================================================================
+# Install an executable into a .app bundle
+# ===========================================================================
+installexe() {
+  puts "> Installing executable..."
+  fn="$1"
+  dst="$2"
+  ar="$3"
+  dstnam=$(echo "$dst" | sed -e "s/\.app$//")
+  apdnam=$(echo "$dst" | sed -e "s/.*\///")
+  
+  mkdir -p "${dst}/Contents/${ar}"
+  install -m 755 "$fn" "${dst}/Contents/${ar}/${fn}"
+  ln -s "Contents/${ar}/${fn}" "${dst}/exec"
+  ln -s "${apdnam}/exec" "$dstnam"
+  echo " OK"
+}
+
+# ===========================================================================
+# Install a resource file into a .app bundle
+# ===========================================================================
+installrsrc() {
+  fn="$1"
+  dst="$2"
+  typ="$3"
+  nam=$(echo "$1" | sed -e "s/.*\///")
+  
+  mkdir -p "${dst}/Contents/${typ}"
+  install -m 644 "$fn" "${dst}/Contents/${typ}/${nam}"
+}
+
+# ===========================================================================
+# MAIN
+# ===========================================================================
+getprojectdefaults
+
+# ---------------------------------------------------------------------------
+# Get command line arguments
+# ---------------------------------------------------------------------------
+while [ ! -z "$1" ]; do
+  case "$1" in
+  	"--appid")
+  		appid="$1"
+  		shift
+  		;;
+  	"--appname")
+  		appname="$1"
+  		shift
+  		;;
+  	"--dest")
+  		destdir=$(echo "$1" | sed -e "s/\/$//")
+  		shift
+  		;;
+  	*)
+  		appname="$1"
+  		shift
+  		;;
+ esac
+done
+
+if [ -z "$destdir" ]; then
+  destdir="."
 fi
-$ECHON "* Setting bundle metadata...$NHL"
-cat > "$appname.app/.meta" << _EOF_
-<?xml version="1.0" encoding="utf-8"?>
-<metro.directory type="directory/application-bundle" id="1837124781230156">
-  <metro.appid>$appid</metro.appid>
-</metro.directory>
-_EOF_
-echo " OK"
+
+if [ -z "$appname" ]; then
+  fail No appname provided and no .appname file found.
+fi
+
+arch=$(getarch)
+
+# ---------------------------------------------------------------------------
+# Start building the bundle
+# ---------------------------------------------------------------------------
+echo "* Building ${appname} for ${arch}:"
+
+execfile="${appname}.exe"
+appdir="${destdir}/${appname}.app"
+mkappdir "$appdir"
+installexe "$execfile" "$appdir" "$arch"
+
+# ---------------------------------------------------------------------------
+# Install resource files
+# ---------------------------------------------------------------------------
+if [ -d rsrc ]; then
+  for rsrc in rsrc/*; do
+    puts "> Installing ${rsrc}..."
+	if endswith "$rsrc" ".xml"; then
+	  subtype=$(echo "$rsrc" | sed -e "s/.xml$//;s/.*\.//")
+	  case "$subtype" in
+		"schema")
+			installrsrc "$rsrc" "$appdir" "Schemas"
+			;;
+		"validator")
+			installrsrc "$rsrc" "$appdir" "Schemas"
+			;;
+		"conf")
+			installrsrc "$rsrc" "$appdir" "Configuration Defaults"
+			;;
+		*)
+			installrsrc "$rsrc" "$appdir" "Resources"
+			;;
+	  esac
+	else
+	  if endswith "$rsrc" ".thtml"; then
+	    installrsrc "$rsrc" "$appdir" "Templates"
+	  else
+	    installrsrc "$rsrc" "$appdir" "Resources"
+	  fi
+	fi
+	echo " OK"
+  done
+fi
+
+# ---------------------------------------------------------------------------
+# Install tools
+# ---------------------------------------------------------------------------
+if [ -d tools ]; then
+  for tool in tools/*; do
+    installrsrc "$tool" "$appdir" "Tools"
+  done
+fi
