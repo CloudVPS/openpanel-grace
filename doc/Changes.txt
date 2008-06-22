@@ -1,3 +1,22 @@
+0.9.23     ??? ??? ?? 2008                           <grace@openpanel.com>
+
+           * Rigged the process class to never get the child process
+             confused about outstanding lock objects, by declaring
+             its environment to be single-threaded (which it is).
+             This makes the systemprocess class more robust.
+             
+           * Rewrote the mkproject utility to be more flexible. It now
+             also allows for setting up projects that don't use the
+             .app bundle directory structure.
+           
+           * Rewrote the mkapp utility.
+             
+           * Fixed an issue where value::sort() would still lead to
+             a messed up tree linking node keys.
+             
+           * Changed value::sort()'s sorting algorithm from fugly
+             quicksort to something a bit more sane.
+
 0.9.22     Fri Jun 13 2008                           <grace@openpanel.com>
 
            * Removed a lot of unnecessarily inlined code.
