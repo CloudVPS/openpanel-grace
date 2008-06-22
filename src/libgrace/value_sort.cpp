@@ -510,13 +510,8 @@ bool naturalLabelSort (value *l, value *r, const string &opt)
 // ========================================================================
 void value::sort (sortmethod cmpare, const string &opt)
 {
-	int hits = 1;
-	value *v;
 	value **narray = NULL;
-	unsigned int icount = 1;
-	unsigned int crsr, jump;
-	unsigned int min = 0;
-	unsigned int max = 1;
+	unsigned int crsr, min, max;
 
 	if (ucount && (arraysz != ucount)) return;
 	if (arraysz < 2) return;
