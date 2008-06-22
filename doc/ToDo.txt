@@ -5,11 +5,9 @@ Pending issues for GRACE:
   - Add support for a 'version' type (2b uint vector) [BEFORE 1.0]
   - Add support for a 'vector' type (usvector,svector,ivector,uvector,vector)
   - Add support for a 'color' type [BEFORE 1.0]
-  - Make the timestamp handling more useful [BEFORE 1.0]
   - Add import/export of sexpressions.
 
   class statstring:
-  - Migrate to a 64-bit key [MAYBE NOT]
   - Somehow cache the way we resolve constants, making it less necessary
     to do expensive lookups in loops. [IF TIME ALLOWS]
     
@@ -32,5 +30,4 @@ Pending issues for GRACE:
   scriptparser:
   - Sanitize language [status: BEFORE 1.0]
   - Sanitize parsing [status: BEFORE 1.0]
-  
-  
+    
