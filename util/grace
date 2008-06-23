@@ -1,0 +1,39 @@
+#!/bin/sh
+cmd=$(echo "$0" | sed -e "s@.*/@@")
+mypath=$(echo "$0" | sed -e "s@/${cmd}@@")
+if [ "$cmd" = "grace" ]; then
+  if [ -z "$1" ]; then
+    cmd="interactive"
+  else
+	cmd="$1"
+	shift
+  fi
+else
+  echo "WARNING: Calling grace tools directly will be deprecated. Please use" >&2
+  echo "         ${mypath}/grace $cmd <args>" >&2
+fi
+
+case "$cmd" in
+	"where")
+		echo "$mypath"
+		exit 0
+		;;
+	"--help")
+	    S=$(echo "$0" | sed -e "s/./ /g")
+		echo "Usage: $0 <command> [args]" >&2
+		echo "       $S where" >&2
+		find "${mypath}/util-grace" -type f -or -type l -maxdepth 1 | \
+		  while read tool; do
+			nm=$(echo "$tool" | sed -e "s@.*/@@")
+			echo "       $S $nm" >&2
+		  done
+		exit 0
+		;;
+esac
+
+tool="${mypath}/util-grace/${cmd}"
+if [ ! -f "$tool" ]; then
+  echo "${cmd}: not found" >&2
+  exit 1
+fi
+exec "${tool}" $*

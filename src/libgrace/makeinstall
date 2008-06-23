@@ -36,5 +36,13 @@ cp ../../include/grace/*.h "$path_include/grace/"
 
 echo "Installing utilities in $path_bin"
 if [ -d ../../util ]; then
-  cp ../../util/mk* "$path_bin"/
+  rm -f "${path_bin}/grace"
+  cp ../../util/grace "${path_bin}/"
+  mkdir -p "${path_bin}/util-grace"
+  for tool in ../../util/mk*; do
+    toolnm=$(echo "$tool" | sed -e "s@.*/@@")
+    cp "$tool" "${path_bin}/util-grace/"
+    rm -f "${path_bin}/${toolnm}"
+    ln -s grace "${path_bin}/${toolnm}"
+  done
 fi

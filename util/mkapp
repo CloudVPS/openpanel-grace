@@ -126,14 +126,17 @@ getprojectdefaults
 while [ ! -z "$1" ]; do
   case "$1" in
   	"--appid")
+  		shift
   		appid="$1"
   		shift
   		;;
   	"--appname")
+  		shift
   		appname="$1"
   		shift
   		;;
   	"--dest")
+  		shift
   		destdir=$(echo "$1" | sed -e "s/\/$//")
   		shift
   		;;

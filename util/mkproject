@@ -558,8 +558,10 @@ include makeinclude
 
 OBJ	= main.o
 
-all: %APPNAME%.exe
-	mkapp %APPNAME%
+all: %APPNAME%
+
+%APPNAME%: %APPNAME%.exe
+	grace mkapp %APPNAME%
 
 %APPNAME%.exe: $(OBJ)
 	$(LD) $(LDFLAGS) -o %APPNAME%.exe $(OBJ) $(LIBS)
