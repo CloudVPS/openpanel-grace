@@ -431,6 +431,7 @@ extern memory::pool *__retain_ptr;
 
 int main (int argc, char *argv[])
 {
+	__THREADED = true;
 	int returnv;
 	initfuncptr inithook = NULL;
 	void *dlh = NULL;
