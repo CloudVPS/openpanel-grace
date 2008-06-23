@@ -227,7 +227,7 @@ void lockbase::lockw (void)
 // ========================================================================
 void lockbase::unlock (void)
 {
-	//if (! __THREADED) return;
+	if (! __THREADED) return;
 	pthread_mutex_lock (mutex);
 	pthread_t self = pthread_self();
 	//::printf ("%08x@[%d] ::unlock()\n", this, self);
@@ -268,7 +268,7 @@ void lockbase::unlock (void)
 // ========================================================================
 bool lockbase::trylockr (int secs)
 {
-	//if (! __THREADED) return true;
+	if (! __THREADED) return true;
 	int goahead = 0;
 	
 	for (int i=0; i<10; ++i)
@@ -301,7 +301,7 @@ bool lockbase::trylockr (int secs)
 // ========================================================================
 bool lockbase::trylockw (int secs)
 {
-	//if (! __THREADED) return true;
+	if (! __THREADED) return true;
 	int goahead = 0;
 	bool upgrading = false;
 	pthread_t self = pthread_self();
