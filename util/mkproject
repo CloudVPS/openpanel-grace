@@ -88,7 +88,15 @@ mkprojectdir() {
   which mkconfig >/dev/null 2>&1 && mkconfig
   cd ..
 }
- 
+
+usage() {
+  echo "Usage: $0 [options]"
+  echo "       -d --daemon         : Build a daemon project"
+  echo "       -n --noapp          : Skip .app bundle logistics"
+  echo "          --appname <name> : Desired application name"
+  echo "          --domain <name>  : Desired application domain"
+}
+
 # ===========================================================================
 # MAIN
 # ===========================================================================
@@ -121,8 +129,13 @@ while [ ! -z "$1" ]; do
   		APPDOMAIN="$1"
   		shift
   		;;
+  	"--help")
+  		usage >&2
+  		exit 0
+  		;;
   	*)
   		echo "Unknown option: $1" >&2
+  		usage >&2
   		exit 1
   		;;
   esac
