@@ -185,6 +185,11 @@ void application::init (int Argc, char *Argv[])
 	fs.pathvol["rsrc"].newval() = temppath;
 
 	temppath = appath;
+	temppath.strcat ("/Contents/Templates");
+	temppath = fs.transr (temppath);
+	fs.pathvol["tmpl"].newval() = temppath;
+
+	temppath = appath;
 	temppath.strcat ("/Contents/Tools");
 	temppath = fs.transr (temppath);
 	fs.pathvol["tools"].newval() = temppath;
