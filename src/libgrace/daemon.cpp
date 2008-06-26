@@ -342,10 +342,9 @@ void daemon::log (log::priority prio, const string &modulename,
 		
 		if (! daemonized)
 		{
-			backlog.newval();
-			backlog[-1][logproperty::module] = modulename;
-			backlog[-1][logproperty::text] = logText;
-			backlog[-1][logproperty::priority] = prio;
+			backlog.newval() = $(logproperty::module, modulename) ->
+							   $(logproperty::text, logText) ->
+							   $(logproperty::priority, prio);
 			dq = true;
 			return;
 		}
@@ -431,13 +430,9 @@ void daemon::log (log::priority prio, const string &modulename,
 		dq = false;
 	}
 	
-	value  logEv;
-	
-	logEv[logproperty::priority] = prio;
-	logEv[logproperty::module] = modulename;
-	logEv[logproperty::text] = logText;
-	
-	LOGTHREAD->sendevent ("logmessage", logEv);
+	LOGTHREAD->sendevent ("logmessage", $(logproperty::priority, prio) ->
+				   						$(logproperty::module, modulename) ->
+				   						$(logproperty::text, logText));
 }
 
 // ========================================================================
@@ -495,6 +490,9 @@ bool daemon::settargetuser (const string &uname)
 	return true;
 }
 
+// ==========================================================================
+// METHOD daemon::settargetgroups
+// ==========================================================================
 bool daemon::settargetgroups (const value &list)
 {
 	tgroupcount = list.count();
