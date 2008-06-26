@@ -250,7 +250,7 @@ public:
 					 
 					 /// Set the additional target groups.
 					 /// \param grouplist An array of group names.
-	void			 settargetgroups (const value &grouplist);
+	bool			 settargetgroups (const value &grouplist);
 
 					 /// Send an empty event to the main thread, with
 					 /// only the type() set.
