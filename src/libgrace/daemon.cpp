@@ -52,6 +52,8 @@ daemon::daemon (const string &title) : application (title)
 	tuid = teuid = 0;
 	tgid = tegid = 0;
 	pidcheck = true;
+	tgroupcount = 0;
+	tgroups = NULL;
 }
 
 // ========================================================================
@@ -93,6 +95,7 @@ void daemon::daemonize (bool delayedexit)
 		if (pidcheck) writepid ();
 		
 		// Set user-/groupids.
+		if (tgroupcount) setgroups (tgroupcount, tgroups);
 		if (tgid) setregid (tgid, tegid);
 		if (tuid) setreuid (tuid, teuid);
 		return;
@@ -133,9 +136,9 @@ void daemon::daemonize (bool delayedexit)
 					// We're set. Do the business.
 					daemonized = true;
 					if (pidcheck) writepid ();
+					if (tgroupcount) setgroups (tgroupcount, tgroups);
 					if (tgid) setregid (tgid, tegid);
 					if (tuid) setreuid (tuid, teuid);
-	
 					return;
 				
 				case -1:
@@ -489,6 +492,28 @@ bool daemon::settargetuser (const string &uname)
 	
 	settargetuid (pw["uid"].uval());
 	settargetgid (pw["gid"].uval());
+	return true;
+}
+
+bool daemon::settargetgroups (const value &list)
+{
+	tgroupcount = list.count();
+	tgroups = new gid_t[tgroupcount];
+	int i=0;
+	
+	foreach (g, list)
+	{
+		value dt = core.userdb.getgrnam (g.sval());
+		if (dt.isempty())
+		{
+			tgroupcount = 0;
+			delete[] tgroups;
+			tgroups = NULL;
+			return false;
+		}
+		gid_t gid = dt["gid"].uval();
+		tgroups[i++] = gid;
+	}
 	return true;
 }
 

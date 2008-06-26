@@ -247,6 +247,10 @@ public:
 					 	tgid = rgid;
 					 	tegid = egid;
 					 }
+					 
+					 /// Set the additional target groups.
+					 /// \param grouplist An array of group names.
+	void			 settargetgroups (const value &grouplist);
 
 					 /// Send an empty event to the main thread, with
 					 /// only the type() set.
@@ -284,6 +288,8 @@ protected:
 	uid_t			 teuid; ///< Target effective userid after daemonize().
 	gid_t			 tgid; ///< Target real groupid after daemonize().
 	gid_t			 tegid; ///< Target effective groupid after daemonize().
+	int				 tgroupcount; ///< Number of extra groups.
+	gid_t			*tgroups; ///< Array of extra groups.
 	bool			 pidcheck; ///< False if no pidcheck should be performed.
 	eventq			 events; ///< Inbound event socket.
 };
