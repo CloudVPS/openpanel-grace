@@ -166,20 +166,28 @@ exit 0
 #include <grace/application.h>
 
 //  -------------------------------------------------------------------------
+/// Implementation template for application config.
+//  -------------------------------------------------------------------------
+typedef configdb<class %APPCNAME%App> appconfig;
+
+//  -------------------------------------------------------------------------
 /// Main application class.
 //  -------------------------------------------------------------------------
 class %APPCNAME%App : public application
 {
 public:
-		 	 %APPCNAME%App (void) :
-				application ("%APPDOMAIN%.%APPCNAME%")
-			 {
-			 }
-			~%APPCNAME%App (void)
-			 {
-			 }
+		 		 %APPCNAME%App (void) :
+					application ("%APPDOMAIN%.%APPCNAME%")
+				 {
+				 }
+				~%APPCNAME%App (void)
+				 {
+				 }
+	
+	int			 main (void);
 
-	int		 main (void);
+protected:
+	appconfig	 conf;
 };
 
 #endif
@@ -230,6 +238,12 @@ $appobject(%APPCNAME%App);
 // ==========================================================================
 int %APPCNAME%App::main (void)
 {
+	string conferr;
+	if (! conf.load ("%APPDOMAIN%.%APPCNAME%", conferr))
+	{
+		ferr.writeln ("%% Error loading configuration: %s" %format (conferr));
+		return 1;
+	}
 	return 0;
 }
 ### END TEMPLATE application_main_app
@@ -331,21 +345,29 @@ bool %APPCNAME%App::confLog (config::action act, keypath &kp,
 #include <grace/application.h>
 
 //  -------------------------------------------------------------------------
+/// Implementation template for application config.
+//  -------------------------------------------------------------------------
+typedef configdb<class %APPCNAME%App> appconfig;
+
+//  -------------------------------------------------------------------------
 /// Main application class.
 //  -------------------------------------------------------------------------
 class %APPCNAME%App : public application
 {
 public:
-		 	 %APPCNAME%App (void) :
-				application ("%APPDOMAIN%.%APPCNAME%")
-			 {
-			 	opt = $("-h", $("long", "--help"));
-			 }
-			~%APPCNAME%App (void)
-			 {
-			 }
+		 		 %APPCNAME%App (void) :
+					application ("%APPDOMAIN%.%APPCNAME%")
+				 {
+				 	opt = $("-h", $("long", "--help"));
+				 }
+				~%APPCNAME%App (void)
+				 {
+				 }
+	
+	int			 main (void);
 
-	int		 main (void);
+protected:
+	appconfig	 conf;
 };
 
 #endif
@@ -396,6 +418,12 @@ $appobject(%APPCNAME%App);
 // ==========================================================================
 int %APPCNAME%App::main (void)
 {
+	string conferr;
+	if (! conf.loadini ("etc:%APPNAME%.conf", conferr))
+	{
+		ferr.writeln ("%% Error loading configuration: %s" %format (conferr));
+		return 1;
+	}
 	return 0;
 }
 ### END TEMPLATE application_main_noapp
