@@ -2550,7 +2550,7 @@ void string::replace (const value &set)
 	for (unsigned int i=0; i<size; ++i)
 	{
 		charmatch *m = M.match (data->v+offs+i, size-i);
-		if (m)
+		if (m && m->replace)
 		{
 			res.strcat (*(m->replace));
 			i += (m->lenflag-1);
@@ -3129,7 +3129,7 @@ charmatch *charmatch::match (const char *str, int ln)
 	if (lenflag) return this;
 	if (! ln) return NULL;
 	
-	charmatch *m = array[(int)str[0]];
+	charmatch *m = array[(unsigned char)str[0]];
 	if (m)
 	{
 		return m->match (str+1, ln-1);
@@ -3149,7 +3149,7 @@ void charmatch::addmatch (const char *seq, int pos, int ln, const string &rep)
 		return;
 	}
 	
-	int c = seq[pos];
+	unsigned char c = (unsigned char) seq[pos];
 	if (array[c] == NULL)
 	{
 		array[c] = new charmatch;
