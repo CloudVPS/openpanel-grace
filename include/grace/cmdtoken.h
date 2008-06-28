@@ -274,26 +274,36 @@ public:
 						 }
 						 else if (operand == "+=")
 						 {
-							 if (atoi (rright))
-								 env[lleft.str()] = env[left.str()].ival() + atoi (rright);
+							 if (rright.toint())
+								 env[lleft] = env[left].ival() + rright.toint();
 							 else
 							 {
-								 env[lleft.str()] = env[left.str()].sval() + rright;
+								 env[lleft] = env[left].sval() + rright;
 							 }
 						 }
 						 else if (operand == "-=")
 						 {
-							 env[lleft.str()] = env[left.str()].ival() - atoi (rright);
+							 env[lleft] = env[left].ival() - rright.toint();
 						 }
 						 else if (operand == "%=")
 						 {
 							 if (atoi (rright) > 0)
-								 env[lleft.str()] = env[left.str()].ival() % atoi (rright);
+								 env[lleft] = env[left].ival() % rright.toint();
 						 }
 						 else if (operand == "~=")
 						 {
-							 env[lleft.str()] =
-							 	strutil::regexp (env[left.str()].sval(), rright);
+							 env[lleft] = strutil::regexp (env[left].sval(), rright);
+						 }
+						 else if (operand == "/=")
+						 {
+						 	if (rright.toint() > 0)
+						 	{
+						 		env[lleft] = env[lleft].ival() / rright.toint();
+						 	}
+						 }
+						 else if (operand == "*=")
+						 {
+							env[lleft] = env[lleft].ival() * rright.toint();
 						 }
 					 }
 					 

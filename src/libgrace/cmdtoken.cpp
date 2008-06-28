@@ -73,6 +73,7 @@ void cmdtoken_data::run (value &v, string &buf)
 	if (dat.strstr ("<<") < 0)
 	{
 		buf += dat;
+		if (! next) return;
 		buf += "\n";
 		return;
 	}
@@ -83,16 +84,14 @@ void cmdtoken_data::run (value &v, string &buf)
 	
 	while ((pos = dat.strstr ("<<")) >= 0)
 	{
-		buf += dat.left (pos);
-		dat = dat.mid(pos+2);
+		buf += dat.cutat ("<<");
 		pos2 = dat.strstr (">>");
 		if (pos2>=0)
 		{
 			value decl;
 			value ind;
 			
-			tok = dat.left (pos2);
-			dat = dat.mid (pos2+2);			
+			tok = dat.cutat (">>");
 
 			decl = strutil::splitquoted (tok, ' ');
 			string section = decl[0];
@@ -115,6 +114,10 @@ void cmdtoken_data::run (value &v, string &buf)
 			pr->run (v, buf, section);
 		}
 	}
+	
+	buf += dat;
+	if (next) buf += "\n";
+	return;
 }
 
 // ========================================================================
@@ -131,6 +134,7 @@ void cmdtoken_loop::run (value &v, string &buf)
 	string ploopvar = cmdtoken_parsestring (v, loopvar);
 	//value oldv;
 	loopdata = v[ploopvar];
+	v["_loopcount"] = loopdata.count();
 	
 	//oldv = v;
 	
@@ -227,7 +231,11 @@ void scriptparser::build (const string &src)
 		string stripped;
 		int ps = 0;
 		
-		if (! ln.sval().strlen()) continue;
+		if (! ln.sval())
+		{
+			new cmdtoken_data (ln, cc);
+			continue;
+		}
 		
 		while ((ln.sval()[ps] == ' ')||(ln.sval()[ps] == '\t')) ++ps;
 		stripped = ln.sval().mid (ps);
@@ -252,6 +260,14 @@ void scriptparser::build (const string &src)
 					crsr++;
 					labels[args] = crsr;
 					cc = c;
+					break;
+					
+				incaseof ("@define") :
+					string sect = args.cutat (' ');
+					c = new cmdtoken (nopToken, this);
+					c = new cmdtoken_data (args, c);
+					crsr++;
+					labels[sect] = crsr;
 					break;
 
 				incaseof ("@switch") :
