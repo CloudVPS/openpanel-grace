@@ -1,4 +1,7 @@
-0.9.23     ??? ??? ?? 2008                           <grace@openpanel.com>
+0.9.23     Mon Jun 30 2008                           <grace@openpanel.com>
+
+           * Fixed a bug in string::replace() when dealing with
+             high ASCII or UTF characters.
 
            * Rigged the process class to never get the child process
              confused about outstanding lock objects, by declaring
@@ -15,7 +18,7 @@
              a messed up tree linking node keys.
              
            * Changed value::sort()'s sorting algorithm from fugly
-             quicksort to something a bit more sane.
+             bubblesort to something a bit more sane.
 
 0.9.22     Fri Jun 13 2008                           <grace@openpanel.com>
 
