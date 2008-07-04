@@ -7,7 +7,7 @@
              section, indicates that any tags with an unknown type
              should assume their tagname to be the node's key.
              
-           * Fixed offset-bug in string::strcpy().
+           * Fixed offset-bug in string::strcat().
 
 0.9.23     Mon Jun 30 2008                           <grace@openpanel.com>
 
