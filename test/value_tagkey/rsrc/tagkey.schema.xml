@@ -3,4 +3,6 @@
   <xml.schema.options>
     <xml.option.defaulttagkey>true</xml.option.defaulttagkey>
   </xml.schema.options>
+  <xml.class name="gid"><xml.type>integer</xml.type></xml.class>
+  <xml.class name="uid"><xml.type>integer</xml.type></xml.class>
 </xml.schema>

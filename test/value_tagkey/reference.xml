@@ -3,7 +3,7 @@
 	<string id="firstName">John</string>
 	<string id="lastName">Doe</string>
 	<dict id="credentials">
-		<string id="uid">100</string>
-		<string id="gid">100</string>
+		<integer id="uid">100</integer>
+		<integer id="gid">100</integer>
 	</dict>
 </test>
