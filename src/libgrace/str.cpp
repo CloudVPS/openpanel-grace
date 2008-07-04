@@ -1034,7 +1034,7 @@ void string::insert (const string &s)
 		if (newsize)
 			memmove (data->v + offs, s.str(), newsize);
 			
-		data->v[size] = '\0';
+		data->v[offs+size] = '\0';
 	}
 	else
 	{
@@ -1077,7 +1077,7 @@ void string::strcat (const string &s)
 		}
 		
 		memmove (data->v + offs + oldsize, s.str(), s.strlen());
-		data->v[size] = '\0';
+		data->v[offs+size] = '\0';
 	}
 	else
 	{
