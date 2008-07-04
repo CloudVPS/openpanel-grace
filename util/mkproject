@@ -69,14 +69,14 @@ mkprojectdir() {
   mkdir "${DIRNAME}/rsrc"
   
   if [ "$BUILDTYPE" = "app" ]; then
-    template conf_xml | writefile rsrc/${APPDOMAIN}.${APPCNAME}.conf.xml
-    template schema_xml | writefile rsrc/${APPDOMAIN}.${APPCNAME}.schema.xml
-    template validator_xml | writefile rsrc/${APPDOMAIN}.${APPCNAME}.validator.xml
+    template ${DOMAIN}_conf_xml | writefile rsrc/${APPDOMAIN}.${APPCNAME}.conf.xml
+    template ${DOMAIN}_schema_xml | writefile rsrc/${APPDOMAIN}.${APPCNAME}.schema.xml
+    template ${DOMAIN}_validator_xml | writefile rsrc/${APPDOMAIN}.${APPCNAME}.validator.xml
     template runoptions_xml | writefile rsrc/grace.runoptions.xml
     template makefile_app | writefile Makefile
   else
     template makefile_noapp | writefile Makefile
-    template appconf | writefile rsrc/${APPNAME}.conf
+    template ${DOMAIN}_appconf | writefile rsrc/${APPNAME}.conf
   fi
   
   template ${DOMAIN}_header_${BUILDTYPE} | writefile ${APPCNAME}.h
@@ -164,6 +164,7 @@ exit 0
 #ifndef _%APPCNAME%_H
 #define _%APPCNAME%_H 1
 #include <grace/application.h>
+#include <grace/configdb.h>
 
 //  -------------------------------------------------------------------------
 /// Implementation template for application config.
@@ -177,7 +178,7 @@ class %APPCNAME%App : public application
 {
 public:
 		 		 %APPCNAME%App (void) :
-					application ("%APPDOMAIN%.%APPCNAME%")
+					application ("%APPDOMAIN%.%APPCNAME%"), conf (this)
 				 {
 				 }
 				~%APPCNAME%App (void)
@@ -343,6 +344,7 @@ bool %APPCNAME%App::confLog (config::action act, keypath &kp,
 #ifndef _%APPCNAME%_H
 #define _%APPCNAME%_H 1
 #include <grace/application.h>
+#include <grace/configdb.h>
 
 //  -------------------------------------------------------------------------
 /// Implementation template for application config.
@@ -356,7 +358,8 @@ class %APPCNAME%App : public application
 {
 public:
 		 		 %APPCNAME%App (void) :
-					application ("%APPDOMAIN%.%APPCNAME%")
+					application ("%APPDOMAIN%.%APPCNAME%"),
+					conf (this)
 				 {
 				 	opt = $("-h", $("long", "--help"));
 				 }
@@ -419,11 +422,7 @@ $appobject(%APPCNAME%App);
 int %APPCNAME%App::main (void)
 {
 	string conferr;
-	if (! conf.loadini ("etc:%APPNAME%.conf", conferr))
-	{
-		ferr.writeln ("%% Error loading configuration: %s" %format (conferr));
-		return 1;
-	}
+	conf.loadini ("etc:%APPNAME%.conf", conferr);
 	return 0;
 }
 ### END TEMPLATE application_main_noapp
@@ -517,19 +516,30 @@ bool %APPCNAME%App::confLog (config::action act, keypath &kp,
 ### END TEMPLATE daemon_main_noapp
 
 #############################################################################
-### TEMPLATE conf_xml
+### TEMPLATE daemon_conf_xml
 <?xml version="1.0" encoding="utf-8"?>
 <%APPDOMAIN%.%APPCNAME%.conf>
   <system>
     <eventlog>event.log</eventlog>
   </system>
 </%APPDOMAIN%.%APPCNAME%.conf>
-### END TEMPLATE conf_xml
+### END TEMPLATE daemon_conf_xml
 
 #############################################################################
-### TEMPLATE schema_xml
+### TEMPLATE application_conf_xml
+<?xml version="1.0" encoding="utf-8"?>
+<%APPDOMAIN%.%APPCNAME%.conf>
+  <verbose>event.log</verbose>
+</%APPDOMAIN%.%APPCNAME%.conf>
+### END TEMPLATE application_conf_xml
+
+#############################################################################
+### TEMPLATE daemon_schema_xml
 <?xml version="1.0" encoding="utf-8"?>
 <xml.schema>
+  <xml.schema.options>
+    <xml.option.defaulttagkey>true</xml.option.defaulttagkey>
+  </xml.schema.options>
   <xml.class name="%APPDOMAIN%.%APPCNAME%.conf">
     <xml.type>dict</xml.type>
     <xml.proplist>
@@ -546,10 +556,21 @@ bool %APPCNAME%App::confLog (config::action act, keypath &kp,
     <xml.type>string</xml.type>
   </xml.class>
 </xml.schema>
-### END TEMPLATE schema_xml
+### END TEMPLATE daemon_schema_xml
 
 #############################################################################
-### TEMPLATE validator_xml
+### TEMPLATE application_schema_xml
+<?xml version="1.0" encoding="utf-8"?>
+<xml.schema>
+  <xml.schema.options>
+    <xml.option.defaulttagkey>true</xml.option.defaulttagkey>
+  </xml.schema.options>
+  <xml.class name="verbose"><xml.type>bool</xml.type></xml.class>
+</xml.schema>
+### END TEMPLATE application_schema_xml
+
+#############################################################################
+### TEMPLATE daemon_validator_xml
 <?xml version="1.0" encoding="utf-8"?>
 <grace.validator>
   <datarule id="root">
@@ -574,7 +595,19 @@ bool %APPCNAME%App::confLog (config::action act, keypath &kp,
   </datarule>
 
 </grace.validator>
-### END TEMPLATE validator_xml
+### END TEMPLATE daemon_validator_xml
+
+#############################################################################
+### TEMPLATE application_validator_xml
+<?xml version="1.0" encoding="utf-8"?>
+<grace.validator>
+  <datarule id="root">
+    <match.mandatory>
+      <mandatory type="child" key="verbose"/>
+    </match.mandatory>
+  </datarule>
+</grace.validator>
+### END TEMPLATE application_validator_xml
 
 #############################################################################
 ### TEMPLATE runoptions_xml
@@ -692,10 +725,15 @@ ln -s %APPNAME%.app/exec $CONFIG_BINPATH/%APPNAME%
 ### END TEMPLATE makeinstall_app
 
 #############################################################################
-### TEMPLATE appconf
+### TEMPLATE daemon_appconf
 [system]
 logfile = "event.log"
-### END TEMPLATE appconf
+### END TEMPLATE daemon_appconf
+
+#############################################################################
+### TEMPLATE application_appconf
+verbose = "true"
+### END TEMPLATE application_appconf
 
 #############################################################################
 ### TEMPLATE configure_in

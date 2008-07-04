@@ -1,3 +1,14 @@
+0.9.24     ??? ??? ?? ????                           <grace@openpanel.com>
+
+           * Put some more sense into the application templates created
+             by grace mkproject.
+           
+           * Add <xml.option.defaulttagkey/> to the xmlschema option
+             section, indicates that any tags with an unknown type
+             should assume their tagname to be the node's key.
+             
+           * Fixed offset-bug in string::strcpy().
+
 0.9.23     Mon Jun 30 2008                           <grace@openpanel.com>
 
            * Fixed a bug in string::replace() when dealing with
