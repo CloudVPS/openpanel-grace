@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test>
+  <firstName>John</firstName>
+  <lastName>Doe</lastName>
+  <credentials>
+    <uid>100</uid>
+    <gid>100</gid>
+  </credentials>
+</test>

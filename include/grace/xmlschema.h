@@ -99,6 +99,10 @@ public:
 						 /// the xml.schema.options section.
 	bool				 hasrootclass (void);
 	
+						 /// Returns true if unknown tags should be
+						 /// treated as keys.
+	bool				 tagkey (void);
+	
 						 /// Return the root class if defined in the
 						 /// xml.schema.options section.
 	const string		&getrootclass (void);

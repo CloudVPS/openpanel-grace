@@ -111,6 +111,16 @@ bool xmlschema::hasrootclass (void)
 	return true;
 }
 
+// ==========================================================================
+// METHOD xmlschema::tagkey
+// ==========================================================================
+bool xmlschema::tagkey (void)
+{
+	if (! schema.exists (".options")) return false;
+	if (! schema[".options"].exists ("tagkey")) return false;
+	return schema[".options"]["tagkey"];
+}
+
 // ========================================================================
 // METHOD ::getrootclass
 // ========================================================================
@@ -332,21 +342,23 @@ bool xmlschema::knownclass (const string &name)
 const string &xmlschema::resolveid (const string &forclass,
 									const string &superclass)
 {
-	static string empty;
-	
+	static string empty;	
 	visitor<const value> probe (schema);
 	
 	if (! probe.enter (superclass))
 	{
+		if (tagkey()) return forclass;
 		return empty;
 	}
 	if (! probe.enter (key::xml_proplist))
 	{
+		if (tagkey()) return forclass;
 		return empty;
 	}
 		
 	if (! probe.enter (forclass))
 	{
+		if (tagkey()) return forclass;
 		return empty;
 	}
 	

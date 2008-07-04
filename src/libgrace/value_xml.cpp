@@ -419,7 +419,7 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 				{
 					if (schema) __id__ = schema->resolveindexname (tagtype);
 					else __id__ = "id";
-
+					
 					if ((!ignorethis) && (insidecontainervalue || insidecontainer))
 					{
 						//::printf ("we're inside a container but didn't run into valueclass object\n");

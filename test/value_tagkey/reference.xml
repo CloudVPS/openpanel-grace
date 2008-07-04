@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test>
+	<string id="firstName">John</string>
+	<string id="lastName">Doe</string>
+	<dict id="credentials">
+		<string id="uid">100</string>
+		<string id="gid">100</string>
+	</dict>
+</test>

@@ -80,7 +80,10 @@ void xmlschema::xmlrootschema (void)
 							$attr("id","rootclass")) ->
 						$("xml.option.doctype",
 							$type("xml.member") ->
-							$attr("id","doctype")))) ->
+							$attr("id","doctype"))->
+						$("xml.option.defaulttagkey",
+							$type("xml.member") ->
+							$attr("id","tagkey")))) ->
 				$("xml.option.rootclass",
 					$type("xml.class") ->
 					$("xml.type","string") ->
@@ -150,6 +153,10 @@ void xmlschema::xmlrootschema (void)
 							$attr("mandatory","true") ->
 							$("xml.type","string") ->
 							$("xml.code","XODd")))) ->
+				$("xml.option.defaulttagkey",
+					$type("xml.class") ->
+					$("xml.type","bool") ->
+					$("xml.code","XOtk")) ->
 				$("xml.class",
 					$type("xml.class") ->
 					$("xml.type","dict") ->
