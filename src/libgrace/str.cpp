@@ -1110,7 +1110,7 @@ unsigned int string::utf8len (void) const
 	if (size<2) return size;
 	for (unsigned int i=0; i<size; ++i)
 	{
-		if ((data->v[i] & 0xc0) != 0x80) res++;
+		if ((data->v[offs+i] & 0xc0) != 0x80) res++;
 	}
 	return res;
 }
@@ -1142,7 +1142,7 @@ unsigned int string::utf8pos (int i) const
 		crsr = size-1;
 		while (crsr && ii)
 		{
-			if (data->v[crsr] & 0xc0 != 0x80) ii++;
+			if (data->v[offs+crsr] & 0xc0 != 0x80) ii++;
 			crsr--;
 		}
 		return crsr;
@@ -1151,7 +1151,7 @@ unsigned int string::utf8pos (int i) const
 	crsr = 0;
 	while ((crsr<size) && ii)
 	{
-		if (data->v[crsr] & 0xc0 != 0x80) ii--;
+		if (data->v[offs+crsr] & 0xc0 != 0x80) ii--;
 		crsr++;
 	}
 	return crsr;
@@ -1192,7 +1192,7 @@ void string::strcat (const char *s, size_t sz)
 		}
 	}
 	memmove (data->v + offs + oldsize, s, sz);
-	data->v[size] = '\0';
+	data->v[offs+size] = '\0';
 }
 
 // ========================================================================
@@ -1236,7 +1236,7 @@ void string::strcat (const char *s)
 			data = (refblock *) realloc (data, alloc);
 		}
 		memmove (data->v + offs + oldsize, s, size-oldsize);
-		data->v[size] = '\0';
+		data->v[offs+size] = '\0';
 	}
 	else
 	{
@@ -1711,7 +1711,7 @@ void string::crop (int sz)
 			memmove (data->v, data->v + (size - _sz), _sz);
 		}
 		size = _sz;
-		data->v[size] = '\0';
+		data->v[offs+size] = '\0';
 		if (GROW(size+1+sizeof (refblock)) < alloc)
 		{
 			alloc = GROW(size+1+sizeof (refblock));
@@ -1756,7 +1756,7 @@ void string::pad (int psz, char p)
 				memmove (data->v + offs + (sz-size), data->v + offs, size);
 				for (unsigned int i=0; i < (unsigned int)(sz-size); ++i)
 				{
-					data->v[i] = p;
+					data->v[offs+i] = p;
 				}
 			}
 		}
