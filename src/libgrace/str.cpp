@@ -2555,7 +2555,7 @@ void string::replace (const value &set)
 			res.strcat (*(m->replace));
 			i += (m->lenflag-1);
 		}
-		else res.strcat (data->v[i]);
+		else res.strcat (data->v[offs+i]);
 	}
 	
 	(*this) = res;
