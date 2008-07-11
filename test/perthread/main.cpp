@@ -21,8 +21,10 @@ public:
 			 	for (int i=0; i<cnt; ++i)
 			 	{
 				 	DB.get() = DB.get().ival() + 1;
+				 	::printf ("DB.get() -> %i\n", DB.get().ival());
 				 }
 				 *out = DB.get();
+				 value ev = waitevent ();
 				 threadStopped.signal ();
 			 }
 
@@ -51,9 +53,15 @@ APPOBJECT(perthreadtestApp);
 
 int perthreadtestApp::main (void)
 {
+	outputOne = outputTwo = outputThree = 0;
+	__THREADED = true;
 	testThread one (&outputOne, 18321);
 	testThread two (&outputTwo, 33510);
 	testThread three (&outputThree, 18495);
+	
+	one.sendevent ("shutdown");
+	two.sendevent ("shutdown");
+	three.sendevent ("shutdown");
 	
 	threadStopped.wait ();
 	::printf ("%i %i %i\n", outputOne, outputTwo, outputThree);
