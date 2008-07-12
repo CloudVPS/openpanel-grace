@@ -1039,17 +1039,17 @@ string *strutil::titlecaps (const string &src)
 	
 	if (! midwords.exists ("of"))
 	{
-		midwords["a"] = true;
-		midwords["an"] = true;
-		midwords["in"] = true;
-		midwords["of"] = true;
-		midwords["the"] = true;
-		midwords["de"] = true;
-		midwords["van"] = true;
-		midwords["aan"] = true;
-		midwords["ter"] = true;
-		midwords["der"] = true;
-		midwords["te"] = true;
+		midwords = $("a",true) ->
+				   $("an",true) ->
+				   $("in",true) ->
+				   $("of",true) ->
+				   $("the",true) ->
+				   $("de",true) ->
+				   $("van",true) ->
+				   $("aan",true) ->
+				   $("ter",true) ->
+				   $("der",true) ->
+				   $("te",true);
 	}
 	
 	splitup = strutil::splitspace (src);
