@@ -291,8 +291,9 @@ value *strutil::splitquoted (const string &str, char s, bool forxml)
 					}
 					
 					if (((lastnspace+1)-left) < 1)
+					{
 						res.newval() = "";
-						
+					}	
 					else
 					{
 						string tmp;
