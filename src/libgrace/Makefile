@@ -41,6 +41,7 @@ OBJ			= 	application.o \
 				timeofday.o \
 				timestamp.o \
 				tolower.o \
+				udpsocket.o \
 				valuable.o \
 				value.o \
 				value_ascii.o \
