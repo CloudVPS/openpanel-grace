@@ -149,6 +149,16 @@ public:
 						 	return o.ipval() != addr;
 						 }
 						 
+	bool				 operator== (const ipaddress &o) const
+						 {
+						 	return addr == o.addr;
+						 }
+	
+	bool				 operator!= (const ipaddress &o) const
+						 {
+						 	return addr != o.addr;
+						 }
+						 
 protected:
 	unsigned int		 addr; ///< The IPv4 address in host format.
 };

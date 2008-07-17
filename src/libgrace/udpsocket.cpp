@@ -33,6 +33,7 @@ bool udpsocket::bind (int port)
 
 	local_addr.sin_addr.s_addr = INADDR_ANY;
 	local_addr.sin_port = htons (port);
+	local_addr.sin_family = AF_INET;
 
 	if (::bind (sock, (struct sockaddr *) &local_addr, sizeof (local_addr)))
 	{
@@ -110,7 +111,7 @@ string *udpsocket::receive (ipaddress &addr, int timeout_ms)
 	struct sockaddr_in remote_addr;
 	char buf[2048];
 	int sz;
-	socklen_t addrsz;
+	socklen_t addrsz = sizeof (remote_addr);
 	
 	if (timeout_ms>=0)
 	{

@@ -23,13 +23,25 @@ APPOBJECT(udpsockettestApp);
 int udpsockettestApp::main (void)
 {
 	udpsocket s1, s2;
-	s2.bind (1973);
-	s1.sendto ("127.0.0.1", 1973, "hello, world");
-	string in = s2.receive ();
+	ipaddress a;
+	if (! s2.bind (3314))
+	{
+		FAIL ("bind");
+	}
+	
+	s1.sendto ("127.0.0.1", 3314, "hello, world");
+	string in = s2.receive (a, 1000);
 	if (in != "hello, world")
 	{
 		FAIL ("mismatch");
 	}
+	
+	if (a != (ipaddress) "127.0.0.1")
+	{
+		fout.writeln ("%P" %format (a));
+		FAIL ("recvip");
+	}
+	
 	return 0;
 }
 
