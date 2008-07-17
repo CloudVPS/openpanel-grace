@@ -13,8 +13,8 @@ public:
 	bool			 bind (int port);
 	bool			 bind (ipaddress addr, int port);
 	
-	string			*receive (int timeout_ms = 0);
-	string			*receive (ipaddress &remoteip, int timeout_ms = 0);
+	string			*receive (int timeout_ms = -1);
+	string			*receive (ipaddress &remoteip, int timeout_ms = -1);
 	bool			 sendto (ipaddress addr, int port, const string &data);
 	
 protected:

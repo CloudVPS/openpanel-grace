@@ -86,6 +86,19 @@ string *udpsocket::receive (int timeout_ms)
 	char buf[2048];
 	int sz;
 	
+	if (timeout_ms>=0)
+	{
+		fd_set fds;
+		struct timeval tv;
+		tv.tv_sec = timeout_ms/1000;
+		tv.tv_usec = (timeout_ms % 1000) * 1000;
+		
+		FD_ZERO (&fds);
+		FD_SET (sock, &fds);
+		
+		if (select (sock+1, &fds, NULL, NULL, &tv) < 1) return &res;
+	}
+	
 	sz = recv (sock, buf, 2048, 0);
 	if (sz>0) res.strcpy (buf, sz);
 	return &res;
@@ -98,6 +111,23 @@ string *udpsocket::receive (ipaddress &addr, int timeout_ms)
 	char buf[2048];
 	int sz;
 	socklen_t addrsz;
+	
+	if (timeout_ms>=0)
+	{
+		fd_set fds;
+		struct timeval tv;
+		tv.tv_sec = timeout_ms/1000;
+		tv.tv_usec = (timeout_ms % 1000) * 1000;
+		
+		FD_ZERO (&fds);
+		FD_SET (sock, &fds);
+		
+		if (select (sock+1, &fds, NULL, NULL, &tv) < 1)
+		{
+			addr = 0;
+			return &res;
+		}
+	}
 	
 	sz = recvfrom (sock, buf, 2048, 0, (struct sockaddr *) &remote_addr,
 				   &addrsz);
