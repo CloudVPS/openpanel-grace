@@ -1,4 +1,4 @@
-0.9.24     ??? ??? ?? ????                           <grace@openpanel.com>
+0.9.24     Mon Jul 21 2008                           <grace@openpanel.com>
 
            * Put some more sense into the application templates created
              by grace mkproject.
