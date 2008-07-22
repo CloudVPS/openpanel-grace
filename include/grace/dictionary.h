@@ -107,7 +107,7 @@ public:
 	kind			&operator[] (int index)
 					 {
 					 	if ((! _array)||(index < 0)||(index >= _count))
-					 		throw (dictIndexOutOfBoundsException());
+					 		throw dictIndexOutOfBoundsException();
 					 	
 					 	return *((kind *) _array[index]->ent);
 					 }

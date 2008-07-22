@@ -17,7 +17,7 @@ void lockbase::lockr (void)
 	{
 		if (eno != EDEADLK)
 		{
-			throw (lockException());
+			throw lockException();
 		}
 	}
 }
@@ -33,7 +33,7 @@ void lockbase::lockw (void)
 	{
 		if (eno != EDEADLK)
 		{
-			throw (lockException());
+			throw lockException();
 		}
 	}
 }
@@ -125,7 +125,7 @@ void lockbase::unlock (void)
 	if ((eno = pthread_rwlock_unlock (rwlock)))
 	{
 		__lockbase_unlock_breakme ();
-		throw (lockException());
+		throw lockException();
 	}
 }
 

@@ -116,7 +116,7 @@ bool thread::spawn (void)
 			if (pthread_create (&tid, &attr, thread::dorun, this))
 			{
 				sectionlock.unlock();
-				throw (threadCreateException());
+				throw threadCreateException();
 			}
 			pthread_detach (tid);
 			result = true;

@@ -113,7 +113,7 @@ public:
 					 /// \throw arrayOutOfBoundsException
 	void			 insert (kind *foo, int position, bool dynamic = true)
 					 {
-					 	if (position < 0) throw (arrayOutOfBoundsException());
+					 	if (position < 0) throw arrayOutOfBoundsException();
 					 	if (position == _count)
 					 	{
 					 		add (foo, dynamic);
@@ -121,7 +121,7 @@ public:
 					 	}
 					 	if (position >= _count)
 					 	{
-					 		throw (arrayOutOfBoundsException());
+					 		throw arrayOutOfBoundsException();
 					 	}
 						if (! _arraysz)
 						{
@@ -158,8 +158,8 @@ public:
 					 {
 					 	int pos = _pos;
 					 	if (pos<0) pos = _count + pos;
-					 	if (pos<0) throw (arrayOutOfBoundsException());
-					 	if (pos >= _count) throw (arrayOutOfBoundsException());
+					 	if (pos<0) throw arrayOutOfBoundsException();
+					 	if (pos >= _count) throw arrayOutOfBoundsException();
 					 	if (_array[pos].dynamic) delete _array[pos].obj;
 					 	if ((pos+1) < _count)
 					 	{
@@ -177,9 +177,9 @@ public:
 					 /// \throws arrayOutOfBoundsException
 	void			 swap (int a, int b)
 					 {
-					 	if ((a<0) || (b<0)) throw (arrayOutOfBoundsException());
+					 	if ((a<0) || (b<0)) throw arrayOutOfBoundsException();
 						if ((a>=_count) || (b>=_count))
-							throw (arrayOutOfBoundsException());
+							throw arrayOutOfBoundsException();
 						
 						_swap (a, b);
 					 }
@@ -191,11 +191,11 @@ public:
 					 {
 					 	if ((from<0)||(to<0))
 					 	{
-					 		throw (arrayOutOfBoundsException());
+					 		throw arrayOutOfBoundsException();
 					 	}
 					 	if ((from>=_count) || (to>=_count))
 					 	{
-					 		throw (arrayOutOfBoundsException());
+					 		throw arrayOutOfBoundsException();
 					 	}
 					 	if (from == to) return;
 					 	
@@ -229,8 +229,8 @@ public:
 					 {
 					 	int pos = _pos;
 					 	if (pos<0) pos = _count + pos;
-					 	if (pos<0) throw (arrayOutOfBoundsException());
-					 	if (pos >= _count) throw (arrayOutOfBoundsException());
+					 	if (pos<0) throw arrayOutOfBoundsException();
+					 	if (pos >= _count) throw arrayOutOfBoundsException();
 					 	return *(_array[pos].obj);
 					 }
 					 

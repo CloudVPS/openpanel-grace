@@ -100,7 +100,7 @@ void ringbuffer::add (const char *data, unsigned int sz)
 	}
 
 	unsigned int toend;
-	if (sz > count) throw (bufferOverflowException());
+	if (sz > count) throw bufferOverflowException();
 	toend = count - writecursor;
 	if (sz > toend)
 	{

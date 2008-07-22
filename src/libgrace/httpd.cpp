@@ -681,8 +681,8 @@ void httpdworker::run (void)
 				
 				// If we got nothing useful, totally drop out of
 				// the session.
-				if (! gotCommand) throw (httpdWorkerException());
-				if (s.eof()) throw (httpdWorkerException());
+				if (! gotCommand) throw httpdWorkerException();
+				if (s.eof()) throw httpdWorkerException();
 				
 				// Now we'll start interpreting the http comand
 				string cmd;

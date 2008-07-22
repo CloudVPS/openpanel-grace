@@ -49,7 +49,7 @@ value *fswatch::listchanges (void)
 {
 	if (! watchpath)
 	{
-		throw (nothingToWatchException());
+		throw nothingToWatchException();
 	}
 	
 	returnclass (value) res retain;

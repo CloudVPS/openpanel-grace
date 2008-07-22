@@ -645,7 +645,7 @@ value &value::operator= (const value &v)
 		}
 		if (arraysz != (unsigned int) v.count())
 		{
-			throw (valueCountMismmatchException());
+			throw valueCountMismmatchException();
 		}
 	}
 	if (v.attrib)

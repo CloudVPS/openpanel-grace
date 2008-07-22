@@ -83,7 +83,7 @@ value *netdb::gethostbyaddr (const string &addr)
 	
 	if (!inet_aton (addr.str(), &ina))
 	{
-		throw (badAddressException());
+		throw badAddressException();
 	}
 	
 	he = ::gethostbyaddr_r ((char *) &ina, sizeof (struct in_addr),

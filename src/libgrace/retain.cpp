@@ -149,7 +149,7 @@ namespace memory
 		{
 			dump ("/tmp/memoryleak.dump");
 			c->lck.unlock();
-			throw (memoryLeakException());
+			throw memoryLeakException();
 		}
 		if (defaults::memory::leakcallback)
 		{
@@ -215,7 +215,7 @@ namespace memory
 		}
 		if (!c)
 		{
-			throw (memoryInvalidAddressException());
+			throw memoryInvalidAddressException();
 		}
 #endif
 		

@@ -28,7 +28,7 @@ smtpd::~smtpd (void)
 // ==========================================================================
 void smtpd::listento (int port)
 {
-	if (listenport) throw (smtpdListenPortException());
+	if (listenport) throw smtpdListenPortException();
 
 	lsock.listento (port);
 	listenport = port;
@@ -36,7 +36,7 @@ void smtpd::listento (int port)
 
 void smtpd::listento (ipaddress addr, int port)
 {
-	if (listenport) throw (smtpdListenPortException());
+	if (listenport) throw smtpdListenPortException();
 	
 	lsock.listento (addr, port);
 	listenport = port;
@@ -365,7 +365,7 @@ mainloop:
 							break;
 							
 						default:
-							throw (smtpdPigsFlyException());
+							throw smtpdPigsFlyException();
 					}
 				}
 			}

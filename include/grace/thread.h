@@ -221,8 +221,8 @@ public:
 					 /// \throw threadGroupIndexException Index was out of bounds.
 	inline groupthread &operator[] (int idx)
 					 {
-						if (idx<0) throw (threadGroupIndexException());
-						if (idx>cnt) throw (threadGroupIndexException());
+						if (idx<0) throw threadGroupIndexException();
+						if (idx>cnt) throw threadGroupIndexException();
 						return *(array[idx]);
 					 }
 					 

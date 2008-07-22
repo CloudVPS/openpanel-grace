@@ -276,18 +276,18 @@ void scriptparser::build (const string &src)
 				
 				incaseof ("@endswitch") :
 					if ( (! cc->parent) || (cc->parent == this) )
-						throw (scriptUnbalancedConditionException());
+						throw scriptUnbalancedConditionException();
 					
 					if (cc->type == caseToken)
 					{
 						if ( (! cc->parent) || (cc->parent == this) )
-							throw (scriptUnbalancedConditionException());
+							throw scriptUnbalancedConditionException();
 							
 						cc = cc->parent;
 					}
 					if (cc->type != switchToken)
 					{
-						throw (scriptUnbalancedConditionException());
+						throw scriptUnbalancedConditionException();
 					}
 					break;
 				
@@ -295,13 +295,13 @@ void scriptparser::build (const string &src)
 					if (cc->type == caseToken)
 					{
 						if ( (! cc->parent) || (cc->parent == this) )
-							throw (scriptUnbalancedConditionException());
+							throw scriptUnbalancedConditionException();
 						
 						cc = cc->parent;
 					}
 					if (cc->type != switchToken)
 					{
-						throw (scriptUnbalancedConditionException());
+						throw scriptUnbalancedConditionException();
 					}
 					
 					cc = new cmdtoken_case (args, cc);
@@ -323,22 +323,22 @@ void scriptparser::build (const string &src)
 				
 				incaseof ("@else") :
 					if ( (! cc->parent) || (cc->parent == this) )
-						throw (scriptUnbalancedConditionException());
+						throw scriptUnbalancedConditionException();
 					
 					cc = cc->parent;
 					if (cc->type != condToken)
-						throw (scriptUnbalancedConditionException());
+						throw scriptUnbalancedConditionException();
 					
 					cc = new cmdtoken (nopToken, cc);
 					break;
 					
 				incaseof ("@endif") :
 					if ( (! cc->parent) || (cc->parent == this) )
-						throw (scriptUnbalancedConditionException());
+						throw scriptUnbalancedConditionException();
 	
 					cc = cc->parent;
 					if ((cc->type != condToken) || (! cc->parent))
-						throw (scriptUnbalancedConditionException());
+						throw scriptUnbalancedConditionException();
 	
 					cc = cc->parent;
 					break;

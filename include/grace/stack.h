@@ -33,7 +33,7 @@ public:
 					}
 					if (array) ::free (array);
 					array = NULL;
-					throw (stackUnderflowException());
+					throw stackUnderflowException();
 				 }
 				 
 	inline void	 push (kind *k)
@@ -41,14 +41,14 @@ public:
 				 	if (! array)
 					{
 						array = (kind **) malloc (4 * sizeof (kind *));
-						if (! array) throw (stackOutOfMemoryException());
+						if (! array) throw stackOutOfMemoryException();
 						asz = 4;
 					}
 					if (cnt+1 > asz)
 					{
 						asz *= 2;
 						array = (kind **) realloc (array, asz * sizeof (kind *));
-						if (! array) throw (stackOutOfMemoryException());
+						if (! array) throw stackOutOfMemoryException();
 					}
 					array[cnt++] = k;
 				 }
@@ -68,8 +68,8 @@ public:
 				 }
 	inline kind	&operator[] (int pos)
 				 {
-				 	if (pos < 0) throw (stackAccessRangeException());
-				 	if (pos >= cnt) throw (stackAccessRangeException());
+				 	if (pos < 0) throw stackAccessRangeException();
+				 	if (pos >= cnt) throw stackAccessRangeException();
 				 	return *(array[(cnt-1) - pos]);
 				 }
 
