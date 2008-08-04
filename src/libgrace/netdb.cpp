@@ -130,7 +130,7 @@ value *netdb::gethostbyaddr (const string &addr)
 #else
 	struct hostent he;
 	struct in_addr ina;
-	struct char he_data[2560];
+	char he_data[2560];
 	int retval = 0;
 	
 	if (!inet_aton (addr.str(), &ina))
