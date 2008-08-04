@@ -61,7 +61,7 @@ value *netdb::gethostbyname (const string &name)
 		result = false;
 		return &result;
 	}
-	return netdb::converthostentry (&he);
+	return netdb::converthostentry (&h.he);
 #endif
 }
 
