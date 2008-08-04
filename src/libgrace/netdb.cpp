@@ -129,6 +129,7 @@ value *netdb::gethostbyaddr (const string &addr)
 	return netdb::converthostentry (he);
 #else
 	struct hostent he;
+	struct hostent *res = NULL;
 	struct in_addr ina;
 	char he_data[2560];
 	int retval = 0;
@@ -139,7 +140,7 @@ value *netdb::gethostbyaddr (const string &addr)
 	}
 	
 	if (gethostbyaddr_r ((char *) &ina, sizeof (struct in_addr),
-						 AF_INET, &he, he_data, 2560, &retval));
+						 AF_INET, &he, he_data, 2560, &res, &retval));
 	{
 		returnclass (value) result retain;
 		result = false;
