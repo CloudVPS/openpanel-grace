@@ -48,12 +48,14 @@ value *netdb::gethostbyname (const string &name)
 	}
 	return netdb::converthostentry (he);
 #else
-	struct hostent he;
+	struct {
+		struct hostent he;
+		char addr_space[2560];
+	} h;
 	struct hostent *result = NULL;
-	char addr_space[2560];
 	int err;
 	
-	if (gethostbyname_r (name.str(), &he, addr_space, 2560, &result, &err))
+	if (gethostbyname_r (name.str(), &h.he, h.addr_space, 2560, &result, &err))
 	{
 		returnclass (value) result retain;
 		result = false;
