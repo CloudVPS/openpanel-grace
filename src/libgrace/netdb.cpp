@@ -131,6 +131,7 @@ value *netdb::gethostbyaddr (const string &addr)
 	struct hostent he;
 	struct in_addr ina;
 	struct char he_data[2560];
+	int retval = 0;
 	
 	if (!inet_aton (addr.str(), &ina))
 	{
@@ -138,7 +139,7 @@ value *netdb::gethostbyaddr (const string &addr)
 	}
 	
 	if (gethostbyaddr_r ((char *) &ina, sizeof (struct in_addr),
-						 AF_INET, &he, he_data));
+						 AF_INET, &he, he_data, 2560, &retval));
 	{
 		returnclass (value) result retain;
 		result = false;
