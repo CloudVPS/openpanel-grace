@@ -59,7 +59,7 @@ value *netdb::gethostbyname (const string &name)
 		result = false;
 		return &result;
 	}
-	return netdb::converthostentry (result);
+	return netdb::converthostentry (&he);
 #endif
 }
 
@@ -83,16 +83,19 @@ ipaddress netdb::resolve (const string &name)
 	
 	return result;
 #else
-	struct hostent he;
+	struct {
+		struct hostent he;
+		char addr_space[2560];
+	} h;
 	struct hostent *result = NULL;
-	char addr_space[2560];
 	int err;
 	ipaddress resval = 0;
 	
-	if (gethostbyname_r (name.str(), &he, addr_space, 2560, &result, &err))
+	if (gethostbyname_r (name.str(), &h.he, h.addr_space, 2560, &result, &err))
 	{
 		return resval;
 	}
+	
 	if (! result) return resval;
 	if (result->h_addrtype == AF_INET) 
 	{
