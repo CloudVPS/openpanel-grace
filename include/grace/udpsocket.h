@@ -42,6 +42,10 @@ public:
 					 /// \param data Data to send (should fit in a packet).
 	bool			 sendto (ipaddress addr, int port, const string &data);
 	
+					 /// Indicate that we will want to send to a broadcast
+					 /// address.
+	void			 setbroadcast (bool to = true);
+	
 protected:
 	int				 sock; ///< The actual datagram socket.
 };
