@@ -36,33 +36,31 @@
 // =======================================================================
 value *netdb::gethostbyname (const string &name)
 {
-#ifndef HAVE_GETHOSTBYNAME_R
-	struct hostent *he;
+	returnclass (value) res retain;
+	struct addrinfo *ainf;
 	
-	he = ::gethostbyname (name.str());
-	if (! he)
-	{
-		returnclass (value) result retain;
-		result = false;
-		return &result;
-	}
-	return netdb::converthostentry (he);
-#else
-	struct {
-		struct hostent he;
-		char addr_space[2560];
-	} h;
-	struct hostent *result = NULL;
-	int err;
+	res["name"] = name;
 	
-	if (gethostbyname_r (name.str(), &h.he, h.addr_space, 2560, &result, &err))
+	if (getaddrinfo (name.cval(), NULL, NULL, &ainf))
 	{
-		returnclass (value) result retain;
-		result = false;
-		return &result;
+		return &res;
 	}
-	return netdb::converthostentry (&h.he);
-#endif
+	
+	struct addrinfo *crsr = ainf;
+	for (;crsr;crsr = crsr->ai_next)
+	{
+		if (crsr->ai_family != AF_INET) continue;
+		if (crsr->ai_socktype != SOCK_STREAM) continue;
+		if (crsr->ai_addr)
+		{
+			struct sockaddr_in *sa_in = (struct sockaddr_in *) crsr->ai_addr;
+			ipaddress i = ntohl (sa_in->sin_addr.s_addr);
+			res["address"].newval().setip (i);
+		}
+	}
+	
+	freeaddrinfo (ainf);
+	return &res;
 }
 
 // ========================================================================
@@ -70,43 +68,29 @@ value *netdb::gethostbyname (const string &name)
 // ========================================================================
 ipaddress netdb::resolve (const string &name)
 {
-#ifndef HAVE_GETHOSTBYNAME_R
-	ipaddress result = 0;
-	struct hostent *he;
+	struct addrinfo *ainf;
 	
-	he = ::gethostbyname (name.str());
-	if (! he) return result;
-	if (he->h_addrtype == AF_INET) // h_addr == h_addr_list[0];
+	if (getaddrinfo (name.cval(), NULL, NULL, &ainf))
 	{
-		struct in_addr *sin;
-		sin = ((struct in_addr *)he->h_addr_list[0]);
-		result = ntohl (sin->s_addr);
+		return 0;
 	}
 	
-	return result;
-#else
-	struct {
-		struct hostent he;
-		char addr_space[2560];
-	} h;
-	struct hostent *result = NULL;
-	int err;
-	ipaddress resval = 0;
-	
-	if (gethostbyname_r (name.str(), &h.he, h.addr_space, 2560, &result, &err))
+	struct addrinfo *crsr = ainf;
+	for (;crsr;crsr = crsr->ai_next)
 	{
-		return resval;
+		if (crsr->ai_family != AF_INET) continue;
+		if (crsr->ai_socktype != SOCK_STREAM) continue;
+		if (crsr->ai_addr)
+		{
+			struct sockaddr_in *sa_in = (struct sockaddr_in *) crsr->ai_addr;
+			ipaddress i = ntohl (sa_in->sin_addr.s_addr);
+			freeaddrinfo (ainf);
+			return i;
+		}
 	}
 	
-	if (! result) return resval;
-	if (result->h_addrtype == AF_INET) 
-	{
-		struct in_addr *sin;
-		sin = ((struct in_addr *) result->h_addr_list[0]);
-		resval = ntohl (sin->s_addr);
-	}
-	return resval;
-#endif
+	freeaddrinfo (ainf);
+	return 0;
 }
 
 // ========================================================================
