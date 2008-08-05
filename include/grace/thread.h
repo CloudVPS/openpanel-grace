@@ -152,7 +152,7 @@ public:
 					 	{
 					 		unsigned long long *o = (unsigned long long *) tmp;
 					 		unsigned int r;
-					 		r =  (unsigned int) ((*o) & (0xffffffff00000000LL) >> 32);
+					 		r =  (unsigned int) (((*o) & (0xffffffff00000000LL)) >> 32);
 					 		r ^= (unsigned int) ((*o) & 0xffffffffLL);
 					 		return r;
 					 	}
