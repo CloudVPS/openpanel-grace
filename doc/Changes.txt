@@ -1,3 +1,14 @@
+0.9.25     Fri Aug  8 2008                           <grace@openpanel.com>
+
+           * Add broadcast option to udpsocket
+           
+           * Thread-ids were not properly resolved on 64bits platforms
+           
+           * Fixed syntax of throws to please gcc3
+           
+           * netdb::resolve() and friends now use getaddrinfo, slowly
+             getting ready for including IPv6 support.
+             
 0.9.24     Mon Jul 21 2008                           <grace@openpanel.com>
 
            * Put some more sense into the application templates created
