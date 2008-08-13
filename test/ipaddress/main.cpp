@@ -35,6 +35,11 @@ int ipaddresstestApp::main (void)
 	value foo = $("address", netdb::resolve ("localhost"));
 	foo.savexml ("out.xml");
 	
+	value x = "172.17.2.255";
+	ipaddress fromval = x;
+	string backval = "%P" %format (fromval);
+	if (backval != "172.17.2.255") FAIL ("fromvalue");
+	
 	value v;
 	v.loadxml ("out.xml");
 	if (addr != v) FAIL ("readabck compare");
