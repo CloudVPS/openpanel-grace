@@ -1,3 +1,7 @@
+0.9.26     Wed Aug 13 2008                           <grace@openpanel.com>
+
+           * Some fixes to the ipaddress class.
+
 0.9.25     Fri Aug  8 2008                           <grace@openpanel.com>
 
            * Add broadcast option to udpsocket
