@@ -71,7 +71,7 @@ unsigned int value::ipval (void) const
 {
 	if (itype != i_string) return this->uval();
 	value t;
-	t = this->uval();
+	t = this->sval();
 	return t.ipval();
 }
 

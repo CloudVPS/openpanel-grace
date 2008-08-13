@@ -63,6 +63,7 @@ public:
 						 /// Just calls ipval().
 						 ipaddress (const value &o)
 						 {
+						 	::printf ("constrct(const value) %08x\n", o.ipval());
 						 	addr = o.ipval ();
 						 }
 						 
@@ -77,6 +78,26 @@ public:
 	ipaddress			&operator= (const ipaddress &o)
 						 {
 						 	addr = o.addr;
+						 	return *this;
+						 }
+						 
+	ipaddress			&operator= (const value &v)
+						 {
+						 	::printf ("operator=(const value) %08x\n", v.ipval());
+						 	addr = v.ipval();
+						 	return *this;
+						 }
+						 
+	ipaddress			&operator= (int i)
+						 {
+						 	addr = i;
+						 	return *this;
+						 }
+						 
+	ipaddress			&operator= (const char *c)
+						 {
+						 	addr = str2ip (c);
+						 	return *this;
 						 }
 						 
 						 /// Cast-o-matic operator to unsigned int.
