@@ -47,6 +47,7 @@ bool udpsocket::bind (ipaddress addr, int port)
 {
 	struct sockaddr_in local_addr;
 
+	local_addr.sin_family = AF_INET;
 	local_addr.sin_addr.s_addr = htonl (addr);
 	local_addr.sin_port = htons (port);
 

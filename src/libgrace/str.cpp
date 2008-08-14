@@ -2118,7 +2118,7 @@ size_t string::bingetvint (size_t offset, unsigned int &val) const
 	
 	val = 0;
 	
-	switch (data->v[offset] & 0xc0)
+	switch (data->v[offs+offset] & 0xc0)
 	{
 		case 0x00:
 			val = (data->v[offs+offset] & 0xff);
