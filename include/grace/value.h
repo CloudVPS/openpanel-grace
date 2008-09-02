@@ -1197,6 +1197,7 @@ protected:
 	unsigned int	  arraysz; ///< Number of children.
 	unsigned int	  arrayalloc; ///< Allocated array size.
 	unsigned int	  ucount; ///< Number of unkeyed children.
+	threadref_t		  threadref; ///< Thread reference.
 	
 	void			  alloc (unsigned int c); ///< Array allocation.
 	

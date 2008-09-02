@@ -22,6 +22,8 @@
 #include <stdio.h>
 #include <string.h>
 
+extern threadref_t getref (void);
+
 value *$ (const statstring &id, const value &v)
 {
 	returnclass (value) res retain;
@@ -663,6 +665,13 @@ value &value::operator= (const value &v)
 // ========================================================================
 value &value::operator= (value *v)
 {
+	if (v->threadref != threadref)
+	{
+		(*this) = (*v);
+		delete v;
+		return *this;
+	}
+	
 	clear();
 	
 	// Prefer to keep the original type
@@ -1976,6 +1985,7 @@ void value::init (bool first)
 {
 	if (first)
 	{
+		threadref = getref();
 		_type = t_unset;
 		itype = i_unset;
 		
