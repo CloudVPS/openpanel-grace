@@ -100,8 +100,8 @@ public:
 	/// Assign the value. Whatever value you are keeping in this template
 	/// will need to be able to deal with operator= for a reference to
 	/// its own type.
-	perthread &operator= (kind &i) { get() = i; }
-	perthread &operator= (const kind &i) { get() = i; }
+	perthread &operator= (kind &i) { get() = i; return *this; }
+	perthread &operator= (const kind &i) { get() = i; return *this; }
 
 protected:
 	lock<bool> lck; ///< List lock.

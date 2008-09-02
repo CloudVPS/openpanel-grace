@@ -20,6 +20,7 @@
 #include <sys/types.h>
 
 $exception (valueCountMismmatchException, "internal count mismatch");
+$exception (valueArraySizeException, "array size out of bounds")
 
 /// Union for all number types embedded in a value object.
 typedef union dtypes
@@ -1119,7 +1120,7 @@ public:
 					 {
 					 	if (index<0) return NULL;
 					 	if (!arraysz) return NULL;
-					 	if (index >= arraysz) return NULL;
+					 	if (index >= (int) arraysz) return NULL;
 					 	return array[(index<0) ? arraysz-index : index];
 					 }
 

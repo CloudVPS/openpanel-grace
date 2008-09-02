@@ -98,10 +98,9 @@ unsigned long long checksum64 (const char *string)
 // ========================================================================
 unsigned long long djbhash64 (const char *string)
 {
-	register int len, pos;
-	unsigned long long c;
-	
+	register int pos;
 	register unsigned long long result = 5381;
+	
 	for (pos=0; string[pos]; ++pos)
 	{
 		result = result * 33 ^ _tolower((int) string[pos]);

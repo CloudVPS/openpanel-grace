@@ -664,7 +664,7 @@ void string::escape (void)
 		size = 0;
 		alloc = 0;
 		offs = 0;
-		for (int i=0; i<old_size; ++i)
+		for (unsigned int i=0; i<old_size; ++i)
 		{
 			c = (unsigned char) old_data->v[i+old_offs];
 			if ( (c=='%') || (c=='\\') || (c=='\"') || (c=='\'') )
@@ -721,7 +721,7 @@ void string::escapexml (void)
 		data = NULL;
 		size = 0;
 		alloc = 0;
-		for (int i=0; i<old_size; ++i)
+		for (unsigned int i=0; i<old_size; ++i)
 		{
 			c = (unsigned char) old_data->v[i+old_offs];
 			if (c == '&')
@@ -775,7 +775,7 @@ void string::unescapexml (void)
 		size = 0;
 		alloc = 0;
 		offs = 0;
-		for (int i=0; i<old_size; ++i)
+		for (unsigned int i=0; i<old_size; ++i)
 		{
 			c = old_data->v[i+old_offs];
 			if (c == '&')
@@ -879,7 +879,7 @@ void string::unescape (void)
 		data = NULL;
 		size = 0;
 		alloc = 0;
-		for (int i=0; i<old_size; ++i)
+		for (unsigned int i=0; i<old_size; ++i)
 		{
 			c = old_data->v[i+old_offs];
 			if (c == '%')
@@ -1120,9 +1120,10 @@ unsigned int string::utf8len (void) const
 // ========================================================================
 void string::utf8pad (int i, char with)
 {
+	if (i<0) return;
 	unsigned int u8len = utf8len();
 	unsigned int u8dif = strlen() - u8len;
-	if (u8len < i) pad (i+u8dif, with);
+	if (u8len < (unsigned int) i) pad (i+u8dif, with);
 	else crop (utf8pos (i));
 }
 
@@ -1205,7 +1206,6 @@ void string::strcat (const char *s)
 	bool testOne = false;
 	bool testTwo = false;
 	bool testThree = false;
-	refblock *olddata = data;
 
 	if (data != NULL) testOne = true;
 
@@ -1461,7 +1461,7 @@ int string::strstr (const string &substr, int offset) const
 // ========================================================================
 #define METASTRCMP(left,right,leftdone,rightdone) { \
 	int res = 0; \
-	int i = 0; \
+	unsigned int i = 0; \
 	while ((!(leftdone)) && (!(rightdone)) && \
 		   ((res = ((int) left) - ((int) right)) == 0)) i++; \
 	if (res) { return res; } \
@@ -1493,8 +1493,6 @@ int string::strcmp (const char *s) const
 int string::strcmp (const string &s) const
 {
 	unsigned int osize = s.size;
-	unsigned int i = 0;
-	int dif;
 	
 	if (! size) return s.strlen();
 	if (data == s.data) return 0;
@@ -1512,8 +1510,6 @@ int string::strcmp (const string &s) const
 int string::strcasecmp (const string &s) const
 {
 	unsigned int osize = s.size;
-	unsigned int i = 0;
-	int dif;
 	
 	if (! size) return s.strlen();
 	if (data == s.data) return 0;
@@ -1665,7 +1661,7 @@ void string::flush (void)
 // ========================================================================
 void string::crop (int sz)
 {
-	int _sz = (sz < 0) ? -sz : sz;
+	unsigned int _sz = (sz < 0) ? -sz : sz;
 	
 	if (sz == 0)
 	{
@@ -1687,9 +1683,9 @@ void string::crop (int sz)
 		return;
 	}
 	
-	if (size > (unsigned int) _sz)
+	if (size > _sz)
 	{
-		if ((size - _sz) < tune::str::cropcopylimit)
+		if ((size - _sz) < (unsigned int) tune::str::cropcopylimit)
 		{
 			if (sz<0) offs = ((size - _sz) + offs);
 			size = _sz;
@@ -1730,11 +1726,10 @@ void string::crop (int sz)
 // ========================================================================
 void string::pad (int psz, char p)
 {
-	int sz = psz;
+	unsigned int sz = (psz<0) ? -psz : psz;
 	if (! data) strcat (p);
-	if (sz<0) sz = -sz;
 	
-	if (((unsigned int) sz) < size)
+	if (sz < size)
 	{
 		crop (psz);
 		return;
@@ -2479,7 +2474,7 @@ string *string::ltrim (const string &set) const
 	if(! data) return NULL;
 	if(! set)  return NULL;
 	
-	int left = 0;
+	unsigned int left = 0;
 	while ((left<size) && (set.strchr (data->v[offs+left]) >= 0)) left++;
 	if (left == size) return NULL;
 	
@@ -2494,10 +2489,11 @@ string *string::ltrim (const string &set) const
 // ========================================================================	
 string *string::rtrim (const string &set) const
 {
-	if(! data) return NULL;
-	if(! set)  return NULL;
+	if (! data) return NULL;
+	if (! set)  return NULL;
+	if (! size) return NULL;
 	
-	int right = size-1;
+	unsigned int right = size-1;
 	while ((right>0) && (set.strchr (data->v[offs+right]) >= 0))
 	{
 		right--;
@@ -2505,7 +2501,6 @@ string *string::rtrim (const string &set) const
 	
 	if (right<size) right++;
 	if (right < 1) return NULL;
-	
 	return left (right);
 }
 
@@ -2877,7 +2872,7 @@ char *string::visitchild (int pos) const
 {
 	if (! data) return NULL;
 	if (pos<0) return NULL;
-	if (pos>=size) return NULL;
+	if (pos>=(int) size) return NULL;
 	return data->v+offs+pos;
 }
 

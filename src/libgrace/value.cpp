@@ -1618,6 +1618,7 @@ void value::cleararray (void)
 // ========================================================================
 void value::alloc (unsigned int count)
 {
+	if (count & 0x80000000) throw valueArraySizeException();
 	unsigned int wanted = 4;
 	while (wanted < count)
 	{

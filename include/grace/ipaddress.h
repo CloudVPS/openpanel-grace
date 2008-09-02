@@ -149,11 +149,11 @@ public:
 						 #define INTOP(thetype) \
 						 	bool operator== (thetype o) const \
 						 	{ \
-						 		return o == addr; \
+						 		return o == (thetype) addr; \
 						 	} \
 						 	bool operator!= (thetype o) const \
 						 	{ \
-						 		return o != addr; \
+						 		return o != (thetype) addr; \
 						 	}
 						 
 						 INTOP (int)
