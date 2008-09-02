@@ -1,3 +1,7 @@
+0.9.27     Tue Sep  2 2008                           <grace@openpanel.com>
+
+           * Add some thread safety to copying value objects.
+
 0.9.26     Wed Aug 13 2008                           <grace@openpanel.com>
 
            * Some fixes to the ipaddress class.
