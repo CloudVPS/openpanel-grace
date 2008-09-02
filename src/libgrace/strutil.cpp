@@ -95,7 +95,7 @@ value *strutil::splitescaped (const string &str, char s, const string &escapees)
 {
 	returnclass (value) res retain;
 	
-	int i = 0;
+	unsigned int i = 0;
 	string ts;
 	
 	while (i < str.strlen())
@@ -138,7 +138,6 @@ value *strutil::splitescaped (const string &str, char s, const string &escapees)
 bool strutil::crlfornot (const string &str)
 {
 	int crlf, nl;
-	value *res = NULL;
 	
 	crlf = str.strstr ("\r\n");
 	nl = str.strchr ('\n');
@@ -204,19 +203,20 @@ value *strutil::parsemime (const string &str)
 value *strutil::splitlines (const string &str)
 {
 	value *res;
-	int left = 0;
-	int right;
-	
-	int crlf, nl;
 
 	if (! strutil::crlfornot (str))	
+	{
 		res = strutil::split (str, '\n');
-	
+	}
 	else
+	{
 		res = strutil::split (str, "\r\n");
+	}
 		
-	if (res->count() && (! (*res)[-1].sval().strlen()) )
+	if (res->count() && (! (*res)[-1].sval()))
+	{
 		res->rmindex (res->count() -1);
+	}
 		
 	return res;
 }
@@ -348,13 +348,11 @@ value *strutil::splitcsv (const string &str)
 	returnclass (value) res retain;
 
 	int right=0;
-	int left = 0;
 	int sz = str.strlen();
 	bool quoted = false;
 	bool wasquoted = false;
 	string nval;
 	
-	char quot = 0;
 	while (right < sz)
 	{
 		char c = str[right];
@@ -484,7 +482,6 @@ value *strutil::parsehdr (const string &hdr)
 		{
 			value nvpair;
 			string sub;
-			int nospc;
 			
 			nvpair = strutil::splitquoted (namevalue.sval(), '=');
 			
@@ -520,7 +517,7 @@ value *strutil::parsenv (const string &line, char split, char nvsplit)
 
 		if ((right[0] == '\"') && (right[-1] == '\"'))
 		{
-			for (int i=1; i<right.strlen()-1; ++i)
+			for (unsigned int i=1; i<right.strlen()-1; ++i)
 			{
 				if (right[i] == '\\') i++;
 				val.strcat (right[i]);
@@ -925,7 +922,6 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 	{
 		searchStr.crop (0);
 		searchStr.printf ("</%s", tagName.str());
-		int ctag;
 		int ntag;
 		
 		ntag = xml->strchr ('<', tag->crsr-1);

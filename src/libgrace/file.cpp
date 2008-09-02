@@ -647,7 +647,6 @@ readagain:
 		{
 			feof = true;
 			err = errortext::file::brokenpipe;
-			unsigned int p;
 			return NULL;
 		}
 	}

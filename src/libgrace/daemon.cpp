@@ -656,7 +656,7 @@ void logthread::run (void)
 						
 						int ii = defaults::lim::logrotate - 1;
 						
-						for (ii ; ii >= 0; --ii)
+						for (; ii >= 0; --ii)
 						{
 							string oldfn, newfn;
 							

@@ -412,7 +412,6 @@ string *md5checksum::md5pw (const char *pw, const char *salt)
 	returnclass (string) passwd retain;
 	
 	md5checksum ctx1;
-	unsigned long l;
 	int sl, pl;
 	unsigned int i;
 	string final;

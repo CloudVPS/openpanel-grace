@@ -71,7 +71,7 @@ termbuffer::~termbuffer (void)
 unsigned int _calcutfpos (const char *buf, unsigned int crsr)
 {
 	unsigned int res = 0;
-	for (int i=0; i<crsr; ++i) if ((buf[i] & 0xc0) != 0x80) res++;
+	for (unsigned int i=0; i<crsr; ++i) if ((buf[i] & 0xc0) != 0x80) res++;
 	return res;
 }
 
@@ -97,7 +97,6 @@ void termbuffer::on (void)
 {
 	if (engaged) return;
 	
-	int i;
 	string term;
 	
 	// Get current termios attributes.
@@ -183,8 +182,6 @@ void termbuffer::setprompt (const string &p)
 // ==========================================================================
 void termbuffer::backspace (void)
 {
-	char *ptr;
-	
 	// Nothing to backspace before the prompt.
 	if (crsr <= prompt.strlen()) return;
 	
@@ -225,8 +222,6 @@ void termbuffer::backspace (void)
 // ==========================================================================
 void termbuffer::del (void)
 {
-	char *ptr;
-	
 	if (crsr < prompt.strlen()) return;
 	if (crsr == len) return;
 	
@@ -386,8 +381,6 @@ void termbuffer::crdown (void)
 // ==========================================================================
 void termbuffer::insert (char c)
 {
-	char *ptr;
-	
 	if (len >= size) // buffer full
 	{
 		tputc (7); // beep
@@ -456,7 +449,7 @@ void termbuffer::clearright (void)
 // ==========================================================================
 void termbuffer::wordleft (void)
 {
-	int promptsz = prompt.strlen();
+	unsigned int promptsz = prompt.strlen();
 	if (crsr <= promptsz) return;
 	crsr--;
 	if (crsr > promptsz) crsr--;
