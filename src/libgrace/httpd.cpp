@@ -563,7 +563,7 @@ void httpdworker::run (void)
 	bool run = true;
 	
 	
-	threadid = "httpdworker/%x" %format (threadid());
+	threadid = "httpdworker/%x" %format (this->threadid());
 	
 	// If anyone cares, shout out that we're alive
 	if (parent->eventmask & HTTPD_INFO)
