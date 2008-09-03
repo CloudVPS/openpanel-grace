@@ -562,7 +562,7 @@ void httpdworker::run (void)
 	string threadid;
 	bool run = true;
 	
-	threadid = "httpdworker/%x" %format ((unsigned int) tid);
+	threadid = "httpdworker/%x" %format ((unsigned int) (tid & (unsigned int) 0xffffffff));
 	
 	// If anyone cares, shout out that we're alive
 	if (parent->eventmask & HTTPD_INFO)
