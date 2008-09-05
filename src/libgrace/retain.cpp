@@ -366,6 +366,12 @@ namespace memory
 	// ====================================================================
 	void *retainable::operator new (size_t sz, pooltype r)
 	{
+#ifdef DISABLE_RETAINPOOLS
+		block *b = (block *) malloc (sz + sizeof (block));
+		b->pool = NULL;
+		b->status = sz;
+		return b->dt;
+#endif
 		void *res = retainpool().alloc (sz);
 		return res;
 	}
@@ -375,6 +381,10 @@ namespace memory
 	// ====================================================================
 	void retainable::operator delete (void *v, pooltype r)
 	{
+#ifdef DISABLE_RETAINPOOLS
+		::free (((char *)v)-sizeof (block));
+		return;
+#endif
 		retainpool().free (v);
 	}
 	
