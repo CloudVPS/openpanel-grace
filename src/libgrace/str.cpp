@@ -70,11 +70,6 @@ void removeref (void *refAddress)
 	delete (threadref_t *) refAddress;
 }
 
-// A copy of the sequence counter for giving out threadref_t sequences.
-// Kept global for easier debugging. The lock for this sequence
-// counter is kept static inside the getref() function.
-threadref_t TSEQ;
-
 // ========================================================================
 // FUNCTION getref
 // ---------------
@@ -115,7 +110,6 @@ threadref_t getref (void)
 		}
 	}
 	
-	TSEQ = (*res);
 	return (*res);
 }
 

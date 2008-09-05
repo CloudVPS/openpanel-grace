@@ -61,6 +61,8 @@ namespace memory
 		sizepool *c = new sizepool;
 		if (! c) return NULL;
 		
+		c->lck.lockw ();
+		
 		// For tiny sizes, allocate in 8K blocks. For medium, use 64K blocks.
 		// For larger objects, keep a count of 16.
 		if (rndsz < 512) count = 8192/rndsz;
@@ -79,6 +81,7 @@ namespace memory
 			bl->pool = c;
 		}
 		
+		c->lck.unlock ();
 		return c;
 	}
 
@@ -109,11 +112,15 @@ namespace memory
 			c = mkpool (rndsz);
 			if (! c) return NULL;
 
+			c->lck.lockw ();
+
 			block *b = (block *) c->blocks;
 			b->status = wired;
 			
 			if (lastc) lastc->next = c;
 			else pools = c;
+			
+			c->lck.unlock ();
 			
 			return (void *) b->dt;
 		}
