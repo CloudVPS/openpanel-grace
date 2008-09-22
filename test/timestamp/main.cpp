@@ -115,7 +115,14 @@ int timestamptestApp::main (void)
 	fout.writeln ("delta: %i" %format (parsed1.delta (parsed2, days)));
 	
 	value out = $("parsed1", parsed1) ->
-				$("parsed2", parsed2);
+				$("parsed2", parsed2) ->
+				$("p1details",
+					$("hour", parsed1.hour()) ->
+					$("minute", parsed1.minute()) ->
+					$("year", parsed1.year()) ->
+					$("month", parsed1.month()) ->
+					$("mday", parsed1.mday())
+				 );
 				
 	fout.writeln (out.toxml());
 	

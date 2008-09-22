@@ -139,7 +139,7 @@ const struct tm &timestamp::tm (void) const
 	localtime_r ((const time_t *) &tvval.tv_sec, (struct tm *) &tmval);
 #ifdef HAVE_GMTOFF
 	((timestamp *)this)->tmval.tm_gmtoff = timezone;
-#endif
+#endif 
 	return tmval;
 }
 
@@ -334,8 +334,18 @@ void timestamp::iso (const string &isodate)
 	tmval.tm_gmtoff = timezone;
 #endif
     //timezone = __system_local_timezone;
-	tmset = true;
 	tvval.tv_sec = timelocal (&tmval); // + timezone - __system_local_timezone;
+
+	if (timepart.strlen() == 8)
+	{
+		tmval.tm_hour = ::atoi (timepart.str());
+		tmval.tm_min = ::atoi (timepart.str() + 3);
+		tmval.tm_sec = ::atoi (timepart.str() + 6);
+		
+		//timezone = __system_local_timezone;
+		tvval.tv_sec = timelocal (&tmval); // + timezone - __system_local_timezone;
+	}
+
 	tvval.tv_usec = 0;
 }
 
