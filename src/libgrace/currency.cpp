@@ -437,7 +437,7 @@ long long parsecurrency (const string &from)
 		{
 			return 1000LL * strtoll (from.str(),NULL,10);
 		}
-		if (! (::isdigit(*crsr)||::isspace(*crsr)))
+		if (! (isdigit(*crsr)||isspace(*crsr)))
 			return 0LL;
 		++crsr;
 	}

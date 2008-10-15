@@ -1,5 +1,17 @@
 #!/bin/sh
 
+# ---------------------------------------------------------------------------
+# Solaris' /bin/sh uses a braindead builtin echo, circumvent
+# ---------------------------------------------------------------------------
+TEST=`echo -n ""`
+if [ -z "$TEST" ]; then
+  ECHON="echo -n"
+  NNL=""
+else
+  ECHON="echo"
+  NNL="\c"
+fi
+
 genversion() {
     hg parents -b >/dev/null 2>&1 || BRANCH=$(hg tags | { read a; read line; tipmost=`echo "$line" | cut -f1 -d" "`; echo "$tipmost"; })
     if [ -z "$BRANCH" ]; then BRANCH=`hg parents -b --template '{branches}\n'`; fi
@@ -9,10 +21,10 @@ genversion() {
 	
 	ACTUALTAG=`hg id | cut -f2 -d" "`
 	if [ "$ACTUALTAG" = "$BRANCH" ]; then
-	  $(which echo) -n "${BRANCH}-${DISTRO}"
+	  $ECHON "${BRANCH}-${DISTRO}$NNL"
 	else
 	  ACTUALID=`hg id | cut -f1 -d" " | sed -e "s/+$//"`
-	  $(which echo) -n "${BRANCH}-${DISTRO}-${ACTUALID}"
+	  $ECHON "${BRANCH}-${DISTRO}-${ACTUALID}"
 	fi
 	DIFC=`hg diff | wc -l | sed -e "s/ //g"`
 	if [ "$DIFC" = "0" ]
