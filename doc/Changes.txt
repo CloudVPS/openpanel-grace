@@ -1,3 +1,16 @@
+0.9.28     -                                         <grace@openpanel.com>
+
+           * Fix boatloads of compiler warnings.
+           
+           * Some stability fixes for issues found with valgrind.
+           
+           * Some 64-bits fixes.
+           
+           * Some fixes to the timestamp class regarding daylight
+             savings time.
+             
+           * Compatibility fixes for opensolaris.
+
 0.9.27     Tue Sep  2 2008                           <grace@openpanel.com>
 
            * Add some thread safety to copying value objects.
