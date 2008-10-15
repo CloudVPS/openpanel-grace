@@ -12,6 +12,7 @@
 #include <grace/value.h>
 
 #include <math.h>
+#include <ctype.h>
 
 // ========================================================================
 // CONSTRUCTOR

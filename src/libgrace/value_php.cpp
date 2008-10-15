@@ -86,7 +86,7 @@ const char *value::phpdeserialize (const char *phpdata, bool recursed)
 				crsr++;
 				SKIPEXPECTED(':');
 
-				while (::isdigit (*crsr)) crsr++;
+				while (isdigit (*crsr)) crsr++;
 				SKIPEXPECTED(':');
 				
 				// Skip class name, we don't care.
@@ -109,7 +109,7 @@ const char *value::phpdeserialize (const char *phpdata, bool recursed)
 				// serialization data because it gave them a
 				// hard-on, not because it's actually helping them
 				// parse it more efficiently.
-				while (::isdigit (*crsr)) crsr++;
+				while (isdigit (*crsr)) crsr++;
 				SKIPEXPECTED(':');
 				SKIPEXPECTED('{');
 	
@@ -152,7 +152,7 @@ const char *value::phpdeserialize (const char *phpdata, bool recursed)
 				crsr++;
 				SKIPEXPECTED(':');
 				itmp = ::atoi (crsr);
-                while ((::isdigit (*crsr))||((*crsr)=='-')) crsr++;
+                while ((isdigit (*crsr))||((*crsr)=='-')) crsr++;
 				SKIPEXPECTED(';');
 				if (st == parse_key)
 				{
@@ -176,7 +176,7 @@ const char *value::phpdeserialize (const char *phpdata, bool recursed)
 				SKIPEXPECTED(':');
 				itmp = ::atoi (crsr);
 				if (itmp<0) return NULL;
-				while (::isdigit (*crsr)) crsr++;
+				while (isdigit (*crsr)) crsr++;
 				SKIPEXPECTED(':');
 				SKIPEXPECTED('\"');
 				oldcrsr = crsr;
@@ -225,7 +225,7 @@ const char *value::phpdeserialize (const char *phpdata, bool recursed)
 				crsr++;
 				SKIPEXPECTED(':');
 				itmp = ::atoi (crsr);
-				while (::isdigit (*crsr)) crsr++;
+				while (isdigit (*crsr)) crsr++;
 				SKIPEXPECTED(';');
 				if (st == parse_key)
 				{
@@ -248,7 +248,7 @@ const char *value::phpdeserialize (const char *phpdata, bool recursed)
 				SKIPEXPECTED(':');
 				dtmp = ::atof (crsr);
 				//::printf ("parsing 'd' value: %f\n", dtmp);
-				while ((::isdigit (*crsr))||((*crsr)=='.')||((*crsr)=='-'))
+				while ((isdigit (*crsr))||((*crsr)=='.')||((*crsr)=='-'))
 					 crsr++;
 				SKIPEXPECTED(';');
 				if (st == parse_key)

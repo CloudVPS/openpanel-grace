@@ -114,7 +114,12 @@ void termbuffer::on (void)
 	// Technically speaking this makes no sense, the termios attributes
 	// are never applied, yet this is how terminus inside cish/2 does it
 	// now so I'll keep it around for this port.
-	cfmakeraw (&newterm);
+	newterm.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
+	newterm.c_oflag &= ~OPOST;
+	newterm.c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
+	newterm.c_cflag &= ~(CSIZE|PARENB);
+	newterm.c_cflag |= CS8;
+	//cfmakeraw (&newterm);
 	
 	term = ::getenv("TERM");
 	if (term == "xterm")

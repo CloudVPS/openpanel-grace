@@ -335,7 +335,7 @@ void timestamp::iso (const string &isodate)
 	tmval.tm_isdst = -1;
 #endif
     //timezone = __system_local_timezone;
-	tvval.tv_sec = timelocal (&tmval); // + timezone - __system_local_timezone;
+	tvval.tv_sec = mktime (&tmval); // + timezone - __system_local_timezone;
 
 	if (timepart.strlen() == 8)
 	{
@@ -344,7 +344,7 @@ void timestamp::iso (const string &isodate)
 		tmval.tm_sec = ::atoi (timepart.str() + 6);
 		
 		//timezone = __system_local_timezone;
-		tvval.tv_sec = timelocal (&tmval); // + timezone - __system_local_timezone;
+		tvval.tv_sec = mktime (&tmval); // + timezone - __system_local_timezone;
 	}
 
 	tvval.tv_usec = 0;

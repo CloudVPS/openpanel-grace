@@ -96,7 +96,8 @@ installexe() {
   apdnam=$(echo "$dst" | sed -e "s/.*\///")
   
   mkdir -p "${dst}/Contents/${ar}"
-  install -m 755 "$fn" "${dst}/Contents/${ar}/${fn}"
+  cp "$fn" "${dst}/Contents/${ar}/${fn}"
+  chmod 755 "${dst}/Contents/${ar}/${fn}"
   ln -s "Contents/${ar}/${fn}" "${dst}/exec"
   ln -s "${apdnam}/exec" "$dstnam"
   echo " OK"
@@ -112,7 +113,8 @@ installrsrc() {
   nam=$(echo "$1" | sed -e "s/.*\///")
   
   mkdir -p "${dst}/Contents/${typ}"
-  install -m 644 "$fn" "${dst}/Contents/${typ}/${nam}"
+  cp "$fn" "${dst}/Contents/${typ}/${nam}"
+  chmod 644 "${dst}/Contents/${typ}/${nam}"
 }
 
 # ===========================================================================
