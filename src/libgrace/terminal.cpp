@@ -110,27 +110,6 @@ void termbuffer::on (void)
 	
 	// Enact the new terminal discipline.
 	tcsetattr (fin.filno, TCSAFLUSH, &newterm);
-	
-	// Technically speaking this makes no sense, the termios attributes
-	// are never applied, yet this is how terminus inside cish/2 does it
-	// now so I'll keep it around for this port.
-	newterm.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
-	newterm.c_oflag &= ~OPOST;
-	newterm.c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
-	newterm.c_cflag &= ~(CSIZE|PARENB);
-	newterm.c_cflag |= CS8;
-	//cfmakeraw (&newterm);
-	
-	term = ::getenv("TERM");
-	if (term == "xterm")
-	{
-		// The xterm standard defines this sequence for 'vt100
-		// compatibility mode', whatever the hell that means (it hasn't
-		// yet unbroken any broken behaviour of xterm clones I've seen
-		// in the wild).
-		tprintf (XTERM_SETVT100);
-	}
-	
 	engaged = true;
 }
 
