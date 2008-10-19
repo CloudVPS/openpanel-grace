@@ -2,4 +2,11 @@
 <dict>
 	<date id="parsed1">2007-12-24T13:39:15</date>
 	<date id="parsed2">2008-12-16T11:15:15</date>
+	<dict id="p1details">
+		<integer id="hour">13</integer>
+		<integer id="minute">39</integer>
+		<integer id="year">2007</integer>
+		<integer id="month">12</integer>
+		<integer id="mday">24</integer>
+	</dict>
 </dict>
