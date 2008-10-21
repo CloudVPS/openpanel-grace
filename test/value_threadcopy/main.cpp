@@ -15,9 +15,15 @@ public:
 			 
 	void		 run (void);
 	value		*get (void);
+	void		 shutdown (void)
+				 {
+				 	sendevent ("shutdown");
+				 	shutcond.wait ();
+				 }
 	
 protected:
 	lock<value>	 db;
+	conditional	 shutcond;
 };
 
 class value_threadcopytestApp : public application
@@ -56,6 +62,11 @@ int value_threadcopytestApp::main (void)
 		v.savexml ("v.xml");
 		__musleep (rand() & 25);
 	}
+	
+	P.shutdown();
+	Q.shutdown();
+	R.shutdown();
+	
 	return 0;
 }
 
@@ -85,5 +96,11 @@ void producer::run (void)
 			}
 		}
 		core.sh ("/usr/bin/true");
+		value v = nextevent ();
+		if (v.type() == "shutdown")
+		{
+			shutcond.broadcast();
+			return;
+		}
 	}
 }
