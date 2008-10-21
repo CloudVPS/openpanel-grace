@@ -1,13 +1,13 @@
 /*
  *	linux.c
- *	Release $Name: MATRIXSSL_1_8_3_OPEN $
+ *	Release $Name: MATRIXSSL_1_8_6_OPEN $
  *
  *	Linux compatibility layer
  *	Other UNIX like operating systems should also be able to use this
  *	implementation without change.
  */
 /*
- *	Copyright (c) PeerSec Networks, 2002-2007. All Rights Reserved.
+ *	Copyright (c) PeerSec Networks, 2002-2008. All Rights Reserved.
  *	The latest version of this code is available at http://www.matrixssl.org
  *
  *	This software is open source; you can redistribute it and/or modify
@@ -40,7 +40,7 @@
 #include "../osLayer.h"
 
 #if defined(USE_RDTSCLL_TIME) || defined(RDTSC)
-#include <sys/timex.h>
+#include <asm/timex.h>
 /*
 	As defined in asm/timex.h for x386:
 */

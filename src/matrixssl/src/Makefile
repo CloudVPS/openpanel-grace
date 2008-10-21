@@ -2,7 +2,7 @@
 #	Makefile for MatrixSSL library
 #	Builds optimized shared library by default.
 #	See comments below for building a debug library.
-#	Copyright (c) PeerSec Networks, 2002-2007. All Rights Reserved.
+#	Copyright (c) PeerSec Networks, 2002-2008. All Rights Reserved.
 #
 
 CC      = gcc
@@ -46,7 +46,7 @@ OBJECTS	= \
 #
 #MATRIXSSL_DEBUG = 1
 ifdef MATRIXSSL_DEBUG
-DFLAGS	= -g -Wall -Winline -Wdisabled-optimization -DDEBUG
+DFLAGS	= -g -Wall -Winline -Wdisabled-optimization -Wno-pointer-sign -Wno-sign-compare -DDEBUG
 STRIP	= test
 else
 #DFLAGS	= -Os
@@ -70,6 +70,7 @@ endif
 #
 SHARED	= -shared
 CFLAGS  = $(DFLAGS) -fPIC -DLINUX -I./
+# Add these for MPI2  -funroll-all-loops -fomit-frame-pointer
 LDFLAGS += -lc -lpthread
 
 #
@@ -80,7 +81,8 @@ CC	= cc
 SO	= .dylib
 SHARED	= -dynamiclib
 CFLAGS += -DOSX -isystem -I/usr/include
-LDFLAGS += -flat_namespace -install_name @executable_path/../src/$(LIBRARY)
+#LDFLAGS += -install_name @rpath/$(LIBRARY)
+LDFLAGS += -flat_namespace -install_name @executable_path/./$(LIBRARY)
 STRIP = test
 endif
 
@@ -120,7 +122,6 @@ $(LIBRARY): $(OBJECTS)
 $(STATIC): $(OBJECTS)
 	$(AR) -rcuv $@ $^
 	$(RANLIB) $@
-
 
 #
 #	Clean up all generated files
