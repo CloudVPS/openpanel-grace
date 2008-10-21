@@ -84,7 +84,7 @@ ipaddress netdb::resolve (const string &name)
 	for (;crsr;crsr = crsr->ai_next)
 	{
 		if (crsr->ai_family != AF_INET) continue;
-		if (crsr->ai_socktype != SOCK_STREAM) continue;
+		if (crsr->ai_socktype && (crsr->ai_socktype != SOCK_STREAM)) continue;
 		if (crsr->ai_addr)
 		{
 			struct sockaddr_in *sa_in = (struct sockaddr_in *) crsr->ai_addr;
