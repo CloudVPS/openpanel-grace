@@ -143,6 +143,7 @@ bool sslclientcodec::fetchinput (ringbuffer &into)
 	unsigned int room = 0;
 	unsigned char myerror[256], alertLevel, alertDescription;
 	
+	myerror[0] = 0;
 	alertLevel = 0;
 	alertDescription = 0;
 	
