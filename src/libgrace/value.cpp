@@ -665,7 +665,7 @@ value &value::operator= (const value &v)
 // ========================================================================
 value &value::operator= (value *v)
 {
-	if (v->threadref != threadref)
+	if (v && v->threadref != threadref)
 	{
 		(*this) = (*v);
 		delete v;
