@@ -60,9 +60,9 @@ value *netdb::gethostbyname (const string &name)
 	}
 	
 	freeaddrinfo (ainf);
-	if (! res.exists (address))
+	if (! res.exists ("address"))
 	{
-		ipadress i (name);
+		ipaddress i (name);
 		if (i) res["address"].newval().setip (i);
 	}
 	return &res;
