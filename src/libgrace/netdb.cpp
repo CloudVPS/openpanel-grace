@@ -60,6 +60,11 @@ value *netdb::gethostbyname (const string &name)
 	}
 	
 	freeaddrinfo (ainf);
+	if (! res.exists (address))
+	{
+		ipadress i (name);
+		if (i) res["address"].newval().setip (i);
+	}
 	return &res;
 }
 
@@ -90,6 +95,9 @@ ipaddress netdb::resolve (const string &name)
 	}
 	
 	freeaddrinfo (ainf);
+
+	ipaddress li (name);
+	if (li) return li;
 	return 0;
 }
 
