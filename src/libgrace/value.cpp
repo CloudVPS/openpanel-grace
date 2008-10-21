@@ -115,6 +115,7 @@ value::value (creatorlabel l, unsigned int k)
 	arrayalloc = 0;
 	ucount = 0;
 	attrib = NULL;
+	threadref = getref();
 }
 
 // ========================================================================
@@ -134,6 +135,7 @@ value::value (creatorlabel l,const char *k)
 	arraysz = 0;
 	arrayalloc = 0;
 	attrib = NULL;
+	threadref = getref();
 }
 
 // ========================================================================
@@ -156,6 +158,7 @@ value::value (creatorlabel l, const char *k, unsigned int ki)
 	arraysz = 0;
 	arrayalloc = 0;
 	attrib = NULL;
+	threadref = getref();
 }
 
 // ========================================================================
@@ -182,6 +185,7 @@ value::value (creatorlabel l, const string &k)
 	arrayalloc = 0;
 	ucount = 0;
 	attrib = NULL;
+	threadref = getref();
 }
 
 // ========================================================================
@@ -297,6 +301,7 @@ value::value (const value &v)
 	arrayalloc = 0;
 	ucount = 0;
 	attrib = NULL;
+	threadref = getref();
 	
 	(*this) = v;
 }
