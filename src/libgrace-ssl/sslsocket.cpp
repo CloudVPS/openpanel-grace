@@ -76,7 +76,6 @@ bool sslclientcodec::setup (void)
 		inbuf.start = inbuf.end = inbuf.buf;
 		insock.start = insock.end = insock.buf;
 		outsock.start = outsock.end = outsock.buf;
-		
 		//::printf ("setting up client hello\n");
 		if (matrixSslNewSession (&ssl, NULL, NULL /*&session*/, 0) < 0)
 		{
@@ -141,9 +140,9 @@ bool sslclientcodec::fetchinput (ringbuffer &into)
 {
 	int rc;
 	unsigned int room = 0;
-	unsigned char myerror[256], alertLevel, alertDescription;
+	unsigned char myerror, alertLevel, alertDescription;
 	
-	myerror[0] = 0;
+	myerror = 0;
 	alertLevel = 0;
 	alertDescription = 0;
 	
@@ -164,7 +163,7 @@ bool sslclientcodec::fetchinput (ringbuffer &into)
 	//::printf ("%08x fetchinput() insock.size=%i\n", this, insock.end-insock.start);
 
 again:
-	rc = matrixSslDecode (ssl, &insock, &inbuf, myerror, &alertLevel,
+	rc = matrixSslDecode (ssl, &insock, &inbuf, &myerror, &alertLevel,
 						  &alertDescription);
 
 	switch (rc)
@@ -175,7 +174,7 @@ again:
 			return false;
 		
 		case SSL_PARTIAL:
-			//::printf ("%08x partial\n", this);
+			
 			if (inbuf.start == inbuf.end) return true;
 			
 			//::printf ("%08x start=%08x end=%08x size=%i\n", this, inbuf.start, inbuf.end, inbuf.end-inbuf.start);
@@ -211,10 +210,41 @@ again:
 			return true;
 			
 		case SSL_ERROR:
-			//::printf ("%08x fetchinput SSL_ERROR\n", this);
-			err.crop();
-			err.printf ("MatrixSSL Protocol Error: %s", myerror);
-			//::printf ("%s\n", err.str());
+			switch (myerror)
+			{
+				case SSL_ALERT_UNEXPECTED_MESSAGE:
+					err = "Unexpected SSL message"; break;
+				
+				case SSL_ALERT_BAD_RECORD_MAC:
+					err = "SSL bad record MAC"; break;
+				
+				case SSL_ALERT_DECOMPRESSION_FAILURE:
+					err = "Decompression failure"; break;
+				
+				case SSL_ALERT_HANDSHAKE_FAILURE:
+					err = "Handshake failure"; break;
+					
+				case SSL_ALERT_NO_CERTIFICATE:
+					err = "No certificate"; break;
+				
+				case SSL_ALERT_BAD_CERTIFICATE:
+					err = "Bad certificate"; break;
+				
+				case SSL_ALERT_UNSUPPORTED_CERTIFICATE:
+					err = "Unsupported certificate"; break;
+					
+				case SSL_ALERT_CERTIFICATE_REVOKED:
+					err = "Certificate revoked"; break;
+				
+				case SSL_ALERT_CERTIFICATE_EXPIRED:
+					err = "Certificate expired"; break;
+				
+				case SSL_ALERT_CERTIFICATE_UNKNOWN:
+					err = "Unknown certificate"; break;
+				
+				default:
+					err = "Unknown MatrixSSL error"; break;
+			}
 			inbuf.start = inbuf.end = inbuf.buf;
 			throw (EX_SSL_PROTOCOL_ERROR);
 			

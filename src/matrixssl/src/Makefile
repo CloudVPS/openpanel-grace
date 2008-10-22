@@ -96,7 +96,7 @@ endif
 
 all: compile
 
-compile: $(OBJECTS) $(LIBRARY) $(STATIC)
+compile: $(OBJECTS) $(STATIC)
 
 #
 # Manual dependencies
