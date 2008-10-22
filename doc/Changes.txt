@@ -1,5 +1,12 @@
 0.9.28     -                                         <grace@openpanel.com>
 
+           * Fixed error reporting in libgrace-ssl.
+
+           * Added a built-in CA certificate chain to libgrace-ssl
+             imported from the mozilla CA certs.
+
+           * Upgrade to matrixssl 1.8.6.
+
            * Fix boatloads of compiler warnings.
            
            * Some stability fixes for issues found with valgrind.
