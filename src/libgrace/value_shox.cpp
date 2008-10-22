@@ -131,8 +131,11 @@ bool value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 			
 			// If the key is '0' we deserialize an object with no id,
 			// otherwise initialize it with the id looked up in the sdict.
-			tskey = sdict.get (ikey-1);
-			if (ikey) crsr = &((*attrib)[tskey]);
+			if (ikey)
+			{
+				tskey = sdict.get (ikey-1);
+				crsr = &((*attrib)[tskey]);
+			}
 			else crsr = &(attrib->newval());
 			
 			// Recurse to read the data into the node.
