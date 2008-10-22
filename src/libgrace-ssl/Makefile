@@ -1,6 +1,6 @@
 include makeinclude
 
-OBJ			= 	sslsocket.o
+OBJ			= 	sslsocket.o mozillacerts.o
 
 AR = ar cr
 

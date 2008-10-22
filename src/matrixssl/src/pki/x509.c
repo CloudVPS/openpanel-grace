@@ -738,10 +738,12 @@ int32 matrixX509ParseCert(psPool_t *pool, unsigned char *pp, int32 size,
 */
 	parsing = 1;
 	while (parsing) {
+		
 		if (getSequence(&p, (int32)(end - p), &len) < 0) {
 			matrixStrDebugMsg("Initial cert parse error\n", NULL);
 			return -1;
 		}
+		
 		certStart = p;
 /*	
 		TBSCertificate  ::=  SEQUENCE  {

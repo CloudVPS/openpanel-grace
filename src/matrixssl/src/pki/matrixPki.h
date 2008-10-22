@@ -51,7 +51,7 @@ extern "C" {
 #define KEY_FILE_TYPE 1
 #define CERT_FILE_TYPE 2
 
-#define MAX_CHAIN_LENGTH		16
+#define MAX_CHAIN_LENGTH		256
 typedef uint32 sslChainLen_t[MAX_CHAIN_LENGTH];
 /******************************************************************************/
 /*

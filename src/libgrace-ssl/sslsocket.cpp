@@ -5,11 +5,15 @@
 //                         Madscience Labs, Rotterdam 
 // ========================================================================
 #include <grace/sslsocket.h>
+#include <grace/filesystem.h>
 
 int dummyCertValidator (sslCertInfo_t *certInfo, void *arg)
 {
 	return 1;
 }
+
+sslKeys_t *MATRIXSSLKEYS = NULL;
+extern const char *GRACE_BUILTIN_CERTS;
 
 // =================================================================
 // FUNCTION setupMatrixSSL
@@ -19,6 +23,34 @@ void setupMatrixSSL (void)
 	static bool initialized = false;
 	if (! initialized)
 	{
+		value certlist;
+		certlist = strutil::split (GRACE_BUILTIN_CERTS, "-----BEGIN CERTIFICATE-----\n");
+		string cacerts;
+		
+		foreach (encodedcert, certlist)
+		{
+			string mycert = encodedcert;
+			if (! mycert) continue;
+			mycert.cropat ("---");
+			string decoded = mycert.decode64();
+			
+			unsigned char d2 = (unsigned char) decoded[2];
+			unsigned char d3 = (unsigned char) decoded[3];
+			int hdrlen = d3 + (256 * d2);
+			
+			if (decoded.strlen() != (hdrlen + 4))
+			{
+				continue;
+			}
+			
+			cacerts.strcat (decoded);
+		}
+		
+		//fs.save ("certs.der", mycert);
+		//int i = matrixSslReadKeys (&MATRIXSSLKEYS, NULL, NULL, NULL, "cacert");
+		matrixSslReadKeysMem (&MATRIXSSLKEYS, NULL, 0, NULL, 0,
+							  (unsigned char *) cacerts.str(),
+							  cacerts.strlen());
 		//::printf ("calling matrixsslopen\n");
 		if (matrixSslOpen() == 0) initialized = true;
 		else
@@ -77,7 +109,7 @@ bool sslclientcodec::setup (void)
 		insock.start = insock.end = insock.buf;
 		outsock.start = outsock.end = outsock.buf;
 		//::printf ("setting up client hello\n");
-		if (matrixSslNewSession (&ssl, NULL, NULL /*&session*/, 0) < 0)
+		if (matrixSslNewSession (&ssl, MATRIXSSLKEYS, NULL /*&session*/, 0) < 0)
 		{
 			//::printf ("ssl session creation failed\n");
 			err = "MatrixSSL Session Error";
