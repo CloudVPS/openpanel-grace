@@ -253,14 +253,12 @@ int httpdfileshare::run (string &uri, string &postbody,
 					
 		if (parent->eventmask & HTTPD_ERROR)
 		{
-			value ev;
 			string ertxt;
 			ertxt = errortext::httpd::illuri_details %format (uri, root, realpath);
 
-			ev("class") = "error";
-			ev["ip"] = s.peer_name;
-			ev["text"] = ertxt;
-			parent->eventhandle (ev);
+			parent->eventhandle ($attr("class", "error") ->
+								 $("ip", s.peer_name) ->
+								 $("text", ertxt));
 		}
 		
 		return 500;
