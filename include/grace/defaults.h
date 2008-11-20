@@ -265,7 +265,7 @@ namespace errortext
 		sparameter connect defaultvalue ("Could not connect to %s:%i");
 		sparameter chunksz defaultvalue ("Max chunksize exceeded: %i < %i");
 		sparameter connbroken defaultvalue ("Connection broken: %s");
-		sparameter timeout defaultvalue ("Connected timed out");
+		sparameter timeout defaultvalue ("Connection timed out");
 		sparameter prebroken defaultvalue ("Premature end of connection");
 		sparameter chunk defaultvalue ("Error getting chunked data");
 	}

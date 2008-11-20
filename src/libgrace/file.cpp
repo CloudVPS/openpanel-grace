@@ -1036,6 +1036,7 @@ string *file::read (size_t sz, int timeout_ms)
 	}
 	
 	ssz = ::read (filno, buf, am);
+	
 	if ( (ssz<=0) && (errno == EAGAIN) ) 
 	{
 		if (nonblocking)
@@ -1066,11 +1067,16 @@ string *file::read (size_t sz, int timeout_ms)
 		}
 
 		ssz = ::read (filno, buf, am);
+		
 		if (ssz <= 0)
 		{
-			errcode = FERR_TIMEOUT;
-			err = errortext::file::rdto_read;
-			return NULL;
+			codec->fetchinput (buffer);
+			if (! buffer.backlog())
+			{
+				errcode = FERR_TIMEOUT;
+				err = errortext::file::rdto_read;
+				return NULL;
+			}
 		}
 		
 	}
