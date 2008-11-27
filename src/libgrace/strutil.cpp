@@ -975,6 +975,7 @@ void strutil::xmlreadtag (xmltag *tag, const string *xml)
 				}
 				tag->hasdata = true;
 				tag->data = xml->mid (ntag+9, rightb - (ntag+9));
+				tag->crsr = rightb + 3;
 			}
 			else
 			{
