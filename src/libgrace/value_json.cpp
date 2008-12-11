@@ -4,6 +4,9 @@
 #include <grace/strutil.h>
 #include <grace/filesystem.h>
 
+// ==========================================================================
+// METHOD value::readjsonstring
+// ==========================================================================
 const char *value::readjsonstring (const char *pos, string &into)
 {
 	const char *atpos = pos;
@@ -64,6 +67,9 @@ const char *value::readjsonstring (const char *pos, string &into)
 	return NULL;
 }
 
+// ==========================================================================
+// METHOD value::readjsonnumber
+// ==========================================================================
 const char *value::readjsonnumber (const char *crsr, string &into)
 {
 	const char *c = crsr;
@@ -115,6 +121,9 @@ const char *value::readjsonnumber (const char *crsr, string &into)
 	return c;
 }
 
+// ==========================================================================
+// METHOD value::decodejson
+// ==========================================================================
 const char *value::decodejson (const char *objpos)
 {
 	const char *crsr = objpos;
@@ -262,6 +271,9 @@ const char *value::decodejson (const char *objpos)
 	return crsr+1;
 }
 
+// ==========================================================================
+// METHOD value::fromjson
+// ==========================================================================
 bool value::fromjson (const string &code)
 {
 	int pos = 0;
@@ -270,6 +282,9 @@ bool value::fromjson (const string &code)
 	decodejson (code.cval() + pos);	
 }
 
+// ==========================================================================
+// METHOD value::encodejsonstring
+// ==========================================================================
 void value::encodejsonstring (string &into) const
 {
 	const char *c = cval();
@@ -287,6 +302,9 @@ void value::encodejsonstring (string &into) const
 	}
 }
 
+// ==========================================================================
+// METHOD value::encodejsonid
+// ==========================================================================
 void value::encodejsonid (string &into) const
 {
 	const char *c = name();
@@ -304,6 +322,9 @@ void value::encodejsonid (string &into) const
 	}
 }
 
+// ==========================================================================
+// METHOD value::encodejson
+// ==========================================================================
 void value::encodejson (string &into) const
 {
 	if (! count())
@@ -359,6 +380,9 @@ void value::encodejson (string &into) const
 	}
 }
 
+// ==========================================================================
+// METHOD value::tojson
+// ==========================================================================
 string *value::tojson (void) const
 {
 	returnclass (string) res retain;

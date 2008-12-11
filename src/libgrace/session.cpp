@@ -2,14 +2,23 @@
 #include <grace/strutil.h>
 #include <grace/system.h>
 
+// ==========================================================================
+// CONSTRUCTOR sessionlist
+// ==========================================================================
 sessionlist::sessionlist (void)
 {
 }
 
+// ==========================================================================
+// DESTRUCTOR sessionlist
+// ==========================================================================
 sessionlist::~sessionlist (void)
 {
 }
 
+// ==========================================================================
+// METHOD sessionlist::exists
+// ==========================================================================
 bool sessionlist::exists (const statstring &id)
 {
 	bool result = false;
@@ -22,6 +31,9 @@ bool sessionlist::exists (const statstring &id)
 	return result;
 }
 
+// ==========================================================================
+// METHOD sessionlist::create
+// ==========================================================================
 string *sessionlist::create (const value &sdat)
 {
 	returnclass (string) uuid retain;
@@ -37,6 +49,9 @@ string *sessionlist::create (const value &sdat)
 	return &uuid;
 }
 
+// ==========================================================================
+// METHOD sessionlist::destroy
+// ==========================================================================
 void sessionlist::destroy (const statstring &id)
 {
 	exclusivesection (db)
@@ -45,6 +60,9 @@ void sessionlist::destroy (const statstring &id)
 	}
 }
 
+// ==========================================================================
+// METHOD sessionlist::get
+// ==========================================================================
 value *sessionlist::get (const statstring &id)
 {
 	returnclass (value) res retain;
@@ -58,6 +76,9 @@ value *sessionlist::get (const statstring &id)
 	return &res;
 }
 
+// ==========================================================================
+// METHOD sessionlist::set
+// ==========================================================================
 void sessionlist::set (const statstring &id, const value &dat)
 {
 	exclusivesection (db)
@@ -67,6 +88,9 @@ void sessionlist::set (const statstring &id, const value &dat)
 	}
 }
 
+// ==========================================================================
+// METHOD sessionlist::expire
+// ==========================================================================
 void sessionlist::expire (int timeout)
 {
 	time_t now = core.time.now();
