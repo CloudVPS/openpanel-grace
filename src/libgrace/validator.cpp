@@ -605,6 +605,9 @@ string *validator::encodeidchain (void)
 	return &res;
 }
 
+// ==========================================================================
+// METHOD validator::makeerror
+// ==========================================================================
 void validator::makeerror (string &into, int errorcode,
 						   const string &errortext,
 						   const string &detail)

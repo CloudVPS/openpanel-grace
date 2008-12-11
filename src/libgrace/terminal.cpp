@@ -593,6 +593,9 @@ void termbuffer::tprintf (const char *fmt, ...)
 	write (fout.filno, data.str(), data.strlen());
 }
 
+// ==========================================================================
+// METHOD termbuffer::tputs
+// ==========================================================================
 void termbuffer::tputs (const string &str)
 {
 	write (fout.filno, str.str(), str.strlen());

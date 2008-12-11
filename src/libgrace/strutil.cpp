@@ -91,6 +91,9 @@ value *strutil::split (const string &str, const string &s)
 	return &res;
 }
 
+// ==========================================================================
+// METHOD strutil::splitescaped
+// ==========================================================================
 value *strutil::splitescaped (const string &str, char s, const string &escapees)
 {
 	returnclass (value) res retain;

@@ -87,6 +87,9 @@ value *fswatch::listchanges (void)
 	return &res;
 }
 
+// ==========================================================================
+// METHOD fswatch::list
+// ==========================================================================
 value *fswatch::list (void)
 {
 	if (! suffixpath) return fs.ls (watchpath);

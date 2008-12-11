@@ -453,6 +453,9 @@ bool filesystem::cdrelative (const string &path)
 	return false;
 }
 
+// ==========================================================================
+// METHOD filesystem::chown
+// ==========================================================================
 bool filesystem::chown (const string &path, const string &touser)
 {
 	string resolved;
@@ -504,6 +507,9 @@ bool filesystem::chown (const string &path, uid_t userid, gid_t groupid)
 	return true;
 }
 
+// ==========================================================================
+// METHOD filesystem::cp
+// ==========================================================================
 bool filesystem::cp (const string &from, const string &to)
 {
 	string pfrom;
