@@ -74,8 +74,7 @@ void smtpsocket::setsender (const string &address)
 		mailpart = tval[1];
 		
 		namepart.chomp();
-		
-		delete mailpart.cutafter ('>');
+		mailpart.cropat ('>');
 		sender = mailpart;
 		sendername = namepart;
 		return;
