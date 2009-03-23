@@ -1475,6 +1475,8 @@ int string::strcmp (const char *s) const
 		return 0;
 	}
 	if (! s ) return -1;
+	size_t l = ::strlen (s);
+	if (l != strlen()) return -1;
 	
 	METASTRCMP((int)data->v[offs+i], s[i], i>=size, !s[i]);
 }
@@ -1489,7 +1491,7 @@ int string::strcmp (const string &s) const
 	unsigned int osize = s.size;
 	
 	if (! size) return s.strlen();
-	if (data == s.data) return 0;
+	if ((data == s.data) && (offs == s.offs) && (size == s.size)) return 0;
 	
 	METASTRCMP((int)data->v[offs+i],
 			   (int)s.data->v[s.offs+i],
@@ -1506,7 +1508,7 @@ int string::strcasecmp (const string &s) const
 	unsigned int osize = s.size;
 	
 	if (! size) return s.strlen();
-	if (data == s.data) return 0;
+	if ((data == s.data) && (offs == s.offs) && (size == s.size)) return 0;
 	
 	METASTRCMP((int)tolower(data->v[offs+i]),
 			   (int)tolower(s.data->v[s.offs+i]),

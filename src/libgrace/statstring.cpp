@@ -217,6 +217,7 @@ stringref *stringrefdb::getref (const char *str, unsigned int key)
 	stringref *crsr;
 	stringref *oldcrsr;
 	unsigned short cnt;
+	size_t slen = ::strlen (str);
 	
 	// Need write-lock because we'll add stuff if there's no match.
 	exclusivesection (treelock)
@@ -230,7 +231,8 @@ stringref *stringrefdb::getref (const char *str, unsigned int key)
 			
 			if (crsr->key == key)
 			{
-				if (crsr->str.strcmp (str) == 0)
+				if ((crsr->str.strlen() == slen) &&
+					(::strcmp (crsr->str.str(), str) == 0))
 				{
 					crsr->refcnt++;
 					cnt = crsr->refcnt;

@@ -63,7 +63,6 @@ public:
 						 /// Just calls ipval().
 						 ipaddress (const value &o)
 						 {
-						 	::printf ("constrct(const value) %08x\n", o.ipval());
 						 	addr = o.ipval ();
 						 }
 						 
@@ -83,7 +82,6 @@ public:
 						 
 	ipaddress			&operator= (const value &v)
 						 {
-						 	::printf ("operator=(const value) %08x\n", v.ipval());
 						 	addr = v.ipval();
 						 	return *this;
 						 }
