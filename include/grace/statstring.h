@@ -336,8 +336,6 @@ public:
 						{
 							size_t slen = ::strlen (str);
 							if (slen != sval().strlen()) return false;
-							unsigned int ki = checksum (str);
-							if (key() != ki) return false;
 							return (::strncmp (str, cval(), slen) == 0);
 						}
 						
@@ -377,12 +375,9 @@ public:
 						
 	inline bool			operator!= (const char *str) const
 						{
-							statstring sstr;
-							sstr = str;
-							
-							if (key() != sstr.key()) return true;
-							if (id() != sstr.id()) return true;
-							return false;
+							size_t slen = ::strlen (str);
+							if (slen != sval().strlen()) return true;
+							return (::strncmp (str, cval(), slen) != 0);
 						}
 						
 	inline bool			operator!= (const string *str) const
