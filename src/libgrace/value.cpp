@@ -1959,27 +1959,26 @@ bool value::isbuiltin (const statstring &type)
 {
 	switch (type.key())
 	{
-		case 0xc152b73e : return true;
-		case 0x29b7dde5 : return true;
-		case 0xbe425861 : return true;
-		case 0x459b78d5 : return true;
-		case 0xbe56e20e : return true;
-		case 0x04cfb5e3 : return true;
-		case 0x474c360c : return true;
-		case 0x592fa6fd : return true;
-		case 0xed127a3f : return true;
-		case 0x41518d33 : return true;
-		case 0xa4be84a6 : return true;
-		case 0x508c2a15 : return true;
-		case 0x54ac07f6 : return true;
-		case 0x1ea82c86 : return true;
-		case 0xcd512b15 : return true;
-		case 0x2c1989bf : return true;
-		case 0xd5e0335b : return true;
-		case 0x8fa9ef61 : return true;
-		case 0x7ae329de : return true;
-		case 0xf5ef3d04 : return true;
-		default : return false;
+		case 0xc152b73e : return true; // void
+		case 0x29b7dde5 : return true; // char
+		case 0xbe425861 : return true; // uchar
+		case 0x459b78d5 : return true; // short
+		case 0xbe56e20e : return true; // ushort
+		case 0x04cfb5e3 : return true; // integer
+		case 0x474c360c : return true; // unsigned
+		case 0x592fa6fd : return true; // bool
+		case 0xed127a3f : return true; // bool.true
+		case 0x41518d33 : return true; // bool.false
+		case 0xa4be84a6 : return true; // double
+		case 0x508c2a15 : return true; // string
+		case 0x54ac07f6 : return true; // ipaddress
+		case 0x1ea82c86 : return true; // long
+		case 0xcd512b15 : return true; // ulong
+		case 0x2c1989bf : return true; // array
+		case 0xd5e0335b : return true; // dict
+		case 0x8fa9ef61 : return true; // date
+		case 0x7ae329de : return true; // currency
+		case 0xf5ef3d04 : return true; // float
 	}
 	return false;
 }
