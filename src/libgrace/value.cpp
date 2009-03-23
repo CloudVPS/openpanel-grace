@@ -1957,29 +1957,29 @@ void value::assign (currency *c)
 // ========================================================================
 bool value::isbuiltin (const statstring &type)
 {
-	caseselector (type)
+	switch (type.key())
 	{
-		incaseof ("void") : return true;
-		incaseof ("char") : return true;
-		incaseof ("uchar") : return true;
-		incaseof ("short") : return true;
-		incaseof ("ushort") : return true;
-		incaseof ("integer") : return true;
-		incaseof ("unsigned") : return true;
-		incaseof ("bool") : return true;
-		incaseof ("bool.true") : return true;
-		incaseof ("bool.false") : return true;
-		incaseof ("double") : return true;
-		incaseof ("string") : return true;
-		incaseof ("ipaddress") : return true;
-		incaseof ("long") : return true;
-		incaseof ("ulong") : return true;
-		incaseof ("array") : return true;
-		incaseof ("dict") : return true;
-		incaseof ("date") : return true;
-		incaseof ("currency") : return true;
-		incaseof ("float") : return true;
-		defaultcase : return false;
+		case 0xc152b73e : return true;
+		case 0x29b7dde5 : return true;
+		case 0xbe425861 : return true;
+		case 0x459b78d5 : return true;
+		case 0xbe56e20e : return true;
+		case 0x04cfb5e3 : return true;
+		case 0x474c360c : return true;
+		case 0x592fa6fd : return true;
+		case 0xed127a3f : return true;
+		case 0x41518d33 : return true;
+		case 0xa4be84a6 : return true;
+		case 0x508c2a15 : return true;
+		case 0x54ac07f6 : return true;
+		case 0x1ea82c86 : return true;
+		case 0xcd512b15 : return true;
+		case 0x2c1989bf : return true;
+		case 0xd5e0335b : return true;
+		case 0x8fa9ef61 : return true;
+		case 0x7ae329de : return true;
+		case 0xf5ef3d04 : return true;
+		default : return false;
 	}
 	return false;
 }
