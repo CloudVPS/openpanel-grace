@@ -124,11 +124,11 @@ public:
 	
 	void			 where (dbstatement st);
 	void			 from (class dbtable &tab);
-	void			 from (class dbtable &tab, class dbtable &tab);
-	void			 from (class dbtable &tab, class dbtable &tab,
-						   class dbtable &tab);
-	void			 from (class dbtable &tab, class dbtable &tab,
-						   class dbtable &tab, class dbtable &tab);
+	void			 from (class dbtable &tab1, class dbtable &tab2);
+	void			 from (class dbtable &tab1, class dbtable &tab2,
+						   class dbtable &tab3);
+	void			 from (class dbtable &tab1, class dbtable &tab2,
+						   class dbtable &tab3, class dbtable &tab4);
 	void			 select (class dbtable &tab);
 	void			 select (dbcolumn &one);
 	void			 select (dbcolumn &one, dbcolumn &two);
