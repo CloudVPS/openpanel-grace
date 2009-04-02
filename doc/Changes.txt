@@ -1,4 +1,8 @@
-0.9.28     -                                         <grace@openpanel.com>
+0.9.29     Thu Apr  2 2008                           <grace@openpanel.com>
+
+           * Lots of optimizations
+
+0.9.28     Thu Feb 12 2008                           <peter@openpanel.com>
 
            * Fixed error reporting in libgrace-ssl.
 
