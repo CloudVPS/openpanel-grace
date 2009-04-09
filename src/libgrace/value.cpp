@@ -2144,7 +2144,10 @@ value &value::operator<< (value *v)
 {
 	for (int i=0; i<(*v).count(); ++i)
 	{
-		(*this)[(*v)[i].name()] = (*v)[i];
+		value &o = (*v)[i];
+		const statstring &vid = o.id();
+		if (vid) (*this)[vid] = o;
+		else newval() = o;
 	}
 	delete v;
 	return *this;
@@ -2154,7 +2157,10 @@ value &value::operator<< (const value &v)
 {
 	for (int i=0; i<v.count(); ++i)
 	{
-		(*this)[v[i].name()] = v[i];
+		const value &o = (*v)[i];
+		const statstring &vid = o.id();
+		if (vid) (*this)[vid] = o;
+		else newval() = o;
 	}
 	return *this;
 }
