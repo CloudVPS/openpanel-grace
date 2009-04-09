@@ -206,12 +206,6 @@ value::value (const timestamp &o)
 	settime (o);
 }
 
-value::value (time_t o)
-{
-	init ();
-	settime (o);
-}
-
 // ========================================================================
 // COPY CONSTRUCTOR
 // ----------------
@@ -497,13 +491,6 @@ value &value::operator= (double d)
 	itype = i_double;
 	if (_type == t_unset) _type = t_double;
 	return *this;
-}
-
-value &value::operator= (time_t o)
-{
-	cleararray ();
-	_type = t_date;
-	return settime (o);
 }
 
 value &value::operator= (bool bval)

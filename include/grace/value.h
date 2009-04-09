@@ -227,9 +227,6 @@ public:
 						 /// Copy-constructor (ipaddress)
 						 value (const class ipaddress &);
 						 
-						 /// Copy-constructor (unix timestamp)
-						 value (time_t);
-						 
 						 /// Copy-constructor (timestamp)
 						 value (const class timestamp &);
 						 
@@ -316,7 +313,6 @@ public:
 	value				&operator= (class valuable *);
 	value				&operator= (const class ipaddress &);
 	value				&operator= (const class timestamp &);
-	value				&operator= (time_t);
 	value				&operator= (bool bval);
 	value				&operator= (long long dval);
 	value				&operator= (const class currency &c);
