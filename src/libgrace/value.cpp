@@ -2157,7 +2157,7 @@ value &value::operator<< (const value &v)
 {
 	for (int i=0; i<v.count(); ++i)
 	{
-		const value &o = (*v)[i];
+		const value &o = v[i];
 		const statstring &vid = o.id();
 		if (vid) (*this)[vid] = o;
 		else newval() = o;
