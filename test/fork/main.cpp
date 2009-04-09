@@ -43,8 +43,6 @@ APPOBJECT(forktestApp);
 
 int forktestApp::main (void)
 {
-	signal (SIGALRM, alarmhandler);
-	alarm (60);
 	for (int i=0; i<4; ++i)
 	{
 		new forker (this);
