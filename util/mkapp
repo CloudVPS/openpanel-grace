@@ -173,34 +173,32 @@ installexe "$execfile" "$appdir" "$arch"
 # Install resource files
 # ---------------------------------------------------------------------------
 if [ -d rsrc ]; then
-  for rsrc in rsrc/*; do
-    if [ ! -d "$rsrc" ]; then
-	  puts "> Installing ${rsrc}..."
-	  if endswith "$rsrc" ".xml"; then
-		subtype=$(echo "$rsrc" | sed -e "s/.xml$//;s/.*\.//")
-		case "$subtype" in
-		  "schema")
-			  installrsrc "$rsrc" "$appdir" "Schemas"
-			  ;;
-		  "validator")
-			  installrsrc "$rsrc" "$appdir" "Schemas"
-			  ;;
-		  "conf")
-			  installrsrc "$rsrc" "$appdir" "Configuration Defaults"
-			  ;;
-		  *)
-			  installrsrc "$rsrc" "$appdir" "Resources"
-			  ;;
-		esac
+  find rsrc -type f -print | while read rsrc; do
+	puts "> Installing ${rsrc}..."
+	if endswith "$rsrc" ".xml"; then
+	  subtype=$(echo "$rsrc" | sed -e "s/.xml$//;s/.*\.//")
+	  case "$subtype" in
+		"schema")
+			installrsrc "$rsrc" "$appdir" "Schemas"
+			;;
+		"validator")
+			installrsrc "$rsrc" "$appdir" "Schemas"
+			;;
+		"conf")
+			installrsrc "$rsrc" "$appdir" "Configuration Defaults"
+			;;
+		*)
+			installrsrc "$rsrc" "$appdir" "Resources"
+			;;
+	  esac
+	else
+	  if endswith "$rsrc" ".thtml"; then
+		installrsrc "$rsrc" "$appdir" "Templates"
 	  else
-		if endswith "$rsrc" ".thtml"; then
-		  installrsrc "$rsrc" "$appdir" "Templates"
-		else
-		  installrsrc "$rsrc" "$appdir" "Resources"
-		fi
+		installrsrc "$rsrc" "$appdir" "Resources"
 	  fi
-	  echo " OK"
 	fi
+	echo " OK"
   done
 fi
 
