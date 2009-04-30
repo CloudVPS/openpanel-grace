@@ -1262,6 +1262,7 @@ bool filesystem::save (const string &_vpath, const string &_data,
 					   flag::savetype tp)
 {
 	if (tp == flag::normal) return save (_vpath, _data);
+	if (_vpath.strlen() > 1024) return false;
 	
 	string tmpnam;
 	string uuid = strutil::uuid();
@@ -1290,6 +1291,7 @@ bool filesystem::save (const string &_vpath, const string &_data,
 
 bool filesystem::save (const string &_vpath, const string &_data)
 {
+	if (_vpath.strlen() > 1024) return false;
 	file f;
 
 	if (! f.openwrite (_vpath)) return false;

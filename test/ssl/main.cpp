@@ -25,14 +25,14 @@ int tcpsocketApp::main (void)
 	{
 		string buffer;
 		
-		if (! outs.connect ("www.openprovider.nl", 443))
+		if (! outs.connect ("customer.xl-internetservices.nl", 443))
 		{
 			ferr.printf ("fail: outs.connect\n");
 			ferr.printf ("err: %s\n", outs.error().str());
 			return 1;
 		}
 		
-		outs.printf ("GET / HTTP/1.0\r\nHost: www.openprovider.nl\r\n\r\n");
+		outs.printf ("GET / HTTP/1.0\r\nHost: customer.xl-internetservices.nl\r\n\r\n");
 		while (! outs.eof())
 		{
 			buffer = outs.gets();
