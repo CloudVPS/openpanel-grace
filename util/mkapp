@@ -1,5 +1,7 @@
 #!/bin/sh
 
+__SPINNER="\\"
+
 # ===========================================================================
 # Print an error and exit
 # ===========================================================================
@@ -8,10 +10,51 @@ fail() {
   exit 1
 }
 
+putok() {
+  if [ -z "$__ECHONE" ]; then
+	echotest=`echo -n`
+	if [ -z "$echotest" ]; then
+	  __ECHONE="echo -ne"
+	  __NHL=""
+	else
+	  __ECHONE="echo"
+	  __NHL="\c"
+	fi
+  fi
+  $__ECHONE "\r*\r$__NHL"
+}
+
 # ===========================================================================
 # Write a string to stdout with no newline
 # ===========================================================================
 puts() {
+  if [ -z "$COLUMNS" ]; then
+    COLUMNS=80
+  fi
+  
+  LN="$*"
+  
+  first=`echo "$LN" | cut -c1`
+  if [ "$first" = ">" ]; then
+    case "$__SPINNER" in
+      "|")
+      	__SPINNER="/"
+      	;;
+      "/")
+      	__SPINNER="-"
+      	;;
+      "-")
+      	__SPINNER="\\"
+      	;;
+      "\\")
+      	__SPINNER="|"
+      	;;
+     esac
+    NLN=`echo "$LN" | cut -c 2-`
+    LN="$__SPINNER$NLN"
+  fi
+  
+  __WIDTH=$(expr $COLUMNS '-' 1)
   if [ -z "$__ECHON" ]; then
 	echotest=`echo -n`
 	if [ -z "$echotest" ]; then
@@ -22,7 +65,8 @@ puts() {
 	  __NHL="\c"
 	fi
   fi
-  $__ECHON "$*$__NHL"
+  __LINE=`echo "$LN                                                                                   " | cut -c 1-$__WIDTH`
+  $__ECHON "$__LINE\r$__NHL"
 }
 
 # ===========================================================================
@@ -81,7 +125,7 @@ mkappdir() {
   fi
   rm -f "$dstnam"
   mkdir -p "$1"
-  echo " OK"
+  putok
 }
 
 # ===========================================================================
@@ -100,7 +144,7 @@ installexe() {
   chmod 755 "${dst}/Contents/${ar}/${fn}"
   ln -s "Contents/${ar}/${fn}" "${dst}/exec"
   ln -s "${apdnam}/exec" "$dstnam"
-  echo " OK"
+  putok
 }
 
 # ===========================================================================
@@ -198,7 +242,7 @@ if [ -d rsrc ]; then
 		installrsrc "$rsrc" "$appdir" "Resources"
 	  fi
 	fi
-	echo " OK"
+	putok
   done
 fi
 
@@ -210,3 +254,6 @@ if [ -d tools ]; then
     installrsrc "$tool" "$appdir" "Tools"
   done
 fi
+
+puts "* Done"
+echo ""
