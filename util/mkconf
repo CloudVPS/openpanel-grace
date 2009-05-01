@@ -29,7 +29,7 @@ if [ ! -f "$APPATH/.meta" ]; then
   exit 1
 fi
 
-appid=`cat "$APPATH/.meta" | grep "metro.appid" | sed -e "s/.*<metro.appid>//;s/<\/metro.appid>.*//"`
+appid=`cat "$APPATH/.meta" | grep "grace.appid" | sed -e "s/.*<grace.appid>//;s/<\/grace.appid>.*//"`
 
 if [ -z "$UID" ]; then
   UID=`id | cut -f1 -d" " | cut -f2 -d= | cut -f1 -d"("`

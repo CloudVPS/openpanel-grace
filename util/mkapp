@@ -87,7 +87,7 @@ getarch() {
 	  UN_PROC=`uname -m`
 	fi
   fi
-  UN_PROC=`echo "$UN_PROC" | sed -e "s/^i.86/i386/"`
+  UN_PROC=`echo "$UN_PROC" | sed -e "s/^i.86/i386/;s/amd64/x86_64/"`
   echo "$UN_OS.$UN_PROC"
 }
 
@@ -165,6 +165,16 @@ installrsrc() {
   chmod 644 "${dst}/Contents/${typ}/${nam}"
 }
 
+showhelp() {
+  cat << _EOF_
+Usage: grace mkapp [options] <application name>
+Options:
+    --appid <application-id>    Example: net.example.tools.helloworld
+    --arch <arch>               Example: Linux.i386
+    --dest <path>               Where to install the application
+_EOF_
+}
+
 # ===========================================================================
 # MAIN
 # ===========================================================================
@@ -180,6 +190,11 @@ while [ ! -z "$1" ]; do
   		appid="$1"
   		shift
   		;;
+  	"--arch")
+  		shift
+  		arch="$1"
+  		shift
+  		;;
   	"--appname")
   		shift
   		appname="$1"
@@ -189,6 +204,14 @@ while [ ! -z "$1" ]; do
   		shift
   		destdir=$(echo "$1" | sed -e "s/\/$//")
   		shift
+  		;;
+  	"--help")
+  		showhelp $0
+  		exit 0
+  		;;
+  	"-h")
+  		showhelp $0
+  		exit 0
   		;;
   	*)
   		appname="$1"
@@ -205,7 +228,13 @@ if [ -z "$appname" ]; then
   fail No appname provided and no .appname file found.
 fi
 
-arch=$(getarch)
+if [ -z "$arch" ]; then
+  arch=$(getarch)
+fi
+
+if [ -z "$appid" ]; then
+  appid="local.$appname"
+fi
 
 # ---------------------------------------------------------------------------
 # Start building the bundle
@@ -215,6 +244,15 @@ echo "* Building ${appname} for ${arch}:"
 execfile="${appname}.exe"
 appdir="${destdir}/${appname}.app"
 mkappdir "$appdir"
+datestamp=$(date +%Y-%m-%dT%H:%M:%S)
+cat > "${appdir}/.meta" << _EOF_
+<?xml version="1.0" encoding="UTF-8"?>
+<bundle>
+	<grace.appid>${appid}</grace.appid>
+	<grace.arch>${arch}</grace.arch>
+	<grace.appname>${appname}</grace.appname>
+</bundle>
+_EOF_
 installexe "$execfile" "$appdir" "$arch"
 
 # ---------------------------------------------------------------------------
