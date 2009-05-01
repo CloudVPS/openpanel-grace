@@ -12,7 +12,7 @@ fail() {
 
 putok() {
   if [ -z "$__ECHONE" ]; then
-	echotest=`echo -n`
+	echotest=`echo -ne`
 	if [ -z "$echotest" ]; then
 	  __ECHONE="echo -ne"
 	  __NHL=""
@@ -83,6 +83,8 @@ getarch() {
   if [ "$UN_PROC" = "unknown" ]; then
 	if [ "$UN_OS" = "Cygwin" ]; then
 	  UN_PROC=i386
+	elif [ "$UN_OS" = "Linux" ]; then
+	  UN_PROC=`uname -m`
 	fi
   fi
   
@@ -126,6 +128,7 @@ mkappdir() {
   rm -f "$dstnam"
   mkdir -p "$1"
   putok
+  echo ""
 }
 
 # ===========================================================================
@@ -145,6 +148,7 @@ installexe() {
   ln -s "Contents/${ar}/${fn}" "${dst}/exec"
   ln -s "${apdnam}/exec" "$dstnam"
   putok
+  echo ""
 }
 
 # ===========================================================================
