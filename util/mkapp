@@ -87,7 +87,7 @@ getarch() {
 	  UN_PROC=`uname -m`
 	fi
   fi
-  
+  UN_PROC=`echo "$UN_PROC" | sed -e "s/^i.86/i386/"`
   echo "$UN_OS.$UN_PROC"
 }
 
