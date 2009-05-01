@@ -22,7 +22,7 @@ case "$cmd" in
 	    S=$(echo "$0" | sed -e "s/./ /g")
 		echo "Usage: $0 <command> [args]" >&2
 		echo "       $S where" >&2
-		find "${mypath}/util-grace" -type f -or -type l -maxdepth 1 | \
+		find "${mypath}/util-grace" -maxdepth 1 -type f -or -type l | \
 		  while read tool; do
 			nm=$(echo "$tool" | sed -e "s@.*/@@")
 			echo "       $S $nm" >&2
