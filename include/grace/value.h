@@ -1103,6 +1103,9 @@ public:
 	string			*join (const string &sep=" ", const string &left="",
 						   const string &right="");
 	
+					 /// Join with a single character separator.
+	string			*join (char c) { string s; s.strcat(c); return join(s); }
+	
 					 /// Compare two value objects on a tree level.
 	bool			 treecmp (const value &other) const;
 
