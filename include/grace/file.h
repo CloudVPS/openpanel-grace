@@ -251,6 +251,14 @@ public:
 	
 				 /// Last generated error code.
 	unsigned int errorcode (void) { return errcode; };
+	
+				 /// Iterator for foreach.
+	string		*visitchild (int index)
+				 {
+				 	if (index<0) return NULL;
+				 	if (eof()) return NULL;
+				 	return gets();
+				 }
 
 	ringbuffer	 buffer; ///< The internal ringbuffer.
 	iocodec		*codec; ///< If set, will be used to encode/decode data.
