@@ -93,6 +93,29 @@ class file
 {
 public:
 				 file (void);
+				 
+				 /// Constructor with explicit path. Opens a file
+				 /// for reading (or writing)
+				 /// \param inpath The disk file to open. If this
+				 ///               starts with a '<', the file is
+				 ///               opened for reading. If it starts
+				 ///               with a '>', it is opened for
+				 ///               writing (in both cases the first
+				 ///               character is stripped). In other
+				 ///               cases the file will be opened for
+				 ///               reading.
+				 file (const string &inpath)
+				 {
+					filno = -1;
+					feof = true;
+					nonblocking = false;
+					codec = NULL;
+					errcode = FERR_OK;
+					if (inpath[0] == '<') openread (inpath.mid(1));
+					else if (inpath[0] == '>') openwrite (inpath.mid(1));
+					else openread (inpath);
+				 }
+				 
 				~file (void);
 				
 				 /// Open a disk file for reading.

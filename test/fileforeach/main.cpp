@@ -21,9 +21,8 @@ APPOBJECT(fileforeachtestApp);
 
 int fileforeachtestApp::main (void)
 {
-	file f;
 	value v;
-	f.openread ("in");
+	file f("in");
 	foreach (line, f) v.newval() = line;
 	
 	v.savexml ("out.xml");
