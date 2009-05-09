@@ -224,13 +224,11 @@ int httpdfileshare::run (string &uri, string &postbody,
 
 		if (parent->eventmask & HTTPD_ERROR)
 		{
-			value ev;
 			string ertxt = errortext::httpd::illuri %format (uri);
 			
-			ev("class") = "error";
-			ev["ip"] = s.peer_name;
-			ev["text"] = ertxt;
-			parent->eventhandle (ev);
+			parent->eventhandle ($attr("class", "error")->
+								 $("ip", s.peer_name) ->
+								 $("text", ertxt));
 		}
 		return 500;
 	}
@@ -322,13 +320,19 @@ int httpdfileshare::run (string &uri, string &postbody,
 	
 	#define HTTP_F "%a, %e %b %Y %H:%M:%S %Z"
 	
-	s.puts ("HTTP/1.1 200 OK\r\n");
-	s.puts ("Connection: %s\r\n" %format (keepalive ? "keep-alive" : "close"));
-	s.puts ("Content-type: %s\r\n" %format (mimetype));
-	s.puts ("Date: %s\r\n" %format (tnow.format (HTTP_F)));
-	s.puts ("Last-Modified: %s\r\n" %format (tmodif.format (HTTP_F)));
-	s.puts ("Expires: %s\r\n" %format (texp.format (HTTP_F)));
-	s.puts ("Content-length: %i\r\n\r\n" %format (outsz));
+	s.puts ("HTTP/1.1 200 OK\r\n"
+			"Connection: %s\r\n"
+			"Content-type: %s\r\n"
+			"Date: %s\r\n"
+			"Expires: %s\r\n"
+			"Content-length: %i\r\n\r\n"
+			%format (keepalive ? "keepalive" : "close",
+					 mimetype,
+					 tnow.format (HTTP_F),
+					 tmodif.format (HTTP_F),
+					 texp.format (HTTP_F),
+					 outsz));
+
 	s.sendfile (realpath, outsz);
 	env["sentbytes"] = outsz;
 	return -200;
