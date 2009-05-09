@@ -13,6 +13,12 @@
 #include <grace/value.h>
 #define _STR_H 1
 
+#ifdef _STR_CPP
+  #define filterclassdef(foo,bar) string foo = bar;
+#else
+  #define filterclassdef(foo,bar) extern string foo;
+#endif
+
 #include <grace/statstring.h>
 #include <sys/types.h>
 #include <ctype.h>
@@ -990,6 +996,26 @@ public:
 };	
 
 extern string emptystring;
+
+extern const char __B64TAB[];
+
+namespace filterclass
+{
+	filterclassdef(alnumdash, "abcdefghijklmnopqrstuvwxyz-");
+	filterclassdef(base64, __B64TAB);
+	filterclassdef(lowercasealpha, "abcdefghijklmnopqrstuvwxyz");
+	filterclassdef(lowercasealnum, "abcdefghijklmnopqrstuvwxyz0123456789");
+	filterclassdef(alpha, "abcdefghijklmnopqrstuvwxyz"
+						  "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	filterclassdef(alnum, "abcdefghijklmnopqrstuvwxyz"
+						  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+						  "0123456789");
+	filterclassdef(digit, "0123456789");
+	filterclassdef(decimal, "0123456789.");
+	filterclassdef(time, "0123456789:");
+	filterclassdef(hexadecimal, "0123456789abcdefABCDEF");
+	filterclassdef(uuid, "0123456789abcdef-");
+};
 
 #endif
 #endif

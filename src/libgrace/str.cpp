@@ -8,6 +8,8 @@
 //      012345678 TAB-O-METER should measure 4
 //      ^	^
 
+#define _STR_CPP 1
+
 #include <grace/str.h>
 #include <grace/regexpression.h>
 #include <grace/defaults.h>

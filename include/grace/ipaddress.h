@@ -71,8 +71,7 @@ public:
 						 {
 						 }
 						
-						 /// Assignment operator. The only one,
-						 /// copy-constructor will save the day.
+						 /// Assignment operator.
 						 /// \param o The original.
 	ipaddress			&operator= (const ipaddress &o)
 						 {
