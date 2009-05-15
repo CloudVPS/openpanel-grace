@@ -223,7 +223,7 @@ again:
 			
 			into.add ((const char *) inbuf.start, inbuf.end-inbuf.start);
 			inbuf.start = inbuf.end = inbuf.buf;
-			//if (insock.end - insock.start) goto again;
+			if (insock.end - insock.start) goto again;
 			return false;
 			
 		case SSL_SEND_RESPONSE:
