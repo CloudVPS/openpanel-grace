@@ -1,4 +1,4 @@
-0.9.30     Fri May 15 2009
+0.9.30     Fri May 15 2009                           <grace@openpanel.com>
 
            * Some BSD compatibility fixes.
            
