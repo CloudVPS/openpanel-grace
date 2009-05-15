@@ -1,8 +1,28 @@
-0.9.29     Thu Apr  2 2008                           <grace@openpanel.com>
+0.9.30     Fri May 15 2009
+
+           * Some BSD compatibility fixes.
+           
+           * Fix value::operator<< for merges of pure arrays.
+           
+           * Improvements to the 'grace mkapp' tool.
+           
+           * Fix in libgrace-ssl for situations where more than one
+             SSL payload is in the final packet of a connection.
+             
+           * Add value::join(char).
+           
+           * The file class is now iterable.
+           
+           * The file class now accepts a path in its constructor.
+           
+           * Some default filtersets for string::filter have been
+             added.
+
+0.9.29     Thu Apr  2 2009                           <grace@openpanel.com>
 
            * Lots of optimizations
 
-0.9.28     Thu Feb 12 2008                           <peter@openpanel.com>
+0.9.28     Thu Feb 12 2009                           <peter@openpanel.com>
 
            * Fixed error reporting in libgrace-ssl.
 
