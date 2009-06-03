@@ -324,6 +324,7 @@ int httpdfileshare::run (string &uri, string &postbody,
 			"Connection: %s\r\n"
 			"Content-type: %s\r\n"
 			"Date: %s\r\n"
+			"Last-Modified: %s\r\n"
 			"Expires: %s\r\n"
 			"Content-length: %i\r\n\r\n"
 			%format (keepalive ? "keepalive" : "close",
