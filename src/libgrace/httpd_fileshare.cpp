@@ -313,13 +313,15 @@ int httpdfileshare::run (string &uri, string &postbody,
 	
 	bool keepalive = env["keepalive"].bval();
 
+	#define HTTP_F "%a, %e %b %Y %H:%M:%S %Z"
+
 	value vinf = fs.getinfo (realpath);
 	timestamp tmodif = vinf["mtime"].uval();
 	timestamp tnow = core.time.now ();
 	string smodif = tmodif.format (HTTP_F);
 	if (inhdr.exists ("If-Modified-Since"))
 	{
-		if (inhdr["If-Modified-Since"] == smodif)
+		if (inhdr["If-Modified-Since"].sval() == smodif)
 		{
 			s.puts ("HTTP/1.1 304 NOT CHANGED\r\n"
 					"Connection: %s\r\n"
@@ -335,8 +337,6 @@ int httpdfileshare::run (string &uri, string &postbody,
 	if (maxage < 60) maxage = 60;
 	
 	timestamp texp = tnow.unixtime () + maxage;
-	
-	#define HTTP_F "%a, %e %b %Y %H:%M:%S %Z"
 	
 	s.puts ("HTTP/1.1 200 OK\r\n"
 			"Connection: %s\r\n"
