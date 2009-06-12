@@ -316,19 +316,25 @@ int httpdfileshare::run (string &uri, string &postbody,
 	value vinf = fs.getinfo (realpath);
 	timestamp tmodif = vinf["mtime"].uval();
 	timestamp tnow = core.time.now ();
-	timestamp texp = tnow.unixtime () + 3600;
+	
+	int maxage = (tnow.unixtime() - tmodif.unixtime() / 2);
+	if (maxage < 60) maxage = 60;
+	
+	timestamp texp = tnow.unixtime () + maxage;
 	
 	#define HTTP_F "%a, %e %b %Y %H:%M:%S %Z"
 	
 	s.puts ("HTTP/1.1 200 OK\r\n"
 			"Connection: %s\r\n"
 			"Content-type: %s\r\n"
+			"Cache-control: max-age=%i\r\n"
 			"Date: %s\r\n"
 			"Last-Modified: %s\r\n"
 			"Expires: %s\r\n"
 			"Content-length: %i\r\n\r\n"
 			%format (keepalive ? "keepalive" : "close",
 					 mimetype,
+					 maxage,
 					 tnow.format (HTTP_F),
 					 tmodif.format (HTTP_F),
 					 texp.format (HTTP_F),
