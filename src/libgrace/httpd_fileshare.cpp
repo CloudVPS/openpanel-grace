@@ -317,7 +317,7 @@ int httpdfileshare::run (string &uri, string &postbody,
 	timestamp tmodif = vinf["mtime"].uval();
 	timestamp tnow = core.time.now ();
 	
-	int maxage = (tnow.unixtime() - tmodif.unixtime() / 2);
+	int maxage = (tnow.unixtime() - tmodif.unixtime()) / 2;
 	if (maxage < 60) maxage = 60;
 	
 	timestamp texp = tnow.unixtime () + maxage;
