@@ -316,6 +316,20 @@ int httpdfileshare::run (string &uri, string &postbody,
 	value vinf = fs.getinfo (realpath);
 	timestamp tmodif = vinf["mtime"].uval();
 	timestamp tnow = core.time.now ();
+	string smodif = tmodif.format (HTTP_F);
+	if (inhdr.exists ("If-Modified-Since"))
+	{
+		if (inhdr["If-Modified-Since"] == smodif)
+		{
+			s.puts ("HTTP/1.1 304 NOT CHANGED\r\n"
+					"Connection: %s\r\n"
+					"Content-length: 0\r\n\r\n"
+					%format (keepalive ? "keepalive" : "close"));
+			
+			env["sentbytes"] = 0;
+			return -304;
+		}
+	}
 	
 	int maxage = (tnow.unixtime() - tmodif.unixtime()) / 2;
 	if (maxage < 60) maxage = 60;
@@ -336,7 +350,7 @@ int httpdfileshare::run (string &uri, string &postbody,
 					 mimetype,
 					 maxage,
 					 tnow.format (HTTP_F),
-					 tmodif.format (HTTP_F),
+					 smodif,
 					 texp.format (HTTP_F),
 					 outsz));
 
