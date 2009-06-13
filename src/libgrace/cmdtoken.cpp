@@ -550,11 +550,11 @@ string *cmdtoken_parseval (value &env, const string &_expr)
 			tmpval = strutil::split (tmpstr, ':');
 			if (env[tmpval[0].sval()].bval())
 			{
-				res = tmpstr[1];
+				res = tmpval[1];
 			}
 			else
 			{
-				res = tmpstr[2];
+				res = tmpval[2];
 			}
 			break;
 		
