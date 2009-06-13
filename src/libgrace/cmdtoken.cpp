@@ -487,7 +487,7 @@ string *cmdtoken_parseval (value &env, const string &_expr)
 	char prefix;
 	
 	expr = _expr;
-	static string prefices ("#/+`^~");
+	static string prefices ("#/+`^~?");
 	
 	if (prefices.strchr (_expr[0]) >= 0)
 	{
