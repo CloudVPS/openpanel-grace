@@ -544,6 +544,19 @@ string *cmdtoken_parseval (value &env, const string &_expr)
 		case '~':
 			res = strutil::urlencode (myval.sval());
 			break;
+			
+		case '?':
+			tmpstr = myval.sval().mid(1);
+			tmpval = strutil::split (tmpstr, ':');
+			if (env[tmpval[0].sval()].bval())
+			{
+				res = tmpstr[1];
+			}
+			else
+			{
+				res = tmpstr[2];
+			}
+			break;
 		
 		default:
 			res = myval.sval();
