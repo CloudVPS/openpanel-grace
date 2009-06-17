@@ -792,7 +792,7 @@ void httpdworker::run (void)
 				}
 				else // The rest gets the 500 EFINGER
 				{
-					s.puts ("HTTP/1.1 500 UNKNOWN METHOD '%S'\r\n" %format (cmd));
+					s.puts ("HTTP/1.1 501 METHOD '%S' NOT IMPLEMENTED\r\n" %format (cmd));
 					s.puts ("Content-type: text/html\r\n\r\n");
 					s.puts (errortext::httpd::html_body %format
 							  		(errortext::httpd::html_500_method));
