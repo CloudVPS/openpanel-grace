@@ -56,9 +56,9 @@ puts() {
   
   __WIDTH=$(expr $COLUMNS '-' 1)
   if [ -z "$__ECHON" ]; then
-	echotest=`echo -n`
+	echotest=`echo -ne`
 	if [ -z "$echotest" ]; then
-	  __ECHON="echo -n"
+	  __ECHON="echo -ne"
 	  __NHL=""
 	else
 	  __ECHON="echo"
