@@ -668,6 +668,8 @@ public:
 
 					 /// Remove child with string key.
 	void			 rmval (const statstring &);
+	
+	void			 rmval (const string &s) { rmval ((statstring)s); }
 
 					 /// Return last array member.
 	value			&last (void);
