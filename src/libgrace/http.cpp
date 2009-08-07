@@ -422,10 +422,20 @@ bool httpsocket::getChunked (string &into)
 				
 				if (! _timeout)
 				{
-					ln = _sock.read (chunksz);
-					if (ln.strlen())
+					while (todo > 0)
 					{
-						into.strcat (ln);
+						ln = _sock.read (todo);
+						if (ln.strlen())
+						{
+							into.strcat (ln);
+							todo -= ln.strlen();
+						}
+						else
+						{
+							errorcode = HTERR_BROKENPIPE;
+							error = errortext::http::connbroken %format (_sock.error());
+							return false;
+						}
 					}
 					ln = _sock.gets(); // get rid of trailing crlf;
 				}
