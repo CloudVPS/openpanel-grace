@@ -233,6 +233,11 @@ int httpdfileshare::run (string &uri, string &postbody,
 		return 500;
 	}
 	
+	if (uri.strchr ('?') >= 0)
+	{
+		uri.cropat ('?');
+	}
+	
 	string createdpath; //< String to build up the translated uri.
 	string realpath; //< The translated uri with translated pathvolume.
 	
