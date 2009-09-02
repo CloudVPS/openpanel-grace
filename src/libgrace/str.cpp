@@ -1612,13 +1612,20 @@ void string::crop (void)
 string *string::mid (int pos, int psz) const
 {
 	if (! data) return NULL;
-	
 	if ((psz<0)||(pos > (int) size)) return new string;
 	int sz = psz;
 	if (!sz) sz = (size-pos);
 	if ((pos+sz) > (int) size) sz = (size-pos);
 	
 	string *res = new (memory::retainable::onstack) string;
+
+	threadref_t me = getref();
+	if (data->threadref != me)
+	{
+		res->strcpy (data + pos + offs, sz);
+		return res;
+	}
+	
 	res->data = data;
 	data->refcount++;
 	res->size = sz;
