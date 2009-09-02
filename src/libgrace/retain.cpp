@@ -352,11 +352,14 @@ namespace memory
 	void retainable::operator delete (void *v)
 	{
 		block *b = (block *) ((char *) v - sizeof (block));
+
+#ifndef DISABLE_RETAINPOOLS
 		if (b->pool)
 		{
 			retainpool().free (v);
 			return;
 		}
+#endif
 		
 		::free (((char *)v)-sizeof (block));
 	}
