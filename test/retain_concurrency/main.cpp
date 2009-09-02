@@ -19,10 +19,13 @@ public:
 	{
 		returnclass (value) res retain;
 		
-		for (int i=0; i<128; ++i)
+		systemprocess proc ((string) "ps axuw");
+		proc.run ();
+		while (! proc.eof())
 		{
-			res.newval() = strutil::uuid();
+			res.newval() = proc.gets();
 		}
+		proc.serialize();
 		return &res;
 	}
 	void run (void)
