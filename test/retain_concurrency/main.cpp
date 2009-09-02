@@ -64,7 +64,8 @@ APPOBJECT(retain_concurrencytestApp);
 
 int retain_concurrencytestApp::main (void)
 {
-	exclusivesection (finishedCount) finishedCount = 0;	
+	exclusivesection (finishedCount) finishedCount = 0;
+	int waitTimeout = 0;
 
 	new testThread;
 	new testThread;
@@ -84,6 +85,17 @@ int retain_concurrencytestApp::main (void)
 		sharedsection (finishedCount)
 		{
 			if (finishedCount == 12) breaksection return 0;
+			if (finishedCount > 0)
+			{
+				waitTimeout++;
+				if (waitTimeout > 16)
+				{
+					breaksection
+					{
+						FAIL("timeout");
+					}
+				}
+			}
 		}
 		sleep (1);
 	}
