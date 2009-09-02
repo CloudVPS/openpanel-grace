@@ -190,7 +190,7 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 				opener = tagstack.pull ();
 				closer = tagtype.sval().mid (1);
 				
-				if (opener != closer)
+				if (closer.strlen() && (opener != closer))
 				{
 					if (err)
 					{
