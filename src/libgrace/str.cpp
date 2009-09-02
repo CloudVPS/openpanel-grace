@@ -1622,7 +1622,7 @@ string *string::mid (int pos, int psz) const
 	threadref_t me = getref();
 	if (data->threadref != me)
 	{
-		res->strcpy ((const char *)data + pos + offs, sz);
+		res->strcpy (((const char *)data) + pos + offs, sz);
 		return res;
 	}
 	
