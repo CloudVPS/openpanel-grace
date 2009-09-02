@@ -28,7 +28,7 @@ inline void __musleep (int ms)
 	(void) ::select (0, NULL, NULL, NULL, &tv);
 }
 
-extern bool __THREADED;
+extern volatile bool __THREADED;
 
 #ifdef PTHREAD_HAVE_RWLOCK
 

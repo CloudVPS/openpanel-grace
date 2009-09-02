@@ -1,7 +1,7 @@
 #include <grace/lock.h>
 #include <grace/system.h>
 
-bool __THREADED = false;
+volatile bool __THREADED = false;
 
 ////////////////////////////////////////////////////////// WITH RWLOCK ////
 #ifdef PTHREAD_HAVE_RWLOCK

@@ -9,7 +9,7 @@
 #include <pthread.h>
 #include <signal.h>
 
-extern bool __THREADED;
+extern volatile bool __THREADED;
 
 $exception (threadCreateException, "Could not create thread");
 $exception (threadGroupIndexException, "Invalid group index");
