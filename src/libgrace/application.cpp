@@ -452,6 +452,6 @@ int main (int argc, char *argv[])
 	a->init (argc, argv);
 	returnv = a->main ();
 	delete a;
-	__retain_ptr->exit ();
+	if (__retain_ptr) __retain_ptr->exit ();
 	return returnv;
 }

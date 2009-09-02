@@ -231,6 +231,9 @@ namespace memory
 	
 	void pool::exit (void)
 	{
+#ifdef DISABLE_RETAINPOOLS
+		return;
+#endif
 		sizepool *c, *nc, *nnc;
 		
 		c = pools;
