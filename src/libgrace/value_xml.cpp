@@ -195,9 +195,10 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 					if (err)
 					{
 						err->printf ("line %i: Unbalanced tag, got <%s> "
-									 "expected </%s>",
+									 "expected </%s> closer.strlen=%i",
 									 tag.getline(&xmlsource),
-									 tagtype.sval().str(), opener.str());
+									 tagtype.sval().str(), opener.str(),
+									 closer.strlen());
 					}
 					return false;
 				}
