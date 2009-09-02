@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <string.h>
 
+void __value_xml_breakme (void) {}
+
 // ========================================================================
 // METHOD ::loadxml
 // ----------------
@@ -192,6 +194,7 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 				
 				if (closer.strlen() && (opener != closer))
 				{
+					__value_xml_breakme();
 					if (err)
 					{
 						err->printf ("line %i: Unbalanced tag, got <%s> "
