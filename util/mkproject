@@ -34,7 +34,7 @@ template() {
   
   cat "$SCRIPTFILE" \
   	| grep --after-context=99999 "^### TEMPLATE $1$" \
-  	| tail +2 \
+  	| ( read line && cat ) \
   	| grep --before-context=99999 "^### END TEMPLATE $1$" \
   	| grep -v "^### " \
   	| sed -e "s/%DOMAIN%/${DOMAIN}/g;s/%APPNAME%/${APPNAME}/g;s/%APPCNAME%/${APPCNAME}/g;s/%APPDOMAIN%/${APPDOMAIN}/g"
