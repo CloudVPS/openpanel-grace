@@ -1,3 +1,7 @@
+0.9.31     Thu Sep  3 2009                           <grace@openpanel.com>
+
+           * Minor fixes
+
 0.9.30     Fri May 15 2009                           <grace@openpanel.com>
 
            * Some BSD compatibility fixes.
