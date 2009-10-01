@@ -2125,7 +2125,8 @@ size_t string::bingetvint (size_t offset, unsigned int &val) const
 			return offset+1;
 			
 		case 0x40:
-			val = ((data->v[offs+offset] & 0x3f) << 8) | (data->v[offset+1] &0xff);
+			val = ((data->v[offs+offset] & 0x3f) << 8) | 
+				  ( data->v[offs+offset+1] &0xff);
 			return offset+2;
 		
 		case 0x80:
