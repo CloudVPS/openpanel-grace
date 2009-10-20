@@ -1,0 +1,57 @@
+#!/usr/bin/make -f
+
+build:
+	cp version.id src/libgrace/version.id
+	cd src/libgrace && ./configure --prefix /usr && make && cd ../..
+	cd src/libgrace-pcre && ./configure --prefix /usr && make && cd ../..
+	cd src/libdbfile && ./configure --prefix /usr && make && cd ../..
+	cd src/matrixssl && ./configure --prefix /usr && make && cd ../..
+	cd src/libgrace-ssl && ./configure --prefix /usr && make && cd ../..
+	cd src/libquerido && ./configure --prefix /usr && make && cd ../..
+	touch build
+
+install:
+	dh_testdir
+	dh_testroot
+	dh_installdirs
+	## libgrace
+	install -m 644 lib/libgrace.so debian/libgrace/usr/lib/libgrace.so
+	## libgrace-devel
+	cp -r include/grace debian/libgrace-devel/usr/include/grace
+	cp util/mk* debian/libgrace-devel/usr/bin/util-grace/
+	cp util/grace debian/libgrace-devel/usr/bin/grace
+	ln -s util-grace/mkapp debian/libgrace-devel/usr/bin/mkapp
+	## libgrace-dbfile
+	install -m 644 lib/libdbfile.so debian/libgrace-dbfile/usr/lib
+	## libgrace-dbfile-devel
+	cp -r include/dbfile debian/libgrace-dbfile-devel/usr/include/dbfile
+	## libgrace-pcre
+	install -m 644 lib/libgrace-pcre.so debian/libgrace-pcre/usr/lib
+	## libgrace-querido
+	install -m 644 lib/libquerido.so debian/libgrace-querido/usr/lib
+	## libgrace-querido-devel
+	cp -r include/querido debian/libgrace-querido-devel/usr/include/querido
+	## libgrace-ssl
+	install -m 644 lib/libgrace-ssl.so debian/libgrace-ssl/usr/lib
+	## libgrace-ssl-devel
+	cp -r include/matrixssl debian/libgrace-ssl-devel/usr/include
+
+binary-indep:
+
+binary-arch binary: install
+	if [ -d debian/tmp ] ; then dh_install -a --sourcedir=debian/tmp ; fi
+	dh_installdocs -a
+	dh_installdeb -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_shlibdeps -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+clean:
+	rm -f build
+	make clean
+	dh_clean
+
+.PHONY: build binary binary-arch binary-indep clean install
