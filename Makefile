@@ -15,11 +15,11 @@ install: all
 	cd src/libgrace-pcre && ./makeinstall
 
 clean:
-	cd src/libgrace && make clean
-	cd src/libgrace-pcre && make clean
-	cd src/libdbfile && make clean
-	cd src/libgrace-ssl && make clean
-	cd src/libquerido && make clean
+	cd src/libgrace && make clean || true
+	cd src/libgrace-pcre && make clean || true
+	cd src/libdbfile && make clean || true
+	cd src/libgrace-ssl && make clean || true
+	cd src/libquerido && make clean || true
 
 grace:
 	cd src/libgrace && ./configure && make
