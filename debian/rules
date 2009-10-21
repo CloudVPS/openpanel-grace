@@ -1,6 +1,7 @@
 #!/usr/bin/make -f
 
-build:
+build: build-stamp
+build-stamp:
 	cp version.id src/libgrace/version.id
 	cd src/libgrace && ./configure --prefix /usr && make && cd ../..
 	cd src/libgrace-pcre && ./configure --prefix /usr && make && cd ../..
@@ -8,9 +9,10 @@ build:
 	cd src/matrixssl && ./configure --prefix /usr && make && cd ../..
 	cd src/libgrace-ssl && ./configure --prefix /usr && make && cd ../..
 	cd src/libquerido && ./configure --prefix /usr && make && cd ../..
-	touch build
+	touch build-stamp
 
-install:
+install: install-stamp
+install-stamp: build-stamp
 	dh_testdir
 	dh_testroot
 	dh_installdirs
@@ -36,9 +38,9 @@ install:
 	## libgrace-ssl-devel
 	cp -r include/matrixssl debian/libgrace-ssl-devel/usr/include
 
-binary-indep:
+binary-indep: build install
 
-binary-arch binary: install
+binary-arch: build install
 	if [ -d debian/tmp ] ; then dh_install -a --sourcedir=debian/tmp ; fi
 	dh_installdocs -a
 	dh_installdeb -a
@@ -54,4 +56,6 @@ clean:
 	make clean
 	dh_clean
 
-.PHONY: build binary binary-arch binary-indep clean install
+binary: binary-indep binary-arch
+
+.PHONY: build clean binary binary-arch binary-indep clean
