@@ -766,9 +766,14 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 	{
 		// If the stack is not empty, the file was fscked. Whine.
 	}
-	if (treestack.count())
+	if (tagstack.count())
 	{
-		if (err && (! err->strlen())) err->strcpy ("Unexpected end of file");
+		if (err && (! err->strlen()))
+		{
+			err->strcpy ("Unexpected end of file expecting %i "
+						 "context closes" %format (tagstack.count()));
+		}
+		
 		return false;
 		//throw (exUnexpectedEndOfFile);
 	}
