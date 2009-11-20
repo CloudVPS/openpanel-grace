@@ -1252,6 +1252,7 @@ valueauth::~valueauth (void)
 bool valueauth::authenticate (const string &username, const string &passwd,
 							  const string &uri)
 {
+	if (! username) return false;
 	bool checkedcrypted = false;
 	bool authenticated = false;
 	
@@ -1449,6 +1450,7 @@ void pwfileauth::loadfile (void)
 bool pwfileauth::authenticate (const string &u, const string &pw,
 							   const string &uri)
 {
+	if (! u) return false;
 	bool res;
 	checkrecord ();
 	lck.lockr ();
