@@ -40,7 +40,7 @@
 #include "../osLayer.h"
 
 #if defined(USE_RDTSCLL_TIME) || defined(RDTSC)
-#include <asm/timex.h>
+#include <sys/timex.h>
 /*
 	As defined in asm/timex.h for x386:
 */
