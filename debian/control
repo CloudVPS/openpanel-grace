@@ -31,7 +31,7 @@ Description: libgrace
 
 Package: libgrace-pcre
 Architecture: any
-Depends: 
+Depends: libpcre3
 Description: libgrace
  The grace c++ library.
 
