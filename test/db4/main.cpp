@@ -39,11 +39,23 @@ int db4testApp::main (void)
 	
 	db4file X;
 	X.setencoding (dbfile::shox);
+
+	try
+	{
+		X.db["peter"]["class"];
+		FAIL("no exception");
+	}
+	catch (dbfileNotOpenException e)
+	{
+	}
 	
 	file f;
 	f.openwrite ("out.dat");
 	
 	if (! X.open ("mydb")) FAIL ("could not re-open db");
+
+	if (X.db["peter"]["class"].sval() != "wanker") FAIL ("readclass");
+	
 	foreach (node, X.db)
 	{
 		f.printf ("%s (%s): %s\n", node.id().str(),
