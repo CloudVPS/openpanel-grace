@@ -1,0 +1,1 @@
+SELECT messages.sender AS sender, messages.subject AS subject, messages.date AS date FROM messages,users WHERE ((users.id=messages.rcpt) AND (users.name="john")) ORDER BY messages.date LIMIT 0,5

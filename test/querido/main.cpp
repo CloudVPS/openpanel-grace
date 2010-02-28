@@ -1,0 +1,47 @@
+#include <grace/application.h>
+#include <grace/filesystem.h>
+#include <querido/sqlite.h>
+#include <querido/table.h>
+
+class queridotestApp : public application
+{
+public:
+		 	 queridotestApp (void) :
+				application ("grace.testsuite.querido")
+			 {
+			 }
+			~queridotestApp (void)
+			 {
+			 }
+
+	int		 main (void);
+};
+
+APPOBJECT(queridotestApp);
+
+#define FAIL(foo) { ferr.printf (foo "\n"); return 1; }
+
+int queridotestApp::main (void)
+{
+	dbengine DB (dbengine::SQLite);
+	if (! DB.open ($("path","db.sqlite"))) FAIL ("dbopen");
+	
+	dbtable User (DB, "users");
+	dbtable Message (DB, "messages");
+	dbquery Q (DB);
+
+	Q.select (Message["sender"].as("sender"),
+			  Message["subject"],
+			  Message["date"]);
+	Q.from (User,Message);
+	Q.where ((User["id"] == Message["rcpt"]) && 
+			 (User["name"] == "john"));
+	Q.orderby (Message["date"]);
+	Q.limit (5);
+
+	fs.save ("out.sql", Q.sqlquery());
+	value res = Q.exec ();
+	res.savexml ("out.xml");
+	return 0;
+}
+

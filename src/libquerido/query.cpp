@@ -546,7 +546,7 @@ void dbquery::mksqlselect (void)
 	
 	foreach (tab, tables)
 	{
-		sql.strcat ("%s%s" %format (first ? "" : ",", tab));
+		sql.strcat ("%s%s" %format (first ? "" : ",", tab.id().str()));
 		first = false;
 	}
 	
@@ -569,7 +569,7 @@ void dbquery::mksqlselect (void)
 	
 	if (limitamount || limitoffs)
 	{
-		sql.strcat (" LIMIT %i,%i" %format (limitoffs, limitamount));
+		sql.strcat (" LIMIT %i,%i" %format (limitamount, limitoffs));
 	}
 }
 
