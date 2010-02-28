@@ -67,6 +67,8 @@ void gdbmfile::close (void)
 // ========================================================================
 bool gdbmfile::recordexists (const statstring &id)
 {
+	if (! dbopen) throw (dbfileNotOpenException());
+
 	int ret;
 	datum key = gdbm_datum_from_string (id.sval());
 	
