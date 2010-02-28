@@ -1,6 +1,16 @@
+0.9.32     Sun Feb 28 2010                           <grace@openpanel.com>
+
+           * Fix bug in pwfile/valueauth handling of empty username.
+           
+           * Fix some build issues for debian.
+
 0.9.31     Thu Sep  3 2009                           <grace@openpanel.com>
 
            * Minor fixes
+           
+           * Fix use of tail in mkproject
+           
+           * Add $?boolname:yes:no$ conditional handling to scriptparser.
 
 0.9.30     Fri May 15 2009                           <grace@openpanel.com>
 

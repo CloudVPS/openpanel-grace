@@ -192,6 +192,7 @@ httpdfileshare::httpdfileshare (httpd &pparent, const string &purimatch,
 				 $("tar", "application/tar") ->
 				 $("rpm", "application/x-rpm") ->
 				 $("cpp", "text/plain") ->
+				 $("css", "text/css") ->
 				 $("h", "text/plain") ->
 				 $("c", "text/plain");
 	}
