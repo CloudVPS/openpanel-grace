@@ -42,6 +42,13 @@ int queridotestApp::main (void)
 	fs.save ("out.sql", Q.sqlquery());
 	value res = Q.exec ();
 	res.savexml ("out.xml");
+	
+	User.setindexcolumn ("name");
+	fout.writeln ("** rowexist=%s" %format (User.rowexists("pi") ? "y":"n"));
+	fout.writeln ("** name=%s" %format (User.row("pi")["name"]));
+	res = User.row ("pi");
+	res.savexml ("row.xml");
+	
 	return 0;
 }
 

@@ -30,7 +30,7 @@ public:
 
 protected:					
 	void			 init (bool first);
-	void			 tovalue (value &into);
+	void			 tovalue (value &into) const;
 	
 	class dbrow		*row;
 	statstring		 id;
@@ -65,7 +65,8 @@ public:
 
 protected:
 	void				 init (bool first);
-	void				 tovalue (value &into);
+	void				 tovalue (value &into) const;
+	void				 toval (value &into);
 	
 	statstring			 rowid;
 	class dbtable		*table;

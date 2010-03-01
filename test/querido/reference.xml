@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<void insertid="0">
+<dict insertid="0">
 	<dict>
 		<string id="sender">pi</string>
 		<string id="subject">hello, world.</string>
@@ -25,4 +25,4 @@
 		<string id="subject">hello, world 5.</string>
 		<integer id="date">20100230</integer>
 	</dict>
-</void>
+</dict>

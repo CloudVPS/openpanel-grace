@@ -1,7 +1,7 @@
 #!/bin/sh
 testname=`echo "querido                        " | cut -c 1-24`
 $(which echo) -n "${testname}: "
-rm -f *.o out.xml out.sql db.sqlite >/dev/null 2>&1
+rm -f *.o out.xml row.xml out.sql db.sqlite >/dev/null 2>&1
 sqlite3 db.sqlite < db.sqlite.in
 $(which echo) -n "."
 make clean >/dev/null 2>&1 || $(which echo) -n ""
@@ -23,6 +23,10 @@ diff out.sql reference.sql >> test.log 2>&1 || {
   exit 1
 }
 diff out.xml reference.xml >> test.log 2>&1 || {
+  echo " failed (DIFF)"
+  exit 1
+}
+diff row.xml row.reference.xml >> test.log 2>&1 || {
   echo " failed (DIFF)"
   exit 1
 }
