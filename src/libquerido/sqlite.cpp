@@ -150,6 +150,8 @@ bool sqlitehandle::query (const string &sql, value &into,
 	}
 	
 	into ("insertid") = sqlite3_last_insert_rowid (hdl);
+	into.type (t_dict);
+	string tmp = into.tojson();
 	return true;
 }
 

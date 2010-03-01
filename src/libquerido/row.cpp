@@ -43,7 +43,7 @@ void dbcell::init (bool first)
 {
 }
 
-void dbcell::tovalue (value &into)
+void dbcell::tovalue (value &into) const
 {
 	into = val;
 }
@@ -66,6 +66,8 @@ dbrow::dbrow (dbtable *tab, const statstring &pid)
 	if (! table->eng->query (qry, tmp))
 	{
 	}
+	
+	string tj = tmp[0].tojson();
 	
 	foreach (col, tmp[0])
 	{
@@ -120,7 +122,12 @@ void dbrow::init (bool first)
 	//cells.clear ();
 }
 
-void dbrow::tovalue (value &into)
+void dbrow::tovalue (value &into) const
+{
+	return ((dbrow*)this)->toval (into);
+}
+
+void dbrow::toval (value &into)
 {
 	foreach (cell, cells)
 	{

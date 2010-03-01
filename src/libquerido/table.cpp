@@ -48,7 +48,11 @@ dbcolumn &dbtable::operator[] (const statstring &cname)
 
 dbrow &dbtable::row (const statstring &rowid)
 {
-	if (rows.exists (rowid)) return rows[rowid];
+	if (rows.exists (rowid))
+	{
+		return rows[rowid];
+	}
+
 	if (! rowexists (rowid)) 
 	{
 		throw (unknownRowException());
@@ -61,6 +65,7 @@ dbrow &dbtable::row (const statstring &rowid)
 
 bool dbtable::rowexists (const statstring &rowid)
 {
+	if (rows.exists (rowid)) return true;
 	value res;	
 	string qry;
 	qry.printf ("SELECT %s FROM %s WHERE %s=\"%S\"", idxid.str(),
