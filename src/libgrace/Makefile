@@ -82,7 +82,7 @@ depend:
 	@makedepend -Y../../include -fMakefile.depend *.cpp 2>/dev/null
 
 clean:
-	rm -f *.o *.a version.id version.cpp
+	rm -f *.o *.a version.cpp
 
 ../../include/grace/platform.h: platform.h
 	cp -f platform.h ../../include/grace/platform.h
