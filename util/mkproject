@@ -37,7 +37,7 @@ template() {
   	| ( read line && cat ) \
   	| grep --before-context=99999 "^### END TEMPLATE $1$" \
   	| grep -v "^### " \
-  	| sed -e "s/%DOMAIN%/${DOMAIN}/g;s/%APPNAME%/${APPNAME}/g;s/%APPCNAME%/${APPCNAME}/g;s/%APPDOMAIN%/${APPDOMAIN}/g"
+  	| sed -e "s/%DOMAIN%/${DOMAIN}/g;s/%APPCLASS%/${APPCLASS}/g;s/%APPNAME%/${APPNAME}/g;s/%APPCNAME%/${APPCNAME}/g;s/%APPDOMAIN%/${APPDOMAIN}/g"
 }
 
 # ===========================================================================
@@ -153,6 +153,9 @@ if [ -z "$APPDOMAIN" ]; then
 fi
 
 APPCNAME=`echo "$APPNAME" | sed -e "s/ //g" | tr A-Z a-z`
+cfirst=`echo "$APPCNAME" | cut -c1 | tr a-z A-Z`
+crest=`echo "$APPCNAME" | cut -c2-`
+APPCLASS="${cfirst}${crest}App"
 DIRNAME="${APPCNAME}"
 
 mkprojectdir
@@ -168,19 +171,19 @@ exit 0
 //  -------------------------------------------------------------------------
 /// Implementation template for application config.
 //  -------------------------------------------------------------------------
-typedef configdb<class %APPCNAME%App> appconfig;
+typedef configdb<class %APPCLASS%> appconfig;
 
 //  -------------------------------------------------------------------------
 /// Main application class.
 //  -------------------------------------------------------------------------
-class %APPCNAME%App : public application
+class %APPCLASS% : public application
 {
 public:
-		 		 %APPCNAME%App (void) :
+		 		 %APPCLASS% (void) :
 					application ("%APPDOMAIN%.%APPCNAME%"), conf (this)
 				 {
 				 }
-				~%APPCNAME%App (void)
+				~%APPCLASS%(void)
 				 {
 				 }
 	
@@ -204,16 +207,16 @@ protected:
 //  -------------------------------------------------------------------------
 /// Implementation template for application config.
 //  -------------------------------------------------------------------------
-typedef configdb<class %APPCNAME%App> appconfig;
+typedef configdb<class %APPCLASS%> appconfig;
 
 //  -------------------------------------------------------------------------
 /// Main daemon class.
 //  -------------------------------------------------------------------------
-class %APPCNAME%App : public daemon
+class %APPCLASS% : public daemon
 {
 public:
-		 				 %APPCNAME%App (void);
-		 				~%APPCNAME%App (void);
+		 				 %APPCLASS% (void);
+		 				~%APPCLASS% (void);
 		 	
 	int					 main (void);
 	
@@ -231,12 +234,12 @@ protected:
 ### TEMPLATE application_main_app
 #include "%APPCNAME%.h"
 
-$appobject(%APPCNAME%App);
+$appobject(%APPCLASS%);
 
 // ==========================================================================
-// METHOD %APPCNAME%App::main
+// METHOD %APPCLASS%::main
 // ==========================================================================
-int %APPCNAME%App::main (void)
+int %APPCLASS%::main (void)
 {
 	string conferr;
 	if (! conf.load ("%APPDOMAIN%.%APPCNAME%", conferr))
@@ -252,34 +255,34 @@ int %APPCNAME%App::main (void)
 ### TEMPLATE daemon_main_app
 #include "%APPCNAME%.h"
 
-$appobject (%APPCNAME%App);
+$appobject (%APPCLASS%);
 
 // ==========================================================================
-// CONSTRUCTOR %APPCNAME%App
+// CONSTRUCTOR %APPCLASS%
 // ==========================================================================
-%APPCNAME%App::%APPCNAME%App (void)
+%APPCLASS%::%APPCLASS% (void)
 	: daemon ("%APPDOMAIN%.%APPCNAME%"),
 	  conf (this)
 {
 }
 
 // ==========================================================================
-// DESTRUCTOR %APPCNAME%App
+// DESTRUCTOR %APPCLASS%
 // ==========================================================================
-%APPCNAME%App::~%APPCNAME%App (void)
+%APPCLASS%::~%APPCLASS% (void)
 {
 }
 
 // ==========================================================================
-// METHOD %APPCNAME%App::main
+// METHOD %APPCLASS%::main
 // ==========================================================================
-int %APPCNAME%App::main (void)
+int %APPCLASS%::main (void)
 {
 	string conferr; ///< Error return from configuration class.
 	
 	// Add watcher value for event log. System will daemonize after
 	// configuration was validated.
-	conf.addwatcher ("system/eventlog", &%APPCNAME%App::confLog);
+	conf.addwatcher ("system/eventlog", &%APPCLASS%::confLog);
 	
 	// Load will fail if watchers did not valiate.
 	if (! conf.load ("%APPDOMAIN%.%APPCNAME%", conferr))
@@ -304,9 +307,9 @@ int %APPCNAME%App::main (void)
 }
 
 // ==========================================================================
-// METHOD %APPCNAME%App::confLog
+// METHOD %APPCLASS%::confLog
 // ==========================================================================
-bool %APPCNAME%App::confLog (config::action act, keypath &kp,
+bool %APPCLASS%::confLog (config::action act, keypath &kp,
 							  const value &nval, const value &oval)
 {
 	string tstr;
@@ -348,21 +351,21 @@ bool %APPCNAME%App::confLog (config::action act, keypath &kp,
 //  -------------------------------------------------------------------------
 /// Implementation template for application config.
 //  -------------------------------------------------------------------------
-typedef configdb<class %APPCNAME%App> appconfig;
+typedef configdb<class %APPCLASS%> appconfig;
 
 //  -------------------------------------------------------------------------
 /// Main application class.
 //  -------------------------------------------------------------------------
-class %APPCNAME%App : public application
+class %APPCLASS% : public application
 {
 public:
-		 		 %APPCNAME%App (void) :
+		 		 %APPCLASS% (void) :
 					application ("%APPDOMAIN%.%APPCNAME%"),
 					conf (this)
 				 {
 				 	opt = $("-h", $("long", "--help"));
 				 }
-				~%APPCNAME%App (void)
+				~%APPCLASS% (void)
 				 {
 				 }
 	
@@ -386,16 +389,16 @@ protected:
 //  -------------------------------------------------------------------------
 /// Implementation template for application config.
 //  -------------------------------------------------------------------------
-typedef configdb<class %APPCNAME%App> appconfig;
+typedef configdb<class %APPCLASS%> appconfig;
 
 //  -------------------------------------------------------------------------
 /// Main daemon class.
 //  -------------------------------------------------------------------------
-class %APPCNAME%App : public daemon
+class %APPCLASS% : public daemon
 {
 public:
-		 				 %APPCNAME%App (void);
-		 				~%APPCNAME%App (void);
+		 				 %APPCLASS% (void);
+		 				~%APPCLASS% (void);
 		 	
 	int					 main (void);
 	
@@ -413,12 +416,12 @@ protected:
 ### TEMPLATE application_main_noapp
 #include "%APPCNAME%.h"
 
-$appobject(%APPCNAME%App);
+$appobject(%APPCLASS%);
 
 // ==========================================================================
-// METHOD %APPCNAME%App::main
+// METHOD %APPCLASS%::main
 // ==========================================================================
-int %APPCNAME%App::main (void)
+int %APPCLASS%::main (void)
 {
 	string conferr;
 	conf.loadini ("etc:%APPNAME%.conf", conferr);
@@ -430,12 +433,12 @@ int %APPCNAME%App::main (void)
 ### TEMPLATE daemon_main_noapp
 #include "%APPCNAME%.h"
 
-$appobject (%APPCNAME%App);
+$appobject (%APPCLASS%);
 
 // ==========================================================================
-// CONSTRUCTOR %APPCNAME%App
+// CONSTRUCTOR %APPCLASS%
 // ==========================================================================
-%APPCNAME%App::%APPCNAME%App (void)
+%APPCLASS%::%APPCLASS% (void)
 	: daemon ("%APPDOMAIN%.%APPCNAME%"),
 	  conf (this)
 {
@@ -443,22 +446,22 @@ $appobject (%APPCNAME%App);
 }
 
 // ==========================================================================
-// DESTRUCTOR %APPCNAME%App
+// DESTRUCTOR %APPCLASS%
 // ==========================================================================
-%APPCNAME%App::~%APPCNAME%App (void)
+%APPCLASS%::~%APPCLASS% (void)
 {
 }
 
 // ==========================================================================
-// METHOD %APPCNAME%App::main
+// METHOD %APPCLASS%::main
 // ==========================================================================
-int %APPCNAME%App::main (void)
+int %APPCLASS%::main (void)
 {
 	string conferr; ///< Error return from configuration class.
 	
 	// Add watcher value for event log. System will daemonize after
 	// configuration was validated.
-	conf.addwatcher ("system/eventlog", &%APPCNAME%App::confLog);
+	conf.addwatcher ("system/eventlog", &%APPCLASS%::confLog);
 	
 	// Load will fail if watchers did not valiate.
 	if (! conf.loadini ("etc:%APPNAME%.conf", conferr))
@@ -483,9 +486,9 @@ int %APPCNAME%App::main (void)
 }
 
 // ==========================================================================
-// METHOD %APPCNAME%App::confLog
+// METHOD %APPCLASS%::confLog
 // ==========================================================================
-bool %APPCNAME%App::confLog (config::action act, keypath &kp,
+bool %APPCLASS%::confLog (config::action act, keypath &kp,
 							  const value &nval, const value &oval)
 {
 	string tstr;
