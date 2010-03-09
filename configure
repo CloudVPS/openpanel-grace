@@ -4,6 +4,6 @@ for script in src/*/configure; do
   oldwd=$(pwd)
   echo "# Configuring $xpath"
   cd "$xpath"
-  ./configure $*
+  ./configure $* || exit 1
   cd "$oldwd"
 done
