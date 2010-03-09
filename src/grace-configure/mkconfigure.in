@@ -53,15 +53,20 @@ cat configure.in | {
 
 cat configure.in configure.dep | uniq -u | {
   while read line; do
-    if [ -f $BASEDIR/$line.rc ]; then
-      if [ ! -f .configtmp.$line ]; then
-        touch .configtmp.$line
-        echo "including $line"
-        cat $BASEDIR/$line.rc >> configure
-        cat $BASEDIR/$line.flags >> configure.flags
-        cat $BASEDIR/$line.include >> configure.include
-      fi
-    fi
+    firstchar=$(echo $line | cut -c1)
+    if [ "$firstchar" = "@" ]; then
+      echo "$line" | cut -c2- | sed -e "s/=/:/" >> configure.flags
+    else
+	  if [ -f $BASEDIR/$line.rc ]; then
+		if [ ! -f .configtmp.$line ]; then
+		  touch .configtmp.$line
+		  echo "including $line"
+		  cat $BASEDIR/$line.rc >> configure
+		  cat $BASEDIR/$line.flags >> configure.flags
+		  cat $BASEDIR/$line.include >> configure.include
+		fi
+	  fi
+	fi
   done
 }
 
