@@ -4,3 +4,8 @@ if [ ! -e configure.paths ]; then
   exit 1
 fi
 
+. configure.paths
+mkdir -p ${CONFIG_LIBPATH}/grace-configure
+mkdir -p ${CONFIG_BINPATH}/util-grace
+install -m 755 mkconfigure ${CONFIG_BINPATH}/util-grace/mkconfigure
+cp -p -R autoconfigure/* ${CONFIG_LIBPATH}/grace-configure/
