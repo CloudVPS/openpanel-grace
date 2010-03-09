@@ -15,12 +15,6 @@ fi
 # ---------------------------------------------------------------------------
 # Figure out where we are installed
 # ---------------------------------------------------------------------------
-
-if [ ! -e configure.paths ]; then
-  echo "Please run configure first" >&2
-  exit 1
-fi
-
 BASEDIR="##BASEDIR##"
 
 if [ -z "$BASEDIR" ]; then echo "cannot find basedir" >&2 ; exit 1; fi
