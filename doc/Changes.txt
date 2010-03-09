@@ -1,3 +1,10 @@
+0.9.33     Tue Mar  9 2010                           <grace@openpanel.com>
+
+           * Fix some issues in libquerido.
+           
+           * Add 'grace mkconfigure' utility to create a new configure
+             script out of a configure.in file.
+
 0.9.32     Sun Feb 28 2010                           <grace@openpanel.com>
 
            * Fix bug in pwfile/valueauth handling of empty username.
