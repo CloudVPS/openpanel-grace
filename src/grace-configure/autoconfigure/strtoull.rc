@@ -1,0 +1,29 @@
+# ---------------------------------------------------------------------------
+# Figure out whether we need libcrypt
+# ---------------------------------------------------------------------------
+
+cat >conftest.cpp <<EOF
+define _XOPEN_SOURCE 501
+#include <unistd.h>
+#include <stdlib.h>
+int main (int argc, char *argv[])
+{
+  unsigned long long foo;
+  foo = strtoull ("10",NULL,10);
+  return 0;
+}
+EOF
+
+saypending "checking whether strtoull works"
+if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >> configure.log 2>&1; then
+  STRTOULLDEF=""
+  saypass "yes"
+else
+  if $CXX -D_NETBSD_SOURCE $CXXFLAGS -o conftest.o -c conftest.cpp >> configure.log 2>&1; then
+    STROULLDEF="#define _NETBSD_SOURCE 1"
+    saypass "netbsd"
+  else
+    saypass "no - Your platform's strtoull is broken, your compile may fail!"
+  fi
+fi
+rm -f conftest.cpp conftest.o

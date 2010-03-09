@@ -1,0 +1,12 @@
+EOF
+
+saypass "done"
+# ---------------------------------------------------------------------------
+# Create the platform.h file
+# ---------------------------------------------------------------------------
+
+saypending "creating platform.h"
+
+cat >platform.h <<EOF
+#ifndef _PLATFORM_H
+#define _PLATFORM_H

@@ -1,0 +1,19 @@
+# ---------------------------------------------------------------------------
+# Figure out if there's a Vendorware C++ compiler on board
+# ---------------------------------------------------------------------------
+
+saypending "looking for ranlib"
+RANLIB=`which ranlib 2>/dev/null`
+if [ ! -f "$RANLIB" ]; then
+  RANLIB=""
+fi
+
+if [ -z "$RANLIB" ]; then
+  RANLIB=":"
+  saypass "n/a"
+else
+  saypass "found"
+  RANLIB="ranlib"
+fi
+
+

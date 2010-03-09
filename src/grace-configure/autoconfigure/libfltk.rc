@@ -1,0 +1,30 @@
+# ---------------------------------------------------------------------------
+# Figure out path to mysql include
+# ---------------------------------------------------------------------------
+
+saypending "looking for fltk include"
+for loc in /usr/local/include /usr/include /opt/include /usr/local/fltk/include /opt/fltk/include /usr/freeware/include $HOME/include; do
+  if [ -f "$loc/FL/Fl.H" ]; then
+    FLTKINC="$loc"
+  fi
+done
+if [ -z "$FLTKINC" ]; then
+  sayfail "failed - You need the FLTK library, available at http://www.fltk.org/"
+fi
+saypass "$FLTKINC"
+
+# ---------------------------------------------------------------------------
+# Figure out path to mysql static library
+# ---------------------------------------------------------------------------
+
+saypending "looking for fltk library"
+for loc in /usr/lib /usr/lib32 /usr/local/lib /usr/local/fltk /usr/local/fltk/lib /opt/fltk /opt/fltk/lib $HOME/lib; do
+  if [ -f "$loc/libfltk.a" ]; then
+    LIBFLTK="$loc/libfltk.a"
+  fi
+done
+if [ -z "$LIBFLTK" ]; then
+  sayfail "failed"
+  exit 1
+fi
+saypass "$LIBFLTK"

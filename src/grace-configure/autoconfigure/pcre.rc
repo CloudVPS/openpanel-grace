@@ -1,0 +1,33 @@
+# ---------------------------------------------------------------------------
+# Figure out path to FLTK include
+# ---------------------------------------------------------------------------
+
+saypending "looking for PCRE include"
+for loc in /sw/include /usr/local/include /usr/include $HOME/include \
+           /sw/include/pcre /opt/local/include /usr/local/include/pcre /usr/include/pcre $HOME/include/pcre; do
+  if [ -f "$loc/pcre.h" ]; then
+    PCREINC="$loc"
+  fi
+done
+if [ -z "$PCREINC" ]; then
+  sayfail "failed"
+  exit 1
+fi
+saypass "$PCREINC"
+
+# ---------------------------------------------------------------------------
+# Figure out path to PCRE library
+# ---------------------------------------------------------------------------
+
+saypending "looking for PCRE library"
+for loc in /sw/lib /usr/lib32 /usr/lib /opt/local/lib /usr/local/lib /usr/freeware/lib /usr/X11R6/lib /lib64 /usr/lib64 /usr/local/lib64 $HOME/lib; do
+  if [ -f "$loc/libpcre.$DYNEXT" ]; then
+    LIBPCRE="-L$loc -lpcre"
+  fi
+done
+if [ -z "$LIBPCRE" ]; then
+  sayfail "failed"
+  exit 1
+fi
+saypass "$LIBPCRE"
+

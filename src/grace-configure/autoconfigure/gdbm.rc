@@ -1,0 +1,17 @@
+# ---------------------------------------------------------------------------
+# Figure out path to GDBM include
+# ---------------------------------------------------------------------------
+
+saypending "looking for gdbm include"
+for loc in /usr/include /usr/local/include /opt/include /sw/include /opt/local/include $HOME/include; do
+  if [ -f "$loc/gdbm.h" ]; then
+    GDBMINC="$loc"
+  fi
+done
+if [ -z "$GDBMINC" ]; then
+  sayfailsoft "failed"
+else
+  saypass "$GDBMINC"
+  LIBGDBM="-L${GDBMINC}/../lib -lgdbm"
+  HAVEGDBM="-DHAVE_GDBM"
+fi

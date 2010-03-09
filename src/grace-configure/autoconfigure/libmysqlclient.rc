@@ -1,0 +1,38 @@
+# ---------------------------------------------------------------------------
+# Figure out path to mysql include
+# ---------------------------------------------------------------------------
+
+saypending "looking for mysql include"
+for loc in /usr/lib/mysql /usr/lib/mysql/include /usr/include/mysql /usr/local/include/mysql /usr/local/mysql/include /opt/mysql /opt/mysql/include /opt/include/mysql /usr/freeware/mysql /usr/freeware/include; do
+  if [ -f "$loc/mysql.h" ]; then
+    MYSQLINC="$loc"
+  fi
+done
+if [ -z "$MYSQLINC" ]; then
+  sayfailsoft "failed"
+else
+  IMYSQLINC="-I${MYSQLINC}"
+  saypass "$MYSQLINC"
+fi
+
+# ---------------------------------------------------------------------------
+# Figure out path to mysql static library
+# ---------------------------------------------------------------------------
+
+saypending "looking for mysql library"
+for loc in /usr/lib/mysql /usr/lib /usr/lib64 /usr/lib64/mysql /usr/local/lib /usr/local/lib/mysql /opt/mysql /usr/local/mysql/lib /usr/mysql/lib /opt/mysql/lib /usr/freeware/lib /usr/freeware/mysql/lib /usr/freeware/lib/mysql /usr/freeware/lib32 /usr/freeware/lib32/mysql; do
+  if [ -f "$loc/libmysqlclient.a" ]; then
+    LIBMYSQL="$loc/libmysqlclient.a"
+  else
+    if [ -f "$loc/libmysqlclient.so" ]; then
+      LIBMYSQL="-L$loc -lmysqlclient"
+    fi
+  fi
+done
+if [ -z "$LIBMYSQL" ]; then
+  sayfailsoft "failed"
+else
+  saypass "$LIBMYSQL"
+  HAVEMYSQL="-DHAVE_MYSQL"
+fi
+

@@ -1,0 +1,6 @@
+#endif
+EOF
+
+saypass "done"
+if [ -f configure.log ]; then rm -f configure.log; fi
+

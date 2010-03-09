@@ -1,0 +1,26 @@
+# ---------------------------------------------------------------------------
+# Figure out whether we need strings.h
+# ---------------------------------------------------------------------------
+
+cat >conftest.cpp <<EOF
+#include <string.h>
+
+int main (int argc, char *argv[])
+{
+	char test[128];
+	bzero (test, 127);
+}
+EOF
+
+saypending "checking whether bzero needs strings.h"
+if $CXX $CXXFLAGS -o conftest conftest.cpp >>configure.log 2>&1; then
+  STRINGS_INCLUDE=""
+  saypass "no"
+else
+  STRINGS_INCLUDE="#include <strings.h>"
+  saypass "yes"
+fi
+
+rm -f conftest.cpp conftest conftest.o
+
+

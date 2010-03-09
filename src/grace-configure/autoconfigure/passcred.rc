@@ -1,0 +1,29 @@
+# ---------------------------------------------------------------------------
+# Figure out if the system supports linux-style PASSCRED voudon
+# ---------------------------------------------------------------------------
+
+
+saypending "checking for SO_PASSCRED support"
+cat > conftest.cpp << EOF
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <sys/un.h>
+#include <sys/socket.h>
+#include <linux/socket.h>
+#include <sys/uio.h>
+
+int main (void)
+{
+    int foo;
+    setsockopt (1, SOL_SOCKET, SO_PASSCRED, (char *) &foo, sizeof(int));
+}
+
+EOF
+
+if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >> configure.log 2>&1; then
+  HAVE_PASSCRED="#define HAVE_PASSCRED 1"
+  saypass "yes"
+else
+  saypass "no"
+fi
+rm -f conftest.cpp conftest.o >/dev/null 2>&1

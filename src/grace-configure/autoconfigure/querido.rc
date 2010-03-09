@@ -1,0 +1,32 @@
+# ---------------------------------------------------------------------------
+# Figure out path to Querido include
+# ---------------------------------------------------------------------------
+
+saypending "looking for querido include"
+for loc in /sw/include /usr/local/include /usr/X11R6/include /usr/include $HOME/include ../../include $HOME/.include; do
+  if [ -f "$loc/querido/query.h" ]; then
+    QUERIDOINC="$loc"
+  fi
+done
+if [ -z "$QUERIDOINC" ]; then
+  sayfail "failed"
+  exit 1
+fi
+saypass "$QUERIDOINC"
+
+# ---------------------------------------------------------------------------
+# Figure out path to Querido static library
+# ---------------------------------------------------------------------------
+
+saypending "looking for querido library"
+for loc in /sw/lib /usr/lib32 /usr/lib64 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
+  if [ -f "$loc/libquerido.$DYNEXT" ]; then
+    LIBQUERIDO="-lquerido"
+  fi
+done
+if [ -z "$LIBQUERIDO" ]; then
+  sayfail "failed"
+  exit 1
+fi
+saypass "$LIBQUERIDO"
+

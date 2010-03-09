@@ -1,0 +1,32 @@
+# ---------------------------------------------------------------------------
+# Figure out path to FLTK include
+# ---------------------------------------------------------------------------
+
+saypending "looking for FLTK include"
+for loc in /usr/local/include /usr/X11R6/include /usr/include $HOME/include; do
+  if [ -f "$loc/FL/Fl.H" ]; then
+    FLTKINC="$loc"
+  fi
+done
+if [ -z "$FLTKINC" ]; then
+  sayfail "failed"
+  exit 1
+fi
+saypass "$FLTKINC"
+
+# ---------------------------------------------------------------------------
+# Figure out path to FLTK static library
+# ---------------------------------------------------------------------------
+
+saypending "looking for FLTK library"
+for loc in /usr/lib32 /usr/lib /usr/local/lib /usr/freeware/lib /usr/X11R6/lib $HOME/lib; do
+  if [ -f "$loc/libfltk.a" ]; then
+    LIBFLTK="$loc/libfltk.a"
+  fi
+done
+if [ -z "$LIBFLTK" ]; then
+  sayfail "failed"
+  exit 1
+fi
+saypass "$LIBFLTK"
+

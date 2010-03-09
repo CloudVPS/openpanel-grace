@@ -1,0 +1,8 @@
+# ---------------------------------------------------------------------------
+# Fake success
+# ---------------------------------------------------------------------------
+
+saypending "faking success"
+LIBFAKE=ohyeah
+FAKE_TYPEDEF="#define FAKE FAKE"
+saypass "yes"

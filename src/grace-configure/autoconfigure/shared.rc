@@ -1,0 +1,27 @@
+# ---------------------------------------------------------------------------
+# Figure out whether LD accepts -rdynamic
+# ---------------------------------------------------------------------------
+
+cat >conftest.cpp <<EOF
+#include <stdio.h>
+
+int main (int argc, char *argv[])
+{
+	printf ("hello, world\n");
+    return 0;
+}
+EOF
+
+saypending "checking whether $LD linker accepts -rdynamic"
+$CXX $CXXFLAGS -c conftest.cpp >/dev/null 2>&1
+if $LD $LDFLAGS -rdynamic -o conftest conftest.o >>configure.log 2>&1; then
+  RDYNAMIC="-rdynamic"
+  saypass "yes"
+else
+  RDYNAMIC=""
+  saypass "no"
+fi
+
+rm -f conftest.cpp conftest contest.o
+
+

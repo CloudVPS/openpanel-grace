@@ -1,0 +1,64 @@
+# ---------------------------------------------------------------------------
+# Figure out if there's a Vendorware C compiler on board
+# ---------------------------------------------------------------------------
+
+saypending "looking for c compiler"
+
+if [ ! -z "$CC" ]; then
+  CC=`which $CC 2>/dev/null`
+fi
+if [ -z "$CC" ]; then
+  CC=`which cc 2>/dev/null`
+fi
+
+if [ -f "$CC" ]; then
+  actually_gcc=`$CC -v 2>&1 | grep gcc | sed -e "s/^gcc/Y/"`
+
+  cat >conftest.c <<_eof_
+#include <stdio.h>
+int main(int argc, char *argv[]) {
+  printf ("hello, nurse\n");
+}
+_eof_
+
+  $CC -o conftest.bin conftest.c >/dev/null 2>&1 || actually_gcc="YES"
+  rm -f conftest.c conftest.bin >/dev/null 2>&1
+  if [ ! -z "$actually_gcc" ]; then
+    CC=""
+  fi
+fi
+
+DYNEXT="so"
+
+if [ -f "$CC" ]; then
+  saypass "$CC"
+  CFLAGS="-n32 -O"
+  SHARED="-shared"
+  LD="$CC"
+  LDSHARED="$CC -shared"
+  LDFLAGS=""
+else
+  CC=`which gcc`
+  if [ -f "$CC" ]; then
+    saypass "$CC"
+    CFLAGS=${CFLAGS}
+    un=`uname`
+    if [ "$un" = "Darwin" ]; then
+      SHARED="-fno-common"
+      LDSHARED="$CC $LDFLAGS -dynamiclib -undefined dynamic_lookup"
+      DYNEXT="dylib"
+    else
+      SHARED="-shared -fPIC"
+      LDSHARED="\$(COMPILER) -shared \$(LDFLAGS)"
+    fi
+    LD="$CC"
+    LDFLAGS=""
+  else
+    sayfail "fail"
+    CC=""
+    exit 1;
+  fi
+fi
+
+COMPILER=$CC
+COMPILERFLAGS=$CFLAGS

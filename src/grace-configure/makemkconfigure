@@ -1,0 +1,9 @@
+#!/bin/sh
+if [ ! -e configure.paths ]; then
+  echo "Please run configure first" >&2
+  exit 1
+fi
+
+. configure.paths
+TINAHGREV=$(cat ../libgrace/version.id)
+cat mkconfigure.in | sed -e "s/##TINAHGREV##/${TINAHGREV}/" | sed -e "s@##BASEDIR##@${CONFIG_LIBPATH}/grace-configure@" > mkconfigure

@@ -1,0 +1,31 @@
+# ---------------------------------------------------------------------------
+# Figure out path to libsqeleton include
+# ---------------------------------------------------------------------------
+
+saypending "looking for libsqeleton include"
+for loc in /usr/include/sqel /opt/include/sqel /usr/local/include/sqel; do
+  if [ -f "$loc/chop.h" ]; then
+    SQELINC="$loc"
+  fi
+done
+if [ -z "$SQELINC" ]; then
+  sayfail "failed"
+fi
+saypass "$SQELINC"
+
+# ---------------------------------------------------------------------------
+# Figure out path to libsqeleton.a
+# ---------------------------------------------------------------------------
+
+saypending "looking for libsqeleton"
+for loc in /usr/lib /opt/lib /usr/local/lib; do
+  if [ -f "$loc/libsqeleton.a" ]; then
+    LIBSQELETON="$loc/libsqeleton.a"
+  fi
+done
+if [ -z "$LIBSQELETON" ]; then
+  sayfail "failed"
+fi
+saypass "$LIBSQELETON"
+
+

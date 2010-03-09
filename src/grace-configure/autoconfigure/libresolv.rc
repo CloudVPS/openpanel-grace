@@ -1,0 +1,27 @@
+# ---------------------------------------------------------------------------
+# Figure out whether we need libdl
+# ---------------------------------------------------------------------------
+
+cat >conftest.cpp <<EOF
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <arpa/nameser.h>
+#include <resolv.h>
+
+int main (int argc, char *argv[])
+{
+   int i = res_query ("", 1, 1, NULL, 0);
+   return 1;
+}
+EOF
+
+saypending "checking whether res_query needs -lresolv"
+if $CXX $CXXFLAGS -o conftest conftest.cpp >>configure.log 2>&1; then
+  LIBRESOLV=""
+  saypass "no"
+else
+  LIBRESOLV="-lresolv"
+  saypass "yes"
+fi
+
+rm -f conftest.cpp conftest

@@ -1,0 +1,23 @@
+# ---------------------------------------------------------------------------
+# Figure out if struct tm has a tm_gmtoff
+# ---------------------------------------------------------------------------
+
+
+saypending "checking for tm_gmtoff support"
+cat > conftest.c << EOF
+#include <time.h>
+
+int main (int argc, char *argv[])
+{
+	struct tm t;
+	t.tm_gmtoff = 0;
+	return 0;
+}
+EOF
+if $COMPILER $COMPILERFLAGS -o conftest conftest.c >> configure.log 2>&1; then
+  HAVE_GMTOFF="#define HAVE_GMTOFF 1"
+  saypass "yes"
+else
+  saypass "no"
+fi
+rm -f conftest.c conftest >/dev/null 2>&1

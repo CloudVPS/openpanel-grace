@@ -1,0 +1,32 @@
+# ---------------------------------------------------------------------------
+# Figure out path to Grace include
+# ---------------------------------------------------------------------------
+
+saypending "looking for grace include"
+for loc in /sw/include /usr/local/include /usr/X11R6/include /usr/include $HOME/include ../../include $HOME/.include; do
+  if [ -f "$loc/grace/str.h" ]; then
+    GRACEINC="$loc"
+  fi
+done
+if [ -z "$GRACEINC" ]; then
+  sayfail "failed"
+  exit 1
+fi
+saypass "$GRACEINC"
+
+# ---------------------------------------------------------------------------
+# Figure out path to Grace library
+# ---------------------------------------------------------------------------
+
+saypending "looking for grace library"
+for loc in /sw/lib /usr/lib32 /usr/lib64 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
+  if [ -f "$loc/libgrace.$DYNEXT" ]; then
+    LIBGRACE="-L$loc -lgrace"
+  fi
+done
+if [ -z "$LIBGRACE" ]; then
+  sayfail "failed"
+  exit 1
+fi
+saypass "$LIBGRACE"
+

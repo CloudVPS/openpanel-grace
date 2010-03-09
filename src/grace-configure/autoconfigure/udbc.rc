@@ -1,0 +1,15 @@
+# ---------------------------------------------------------------------------
+# Figure out path to UDBC static library
+# ---------------------------------------------------------------------------
+
+saypending "looking for UDBC library"
+for loc in /usr/lib32 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib ../../lib $HOME/.lib; do
+  if [ -f "$loc/libudbc.a" ]; then
+    LIBUDBC="$loc/libudbc.a"
+  fi
+done
+if [ -z "$LIBUDBC" ]; then
+  sayfail "failed"
+fi
+saypass "$LIBUDBC"
+

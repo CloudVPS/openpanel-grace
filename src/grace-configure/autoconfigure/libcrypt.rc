@@ -1,0 +1,72 @@
+# ---------------------------------------------------------------------------
+# Figure out whether we need libcrypt
+# ---------------------------------------------------------------------------
+
+cat >conftest.c <<EOF
+#include <crypt.h>
+int main (int argc, char *argv[])
+{
+  char *test = crypt("abcdefg","aB");
+  return 1;
+}
+EOF
+
+saypending "checking where crypt() hides"
+if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.c >> configure.log 2>&1; then
+  CRYPTH="#include <crypt.h>"
+  saypass "crypt.h"
+else
+cat >conftest.c <<EOF
+#include <unistd.h>
+int main (int argc, char *argv[])
+{
+   char *test = crypt("abcdefg","aB");
+   return 1;
+}
+EOF
+if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.c >>configure.log 2>&1; then
+  saypass "unistd.h"
+  CRYPTDEFINE=""
+else
+cat >conftest.c <<EOF
+#define _XOPEN_SOURCE
+#include <unistd.h>
+int main (int argc, char *argv[])
+{
+   char *test = crypt("abcdefg","aB");
+   return 1;
+}
+EOF
+if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.c >>configure.log 2>&1; then
+  saypass "unistd.h"
+  CRYPTDEFINE="#define _XOPEN_SOURCE"
+else
+  cat > conftest.c <<EOF
+#define _XOPEN_SOURCE 5
+#include <unistd.h>
+int main (int argc, char *argv[])
+{
+    char *test = crypt("abcdefg","aB");
+    return 1;
+}
+EOF
+if $COMPILER $COMPILERFLAGS -o conftest.o -c conftest.c >> configure.log 2>&1; then
+  saypass "unistd.h (evil netbsd)"
+  CRYPTDEFINE="#define _XOPEN_SOURCE 5"
+else
+  sayfail "failed"
+  exit 1
+fi
+fi
+fi
+fi
+saypending "checking whether crypt needs -lcrypt"
+if $COMPILER $COMPILERFLAGS -o conftest conftest.o >>configure.log 2>&1; then
+  LIBCRYPT=""
+  saypass "no"
+else
+  LIBCRYPT="-lcrypt"
+  saypass "yes"
+fi
+
+rm -f conftest.c conftest.o conftest

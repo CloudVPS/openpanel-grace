@@ -1,0 +1,42 @@
+# ---------------------------------------------------------------------------
+# Figure out path to mysql include
+# ---------------------------------------------------------------------------
+
+saypending "looking for sqlite3 include"
+for loc in /opt/local/include /usr/local/include /usr/include ; do
+  if [ -f "$loc/sqlite3.h" ]; then
+    SQLITE3INC="$loc"
+  fi
+done
+if [ -z "$SQLITE3INC" ]; then
+  sayfailsoft "failed"
+else
+  saypass "$SQLITE3INC"
+  ISQLITE3INC="-I${SQLITE3INC}"
+fi
+
+# ---------------------------------------------------------------------------
+# Figure out path to sqlite3 static library
+# ---------------------------------------------------------------------------
+
+saypending "looking for sqlite3 library"
+for loc in /opt/local/lib /usr/local/lib /usr/lib64 /usr/lib ; do
+  if [ -f "$loc/libsqlite3.a" ]; then
+    SQLITE3LIB="$loc/libsqlite3.a"
+  else
+    if [ -f "$loc/libsqlite3.so" ]; then
+      SQLITE3LIB="-L$loc -lsqlite3"
+    else
+      if [ -f "$loc/libsqlite3.dylib" ]; then
+        SQLITE3LIB="-L$loc -lsqlite3"
+      fi
+    fi
+  fi
+done
+if [ -z "$SQLITE3LIB" ]; then
+  sayfailsoft "failed"
+else
+  saypass "$SQLITE3LIB"
+  HAVESQLITE3="-DHAVE_SQLITE3"
+fi
+
