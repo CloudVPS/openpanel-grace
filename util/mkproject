@@ -531,7 +531,7 @@ bool %APPCLASS%::confLog (config::action act, keypath &kp,
 ### TEMPLATE application_conf_xml
 <?xml version="1.0" encoding="utf-8"?>
 <%APPDOMAIN%.%APPCNAME%.conf>
-  <verbose>event.log</verbose>
+  <verbose>false</verbose>
 </%APPDOMAIN%.%APPCNAME%.conf>
 ### END TEMPLATE application_conf_xml
 
