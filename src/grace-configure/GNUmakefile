@@ -5,7 +5,7 @@ mkconfigure: mkconfigure.in
 	chmod +x mkconfigure
 
 clean:
-	rm -f mkconfig tests/tmp/*
+	rm -f mkconfigure tests/tmp/*
 	
 install: all
 	./makeinstall

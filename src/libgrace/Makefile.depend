@@ -1,16 +1,19 @@
+-n
 # DO NOT DELETE
 
 application.o: ../../include/grace/application.h ../../include/grace/value.h
 application.o: ../../include/grace/statstring.h ../../include/grace/str.h
 application.o: ../../include/grace/reg.h ../../include/grace/retain.h
 application.o: ../../include/grace/lock.h ../../include/grace/exception.h
-application.o: ../../include/grace/platform.h ../../include/grace/checksum.h
+application.o: ../../include/grace/checksum.h ../../include/grace/platform.h
 application.o: ../../include/grace/case.h ../../include/grace/file.h
 application.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 application.o: ../../include/grace/stack.h ../../include/grace/iterator.h
+application.o: ../../include/grace/generators.h
 application.o: ../../include/grace/currency.h
 application.o: ../../include/grace/dictionary.h ../../include/grace/array.h
 application.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+application.o: ../../include/grace/timestamp.h
 application.o: ../../include/grace/filesystem.h ../../include/grace/strutil.h
 application.o: ../../include/grace/regexpression.h
 application.o: ../../include/grace/perthread.h
@@ -21,42 +24,44 @@ cgi.o: ../../include/grace/system.h ../../include/grace/value.h
 cgi.o: ../../include/grace/statstring.h ../../include/grace/str.h
 cgi.o: ../../include/grace/reg.h ../../include/grace/retain.h
 cgi.o: ../../include/grace/lock.h ../../include/grace/exception.h
-cgi.o: ../../include/grace/platform.h ../../include/grace/checksum.h
+cgi.o: ../../include/grace/checksum.h ../../include/grace/platform.h
 cgi.o: ../../include/grace/case.h ../../include/grace/file.h
 cgi.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 cgi.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-cgi.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-cgi.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-cgi.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
-cgi.o: ../../include/grace/cgi.h ../../include/grace/application.h
-cgi.o: ../../include/grace/xmlschema.h ../../include/grace/filesystem.h
-cgi.o: ../../include/grace/strutil.h ../../include/grace/regexpression.h
-cgi.o: ../../include/grace/perthread.h ../../include/grace/commonkeys.h
-cgi.o: ../../include/grace/defaults.h
+cgi.o: ../../include/grace/generators.h ../../include/grace/currency.h
+cgi.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+cgi.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+cgi.o: ../../include/grace/timestamp.h ../../include/grace/cgi.h
+cgi.o: ../../include/grace/application.h ../../include/grace/xmlschema.h
+cgi.o: ../../include/grace/filesystem.h ../../include/grace/strutil.h
+cgi.o: ../../include/grace/regexpression.h ../../include/grace/perthread.h
+cgi.o: ../../include/grace/commonkeys.h ../../include/grace/defaults.h
 checksum.o: ../../include/grace/tolower.h
 cmdtoken.o: ../../include/grace/cmdtoken.h ../../include/grace/exception.h
-cmdtoken.o: ../../include/grace/value.h ../../include/grace/statstring.h
-cmdtoken.o: ../../include/grace/str.h ../../include/grace/reg.h
-cmdtoken.o: ../../include/grace/retain.h ../../include/grace/lock.h
-cmdtoken.o: ../../include/grace/platform.h ../../include/grace/checksum.h
+cmdtoken.o: ../../include/grace/checksum.h ../../include/grace/value.h
+cmdtoken.o: ../../include/grace/statstring.h ../../include/grace/str.h
+cmdtoken.o: ../../include/grace/reg.h ../../include/grace/retain.h
+cmdtoken.o: ../../include/grace/lock.h ../../include/grace/platform.h
 cmdtoken.o: ../../include/grace/case.h ../../include/grace/file.h
 cmdtoken.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 cmdtoken.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-cmdtoken.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-cmdtoken.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-cmdtoken.o: ../../include/grace/flags.h ../../include/grace/strutil.h
+cmdtoken.o: ../../include/grace/generators.h ../../include/grace/currency.h
+cmdtoken.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+cmdtoken.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+cmdtoken.o: ../../include/grace/timestamp.h ../../include/grace/strutil.h
 cmdtoken.o: ../../include/grace/regexpression.h
 commonkeys.o: ../../include/grace/commonkeys.h
 commonkeys.o: ../../include/grace/statstring.h ../../include/grace/value.h
 commonkeys.o: ../../include/grace/str.h ../../include/grace/reg.h
 commonkeys.o: ../../include/grace/retain.h ../../include/grace/lock.h
-commonkeys.o: ../../include/grace/exception.h ../../include/grace/platform.h
-commonkeys.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
-commonkeys.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-commonkeys.o: ../../include/grace/iterator.h ../../include/grace/currency.h
+commonkeys.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+commonkeys.o: ../../include/grace/platform.h ../../include/grace/file.h
+commonkeys.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
+commonkeys.o: ../../include/grace/stack.h ../../include/grace/iterator.h
+commonkeys.o: ../../include/grace/generators.h ../../include/grace/currency.h
 commonkeys.o: ../../include/grace/dictionary.h ../../include/grace/array.h
 commonkeys.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
-commonkeys.o: ../../include/grace/checksum.h ../../include/grace/case.h
+commonkeys.o: ../../include/grace/timestamp.h ../../include/grace/case.h
 configdb.o: ../../include/grace/configdb.h ../../include/grace/str.h
 configdb.o: ../../include/grace/value.h ../../include/grace/statstring.h
 configdb.o: ../../include/grace/checksum.h ../../include/grace/lock.h
@@ -64,15 +69,16 @@ configdb.o: ../../include/grace/exception.h ../../include/grace/platform.h
 configdb.o: ../../include/grace/case.h ../../include/grace/file.h
 configdb.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 configdb.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-configdb.o: ../../include/grace/currency.h ../../include/grace/retain.h
-configdb.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-configdb.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+configdb.o: ../../include/grace/generators.h ../../include/grace/currency.h
+configdb.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+configdb.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+configdb.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 configdb.o: ../../include/grace/reg.h ../../include/grace/xmlschema.h
 configdb.o: ../../include/grace/filesystem.h ../../include/grace/strutil.h
 configdb.o: ../../include/grace/regexpression.h
 configdb.o: ../../include/grace/perthread.h ../../include/grace/commonkeys.h
 configdb.o: ../../include/grace/validator.h ../../include/grace/system.h
-configdb.o: ../../include/grace/timestamp.h ../../include/grace/defaults.h
+configdb.o: ../../include/grace/defaults.h
 currency.o: ../../include/grace/currency.h ../../include/grace/str.h
 currency.o: ../../include/grace/value.h ../../include/grace/statstring.h
 currency.o: ../../include/grace/checksum.h ../../include/grace/lock.h
@@ -80,25 +86,27 @@ currency.o: ../../include/grace/exception.h ../../include/grace/platform.h
 currency.o: ../../include/grace/case.h ../../include/grace/file.h
 currency.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 currency.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-currency.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-currency.o: ../../include/grace/stringdict.h ../../include/grace/retain.h
-currency.o: ../../include/grace/flags.h ../../include/grace/reg.h
+currency.o: ../../include/grace/generators.h ../../include/grace/dictionary.h
+currency.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+currency.o: ../../include/grace/retain.h ../../include/grace/flags.h
+currency.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
 daemon.o: platform.h ../../include/grace/daemon.h
 daemon.o: ../../include/grace/application.h ../../include/grace/value.h
 daemon.o: ../../include/grace/statstring.h ../../include/grace/str.h
 daemon.o: ../../include/grace/reg.h ../../include/grace/retain.h
 daemon.o: ../../include/grace/lock.h ../../include/grace/exception.h
-daemon.o: ../../include/grace/platform.h ../../include/grace/checksum.h
+daemon.o: ../../include/grace/checksum.h ../../include/grace/platform.h
 daemon.o: ../../include/grace/case.h ../../include/grace/file.h
 daemon.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 daemon.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-daemon.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-daemon.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-daemon.o: ../../include/grace/flags.h ../../include/grace/thread.h
+daemon.o: ../../include/grace/generators.h ../../include/grace/currency.h
+daemon.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+daemon.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+daemon.o: ../../include/grace/timestamp.h ../../include/grace/thread.h
 daemon.o: ../../include/grace/eventq.h ../../include/grace/system.h
-daemon.o: ../../include/grace/timestamp.h ../../include/grace/filesystem.h
-daemon.o: ../../include/grace/strutil.h ../../include/grace/regexpression.h
-daemon.o: ../../include/grace/perthread.h ../../include/grace/defaults.h
+daemon.o: ../../include/grace/filesystem.h ../../include/grace/strutil.h
+daemon.o: ../../include/grace/regexpression.h ../../include/grace/perthread.h
+daemon.o: ../../include/grace/defaults.h
 defaults.o: ../../include/grace/defaults.h
 dictionary.o: ../../include/grace/dictionary.h ../../include/grace/str.h
 dictionary.o: ../../include/grace/value.h ../../include/grace/statstring.h
@@ -107,75 +115,79 @@ dictionary.o: ../../include/grace/exception.h ../../include/grace/platform.h
 dictionary.o: ../../include/grace/case.h ../../include/grace/file.h
 dictionary.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 dictionary.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-dictionary.o: ../../include/grace/currency.h ../../include/grace/retain.h
-dictionary.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+dictionary.o: ../../include/grace/generators.h ../../include/grace/currency.h
+dictionary.o: ../../include/grace/retain.h ../../include/grace/stringdict.h
+dictionary.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 dictionary.o: ../../include/grace/reg.h ../../include/grace/array.h
 eventq.o: ../../include/grace/eventq.h ../../include/grace/lock.h
-eventq.o: ../../include/grace/exception.h ../../include/grace/platform.h
-eventq.o: ../../include/grace/value.h ../../include/grace/statstring.h
-eventq.o: ../../include/grace/str.h ../../include/grace/reg.h
-eventq.o: ../../include/grace/retain.h ../../include/grace/checksum.h
+eventq.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+eventq.o: ../../include/grace/platform.h ../../include/grace/value.h
+eventq.o: ../../include/grace/statstring.h ../../include/grace/str.h
+eventq.o: ../../include/grace/reg.h ../../include/grace/retain.h
 eventq.o: ../../include/grace/case.h ../../include/grace/file.h
 eventq.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 eventq.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-eventq.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-eventq.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-eventq.o: ../../include/grace/flags.h
+eventq.o: ../../include/grace/generators.h ../../include/grace/currency.h
+eventq.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+eventq.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+eventq.o: ../../include/grace/timestamp.h
 file.o: ../../include/grace/file.h ../../include/grace/exception.h
-file.o: ../../include/grace/str.h ../../include/grace/value.h
-file.o: ../../include/grace/statstring.h ../../include/grace/checksum.h
+file.o: ../../include/grace/checksum.h ../../include/grace/str.h
+file.o: ../../include/grace/value.h ../../include/grace/statstring.h
 file.o: ../../include/grace/lock.h ../../include/grace/platform.h
 file.o: ../../include/grace/case.h ../../include/grace/visitor.h
 file.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-file.o: ../../include/grace/currency.h ../../include/grace/retain.h
-file.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-file.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+file.o: ../../include/grace/generators.h ../../include/grace/currency.h
+file.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+file.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+file.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 file.o: ../../include/grace/reg.h ../../include/grace/ringbuffer.h
 file.o: ../../include/grace/filesystem.h ../../include/grace/strutil.h
 file.o: ../../include/grace/regexpression.h ../../include/grace/perthread.h
 file.o: ../../include/grace/defaults.h
 filesystem.o: ../../include/grace/filesystem.h ../../include/grace/retain.h
 filesystem.o: ../../include/grace/lock.h ../../include/grace/exception.h
-filesystem.o: ../../include/grace/platform.h ../../include/grace/str.h
-filesystem.o: ../../include/grace/value.h ../../include/grace/statstring.h
-filesystem.o: ../../include/grace/checksum.h ../../include/grace/case.h
+filesystem.o: ../../include/grace/checksum.h ../../include/grace/platform.h
+filesystem.o: ../../include/grace/str.h ../../include/grace/value.h
+filesystem.o: ../../include/grace/statstring.h ../../include/grace/case.h
 filesystem.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 filesystem.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-filesystem.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-filesystem.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-filesystem.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+filesystem.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+filesystem.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+filesystem.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+filesystem.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 filesystem.o: ../../include/grace/reg.h ../../include/grace/strutil.h
 filesystem.o: ../../include/grace/regexpression.h
 filesystem.o: ../../include/grace/perthread.h ../../include/grace/system.h
-filesystem.o: ../../include/grace/timestamp.h
 fswatch.o: ../../include/grace/fswatch.h ../../include/grace/filesystem.h
 fswatch.o: ../../include/grace/retain.h ../../include/grace/lock.h
-fswatch.o: ../../include/grace/exception.h ../../include/grace/platform.h
-fswatch.o: ../../include/grace/str.h ../../include/grace/value.h
-fswatch.o: ../../include/grace/statstring.h ../../include/grace/checksum.h
+fswatch.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+fswatch.o: ../../include/grace/platform.h ../../include/grace/str.h
+fswatch.o: ../../include/grace/value.h ../../include/grace/statstring.h
 fswatch.o: ../../include/grace/case.h ../../include/grace/file.h
 fswatch.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 fswatch.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-fswatch.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-fswatch.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-fswatch.o: ../../include/grace/flags.h ../../include/grace/reg.h
+fswatch.o: ../../include/grace/generators.h ../../include/grace/currency.h
+fswatch.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+fswatch.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+fswatch.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
 fswatch.o: ../../include/grace/strutil.h ../../include/grace/regexpression.h
 fswatch.o: ../../include/grace/perthread.h
 http.o: ../../include/grace/http.h ../../include/grace/tcpsocket.h
 http.o: ../../include/grace/file.h ../../include/grace/exception.h
-http.o: ../../include/grace/str.h ../../include/grace/value.h
-http.o: ../../include/grace/statstring.h ../../include/grace/checksum.h
+http.o: ../../include/grace/checksum.h ../../include/grace/str.h
+http.o: ../../include/grace/value.h ../../include/grace/statstring.h
 http.o: ../../include/grace/lock.h ../../include/grace/platform.h
 http.o: ../../include/grace/case.h ../../include/grace/visitor.h
 http.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-http.o: ../../include/grace/currency.h ../../include/grace/retain.h
-http.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-http.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+http.o: ../../include/grace/generators.h ../../include/grace/currency.h
+http.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+http.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+http.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 http.o: ../../include/grace/reg.h ../../include/grace/ringbuffer.h
-http.o: ../../include/grace/system.h ../../include/grace/timestamp.h
-http.o: ../../include/grace/ipaddress.h ../../include/grace/valuable.h
+http.o: ../../include/grace/system.h ../../include/grace/ipaddress.h
 http.o: ../../include/grace/strutil.h ../../include/grace/regexpression.h
-http.o: ../../include/grace/defaults.h
+http.o: ../../include/grace/defaults.h ../../include/grace/application.h
 httpd.o: ../../include/grace/httpd.h ../../include/grace/thread.h
 httpd.o: ../../include/grace/str.h ../../include/grace/value.h
 httpd.o: ../../include/grace/statstring.h ../../include/grace/checksum.h
@@ -183,13 +195,13 @@ httpd.o: ../../include/grace/lock.h ../../include/grace/exception.h
 httpd.o: ../../include/grace/platform.h ../../include/grace/case.h
 httpd.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 httpd.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-httpd.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-httpd.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
-httpd.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-httpd.o: ../../include/grace/flags.h ../../include/grace/reg.h
+httpd.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+httpd.o: ../../include/grace/currency.h ../../include/grace/retain.h
+httpd.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+httpd.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+httpd.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
 httpd.o: ../../include/grace/eventq.h ../../include/grace/tcpsocket.h
-httpd.o: ../../include/grace/system.h ../../include/grace/timestamp.h
-httpd.o: ../../include/grace/ipaddress.h ../../include/grace/valuable.h
+httpd.o: ../../include/grace/system.h ../../include/grace/ipaddress.h
 httpd.o: ../../include/grace/cmdtoken.h ../../include/grace/strutil.h
 httpd.o: ../../include/grace/regexpression.h ../../include/grace/filesystem.h
 httpd.o: ../../include/grace/perthread.h ../../include/grace/defaults.h
@@ -204,18 +216,18 @@ httpd_fileshare.o: ../../include/grace/file.h
 httpd_fileshare.o: ../../include/grace/ringbuffer.h
 httpd_fileshare.o: ../../include/grace/visitor.h ../../include/grace/stack.h
 httpd_fileshare.o: ../../include/grace/iterator.h
+httpd_fileshare.o: ../../include/grace/generators.h
 httpd_fileshare.o: ../../include/grace/currency.h
 httpd_fileshare.o: ../../include/grace/retain.h
 httpd_fileshare.o: ../../include/grace/dictionary.h
 httpd_fileshare.o: ../../include/grace/array.h
 httpd_fileshare.o: ../../include/grace/stringdict.h
-httpd_fileshare.o: ../../include/grace/flags.h ../../include/grace/reg.h
+httpd_fileshare.o: ../../include/grace/flags.h
+httpd_fileshare.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
 httpd_fileshare.o: ../../include/grace/eventq.h
 httpd_fileshare.o: ../../include/grace/tcpsocket.h
 httpd_fileshare.o: ../../include/grace/system.h
-httpd_fileshare.o: ../../include/grace/timestamp.h
 httpd_fileshare.o: ../../include/grace/ipaddress.h
-httpd_fileshare.o: ../../include/grace/valuable.h
 httpd_fileshare.o: ../../include/grace/cmdtoken.h
 httpd_fileshare.o: ../../include/grace/strutil.h
 httpd_fileshare.o: ../../include/grace/regexpression.h
@@ -225,16 +237,17 @@ httpd_fileshare.o: ../../include/grace/defaults.h
 httpd_fileshare.o: ../../include/grace/xmlschema.h
 httpd_fileshare.o: ../../include/grace/commonkeys.h
 lock.o: ../../include/grace/lock.h ../../include/grace/exception.h
-lock.o: ../../include/grace/platform.h ../../include/grace/system.h
-lock.o: ../../include/grace/value.h ../../include/grace/statstring.h
-lock.o: ../../include/grace/str.h ../../include/grace/reg.h
-lock.o: ../../include/grace/retain.h ../../include/grace/checksum.h
+lock.o: ../../include/grace/checksum.h ../../include/grace/platform.h
+lock.o: ../../include/grace/system.h ../../include/grace/value.h
+lock.o: ../../include/grace/statstring.h ../../include/grace/str.h
+lock.o: ../../include/grace/reg.h ../../include/grace/retain.h
 lock.o: ../../include/grace/case.h ../../include/grace/file.h
 lock.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 lock.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-lock.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-lock.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-lock.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
+lock.o: ../../include/grace/generators.h ../../include/grace/currency.h
+lock.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+lock.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+lock.o: ../../include/grace/timestamp.h
 md5.o: ../../include/grace/md5.h ../../include/grace/str.h
 md5.o: ../../include/grace/value.h ../../include/grace/statstring.h
 md5.o: ../../include/grace/checksum.h ../../include/grace/lock.h
@@ -242,22 +255,23 @@ md5.o: ../../include/grace/exception.h ../../include/grace/platform.h
 md5.o: ../../include/grace/case.h ../../include/grace/file.h
 md5.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 md5.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-md5.o: ../../include/grace/currency.h ../../include/grace/retain.h
-md5.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-md5.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+md5.o: ../../include/grace/generators.h ../../include/grace/currency.h
+md5.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+md5.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+md5.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 md5.o: ../../include/grace/reg.h
 netdb.o: ../../include/grace/netdb.h ../../include/grace/value.h
 netdb.o: ../../include/grace/statstring.h ../../include/grace/str.h
 netdb.o: ../../include/grace/reg.h ../../include/grace/retain.h
 netdb.o: ../../include/grace/lock.h ../../include/grace/exception.h
-netdb.o: ../../include/grace/platform.h ../../include/grace/checksum.h
+netdb.o: ../../include/grace/checksum.h ../../include/grace/platform.h
 netdb.o: ../../include/grace/case.h ../../include/grace/file.h
 netdb.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 netdb.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-netdb.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-netdb.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-netdb.o: ../../include/grace/flags.h ../../include/grace/ipaddress.h
-netdb.o: ../../include/grace/valuable.h
+netdb.o: ../../include/grace/generators.h ../../include/grace/currency.h
+netdb.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+netdb.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+netdb.o: ../../include/grace/timestamp.h ../../include/grace/ipaddress.h
 process.o: ../../include/grace/process.h ../../include/grace/str.h
 process.o: ../../include/grace/value.h ../../include/grace/statstring.h
 process.o: ../../include/grace/checksum.h ../../include/grace/lock.h
@@ -265,14 +279,14 @@ process.o: ../../include/grace/exception.h ../../include/grace/platform.h
 process.o: ../../include/grace/case.h ../../include/grace/file.h
 process.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 process.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-process.o: ../../include/grace/currency.h ../../include/grace/retain.h
-process.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-process.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+process.o: ../../include/grace/generators.h ../../include/grace/currency.h
+process.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+process.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+process.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 process.o: ../../include/grace/reg.h ../../include/grace/strutil.h
 process.o: ../../include/grace/regexpression.h
 process.o: ../../include/grace/filesystem.h ../../include/grace/perthread.h
-process.o: ../../include/grace/system.h ../../include/grace/timestamp.h
-process.o: ../../include/grace/defaults.h
+process.o: ../../include/grace/system.h ../../include/grace/defaults.h
 reg.o: ../../include/grace/tolower.h
 regexpression.o: ../../include/grace/regexpression.h
 regexpression.o: ../../include/grace/str.h ../../include/grace/value.h
@@ -283,58 +297,61 @@ regexpression.o: ../../include/grace/platform.h ../../include/grace/case.h
 regexpression.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 regexpression.o: ../../include/grace/visitor.h ../../include/grace/stack.h
 regexpression.o: ../../include/grace/iterator.h
+regexpression.o: ../../include/grace/generators.h
 regexpression.o: ../../include/grace/currency.h ../../include/grace/retain.h
 regexpression.o: ../../include/grace/dictionary.h ../../include/grace/array.h
 regexpression.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
-regexpression.o: ../../include/grace/reg.h
+regexpression.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
 retain.o: ../../include/grace/retain.h ../../include/grace/lock.h
-retain.o: ../../include/grace/exception.h ../../include/grace/platform.h
-retain.o: ../../include/grace/defaults.h ../../include/grace/file.h
-retain.o: ../../include/grace/str.h ../../include/grace/value.h
-retain.o: ../../include/grace/statstring.h ../../include/grace/checksum.h
+retain.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+retain.o: ../../include/grace/platform.h ../../include/grace/defaults.h
+retain.o: ../../include/grace/file.h ../../include/grace/str.h
+retain.o: ../../include/grace/value.h ../../include/grace/statstring.h
 retain.o: ../../include/grace/case.h ../../include/grace/visitor.h
 retain.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-retain.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-retain.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-retain.o: ../../include/grace/flags.h ../../include/grace/reg.h
+retain.o: ../../include/grace/generators.h ../../include/grace/currency.h
+retain.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+retain.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+retain.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
 retain.o: ../../include/grace/ringbuffer.h
 ringbuffer.o: ../../include/grace/ringbuffer.h
-ringbuffer.o: ../../include/grace/exception.h ../../include/grace/str.h
-ringbuffer.o: ../../include/grace/value.h ../../include/grace/statstring.h
-ringbuffer.o: ../../include/grace/checksum.h ../../include/grace/lock.h
+ringbuffer.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+ringbuffer.o: ../../include/grace/str.h ../../include/grace/value.h
+ringbuffer.o: ../../include/grace/statstring.h ../../include/grace/lock.h
 ringbuffer.o: ../../include/grace/platform.h ../../include/grace/case.h
 ringbuffer.o: ../../include/grace/file.h ../../include/grace/visitor.h
 ringbuffer.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-ringbuffer.o: ../../include/grace/currency.h ../../include/grace/retain.h
-ringbuffer.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-ringbuffer.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+ringbuffer.o: ../../include/grace/generators.h ../../include/grace/currency.h
+ringbuffer.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+ringbuffer.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+ringbuffer.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 ringbuffer.o: ../../include/grace/reg.h
 session.o: ../../include/grace/session.h ../../include/grace/value.h
 session.o: ../../include/grace/statstring.h ../../include/grace/str.h
 session.o: ../../include/grace/reg.h ../../include/grace/retain.h
 session.o: ../../include/grace/lock.h ../../include/grace/exception.h
-session.o: ../../include/grace/platform.h ../../include/grace/checksum.h
+session.o: ../../include/grace/checksum.h ../../include/grace/platform.h
 session.o: ../../include/grace/case.h ../../include/grace/file.h
 session.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 session.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-session.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-session.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-session.o: ../../include/grace/flags.h ../../include/grace/strutil.h
+session.o: ../../include/grace/generators.h ../../include/grace/currency.h
+session.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+session.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+session.o: ../../include/grace/timestamp.h ../../include/grace/strutil.h
 session.o: ../../include/grace/regexpression.h ../../include/grace/system.h
-session.o: ../../include/grace/timestamp.h
 smtp.o: ../../include/grace/smtp.h ../../include/grace/tcpsocket.h
 smtp.o: ../../include/grace/file.h ../../include/grace/exception.h
-smtp.o: ../../include/grace/str.h ../../include/grace/value.h
-smtp.o: ../../include/grace/statstring.h ../../include/grace/checksum.h
+smtp.o: ../../include/grace/checksum.h ../../include/grace/str.h
+smtp.o: ../../include/grace/value.h ../../include/grace/statstring.h
 smtp.o: ../../include/grace/lock.h ../../include/grace/platform.h
 smtp.o: ../../include/grace/case.h ../../include/grace/visitor.h
 smtp.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-smtp.o: ../../include/grace/currency.h ../../include/grace/retain.h
-smtp.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-smtp.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+smtp.o: ../../include/grace/generators.h ../../include/grace/currency.h
+smtp.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+smtp.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+smtp.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 smtp.o: ../../include/grace/reg.h ../../include/grace/ringbuffer.h
-smtp.o: ../../include/grace/system.h ../../include/grace/timestamp.h
-smtp.o: ../../include/grace/ipaddress.h ../../include/grace/valuable.h
+smtp.o: ../../include/grace/system.h ../../include/grace/ipaddress.h
 smtp.o: ../../include/grace/strutil.h ../../include/grace/regexpression.h
 smtp.o: ../../include/grace/defaults.h
 smtpd.o: ../../include/grace/smtpd.h ../../include/grace/thread.h
@@ -344,40 +361,41 @@ smtpd.o: ../../include/grace/lock.h ../../include/grace/exception.h
 smtpd.o: ../../include/grace/platform.h ../../include/grace/case.h
 smtpd.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 smtpd.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-smtpd.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-smtpd.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
-smtpd.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-smtpd.o: ../../include/grace/flags.h ../../include/grace/reg.h
+smtpd.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+smtpd.o: ../../include/grace/currency.h ../../include/grace/retain.h
+smtpd.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+smtpd.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+smtpd.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
 smtpd.o: ../../include/grace/eventq.h ../../include/grace/tcpsocket.h
-smtpd.o: ../../include/grace/system.h ../../include/grace/timestamp.h
-smtpd.o: ../../include/grace/ipaddress.h ../../include/grace/valuable.h
+smtpd.o: ../../include/grace/system.h ../../include/grace/ipaddress.h
 smtpd.o: ../../include/grace/defaults.h ../../include/grace/filesystem.h
 smtpd.o: ../../include/grace/strutil.h ../../include/grace/regexpression.h
 smtpd.o: ../../include/grace/perthread.h
 socketpool.o: ../../include/grace/socketpool.h
 socketpool.o: ../../include/grace/tcpsocket.h ../../include/grace/file.h
-socketpool.o: ../../include/grace/exception.h ../../include/grace/str.h
-socketpool.o: ../../include/grace/value.h ../../include/grace/statstring.h
-socketpool.o: ../../include/grace/checksum.h ../../include/grace/lock.h
+socketpool.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+socketpool.o: ../../include/grace/str.h ../../include/grace/value.h
+socketpool.o: ../../include/grace/statstring.h ../../include/grace/lock.h
 socketpool.o: ../../include/grace/platform.h ../../include/grace/case.h
 socketpool.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-socketpool.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-socketpool.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
-socketpool.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-socketpool.o: ../../include/grace/flags.h ../../include/grace/reg.h
+socketpool.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+socketpool.o: ../../include/grace/currency.h ../../include/grace/retain.h
+socketpool.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+socketpool.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+socketpool.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
 socketpool.o: ../../include/grace/ringbuffer.h ../../include/grace/system.h
-socketpool.o: ../../include/grace/timestamp.h ../../include/grace/ipaddress.h
-socketpool.o: ../../include/grace/valuable.h
+socketpool.o: ../../include/grace/ipaddress.h
 statstring.o: ../../include/grace/statstring.h ../../include/grace/value.h
 statstring.o: ../../include/grace/str.h ../../include/grace/reg.h
 statstring.o: ../../include/grace/retain.h ../../include/grace/lock.h
-statstring.o: ../../include/grace/exception.h ../../include/grace/platform.h
-statstring.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
-statstring.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-statstring.o: ../../include/grace/iterator.h ../../include/grace/currency.h
+statstring.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+statstring.o: ../../include/grace/platform.h ../../include/grace/file.h
+statstring.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
+statstring.o: ../../include/grace/stack.h ../../include/grace/iterator.h
+statstring.o: ../../include/grace/generators.h ../../include/grace/currency.h
 statstring.o: ../../include/grace/dictionary.h ../../include/grace/array.h
 statstring.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
-statstring.o: ../../include/grace/checksum.h ../../include/grace/case.h
+statstring.o: ../../include/grace/timestamp.h ../../include/grace/case.h
 statstring.o: ../../include/grace/thread.h ../../include/grace/eventq.h
 str.o: ../../include/grace/str.h ../../include/grace/value.h
 str.o: ../../include/grace/statstring.h ../../include/grace/checksum.h
@@ -385,11 +403,12 @@ str.o: ../../include/grace/lock.h ../../include/grace/exception.h
 str.o: ../../include/grace/platform.h ../../include/grace/case.h
 str.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 str.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-str.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-str.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
-str.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-str.o: ../../include/grace/flags.h ../../include/grace/reg.h
-str.o: ../../include/grace/regexpression.h
+str.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+str.o: ../../include/grace/currency.h ../../include/grace/retain.h
+str.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+str.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+str.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
+str.o: ../../include/grace/regexpression.h ../../include/grace/defaults.h
 stringdict.o: ../../include/grace/dictionary.h ../../include/grace/str.h
 stringdict.o: ../../include/grace/value.h ../../include/grace/statstring.h
 stringdict.o: ../../include/grace/checksum.h ../../include/grace/lock.h
@@ -397,8 +416,9 @@ stringdict.o: ../../include/grace/exception.h ../../include/grace/platform.h
 stringdict.o: ../../include/grace/case.h ../../include/grace/file.h
 stringdict.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 stringdict.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-stringdict.o: ../../include/grace/currency.h ../../include/grace/retain.h
-stringdict.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+stringdict.o: ../../include/grace/generators.h ../../include/grace/currency.h
+stringdict.o: ../../include/grace/retain.h ../../include/grace/stringdict.h
+stringdict.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 stringdict.o: ../../include/grace/reg.h ../../include/grace/array.h
 strutil.o: ../../include/grace/strutil.h ../../include/grace/str.h
 strutil.o: ../../include/grace/value.h ../../include/grace/statstring.h
@@ -407,55 +427,58 @@ strutil.o: ../../include/grace/exception.h ../../include/grace/platform.h
 strutil.o: ../../include/grace/case.h ../../include/grace/file.h
 strutil.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 strutil.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-strutil.o: ../../include/grace/currency.h ../../include/grace/retain.h
-strutil.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-strutil.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+strutil.o: ../../include/grace/generators.h ../../include/grace/currency.h
+strutil.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+strutil.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+strutil.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 strutil.o: ../../include/grace/reg.h ../../include/grace/regexpression.h
 strutil.o: ../../include/grace/cmdtoken.h ../../include/grace/system.h
-strutil.o: ../../include/grace/timestamp.h ../../include/grace/defaults.h
+strutil.o: ../../include/grace/defaults.h
 system.o: ../../include/grace/system.h ../../include/grace/value.h
 system.o: ../../include/grace/statstring.h ../../include/grace/str.h
 system.o: ../../include/grace/reg.h ../../include/grace/retain.h
 system.o: ../../include/grace/lock.h ../../include/grace/exception.h
-system.o: ../../include/grace/platform.h ../../include/grace/checksum.h
+system.o: ../../include/grace/checksum.h ../../include/grace/platform.h
 system.o: ../../include/grace/case.h ../../include/grace/file.h
 system.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 system.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-system.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-system.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-system.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
-system.o: ../../include/grace/md5.h platform.h
+system.o: ../../include/grace/generators.h ../../include/grace/currency.h
+system.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+system.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+system.o: ../../include/grace/timestamp.h ../../include/grace/md5.h
+system.o: platform.h
 tcpsocket.o: ../../include/grace/tcpsocket.h ../../include/grace/file.h
-tcpsocket.o: ../../include/grace/exception.h ../../include/grace/str.h
-tcpsocket.o: ../../include/grace/value.h ../../include/grace/statstring.h
-tcpsocket.o: ../../include/grace/checksum.h ../../include/grace/lock.h
+tcpsocket.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+tcpsocket.o: ../../include/grace/str.h ../../include/grace/value.h
+tcpsocket.o: ../../include/grace/statstring.h ../../include/grace/lock.h
 tcpsocket.o: ../../include/grace/platform.h ../../include/grace/case.h
 tcpsocket.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-tcpsocket.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-tcpsocket.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
-tcpsocket.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-tcpsocket.o: ../../include/grace/flags.h ../../include/grace/reg.h
+tcpsocket.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+tcpsocket.o: ../../include/grace/currency.h ../../include/grace/retain.h
+tcpsocket.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+tcpsocket.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+tcpsocket.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
 tcpsocket.o: ../../include/grace/ringbuffer.h ../../include/grace/system.h
-tcpsocket.o: ../../include/grace/timestamp.h ../../include/grace/ipaddress.h
-tcpsocket.o: ../../include/grace/valuable.h ../../include/grace/defaults.h
+tcpsocket.o: ../../include/grace/ipaddress.h ../../include/grace/defaults.h
 tcpsocket.o: ../../include/grace/filesystem.h ../../include/grace/strutil.h
 tcpsocket.o: ../../include/grace/regexpression.h
 tcpsocket.o: ../../include/grace/perthread.h ../../include/grace/netdb.h
 tcpsocket.o: platform.h
 terminal.o: ../../include/grace/terminal.h ../../include/grace/file.h
-terminal.o: ../../include/grace/exception.h ../../include/grace/str.h
-terminal.o: ../../include/grace/value.h ../../include/grace/statstring.h
-terminal.o: ../../include/grace/checksum.h ../../include/grace/lock.h
+terminal.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+terminal.o: ../../include/grace/str.h ../../include/grace/value.h
+terminal.o: ../../include/grace/statstring.h ../../include/grace/lock.h
 terminal.o: ../../include/grace/platform.h ../../include/grace/case.h
 terminal.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-terminal.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-terminal.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
-terminal.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-terminal.o: ../../include/grace/flags.h ../../include/grace/reg.h
+terminal.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+terminal.o: ../../include/grace/currency.h ../../include/grace/retain.h
+terminal.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+terminal.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+terminal.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
 terminal.o: ../../include/grace/ringbuffer.h ../../include/grace/strutil.h
 terminal.o: ../../include/grace/regexpression.h
-terminal.o: ../../include/grace/defaults.h ../../include/grace/filesystem.h
-terminal.o: ../../include/grace/perthread.h
+terminal.o: ../../include/grace/defaults.h ../../include/grace/application.h
+terminal.o: ../../include/grace/filesystem.h ../../include/grace/perthread.h
 thread.o: ../../include/grace/thread.h ../../include/grace/str.h
 thread.o: ../../include/grace/value.h ../../include/grace/statstring.h
 thread.o: ../../include/grace/checksum.h ../../include/grace/lock.h
@@ -463,9 +486,10 @@ thread.o: ../../include/grace/exception.h ../../include/grace/platform.h
 thread.o: ../../include/grace/case.h ../../include/grace/file.h
 thread.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 thread.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-thread.o: ../../include/grace/currency.h ../../include/grace/retain.h
-thread.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-thread.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+thread.o: ../../include/grace/generators.h ../../include/grace/currency.h
+thread.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+thread.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+thread.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 thread.o: ../../include/grace/reg.h ../../include/grace/eventq.h
 timeofday.o: ../../include/grace/timeofday.h ../../include/grace/str.h
 timeofday.o: ../../include/grace/value.h ../../include/grace/statstring.h
@@ -474,12 +498,12 @@ timeofday.o: ../../include/grace/exception.h ../../include/grace/platform.h
 timeofday.o: ../../include/grace/case.h ../../include/grace/file.h
 timeofday.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 timeofday.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-timeofday.o: ../../include/grace/currency.h ../../include/grace/retain.h
-timeofday.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-timeofday.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+timeofday.o: ../../include/grace/generators.h ../../include/grace/currency.h
+timeofday.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+timeofday.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+timeofday.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 timeofday.o: ../../include/grace/reg.h ../../include/grace/strutil.h
 timeofday.o: ../../include/grace/regexpression.h ../../include/grace/system.h
-timeofday.o: ../../include/grace/timestamp.h
 timestamp.o: platform.h ../../include/grace/timestamp.h
 timestamp.o: ../../include/grace/str.h ../../include/grace/value.h
 timestamp.o: ../../include/grace/statstring.h ../../include/grace/checksum.h
@@ -487,11 +511,12 @@ timestamp.o: ../../include/grace/lock.h ../../include/grace/exception.h
 timestamp.o: ../../include/grace/platform.h ../../include/grace/case.h
 timestamp.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 timestamp.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-timestamp.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-timestamp.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
-timestamp.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-timestamp.o: ../../include/grace/flags.h ../../include/grace/reg.h
-timestamp.o: ../../include/grace/system.h ../../include/grace/strutil.h
+timestamp.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+timestamp.o: ../../include/grace/currency.h ../../include/grace/retain.h
+timestamp.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+timestamp.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+timestamp.o: ../../include/grace/reg.h ../../include/grace/system.h
+timestamp.o: ../../include/grace/strutil.h
 timestamp.o: ../../include/grace/regexpression.h
 tolower.o: ../../include/grace/tolower.h
 triplet.o: ../../include/grace/triplet.h ../../include/grace/str.h
@@ -501,10 +526,23 @@ triplet.o: ../../include/grace/exception.h ../../include/grace/platform.h
 triplet.o: ../../include/grace/case.h ../../include/grace/file.h
 triplet.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 triplet.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-triplet.o: ../../include/grace/currency.h ../../include/grace/retain.h
-triplet.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-triplet.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+triplet.o: ../../include/grace/generators.h ../../include/grace/currency.h
+triplet.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+triplet.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+triplet.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 triplet.o: ../../include/grace/reg.h
+udpsocket.o: ../../include/grace/udpsocket.h ../../include/grace/str.h
+udpsocket.o: ../../include/grace/value.h ../../include/grace/statstring.h
+udpsocket.o: ../../include/grace/checksum.h ../../include/grace/lock.h
+udpsocket.o: ../../include/grace/exception.h ../../include/grace/platform.h
+udpsocket.o: ../../include/grace/case.h ../../include/grace/file.h
+udpsocket.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
+udpsocket.o: ../../include/grace/stack.h ../../include/grace/iterator.h
+udpsocket.o: ../../include/grace/generators.h ../../include/grace/currency.h
+udpsocket.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+udpsocket.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+udpsocket.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
+udpsocket.o: ../../include/grace/reg.h ../../include/grace/ipaddress.h
 validator.o: ../../include/grace/validator.h ../../include/grace/str.h
 validator.o: ../../include/grace/value.h ../../include/grace/statstring.h
 validator.o: ../../include/grace/checksum.h ../../include/grace/lock.h
@@ -512,9 +550,10 @@ validator.o: ../../include/grace/exception.h ../../include/grace/platform.h
 validator.o: ../../include/grace/case.h ../../include/grace/file.h
 validator.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 validator.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-validator.o: ../../include/grace/currency.h ../../include/grace/retain.h
-validator.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-validator.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+validator.o: ../../include/grace/generators.h ../../include/grace/currency.h
+validator.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
+validator.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+validator.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 validator.o: ../../include/grace/reg.h ../../include/grace/regexpression.h
 validator.o: ../../include/grace/xmlschema.h ../../include/grace/filesystem.h
 validator.o: ../../include/grace/strutil.h ../../include/grace/perthread.h
@@ -523,50 +562,56 @@ valuable.o: ../../include/grace/valuable.h ../../include/grace/value.h
 valuable.o: ../../include/grace/statstring.h ../../include/grace/str.h
 valuable.o: ../../include/grace/reg.h ../../include/grace/retain.h
 valuable.o: ../../include/grace/lock.h ../../include/grace/exception.h
-valuable.o: ../../include/grace/platform.h ../../include/grace/checksum.h
+valuable.o: ../../include/grace/checksum.h ../../include/grace/platform.h
 valuable.o: ../../include/grace/case.h ../../include/grace/file.h
 valuable.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 valuable.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-valuable.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-valuable.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-valuable.o: ../../include/grace/flags.h
+valuable.o: ../../include/grace/generators.h ../../include/grace/currency.h
+valuable.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+valuable.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+valuable.o: ../../include/grace/timestamp.h
 value.o: platform.h ../../include/grace/value.h
 value.o: ../../include/grace/statstring.h ../../include/grace/str.h
 value.o: ../../include/grace/reg.h ../../include/grace/retain.h
 value.o: ../../include/grace/lock.h ../../include/grace/exception.h
-value.o: ../../include/grace/platform.h ../../include/grace/checksum.h
+value.o: ../../include/grace/checksum.h ../../include/grace/platform.h
 value.o: ../../include/grace/case.h ../../include/grace/file.h
 value.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 value.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-value.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-value.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-value.o: ../../include/grace/flags.h ../../include/grace/strutil.h
+value.o: ../../include/grace/generators.h ../../include/grace/currency.h
+value.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+value.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+value.o: ../../include/grace/timestamp.h ../../include/grace/strutil.h
 value.o: ../../include/grace/regexpression.h ../../include/grace/filesystem.h
 value.o: ../../include/grace/perthread.h ../../include/grace/valuable.h
+value.o: ../../include/grace/ipaddress.h
 value_ascii.o: ../../include/grace/value.h ../../include/grace/statstring.h
 value_ascii.o: ../../include/grace/str.h ../../include/grace/reg.h
 value_ascii.o: ../../include/grace/retain.h ../../include/grace/lock.h
-value_ascii.o: ../../include/grace/exception.h ../../include/grace/platform.h
-value_ascii.o: ../../include/grace/checksum.h ../../include/grace/case.h
+value_ascii.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+value_ascii.o: ../../include/grace/platform.h ../../include/grace/case.h
 value_ascii.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 value_ascii.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-value_ascii.o: ../../include/grace/iterator.h ../../include/grace/currency.h
+value_ascii.o: ../../include/grace/iterator.h
+value_ascii.o: ../../include/grace/generators.h
+value_ascii.o: ../../include/grace/currency.h
 value_ascii.o: ../../include/grace/dictionary.h ../../include/grace/array.h
 value_ascii.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
-value_ascii.o: ../../include/grace/strutil.h
+value_ascii.o: ../../include/grace/timestamp.h ../../include/grace/strutil.h
 value_ascii.o: ../../include/grace/regexpression.h
 value_ascii.o: ../../include/grace/filesystem.h
 value_ascii.o: ../../include/grace/perthread.h
 value_csv.o: ../../include/grace/value.h ../../include/grace/statstring.h
 value_csv.o: ../../include/grace/str.h ../../include/grace/reg.h
 value_csv.o: ../../include/grace/retain.h ../../include/grace/lock.h
-value_csv.o: ../../include/grace/exception.h ../../include/grace/platform.h
-value_csv.o: ../../include/grace/checksum.h ../../include/grace/case.h
+value_csv.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+value_csv.o: ../../include/grace/platform.h ../../include/grace/case.h
 value_csv.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 value_csv.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-value_csv.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-value_csv.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-value_csv.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+value_csv.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+value_csv.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+value_csv.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+value_csv.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 value_csv.o: ../../include/grace/strutil.h
 value_csv.o: ../../include/grace/regexpression.h
 value_csv.o: ../../include/grace/filesystem.h ../../include/grace/perthread.h
@@ -576,64 +621,102 @@ value_cxml.o: ../../include/grace/lock.h ../../include/grace/exception.h
 value_cxml.o: ../../include/grace/platform.h ../../include/grace/case.h
 value_cxml.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 value_cxml.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-value_cxml.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-value_cxml.o: ../../include/grace/retain.h ../../include/grace/dictionary.h
-value_cxml.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-value_cxml.o: ../../include/grace/flags.h ../../include/grace/reg.h
+value_cxml.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+value_cxml.o: ../../include/grace/currency.h ../../include/grace/retain.h
+value_cxml.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+value_cxml.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+value_cxml.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
 value_cxml.o: ../../include/grace/valueindex.h
 value_cxml.o: ../../include/grace/xmlschema.h
 value_cxml.o: ../../include/grace/filesystem.h ../../include/grace/strutil.h
 value_cxml.o: ../../include/grace/regexpression.h
 value_cxml.o: ../../include/grace/perthread.h
 value_cxml.o: ../../include/grace/commonkeys.h
+value_grace.o: ../../include/grace/value.h ../../include/grace/statstring.h
+value_grace.o: ../../include/grace/str.h ../../include/grace/reg.h
+value_grace.o: ../../include/grace/retain.h ../../include/grace/lock.h
+value_grace.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+value_grace.o: ../../include/grace/platform.h ../../include/grace/case.h
+value_grace.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
+value_grace.o: ../../include/grace/visitor.h ../../include/grace/stack.h
+value_grace.o: ../../include/grace/iterator.h
+value_grace.o: ../../include/grace/generators.h
+value_grace.o: ../../include/grace/currency.h
+value_grace.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+value_grace.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+value_grace.o: ../../include/grace/timestamp.h ../../include/grace/strutil.h
+value_grace.o: ../../include/grace/regexpression.h
+value_grace.o: ../../include/grace/filesystem.h
+value_grace.o: ../../include/grace/perthread.h
 value_ini.o: ../../include/grace/value.h ../../include/grace/statstring.h
 value_ini.o: ../../include/grace/str.h ../../include/grace/reg.h
 value_ini.o: ../../include/grace/retain.h ../../include/grace/lock.h
-value_ini.o: ../../include/grace/exception.h ../../include/grace/platform.h
-value_ini.o: ../../include/grace/checksum.h ../../include/grace/case.h
+value_ini.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+value_ini.o: ../../include/grace/platform.h ../../include/grace/case.h
 value_ini.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 value_ini.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-value_ini.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-value_ini.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-value_ini.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+value_ini.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+value_ini.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+value_ini.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+value_ini.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 value_ini.o: ../../include/grace/strutil.h
 value_ini.o: ../../include/grace/regexpression.h
 value_ip.o: ../../include/grace/value.h ../../include/grace/statstring.h
 value_ip.o: ../../include/grace/str.h ../../include/grace/reg.h
 value_ip.o: ../../include/grace/retain.h ../../include/grace/lock.h
-value_ip.o: ../../include/grace/exception.h ../../include/grace/platform.h
-value_ip.o: ../../include/grace/checksum.h ../../include/grace/case.h
+value_ip.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+value_ip.o: ../../include/grace/platform.h ../../include/grace/case.h
 value_ip.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 value_ip.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-value_ip.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-value_ip.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-value_ip.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+value_ip.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+value_ip.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+value_ip.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+value_ip.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 value_ip.o: ../../include/grace/strutil.h ../../include/grace/regexpression.h
 value_ip.o: ../../include/grace/filesystem.h ../../include/grace/perthread.h
+value_ip.o: ../../include/grace/ipaddress.h
+value_json.o: ../../include/grace/value.h ../../include/grace/statstring.h
+value_json.o: ../../include/grace/str.h ../../include/grace/reg.h
+value_json.o: ../../include/grace/retain.h ../../include/grace/lock.h
+value_json.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+value_json.o: ../../include/grace/platform.h ../../include/grace/case.h
+value_json.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
+value_json.o: ../../include/grace/visitor.h ../../include/grace/stack.h
+value_json.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+value_json.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+value_json.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+value_json.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
+value_json.o: ../../include/grace/strutil.h
+value_json.o: ../../include/grace/regexpression.h
+value_json.o: ../../include/grace/filesystem.h
+value_json.o: ../../include/grace/perthread.h
 value_php.o: ../../include/grace/value.h ../../include/grace/statstring.h
 value_php.o: ../../include/grace/str.h ../../include/grace/reg.h
 value_php.o: ../../include/grace/retain.h ../../include/grace/lock.h
-value_php.o: ../../include/grace/exception.h ../../include/grace/platform.h
-value_php.o: ../../include/grace/checksum.h ../../include/grace/case.h
+value_php.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+value_php.o: ../../include/grace/platform.h ../../include/grace/case.h
 value_php.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 value_php.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-value_php.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-value_php.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-value_php.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+value_php.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+value_php.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+value_php.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+value_php.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 value_php.o: ../../include/grace/strutil.h
 value_php.o: ../../include/grace/regexpression.h
 value_php.o: ../../include/grace/filesystem.h ../../include/grace/perthread.h
 value_plist.o: ../../include/grace/value.h ../../include/grace/statstring.h
 value_plist.o: ../../include/grace/str.h ../../include/grace/reg.h
 value_plist.o: ../../include/grace/retain.h ../../include/grace/lock.h
-value_plist.o: ../../include/grace/exception.h ../../include/grace/platform.h
-value_plist.o: ../../include/grace/checksum.h ../../include/grace/case.h
+value_plist.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+value_plist.o: ../../include/grace/platform.h ../../include/grace/case.h
 value_plist.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 value_plist.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-value_plist.o: ../../include/grace/iterator.h ../../include/grace/currency.h
+value_plist.o: ../../include/grace/iterator.h
+value_plist.o: ../../include/grace/generators.h
+value_plist.o: ../../include/grace/currency.h
 value_plist.o: ../../include/grace/dictionary.h ../../include/grace/array.h
 value_plist.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
-value_plist.o: ../../include/grace/strutil.h
+value_plist.o: ../../include/grace/timestamp.h ../../include/grace/strutil.h
 value_plist.o: ../../include/grace/regexpression.h
 value_plist.o: ../../include/grace/filesystem.h
 value_plist.o: ../../include/grace/perthread.h
@@ -642,13 +725,14 @@ value_plist.o: ../../include/grace/commonkeys.h
 value_shox.o: ../../include/grace/value.h ../../include/grace/statstring.h
 value_shox.o: ../../include/grace/str.h ../../include/grace/reg.h
 value_shox.o: ../../include/grace/retain.h ../../include/grace/lock.h
-value_shox.o: ../../include/grace/exception.h ../../include/grace/platform.h
-value_shox.o: ../../include/grace/checksum.h ../../include/grace/case.h
+value_shox.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+value_shox.o: ../../include/grace/platform.h ../../include/grace/case.h
 value_shox.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 value_shox.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-value_shox.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-value_shox.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-value_shox.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+value_shox.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+value_shox.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+value_shox.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+value_shox.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 value_shox.o: ../../include/grace/strutil.h
 value_shox.o: ../../include/grace/regexpression.h
 value_shox.o: ../../include/grace/filesystem.h
@@ -656,13 +740,14 @@ value_shox.o: ../../include/grace/perthread.h
 value_sort.o: ../../include/grace/value.h ../../include/grace/statstring.h
 value_sort.o: ../../include/grace/str.h ../../include/grace/reg.h
 value_sort.o: ../../include/grace/retain.h ../../include/grace/lock.h
-value_sort.o: ../../include/grace/exception.h ../../include/grace/platform.h
-value_sort.o: ../../include/grace/checksum.h ../../include/grace/case.h
+value_sort.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+value_sort.o: ../../include/grace/platform.h ../../include/grace/case.h
 value_sort.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 value_sort.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-value_sort.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-value_sort.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-value_sort.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+value_sort.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+value_sort.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+value_sort.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+value_sort.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 value_sort.o: ../../include/grace/strutil.h
 value_sort.o: ../../include/grace/regexpression.h
 value_sort.o: ../../include/grace/filesystem.h
@@ -676,50 +761,56 @@ value_strformat.o: ../../include/grace/file.h
 value_strformat.o: ../../include/grace/ringbuffer.h
 value_strformat.o: ../../include/grace/visitor.h ../../include/grace/stack.h
 value_strformat.o: ../../include/grace/iterator.h
+value_strformat.o: ../../include/grace/generators.h
 value_strformat.o: ../../include/grace/currency.h
 value_strformat.o: ../../include/grace/retain.h
 value_strformat.o: ../../include/grace/dictionary.h
 value_strformat.o: ../../include/grace/array.h
 value_strformat.o: ../../include/grace/stringdict.h
-value_strformat.o: ../../include/grace/flags.h ../../include/grace/reg.h
+value_strformat.o: ../../include/grace/flags.h
+value_strformat.o: ../../include/grace/timestamp.h ../../include/grace/reg.h
 value_strformat.o: ../../include/grace/strutil.h
 value_strformat.o: ../../include/grace/regexpression.h
 value_xml.o: ../../include/grace/value.h ../../include/grace/statstring.h
 value_xml.o: ../../include/grace/str.h ../../include/grace/reg.h
 value_xml.o: ../../include/grace/retain.h ../../include/grace/lock.h
-value_xml.o: ../../include/grace/exception.h ../../include/grace/platform.h
-value_xml.o: ../../include/grace/checksum.h ../../include/grace/case.h
+value_xml.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+value_xml.o: ../../include/grace/platform.h ../../include/grace/case.h
 value_xml.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 value_xml.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-value_xml.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-value_xml.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-value_xml.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+value_xml.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+value_xml.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+value_xml.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+value_xml.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 value_xml.o: ../../include/grace/strutil.h
 value_xml.o: ../../include/grace/regexpression.h
 value_xml.o: ../../include/grace/filesystem.h ../../include/grace/perthread.h
 value_xml.o: ../../include/grace/xmlschema.h ../../include/grace/commonkeys.h
+value_xml.o: ../../include/grace/ipaddress.h
 valueindex.o: ../../include/grace/valueindex.h ../../include/grace/value.h
 valueindex.o: ../../include/grace/statstring.h ../../include/grace/str.h
 valueindex.o: ../../include/grace/reg.h ../../include/grace/retain.h
 valueindex.o: ../../include/grace/lock.h ../../include/grace/exception.h
-valueindex.o: ../../include/grace/platform.h ../../include/grace/checksum.h
+valueindex.o: ../../include/grace/checksum.h ../../include/grace/platform.h
 valueindex.o: ../../include/grace/case.h ../../include/grace/file.h
 valueindex.o: ../../include/grace/ringbuffer.h ../../include/grace/visitor.h
 valueindex.o: ../../include/grace/stack.h ../../include/grace/iterator.h
-valueindex.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
-valueindex.o: ../../include/grace/array.h ../../include/grace/stringdict.h
-valueindex.o: ../../include/grace/flags.h
+valueindex.o: ../../include/grace/generators.h ../../include/grace/currency.h
+valueindex.o: ../../include/grace/dictionary.h ../../include/grace/array.h
+valueindex.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+valueindex.o: ../../include/grace/timestamp.h
 version.o: ../../include/grace/version.h
 xmlschema.o: ../../include/grace/value.h ../../include/grace/statstring.h
 xmlschema.o: ../../include/grace/str.h ../../include/grace/reg.h
 xmlschema.o: ../../include/grace/retain.h ../../include/grace/lock.h
-xmlschema.o: ../../include/grace/exception.h ../../include/grace/platform.h
-xmlschema.o: ../../include/grace/checksum.h ../../include/grace/case.h
+xmlschema.o: ../../include/grace/exception.h ../../include/grace/checksum.h
+xmlschema.o: ../../include/grace/platform.h ../../include/grace/case.h
 xmlschema.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 xmlschema.o: ../../include/grace/visitor.h ../../include/grace/stack.h
-xmlschema.o: ../../include/grace/iterator.h ../../include/grace/currency.h
-xmlschema.o: ../../include/grace/dictionary.h ../../include/grace/array.h
-xmlschema.o: ../../include/grace/stringdict.h ../../include/grace/flags.h
+xmlschema.o: ../../include/grace/iterator.h ../../include/grace/generators.h
+xmlschema.o: ../../include/grace/currency.h ../../include/grace/dictionary.h
+xmlschema.o: ../../include/grace/array.h ../../include/grace/stringdict.h
+xmlschema.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
 xmlschema.o: ../../include/grace/valueindex.h ../../include/grace/xmlschema.h
 xmlschema.o: ../../include/grace/filesystem.h ../../include/grace/strutil.h
 xmlschema.o: ../../include/grace/regexpression.h
@@ -728,16 +819,18 @@ xmlschema_base.o: ../../include/grace/value.h
 xmlschema_base.o: ../../include/grace/statstring.h ../../include/grace/str.h
 xmlschema_base.o: ../../include/grace/reg.h ../../include/grace/retain.h
 xmlschema_base.o: ../../include/grace/lock.h ../../include/grace/exception.h
-xmlschema_base.o: ../../include/grace/platform.h
-xmlschema_base.o: ../../include/grace/checksum.h ../../include/grace/case.h
+xmlschema_base.o: ../../include/grace/checksum.h
+xmlschema_base.o: ../../include/grace/platform.h ../../include/grace/case.h
 xmlschema_base.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 xmlschema_base.o: ../../include/grace/visitor.h ../../include/grace/stack.h
 xmlschema_base.o: ../../include/grace/iterator.h
+xmlschema_base.o: ../../include/grace/generators.h
 xmlschema_base.o: ../../include/grace/currency.h
 xmlschema_base.o: ../../include/grace/dictionary.h
 xmlschema_base.o: ../../include/grace/array.h
 xmlschema_base.o: ../../include/grace/stringdict.h
-xmlschema_base.o: ../../include/grace/flags.h ../../include/grace/xmlschema.h
+xmlschema_base.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
+xmlschema_base.o: ../../include/grace/xmlschema.h
 xmlschema_base.o: ../../include/grace/filesystem.h
 xmlschema_base.o: ../../include/grace/strutil.h
 xmlschema_base.o: ../../include/grace/regexpression.h
@@ -748,16 +841,18 @@ xmlschema_misc.o: ../../include/grace/value.h
 xmlschema_misc.o: ../../include/grace/statstring.h ../../include/grace/str.h
 xmlschema_misc.o: ../../include/grace/reg.h ../../include/grace/retain.h
 xmlschema_misc.o: ../../include/grace/lock.h ../../include/grace/exception.h
-xmlschema_misc.o: ../../include/grace/platform.h
-xmlschema_misc.o: ../../include/grace/checksum.h ../../include/grace/case.h
+xmlschema_misc.o: ../../include/grace/checksum.h
+xmlschema_misc.o: ../../include/grace/platform.h ../../include/grace/case.h
 xmlschema_misc.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 xmlschema_misc.o: ../../include/grace/visitor.h ../../include/grace/stack.h
 xmlschema_misc.o: ../../include/grace/iterator.h
+xmlschema_misc.o: ../../include/grace/generators.h
 xmlschema_misc.o: ../../include/grace/currency.h
 xmlschema_misc.o: ../../include/grace/dictionary.h
 xmlschema_misc.o: ../../include/grace/array.h
 xmlschema_misc.o: ../../include/grace/stringdict.h
-xmlschema_misc.o: ../../include/grace/flags.h ../../include/grace/xmlschema.h
+xmlschema_misc.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
+xmlschema_misc.o: ../../include/grace/xmlschema.h
 xmlschema_misc.o: ../../include/grace/filesystem.h
 xmlschema_misc.o: ../../include/grace/strutil.h
 xmlschema_misc.o: ../../include/grace/regexpression.h
@@ -768,16 +863,18 @@ xmlschema_root.o: ../../include/grace/value.h
 xmlschema_root.o: ../../include/grace/statstring.h ../../include/grace/str.h
 xmlschema_root.o: ../../include/grace/reg.h ../../include/grace/retain.h
 xmlschema_root.o: ../../include/grace/lock.h ../../include/grace/exception.h
-xmlschema_root.o: ../../include/grace/platform.h
-xmlschema_root.o: ../../include/grace/checksum.h ../../include/grace/case.h
+xmlschema_root.o: ../../include/grace/checksum.h
+xmlschema_root.o: ../../include/grace/platform.h ../../include/grace/case.h
 xmlschema_root.o: ../../include/grace/file.h ../../include/grace/ringbuffer.h
 xmlschema_root.o: ../../include/grace/visitor.h ../../include/grace/stack.h
 xmlschema_root.o: ../../include/grace/iterator.h
+xmlschema_root.o: ../../include/grace/generators.h
 xmlschema_root.o: ../../include/grace/currency.h
 xmlschema_root.o: ../../include/grace/dictionary.h
 xmlschema_root.o: ../../include/grace/array.h
 xmlschema_root.o: ../../include/grace/stringdict.h
-xmlschema_root.o: ../../include/grace/flags.h ../../include/grace/xmlschema.h
+xmlschema_root.o: ../../include/grace/flags.h ../../include/grace/timestamp.h
+xmlschema_root.o: ../../include/grace/xmlschema.h
 xmlschema_root.o: ../../include/grace/filesystem.h
 xmlschema_root.o: ../../include/grace/strutil.h
 xmlschema_root.o: ../../include/grace/regexpression.h
