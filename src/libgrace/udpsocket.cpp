@@ -12,6 +12,7 @@ $exception (udpSocketException, "Could not create UDP socket");
 // ==========================================================================
 udpsocket::udpsocket (void)
 {
+	boundport = 0;
 	sock = socket (AF_INET, SOCK_DGRAM, 0);
 	if (sock<0) throw (udpSocketException());
 }
