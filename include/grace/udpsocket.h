@@ -46,8 +46,13 @@ public:
 					 /// address.
 	void			 setbroadcast (bool to = true);
 	
+					 /// Get the bound port if none was given at binding
+					 /// time. 
+	int				 getport (void) { return boundport; }
+	
 protected:
 	int				 sock; ///< The actual datagram socket.
+	int				 boundport; ///< The port we bound to if we gave none.
 };
 
 #endif

@@ -40,6 +40,20 @@ bool udpsocket::bind (int port)
 		return false;
 	}
 	
+	if (port) boundport = port;
+	else
+	{
+		socklen_t slen = sizeof (local_addr);
+		if (! getsockname (sock, (struct sockaddr *) &local_addr, &slen))
+		{
+			boundport = local_addr.sin_port;
+		}
+		else
+		{
+			boundport = 0;
+		}
+	}
+	
 	return true;
 }
 
@@ -54,6 +68,20 @@ bool udpsocket::bind (ipaddress addr, int port)
 	if (::bind (sock, (struct sockaddr *) &local_addr, sizeof (local_addr)))
 	{
 		return false;
+	}
+	
+	if (port) boundport = port;
+	else
+	{
+		socklen_t slen = sizeof (local_addr);
+		if (! getsockname (sock, (struct sockaddr *) &local_addr, &slen))
+		{
+			boundport = local_addr.sin_port;
+		}
+		else
+		{
+			boundport = 0;
+		}
 	}
 	
 	return true;
