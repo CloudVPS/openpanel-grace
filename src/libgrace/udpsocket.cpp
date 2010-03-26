@@ -77,7 +77,7 @@ bool udpsocket::bind (ipaddress addr, int port)
 		socklen_t slen = sizeof (local_addr);
 		if (! getsockname (sock, (struct sockaddr *) &local_addr, &slen))
 		{
-			boundport = local_addr.sin_port;
+			boundport = ntohs (local_addr.sin_port);
 		}
 		else
 		{
