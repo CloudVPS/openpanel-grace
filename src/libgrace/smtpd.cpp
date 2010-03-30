@@ -296,7 +296,7 @@ mainloop:
 						st = SMTP_QUIT;
 						break;
 					}
-					if (line.strcasecmp ("auth plain") == 0)
+					if (line.strncasecmp ("auth plain", 10) == 0)
 					{
 						string inuser, inpass;
 						int wpos = 0;
