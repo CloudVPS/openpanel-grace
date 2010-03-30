@@ -100,6 +100,10 @@ public:
 							 /// of events sent by worker threads.
 		virtual void		 eventhandle (const value &ev);
 		
+		virtual bool		 authplain (const string &user,
+										const string &pass,
+										value &env);
+		
 							 /// Internal method, generates a 
 							 /// transaction-id.
 		string				*maketransactionid (void);

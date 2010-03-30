@@ -119,7 +119,8 @@ bool smtpsocket::sendmessage (const value &rcptto, const string &subject,
 // ---------------
 // Perform the actual SMTP ritual towards any number of senders.
 // ========================================================================
-bool smtpsocket::dosmtp (const value &rcpts, const string &body)
+bool smtpsocket::dosmtp (const value &rcpts, const string &body,
+						 bool genheaders)
 {
 	tcpsocket sock;
 	string line;
@@ -231,29 +232,32 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body)
 			return false;
 		}
 		
-		// ------------------------------------------------------------------
-		// Send headers.
-		// ------------------------------------------------------------------
-		if (! headers.exists ("From"))
+		if (genheaders)
 		{
-			sock.puts ("From: \"%S\" <%s>\r\n" %format (sendername,sender));
-		}
-		if (! headers.exists ("To"))
-		{
-			if (rcptto.count() == 1)
+			// --------------------------------------------------------------
+			// Send headers.
+			// --------------------------------------------------------------
+			if (! headers.exists ("From"))
 			{
-				sock.puts ("To: %s\r\n" %format (rcptto[0]));
+				sock.puts ("From: \"%S\" <%s>\r\n" %format (sendername,sender));
 			}
-			else
+			if (! headers.exists ("To"))
 			{
-				sock.puts ("To: Undisclosed Recipients\r\n");
+				if (rcptto.count() == 1)
+				{
+					sock.puts ("To: %s\r\n" %format (rcptto[0]));
+				}
+				else
+				{
+					sock.puts ("To: Undisclosed Recipients\r\n");
+				}
 			}
+			foreach (hdr, headers)
+			{
+				sock.puts ("%s: %s\r\n" %format (hdr.id(), hdr));
+			}
+			sock.puts ("\r\n");
 		}
-		foreach (hdr, headers)
-		{
-			sock.puts ("%s: %s\r\n" %format (hdr.id(), hdr));
-		}
-		sock.puts ("\r\n");
 		
 		// ------------------------------------------------------------------
 		// Send body followed by dot-on-a-single-line. Parse reply.

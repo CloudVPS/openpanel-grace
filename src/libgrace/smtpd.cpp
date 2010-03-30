@@ -296,15 +296,68 @@ mainloop:
 						st = SMTP_QUIT;
 						break;
 					}
+					if (line.strcasecmp ("auth plain") == 0)
+					{
+						string inuser, inpass;
+						int wpos = 0;
+						
+						s.puts ("334\r\n");
+						line = s.gets();
+						line = line.decode64();
+						
+						for (int i=0; i<line.strlen(); ++i)
+						{
+							if (line[i] == '\0') ++wpos;
+							else
+							{
+								if (wpos==1) inuser.strcat (line[i]);
+								else inpass.strcat (line[i]);
+							}
+						}
+						if (parent->authplain (inuser, inpass, env))
+						{
+							s.puts ("235 Authenticated\r\n");
+						}
+						else
+						{
+							s.puts ("535 No\r\n");
+						}
+						continue;
+					}
+					if (line.strcasecmp ("auth login") == 0)
+					{
+						string inuser, inpass;
+						s.puts ("334 VXNlcm5hbWU6\r\n");
+						inuser = s.gets();
+						inuser = inuser.decode64();
+						s.puts ("334 UGFzc3dvcmQ6\r\n");
+						inpass = s.gets();
+						inpass = inpass.decode64();
+						if (parent->authplain (inuser, inpass, env))
+						{
+							s.puts ("235 Authenticated\r\n");
+						}
+						else
+						{
+							s.puts ("535 No\r\n");
+						}
+						continue;
+					}
 					switch (st)
 					{
 						case SMTP_WAITHELO:
-							if ((line.strncasecmp ("HELO ", 5) == 0) ||
-								(line.strncasecmp ("EHLO ", 5) == 0))
+							if (line.strncasecmp ("HELO ", 5) == 0)
 							{
 								helostr = line.mid (5);
 								env["helo"] = helostr;
 								s.puts ("250 Hello %s\r\n" %format (exip));
+								st = SMTP_WAITMAILFROM;
+							}
+							else if (line.strncasecmp ("EHLO ", 5) == 0)
+							{
+								env["helo"] = line.mid (5);
+								s.puts ("250-Hello %s\r\n" %format (exip));
+								s.puts ("250 AUTH LOGIN PLAIN\r\n");
 								st = SMTP_WAITMAILFROM;
 							}
 							else
@@ -493,6 +546,12 @@ bool smtpd::deliver (const string &mailbody, value &env)
 	fs.save (fn_dat, mailbody);
 	env.savexml (fn_xml);
 	return true;
+}
+
+bool smtpd::authplain (const string &user, const string &pass,
+					   value &env)
+{
+	return false;
 }
 
 // ==========================================================================

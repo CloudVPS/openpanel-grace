@@ -105,7 +105,8 @@ public:
 
 					 /// Act on an SMTP transaction. Assumes all
 					 /// proper headers and properties have been set.
-	bool			 dosmtp (const value &rcptto, const string &body);
+	bool			 dosmtp (const value &rcptto, const string &body,
+							 bool genheaders = true);
 
 protected:
 	string			 smtphost; ///< The hostname of the remote SMTP.
