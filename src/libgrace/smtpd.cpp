@@ -324,7 +324,7 @@ mainloop:
 						}
 						else
 						{
-							s.puts ("535 No\r\n");
+							s.puts ("535 Authentication failed\r\n");
 						}
 						continue;
 					}
@@ -343,7 +343,7 @@ mainloop:
 						}
 						else
 						{
-							s.puts ("535 No\r\n");
+							s.puts ("535 Authentication failed\r\n");
 						}
 						continue;
 					}
@@ -408,12 +408,12 @@ mainloop:
 								if (parent->checkrecipient (mailfrom, myrcpt, env))
 								{
 									env["rcpt"].newval() = myrcpt;
-									s.printf ("250 OK Sure\r\n");
+									s.printf ("250 OK\r\n");
 									st = SMTP_WAITRCPTORDATA;
 								}
 								else
 								{
-									s.printf ("550 NO GO\r\n");
+									s.printf ("550 Recipient rejected\r\n");
 								}
 							}
 							else
@@ -467,7 +467,7 @@ mainloop:
 								$("status", 550));
 						}
 
-						s.printf ("550 Failed\r\n");
+						s.printf ("550 Delivery failed\r\n");
 						st = SMTP_WAITMAILFROM;
 					}
 					break;
