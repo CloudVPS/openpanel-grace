@@ -31,7 +31,7 @@ public:
 	bool		 checkrecipient (const string &mf, const string &rc,
 								 value &env)
 				 {
-				 	return true;
+				 	return (env["authenticated"]);
 				 }
 	bool		 deliver (const string &body, value &env)
 				 {
@@ -40,6 +40,16 @@ public:
 				 	env.rmval ("helo");
 				 	env.savexml ("out.xml");
 				 	return true;
+				 }
+	bool		 authplain (const string &user, const string &pass,
+							value &env)
+				 {
+				 	if (user == "johndoe" && pass == "kylesmom")
+				 	{
+				 		env["authenticated"] = true;
+				 		return true;
+				 	}
+				 	return false;
 				 }
 };
 
@@ -56,11 +66,18 @@ int smtptestApp::main (void)
 	
 	ss.setsmtphost ("localhost", 8525);
 	ss.setsender ("pi@madscience.nl", "Pim van Riezen");
-	if (! ss.sendmessage ("test@test.test", "test", "testing one two three"))
+	if (ss.sendmessage ("test@test.test", "test", "testing one two three"))
 	{
-		ferr.printf ("FAIL sendmessage: %s\n", ss.error().str());
+		ferr.printf ("FAIL sendmessage noauth: %s\n", ss.error().str());
 		return 1;
 	}
+	ss.authenticate ("johndoe","kylesmom");
+	if (! ss.sendmessage ("test@test.test", "test", "testing one two three"))
+	{
+		ferr.printf ("FAIL sendmessage authenticated: %s\n", ss.error().str());
+		return 1;
+	}
+	
 	sd.shutdown();
 	return 0;
 }

@@ -25,6 +25,10 @@ public:
 					 /// any acts of blowing things up.
 					~smtpsocket (void);
 	
+					 /// Use AUTH PLAIN authentication for the outbound
+					 /// SMTP connection.
+	void			 authenticate (const string &user, const string &pass);
+	
 					 /// Sets the address of the SMTP server.
 					 /// \param hostname SMTP hostname.
 					 /// \param port SMTP tcp port defaults to 25.
@@ -117,6 +121,8 @@ protected:
 	value			 headers; ///< Output headers.
 	string			 err; ///< Error data.
 	int				 erno; ///< Error code.
+	string			 username; ///< Authentication username.
+	string			 password; ///< Authentication password.
 };
 
 #endif

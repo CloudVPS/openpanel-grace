@@ -302,6 +302,7 @@ namespace errortext
 		sparameter rcptto defaultvalue ("SMTP RCPT TO error: ");
 		sparameter data defaultvalue ("SMTP DATA error: ");
 		sparameter deliver defaultvalue ("SMTP Delivery error: ");
+		sparameter authplain defaultvalue ("SMTP Authentication error: ");
 	}
 	namespace smtpd
 	{

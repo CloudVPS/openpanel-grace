@@ -37,6 +37,15 @@ smtpsocket::~smtpsocket (void)
 {
 }
 
+// ==========================================================================
+// METHOD smtpsocket::authenticate
+// ==========================================================================
+void smtpsocket::authenticate (const string &u, const string &p)
+{
+	username = u;
+	password = p;
+}
+
 // ========================================================================
 // METHOD ::setsmtphost
 // ========================================================================
@@ -122,6 +131,7 @@ bool smtpsocket::sendmessage (const value &rcptto, const string &subject,
 bool smtpsocket::dosmtp (const value &rcpts, const string &body,
 						 bool genheaders)
 {
+	bool supportsauth = false;
 	tcpsocket sock;
 	string line;
 	string nbody;
@@ -168,7 +178,7 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body,
 		// ------------------------------------------------------------------
 		// Send HELO and parse reply.
 		// ------------------------------------------------------------------
-		sock.puts ("HELO %s\r\n" %format (hostname));
+		sock.puts ("EHLO %s\r\n" %format (hostname));
 		line = sock.gets();
 		if (line.toint() != 250)
 		{
@@ -180,7 +190,40 @@ bool smtpsocket::dosmtp (const value &rcpts, const string &body,
 		}
 		
 		// Handle continuation lines.
-		while (line[3] == '-') line = sock.gets();
+		while (line[3] == '-')
+		{
+			line = sock.gets();
+			string replystr = line.mid (4);
+			if (replystr.strncasecmp ("auth ",5) == 0)
+			{
+				value splt = strutil::splitspace (replystr);
+				foreach (w, splt)
+				{
+					if (w.strcasecmp ("plain") == 0)
+						supportsauth = true;
+				}
+			}
+		}
+
+		if (username && supportsauth)
+		{
+			string authstr;
+			authstr.strcat ('\0');
+			authstr.strcat (username);
+			authstr.strcat ('\0');
+			authstr.strcat (password);
+			authstr = authstr.encode64();
+			sock.puts ("AUTH PLAIN %s\r\n" %format (authstr));
+			line = sock.gets();
+			if (line.toint() != 235)
+			{
+				erno = SMTPERR_SERVERR;
+				err = "%s%S" %format (errortext::smtp::authplain, line.mid(4));
+				sock.puts ("QUIT\r\n");
+				sock.close();
+				return false;
+			}
+		}
 
 		// ------------------------------------------------------------------
 		// Send MAIL FROM and parse reply.
