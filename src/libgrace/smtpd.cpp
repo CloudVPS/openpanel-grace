@@ -372,9 +372,10 @@ mainloop:
 							break;
 							
 						case SMTP_WAITMAILFROM:
-							if (line.strncasecmp ("MAIL FROM: ", 11) == 0)
+							if (line.strncasecmp ("MAIL FROM:", 10) == 0)
 							{
-								mailfrom = line.mid (11);
+								mailfrom = line.mid (10);
+								mailfrom.chomp ();
 								parent->normalizeaddr (mailfrom);
 								
 								env["from"] = mailfrom;
@@ -398,9 +399,10 @@ mainloop:
 							// NOTE intentional skipthrough!
 						
 						case SMTP_WAITRCPT:
-							if (line.strncasecmp ("RCPT TO: ", 9) == 0)
+							if (line.strncasecmp ("RCPT TO:", 8) == 0)
 							{
-								myrcpt = line.mid (9);
+								myrcpt = line.mid (8);
+								myrcpt.chomp();
 								parent->normalizeaddr (myrcpt);
 								
 								if (parent->checkrecipient (mailfrom, myrcpt, env))
