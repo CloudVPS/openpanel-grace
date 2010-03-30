@@ -301,8 +301,12 @@ mainloop:
 						string inuser, inpass;
 						int wpos = 0;
 						
-						s.puts ("334\r\n");
-						line = s.gets();
+						line = line.mid (11);
+						if (! line)
+						{
+							s.puts ("334\r\n");
+							line = s.gets();
+						}
 						line = line.decode64();
 						
 						for (int i=0; i<line.strlen(); ++i)
@@ -469,7 +473,7 @@ mainloop:
 				else
 				{
 					mailbody.strcat (line);
-					mailbody.strcat ("\n");
+					mailbody.strcat ("\r\n");
 				}
 			}
 			
