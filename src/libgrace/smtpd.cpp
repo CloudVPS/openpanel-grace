@@ -172,19 +172,9 @@ void smtpd::run (void)
 // ==========================================================================
 void smtpworker::run (void)
 {
-	tcpsocket s; // Incoming socket.
-	value ev; // Event data.
-	string line; // Line of text as read from the socket.
-	bool run = true; // True as long as we should be running.
-	value env; // SMTP environment
-	string helostr; // Remote host self-identification
 	string threadid; // Stored thread-id
-	string mailfrom; // Remote host mail from
-	string myrcpt; // Remote host recipient argument.
-	string mailbody; // Received mail body.
-	int failcnt; // Failure counter.
-	string exip; // Remote host ip.
-	
+	bool run = true; // True as long as we should be running.
+
 	// Internal states.
 	enum smtpstate
 	{
@@ -212,6 +202,17 @@ void smtpworker::run (void)
 	// Loop
 	while (run)
 	{
+		tcpsocket s; // Incoming socket.
+		value ev; // Event data.
+		string line; // Line of text as read from the socket.
+		value env; // SMTP environment
+		string helostr; // Remote host self-identification
+		string mailfrom; // Remote host mail from
+		string myrcpt; // Remote host recipient argument.
+		string mailbody; // Received mail body.
+		int failcnt; // Failure counter.
+		string exip; // Remote host ip.
+	
 		// Wait for a connection, if there's nothing to be had
 		// we might as well check events.
 		while (! parent->tcplock.trylockw(5))
@@ -482,6 +483,7 @@ mainloop:
 			if (st != SMTP_QUIT)
 			{
 				env.clear();
+				mailbody.crop();
 				goto mainloop;
 			}
 			
