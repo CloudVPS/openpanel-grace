@@ -68,7 +68,7 @@ int smtptestApp::main (void)
 	ss.setsender ("pi@madscience.nl", "Pim van Riezen");
 	if (ss.sendmessage ("test@test.test", "test", "testing one two three"))
 	{
-		ferr.printf ("FAIL sendmessage noauth: %s\n", ss.error().str());
+		ferr.printf ("FAIL sendmessage noauth\n");
 		return 1;
 	}
 	ss.authenticate ("johndoe","kylesmom");
