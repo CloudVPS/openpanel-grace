@@ -72,10 +72,13 @@ int smtptestApp::main (void)
 		return 1;
 	}
 	ss.authenticate ("johndoe","kylesmom");
-	if (! ss.sendmessage ("test@test.test", "test", "testing one two three"))
+	for (int i=0; i<16; ++i)
 	{
-		ferr.printf ("FAIL sendmessage authenticated: %s\n", ss.error().str());
-		return 1;
+		if (! ss.sendmessage ("test@test.test", "test", "testing one two three"))
+		{
+			ferr.printf ("FAIL sendmessage authenticated: %s\n", ss.error().str());
+			return 1;
+		}
 	}
 	
 	sd.shutdown();
