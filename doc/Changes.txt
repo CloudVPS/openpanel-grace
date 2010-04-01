@@ -1,4 +1,14 @@
+0.9.35     Thu Apr  1 2010                           <grace@openpanel.com>
+
+           * Added AUTH PLAIN / AUTH LOGIN support to the smtpd class.
+           
+           * Fixed rfc-compliance issues with smtpd.
+           
+           * Added AUTH PLAIN support to the smtp (outbound) class.
+
 0.9.34     Wed Mar 24 2010                           <grace@openpanel.com>
+
+           * Internal interum-release.
 
            * Extend udpsocket to allow access to the 'unbound' port
              number.
