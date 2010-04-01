@@ -13,6 +13,7 @@ typedef int smtpeventmask;
 #define SMTP_INFO 0x01
 #define SMTP_ERROR 0x02
 #define SMTP_DELIVERY 0x04
+#define SMTP_AUTH 0x08
 
 /// A base class for implementing an SMTP service.
 class smtpd : public thread

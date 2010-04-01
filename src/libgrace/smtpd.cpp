@@ -322,10 +322,30 @@ mainloop:
 						if (parent->authplain (inuser, inpass, env))
 						{
 							s.puts ("235 Authenticated\r\n");
+							if (parent->mask & SMTP_AUTH)
+							{
+								parent->eventhandle (
+									$attr("class","auth") ->
+									$("type","authenticated") ->
+									$("authtype","PLAIN") ->
+									$("thread",threadid) ->
+									$("ip",exip) ->
+									$("user", inuser));
+							}
 						}
 						else
 						{
 							s.puts ("535 Authentication failed\r\n");
+							if (parent->mask & SMTP_AUTH)
+							{
+								parent->eventhandle (
+									$attr("class","auth") ->
+									$("type","failure") ->
+									$("authtype","PLAIN") ->
+									$("thread",threadid) ->
+									$("ip",exip) ->
+									$("user", inuser));
+							}
 						}
 						continue;
 					}
@@ -341,10 +361,30 @@ mainloop:
 						if (parent->authplain (inuser, inpass, env))
 						{
 							s.puts ("235 Authenticated\r\n");
+							if (parent->mask & SMTP_AUTH)
+							{
+								parent->eventhandle (
+									$attr("class","auth") ->
+									$("type","authenticated") ->
+									$("authtype","LOGIN") ->
+									$("thread",threadid) ->
+									$("ip",exip) ->
+									$("user", inuser));
+							}
 						}
 						else
 						{
 							s.puts ("535 Authentication failed\r\n");
+							if (parent->mask & SMTP_AUTH)
+							{
+								parent->eventhandle (
+									$attr("class","auth") ->
+									$("type","failure") ->
+									$("authtype","LOGIN") ->
+									$("thread",threadid) ->
+									$("ip",exip) ->
+									$("user", inuser));
+							}
 						}
 						continue;
 					}
@@ -556,6 +596,9 @@ bool smtpd::deliver (const string &mailbody, value &env)
 	return true;
 }
 
+// ==========================================================================
+// METHOD smtpd::authplain
+// ==========================================================================
 bool smtpd::authplain (const string &user, const string &pass,
 					   value &env)
 {
