@@ -154,8 +154,10 @@ namespace memory
 		// defaults, this is the end of the line.
 		if (defaults::memory::leakprotection)
 		{
-			dump ("/tmp/memoryleak.dump");
+			dump ("memoryleak.dump");
 			c->lck.unlock();
+			abort();
+			// just in case some jackass catches SIGABRT.
 			throw memoryLeakException();
 		}
 		if (defaults::memory::leakcallback)
