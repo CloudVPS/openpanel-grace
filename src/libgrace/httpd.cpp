@@ -548,6 +548,8 @@ httpdworker::~httpdworker (void)
 {
 }
 
+void __httpd_break (void) {}
+
 // ========================================================================
 // METHOD httpdworker::run
 // -----------------------
@@ -577,38 +579,17 @@ void httpdworker::run (void)
 	// As long as we weren't asked to die
 	while (run)
 	{
-		while (! parent->tcplock.trylockw(1))
+		try
 		{
-			// Anyone calling us?
-			ev = nextevent();
-			if (ev)
+			while (! parent->tcplock.trylockw(1))
 			{
-				if (ev.type() == "die") // time to go
-				{
-					run = false;
-					if (parent->eventmask & HTTPD_INFO)
-					{
-						parent->eventhandle ($attr("class", "info") ->
-											 $("type", "threadstopped") ->
-											 $("thread", threadid));
-					}
-					return;
-				}
-			}
-		}
-		
-		while (! s)
-		{
-			s = parent->listener.tryaccept(2.0);
-			if (!s)
-			{
+				// Anyone calling us?
 				ev = nextevent();
 				if (ev)
 				{
 					if (ev.type() == "die") // time to go
 					{
 						run = false;
-						parent->tcplock.unlock();
 						if (parent->eventmask & HTTPD_INFO)
 						{
 							parent->eventhandle ($attr("class", "info") ->
@@ -619,8 +600,36 @@ void httpdworker::run (void)
 					}
 				}
 			}
+			
+			while (! s)
+			{
+				s = parent->listener.tryaccept(2.0);
+				if (!s)
+				{
+					ev = nextevent();
+					if (ev)
+					{
+						if (ev.type() == "die") // time to go
+						{
+							run = false;
+							parent->tcplock.unlock();
+							if (parent->eventmask & HTTPD_INFO)
+							{
+								parent->eventhandle ($attr("class", "info") ->
+													 $("type", "threadstopped") ->
+													 $("thread", threadid));
+							}
+							return;
+						}
+					}
+				}
+			}
+			parent->tcplock.unlock();
 		}
-		parent->tcplock.unlock();
+		catch (exception e)
+		{
+			__httpd_break();
+		}
 		
 		// Handle the parent httpd's load
 		int nload;
