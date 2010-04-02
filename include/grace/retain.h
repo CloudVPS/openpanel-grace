@@ -77,6 +77,8 @@ namespace memory
 						 /// Create a debugging dump.
 		void			 dump (const char *);
 		
+		void			 dumpmem (block *, size_t sz, FILE *);
+		
 						 /// Free all memory
 		void			 exit (void);
 	

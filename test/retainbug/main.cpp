@@ -1,6 +1,7 @@
 #include <grace/application.h>
 #include <grace/filesystem.h>
 #include <grace/file.h>
+#include <grace/defaults.h>
 
 class retainbugtestApp : public application
 {
@@ -26,34 +27,39 @@ string *testing (void)
 	return &res;
 }
 
+bool LEAKHANDLED;
+
+void leakhandler (void)
+{
+	LEAKHANDLED = true;
+}
+
 int retainbugtestApp::main (void)
 {
+	LEAKHANDLED = false;
 	value v;
 	v = "in.txt";
 	
-	try
+	defaults::memory::leakprotection = false;
+	defaults::memory::leakcallback = leakhandler;
+	
+	file f;
+	for (int i=0; (i<1024) && (! LEAKHANDLED); ++i)
 	{
-		file f;
-		if (1)
+		f.openread (v.sval());
+		string test;
+		
+		testing();
+		
+		test = "abcdefghijkl";
+		for (int i=0; i<800; ++i)
 		{
-			f.openread (v.sval());
-			string test;
-			
-			testing();
-			
-			test = "abcdefghijkl";
-			for (int i=0; i<800; ++i)
-			{
-				test.strcat (" \t");
-				test.trim (" \t");
-			}
+			test.strcat (" \t");
+			test.trim (" \t");
 		}
 	}
-	catch (memoryLeakException e)
-	{
-		return 0;
-	}
-	
-	FAIL ("leak not caught\n");
+
+	if (! LEAKHANDLED) FAIL ("leak not caught\n");
+	return 0;
 }
 

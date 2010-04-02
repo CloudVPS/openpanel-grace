@@ -262,6 +262,31 @@ namespace memory
 		pools = NULL;
 	}
 	
+	void pool::dumpmem (block *b, size_t sz, FILE *finto)
+	{
+		int i,j;
+		
+		for (i=0; i<sz; i+=8)
+		{
+			fprintf (finto, "        ");
+			for (j=0;(j<8)&&((i+j)<sz);++j)
+			{
+				fprintf (finto, "%02x ", b->dt[i+j]);
+			}
+			
+			for (;j<8;++j) fprintf (finto, "   ");
+			
+			for (j=0;(j<8)&&((i+j)<sz);++j)
+			{
+				unsigned char cr = (unsigned char) b->dt[i+j];
+				if (cr<32 || cr & 128) fprintf (finto, ".");
+				else fprintf (finto, "%c", cr);
+			}
+			
+			fprintf (finto, "\n");
+		}
+	}
+	
 	void pool::dump (const char *where)
 	{
 		FILE *finto;
@@ -287,6 +312,7 @@ namespace memory
 				{
 					fprintf (finto, "  alloc %u\n", i);
 				}
+				dumpmem (b, c->sz, finto);
 			}
 			
 			nc = c->extend;
