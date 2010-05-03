@@ -407,7 +407,7 @@ mainloop:
 							}
 							else
 							{
-								s.printf ("500 %s\r\n", errortext::smtpd::ucommand);
+								s.printf ("500 %s (%s)\r\n", errortext::smtpd::ucommand, line.str());
 								SENDERROR(errortext::smtpd::ucommand);
 							}
 							break;
@@ -425,7 +425,7 @@ mainloop:
 							}
 							else
 							{
-								s.printf ("500 %s\r\n", errortext::smtpd::ucommand);
+								s.printf ("500 %s (%s)\r\n", errortext::smtpd::ucommand, line.str());
 								SENDERROR(errortext::smtpd::ucommand);
 							}
 							break;
@@ -459,7 +459,7 @@ mainloop:
 							}
 							else
 							{
-								s.printf ("500 %s\r\n", errortext::smtpd::ucommand);
+								s.printf ("500 %s (%s)\r\n", errortext::smtpd::ucommand, line.str());
 								SENDERROR(errortext::smtpd::ucommand);
 							}
 							break;
