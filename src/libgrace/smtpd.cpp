@@ -489,7 +489,7 @@ mainloop:
 								$("rcpt", env["rcpt"]) ->
 								$("size", mailbody.strlen()) ->
 								$("status", 250) ->
-								$("transaction-id", env["transactionid"]));
+								$("transaction-id", env["transaction-id"]));
 						}
 						
 						s.puts ("250 OK %s\r\n" %format (env["transaction-id"]));
@@ -522,7 +522,9 @@ mainloop:
 			
 			if (st != SMTP_QUIT)
 			{
-				env.clear();
+				env.rmval ("rcpt");
+				env.rmval ("from");
+				env.rmval ("transaction-id");
 				mailbody.crop();
 				goto mainloop;
 			}
