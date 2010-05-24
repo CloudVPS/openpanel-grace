@@ -69,7 +69,7 @@ unsigned int str2ip (const string &str)
 // ========================================================================
 unsigned int value::ipval (void) const
 {
-	if (itype != i_string) return this->uval();
+	if (_itype != i_string) return this->uval();
 	value t;
 	t = this->sval();
 	return t.ipval();
@@ -77,7 +77,7 @@ unsigned int value::ipval (void) const
 
 unsigned int value::ipval (void)
 {
-	if (itype == i_string)
+	if (_itype == i_string)
 	{
 		value spl;
 		spl = strutil::split (s, '.');
@@ -102,7 +102,7 @@ unsigned int value::ipval (void)
 value &value::setip (unsigned int addr)
 {
 	cleararray ();
-	itype = i_ipaddr;
+	_itype = i_ipaddr;
 	if (_type == t_unset)
 		_type = t_ipaddr;
 	t.uval = addr;

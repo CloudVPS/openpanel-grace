@@ -12,7 +12,7 @@
 #include <grace/xmlschema.h>
 
 // ------------------------------------------------------------------------
-// I could theoretically combine these with the itype enum, but CXML/DAAP
+// I could theoretically combine these with the _itype enum, but CXML/DAAP
 // use slightly different type conventions, so this will make it easier
 // to stay compatible.
 // ------------------------------------------------------------------------

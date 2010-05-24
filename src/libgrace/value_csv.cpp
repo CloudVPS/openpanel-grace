@@ -74,7 +74,7 @@ string *value::tocsv (bool withHeaders, const char *indexName)
 		// Extra columns that only appear in later rows are discarded.
 		for (i=0; i<columnCount; ++i)
 		{
-			switch ((*child)[i].itype)
+			switch ((*child)[i]._itype)
 			{
 				case i_string:
 				case i_ipaddr:
@@ -172,7 +172,7 @@ bool value::savecsv (const string &fileName, bool withHeaders,
 		}
 		for (i=0; i<columnCount; ++i)
 		{
-			switch ((*child)[i].itype)
+			switch ((*child)[i]._itype)
 			{
 				case i_string:
 				case i_ipaddr:

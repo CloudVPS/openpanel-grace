@@ -613,7 +613,7 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 								(void) (*newcrsr).sval();
 								(*newcrsr)._type = tag.type;
 							}
-							//::printf ("itype=%i\n", newcrsr->itype);
+							//::printf ("_itype=%i\n", newcrsr->_itype);
 						}
 						
 						// unsigned number types
@@ -693,7 +693,7 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 						{
 							*newcrsr = (unsigned int)
 											__parse_timestr (tag.data);
-							newcrsr->itype = i_date;
+							newcrsr->_itype = i_date;
 							
 							if (tagtype != t_date)
 							{
@@ -967,13 +967,13 @@ void value::printxml (int indent, string &out, bool compact,
 			}
 			else
 			{
-				if (itype == i_bool)
+				if (_itype == i_bool)
 				{
 					rtype = schema->resolvecontainerboolclass (rtype, bval());
 				}
 				else
 				{
-					rtype = schema->resolvecontainertypeclass (rtype, itype);
+					rtype = schema->resolvecontainertypeclass (rtype, _itype);
 				}
 			}
 			
@@ -1027,13 +1027,13 @@ void value::printxml (int indent, string &out, bool compact,
 			}
 			else
 			{
-				if (itype == i_bool)
+				if (_itype == i_bool)
 				{
 					rtype = schema->resolvecontainerboolclass (ptype, bval());
 				}
 				else
 				{
-					rtype = schema->resolvecontainertypeclass (ptype, itype);
+					rtype = schema->resolvecontainertypeclass (ptype, _itype);
 				}
 			}
 			
@@ -1048,7 +1048,7 @@ void value::printxml (int indent, string &out, bool compact,
 	{
 		rid = _name;
 		
-		switch (itype)
+		switch (_itype)
 		{
 			case i_int:
 				//::printf ("+++ i_int\n");
@@ -1086,7 +1086,7 @@ void value::printxml (int indent, string &out, bool compact,
 					rtype = impliedtype;
 					break;
 				}
-				//::printf ("default: %i\n", itype);
+				//::printf ("default: %i\n", _itype);
 				if (ucount)
 				{
 					if ((unsigned int) count() != ucount)
@@ -1169,10 +1169,10 @@ void value::printxml (int indent, string &out, bool compact,
 	// if the value is empty and there are no children, the story ends here
 	
 	if ( (! arraysz) &&
-	     ( (itype != i_unsigned) && (itype != i_int) &&
-	       (itype != i_long) && (itype != i_ulong) &&
-	       (itype != i_double) && 
-	       (itype != i_bool) && (itype != i_currency) &&
+	     ( (_itype != i_unsigned) && (_itype != i_int) &&
+	       (_itype != i_long) && (_itype != i_ulong) &&
+	       (_itype != i_double) && 
+	       (_itype != i_bool) && (_itype != i_currency) &&
 	       (! sval().strlen()) ) )
 	{
 		out.printf ("/>%s", _VEOL);
@@ -1204,7 +1204,7 @@ void value::printxml (int indent, string &out, bool compact,
 					s.str(),
 					_VEOL);
 	}
-	else switch (itype)
+	else switch (_itype)
 	{
 		case i_int:
 			out.printf (">%i</%s>%s", ival(), rtype.str(), _VEOL);

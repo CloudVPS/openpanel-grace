@@ -329,19 +329,19 @@ void value::encodejson (string &into) const
 {
 	if (! count())
 	{
-		if (itype == i_int)
+		if (_itype == i_int)
 		{
 			into.printf ("%i", ival());
 		}
-		else if (itype == i_unsigned)
+		else if (_itype == i_unsigned)
 		{
 			into.printf ("%u", uval());
 		}
-		else if (itype == i_double)
+		else if (_itype == i_double)
 		{
 			into.printf ("%f", dval());
 		}
-		else if (itype == i_bool)
+		else if (_itype == i_bool)
 		{
 			into.strcat (bval() ? "true" : "false");
 		}

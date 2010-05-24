@@ -343,7 +343,7 @@ void value::printphp (string &into, bool withattr) const
 		}
 		if (withattr) into.printf ("s:5:\".data\";");
 	}
-	switch (itype)
+	switch (_itype)
 	{
 		case i_unsigned:
 		case i_int:

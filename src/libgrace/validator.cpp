@@ -501,7 +501,7 @@ bool validator::matchType (const value &obj, const value &def, string &error)
 		return false;
 	}
 	
-	if (obj.itype == tmap[def.sval()].ival()) return true;
+	if (obj.itype() == tmap[def.sval()].ival()) return true;
 	
 	if (def.attribexists ("errortext"))
 	{

@@ -219,7 +219,7 @@ bool value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 				break;
 		}
 		
-		itype = (dtype & 0x1f);
+		_itype = (dtype & 0x1f);
 	}
 	
 	return true;
@@ -270,8 +270,8 @@ void value::printshox (string &outstr, stringdict &sdict) const
 	}
 	
 	// Encode the type-indicator, which is a logical OR of the
-	// itype and three extra shox-specific flags.
-	unsigned char xtype = itype;
+	// _itype and three extra shox-specific flags.
+	unsigned char xtype = _itype;
 	if (! value::isbuiltin (_type)) xtype |= SHOX_HAS_CLASSNAME;
 	if (attrib && attrib->count()) xtype |= SHOX_HAS_ATTRIB;
 	if (arraysz) xtype |= SHOX_HAS_CHILDREN;
@@ -307,7 +307,7 @@ void value::printshox (string &outstr, stringdict &sdict) const
 	}
 	else // Otherwise, encode the data.
 	{
-		switch (itype)
+		switch (_itype)
 		{
 			case i_unset:
 				break;

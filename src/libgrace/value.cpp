@@ -106,7 +106,7 @@ value::value (double orig)
 value::value (creatorlabel l, unsigned int k)
 {
 	_type = t_unset;
-	itype = i_unset;
+	_itype = i_unset;
 	t.lval = 0;
 	key = k;
 	lower = higher = NULL;
@@ -147,7 +147,7 @@ value::value (creatorlabel l,const char *k)
 value::value (creatorlabel l, const char *k, unsigned int ki)
 {
 	_type = t_unset;
-	itype = i_unset;
+	_itype = i_unset;
 	
 	t.lval = 0;
 	key = ki;
@@ -169,7 +169,7 @@ value::value (creatorlabel l, const char *k, unsigned int ki)
 value::value (creatorlabel l, const string &k)
 {
 	_type = t_unset;
-	itype = i_unset;
+	_itype = i_unset;
 	t.lval = 0;
 	
 	// Calculate the hash value
@@ -226,36 +226,36 @@ value::value (value &v)
 
 	// Copy the value's data, depending on type
 
-	switch (v.itype)
+	switch (v._itype)
 	{
 		case i_unsigned:
 		case i_ipaddr:
 		case i_date:
 		case i_int:
 		case i_bool:
-			itype = v.itype;
+			_itype = v._itype;
 			t.uval = v.t.uval;
 			break;
 		
 		case i_string:
-			itype = i_string;
+			_itype = i_string;
 			s = v.s;
 			break;
 		
 		case i_long:
 		case i_ulong:
 		case i_currency:
-			itype = v.itype;
+			_itype = v._itype;
 			t.ulval = v.t.ulval;
 			break;
 			
 		case i_double:
-			itype = i_double;
+			_itype = i_double;
 			t.dval = v.t.dval;
 			break;
 			
 		default:
-			itype = i_unset;
+			_itype = i_unset;
 			break;
 	}
 	
@@ -285,7 +285,7 @@ value::value (value &v)
 value::value (const value &v)
 {
 	_type = t_unset;
-	itype = i_unset;
+	_itype = i_unset;
 	
 	t.lval = 0;
 	key = 0;
@@ -339,7 +339,7 @@ value::value (const string &str)
 {
 	init ();
 	s = str;
-	itype = i_string;
+	_itype = i_string;
 	_type= t_string;
 }
 
@@ -350,7 +350,7 @@ value::value (const statstring &str)
 {
 	init ();
 	s = str;
-	itype = i_string;
+	_itype = i_string;
 	_type = t_string;
 }
 
@@ -361,7 +361,7 @@ value::value (string *str)
 {
 	init ();
 	s = str;
-	itype = i_string;
+	_itype = i_string;
 	_type = t_string;
 }
 
@@ -372,7 +372,7 @@ value::value (int orig)
 {
 	init ();
 	t.ival = orig;
-	itype = i_int;
+	_itype = i_int;
 	_type = t_int;
 }
 
@@ -380,7 +380,7 @@ value::value (unsigned int orig)
 {
 	init ();
 	t.uval = orig;
-	itype = i_unsigned;
+	_itype = i_unsigned;
 	_type = t_unsigned;
 }
 
@@ -388,7 +388,7 @@ value::value (long long orig)
 {
 	init ();
 	t.lval = orig;
-	itype = i_long;
+	_itype = i_long;
 	_type = t_long;
 }
 
@@ -396,7 +396,7 @@ value::value (unsigned long long orig)
 {
 	init ();
 	t.ulval = orig;
-	itype = i_ulong;
+	_itype = i_ulong;
 	_type = t_ulong;
 }
 
@@ -404,7 +404,7 @@ value::value (bool b)
 {
 	init ();
 	t.ival = b ? 1 : 0;
-	itype = i_bool;
+	_itype = i_bool;
 	_type = t_bool;
 }
 
@@ -454,7 +454,7 @@ value &value::operator= (valuable *other)
 value &value::settime (const timestamp &o)
 {
 	cleararray ();
-	itype = i_date;
+	_itype = i_date;
 	t.uval = o.unixtime();
 	return *this;
 }
@@ -470,7 +470,7 @@ value &value::operator= (int i)
 {
 	cleararray ();
 	t.ival = i;
-	itype = i_int;
+	_itype = i_int;
 	if (_type == t_unset) _type  = t_int;
 	return *this;
 }
@@ -479,7 +479,7 @@ value &value::operator= (unsigned int i)
 {
 	cleararray ();
 	t.uval = i;
-	itype = i_unsigned;
+	_itype = i_unsigned;
 	if (_type == t_unset) _type = t_unsigned;
 	return *this;
 }
@@ -488,7 +488,7 @@ value &value::operator= (double d)
 {
 	cleararray ();
 	t.dval = d;
-	itype = i_double;
+	_itype = i_double;
 	if (_type == t_unset) _type = t_double;
 	return *this;
 }
@@ -497,7 +497,7 @@ value &value::operator= (bool bval)
 {
 	cleararray ();
 	t.ival = bval ? 1 : 0;
-	itype = i_bool;
+	_itype = i_bool;
 	if (isbuiltin (_type)) _type = t_bool;
 	return *this;
 }
@@ -506,7 +506,7 @@ value &value::operator= (long long dval)
 {
 	cleararray ();
 	t.lval = dval;
-	itype = i_long;
+	_itype = i_long;
 	if (isbuiltin (_type)) _type = t_long;
 	return *this;
 }
@@ -527,7 +527,7 @@ value &value::operator= (unsigned long long val)
 {
 	cleararray ();
 	t.ulval = val;
-	itype = i_ulong;
+	_itype = i_ulong;
 	if (isbuiltin (_type)) _type = t_ulong;
 	return *this;
 }
@@ -536,7 +536,7 @@ value &value::operator= (const char *str)
 {
 	cleararray ();
 	s = str;
-	itype = i_string;
+	_itype = i_string;
 	if (isbuiltin (_type)) _type = t_string;
 	return *this;
 }
@@ -545,7 +545,7 @@ value &value::operator= (const unsigned char *str)
 {
 	cleararray ();
 	s = str;
-	itype = i_string;
+	_itype = i_string;
 	if (isbuiltin (_type)) _type = t_string;
 	return *this;
 }
@@ -554,7 +554,7 @@ value &value::operator= (const string &str)
 {
 	cleararray ();
 	s = str;
-	itype = i_string;
+	_itype = i_string;
 	if (isbuiltin (_type)) _type = t_string;
 	return *this;
 }
@@ -563,7 +563,7 @@ value &value::operator= (string *str)
 {
 	cleararray();
 	s = str;
-	itype = i_string;
+	_itype = i_string;
 	if (isbuiltin (_type)) _type = t_string;
 }
 
@@ -571,7 +571,7 @@ value &value::operator= (const statstring &str)
 {
 	cleararray ();
 	s = str.sval();
-	itype = i_string;
+	_itype = i_string;
 	if (isbuiltin (_type)) _type = t_string;
 	return *this;
 }
@@ -580,7 +580,7 @@ value &value::operator= (statstring *str)
 {
 	cleararray ();
 	s = str->sval();
-	itype = i_string;
+	_itype = i_string;
 	if (isbuiltin (_type)) _type= t_string;
 	delete str;
 	return *this;
@@ -600,9 +600,9 @@ value &value::operator= (const value &v)
 	// Prefer to keep the original object's type.
 	
 	_type = v.type();
-	itype = v.itype;
+	_itype = v._itype;
 	
-	switch (v.itype)
+	switch (v._itype)
 	{
 		case i_string: s.strclone (v.s); break;
 		case i_bool:
@@ -670,7 +670,7 @@ value &value::operator= (value *v)
 	
 	if (v != NULL)
 	{
-		switch (v->itype)
+		switch (v->_itype)
 		{
 			case i_string: s = v->s; break;
 			case i_bool:
@@ -682,7 +682,7 @@ value &value::operator= (value *v)
 			case i_long:
 			case i_ulong: t.ulval = v->t.ulval; break;
 		}
-		itype = v->itype;
+		_itype = v->_itype;
 		_type = v->type();
 	}
 	else
@@ -753,7 +753,7 @@ const string &value::sval (void) const
 	// will not affect the 'true' type. Note that this
 	// call technically violates its const-contract by manipulating the 
 	// 's' member to contain a string-representation of the value, if
-	// the itype is not i_string.
+	// the _itype is not i_string.
 	//
 	// This string representation is an internal affair of the class and
 	// its side-effects  do not harm the principal constness, the
@@ -761,7 +761,7 @@ const string &value::sval (void) const
 	// function does not find the object in a functionally altered state.
     string &S = (string &) s;
 
-	switch (itype)
+	switch (_itype)
 	{
 		case i_string:
 			return s;
@@ -835,7 +835,7 @@ const char *value::cval (void) const
 int value::ival (void) const
 {
 	if (arraysz) return ((*this)[0].ival());
-	switch (itype)
+	switch (_itype)
 	{
 		case i_int:
 		case i_bool:
@@ -865,7 +865,7 @@ int value::ival (void) const
 unsigned int value::uval (void) const
 {
 	if (arraysz) return ((*this)[0].uval());
-	switch (itype)
+	switch (_itype)
 	{
 		case i_int:
 		case i_bool:
@@ -898,7 +898,7 @@ unsigned int value::uval (void) const
 double value::dval (void) const
 {
 	if (arraysz) return ((*this)[0].dval());
-	switch (itype)
+	switch (_itype)
 	{
 		case i_double: return t.dval;
 		case i_string: return ::atof (s.str());
@@ -918,7 +918,7 @@ double value::dval (void) const
 long long value::lval (void) const
 {
 	if (arraysz) return ((*this)[0].lval());
-	switch (itype)
+	switch (_itype)
 	{
 		case i_long:
 		case i_ulong: return t.lval;
@@ -942,7 +942,7 @@ long long value::lval (void) const
 unsigned long long value::ulval (void) const
 {
 	if (arraysz) return ((*this)[0].ulval());
-	switch (itype)
+	switch (_itype)
 	{
 		case i_long:
 		case i_ulong: return t.ulval;
@@ -968,13 +968,13 @@ unsigned long long value::ulval (void) const
 bool value::bval (void) const
 {
 	if (arraysz) return true;
-	if ((itype == i_bool) || (itype == i_int) || (itype == i_unsigned))
+	if ((_itype == i_bool) || (_itype == i_int) || (_itype == i_unsigned))
 		return (bool) t.ival;
-	if (itype == i_double)
+	if (_itype == i_double)
 		return (bool) t.dval;
-	if (itype == i_string)
+	if (_itype == i_string)
 		return s.strcasecmp ("true") ? false : true;
-	if ((itype == i_long) || (itype == i_ulong) || (itype == i_currency))
+	if ((_itype == i_long) || (_itype == i_ulong) || (_itype == i_currency))
 		return (bool) t.lval;
 	return false;
 }
@@ -1577,7 +1577,7 @@ void value::clear (void)
 	arrayalloc = 0;
 	ucount = 0;
 	_type = t_unset;
-	itype = i_unset;
+	_itype = i_unset;
 	s.crop (0);
 	if (attrib)
 	{
@@ -1927,7 +1927,7 @@ string *__make_timestr (time_t ti)
 void value::assign (const currency &c)
 {
 	t.lval = c.value();
-	itype = i_currency;
+	_itype = i_currency;
 	if (_type == t_unset) _type = t_currency;
 }
 
@@ -1935,7 +1935,7 @@ void value::assign (currency *c)
 {
 	t.lval = c->value();
 	delete c;
-	itype = i_currency;
+	_itype = i_currency;
 	if (_type == t_unset) _type = t_currency;
 }
 
@@ -1979,7 +1979,7 @@ void value::init (bool first)
 	{
 		threadref = getref();
 		_type = t_unset;
-		itype = i_unset;
+		_itype = i_unset;
 		
 		t.lval = 0;
 		key = 0;
@@ -2001,7 +2001,7 @@ void value::init (bool first)
 // ========================================================================
 bool value::isempty (void) const
 {
-	if (itype != i_unset) return false;
+	if (_itype != i_unset) return false;
 	if (array) return false;
 	if (attrib) return false;
 	return true;
@@ -2186,7 +2186,7 @@ value &value::operator+= (const value &v)
 // ========================================================================
 bool value::operator< (const value &other) const
 {
-	switch (other.itype)
+	switch (other._itype)
 	{
 		case i_string:
 			return (::strcmp (cval(), other.cval()) <0);
@@ -2208,7 +2208,7 @@ bool value::operator< (const value &other) const
 
 bool value::operator< (const value &other)
 {
-	switch (other.itype)
+	switch (other._itype)
 	{
 		case i_string:
 			return (::strcmp (cval(), other.cval()) <0);
@@ -2233,7 +2233,7 @@ bool value::operator< (const value &other)
 // ========================================================================
 bool value::operator<= (const value &other) const
 {
-	switch (other.itype)
+	switch (other._itype)
 	{
 		case i_string:
 			return (::strcmp (cval(), other.cval()) <=0);
@@ -2255,7 +2255,7 @@ bool value::operator<= (const value &other) const
 
 bool value::operator<= (const value &other)
 {
-	switch (other.itype)
+	switch (other._itype)
 	{
 		case i_string:
 			return (::strcmp (cval(), other.cval()) <=0);
@@ -2280,7 +2280,7 @@ bool value::operator<= (const value &other)
 // ========================================================================
 bool value::operator>= (const value &other) const
 {
-	switch (other.itype)
+	switch (other._itype)
 	{
 		case i_string:
 			return (::strcmp (cval(), other.cval()) >=0);
@@ -2302,7 +2302,7 @@ bool value::operator>= (const value &other) const
 
 bool value::operator>= (const value &other)
 {
-	switch (other.itype)
+	switch (other._itype)
 	{
 		case i_string:
 			return (::strcmp (cval(), other.cval()) >=0);
@@ -2327,7 +2327,7 @@ bool value::operator>= (const value &other)
 // ========================================================================
 bool value::operator> (const value &other) const
 {
-	switch (other.itype)
+	switch (other._itype)
 	{
 		case i_string:
 			return (::strcmp (cval(), other.cval()) >0);
@@ -2349,7 +2349,7 @@ bool value::operator> (const value &other) const
 
 bool value::operator> (const value &other)
 {
-	switch (other.itype)
+	switch (other._itype)
 	{
 		case i_string:
 			return (::strcmp (cval(), other.cval()) >0);
@@ -2374,7 +2374,7 @@ bool value::operator> (const value &other)
 // ========================================================================
 bool value::operator== (const value &other) const
 {
-	switch (other.itype)
+	switch (other._itype)
 	{
 		case i_string:
 			return (::strcmp (cval(), other.cval()) ==0);
@@ -2396,7 +2396,7 @@ bool value::operator== (const value &other) const
 
 bool value::operator== (const value &other)
 {
-	switch (other.itype)
+	switch (other._itype)
 	{
 		case i_string:
 			return (::strcmp (cval(), other.cval()) ==0);
@@ -2421,7 +2421,7 @@ bool value::operator== (const value &other)
 // ========================================================================
 bool value::operator!= (const value &other) const
 {
-	switch (other.itype)
+	switch (other._itype)
 	{
 		case i_string:
 			return (::strcmp (cval(), other.cval()) !=0);
@@ -2443,7 +2443,7 @@ bool value::operator!= (const value &other) const
 
 bool value::operator!= (const value &other)
 {
-	switch (other.itype)
+	switch (other._itype)
 	{
 		case i_string:
 			return (::strcmp (cval(), other.cval()) !=0);
@@ -2470,13 +2470,13 @@ void value::setcurrency (long long cnew)
 {
 	cleararray ();
 	t.lval = cnew;
-	itype = i_currency;
+	_itype = i_currency;
 	if (isbuiltin (_type)) _type = t_currency;
 }
 
 long long value::getcurrency (void) const
 {
-	switch (itype)
+	switch (_itype)
 	{
 		case i_currency:
 			return t.lval;

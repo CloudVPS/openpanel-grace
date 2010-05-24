@@ -386,13 +386,13 @@ void value::print (int indent, file &out, bool compact) const
 	
 	// Print out the data according to its type
 	
-	if (itype == i_double)
+	if (_itype == i_double)
 	{
 		if (!compact) outstr.printf (___SPC+(128-indent));
 		outstr.printf ("%s= %f\n", nm.str(), t.dval);
 		
 	}
-	else if (itype == i_string)
+	else if (_itype == i_string)
 	{
 		if ((!arraysz)||(s.strlen()))
 		{
@@ -402,12 +402,12 @@ void value::print (int indent, file &out, bool compact) const
 		}
 		
 	}
-	else if (itype == i_int)
+	else if (_itype == i_int)
 	{
 		if (!compact) outstr.printf (___SPC+(128-indent));
 		outstr.printf ("%s= %i\n", nm.str(), t.ival);
 	}
-	else if (itype == i_ipaddr)
+	else if (_itype == i_ipaddr)
 	{
 		if (!compact) outstr.printf (___SPC+(128-indent));
 		outstr.printf ("%s= <%i.%i.%i.%i>\n",
@@ -483,12 +483,12 @@ void value::printstr (int indent, string &out, bool compact) const
 	
 	// Print out the data according to its type
 	
-	if (itype == i_double)
+	if (_itype == i_double)
 	{
 		if (!compact) outstr.printf (___SPC+(128-indent));
 		outstr.printf ("%s= %f\n", nm.str(), t.dval);
 	}
-	else if (itype == i_string)
+	else if (_itype == i_string)
 	{		
 		if ((!arraysz)||(s.strlen()))
 		{
@@ -496,12 +496,12 @@ void value::printstr (int indent, string &out, bool compact) const
 			outstr.printf ("%s= \"%S\"\n", nm.str(), s.str());
 		}
 	}
-	else if (itype == i_int)
+	else if (_itype == i_int)
 	{			
 		if (!compact) outstr.printf (___SPC+(128-indent));
 		outstr.printf ("%s= %i\n", nm.str(), t.ival);
 	}
-	else if (itype == i_ipaddr)
+	else if (_itype == i_ipaddr)
 	{	
 		if (!compact) outstr.printf (___SPC+(128-indent));
 		outstr.printf ("%s= <%i.%i.%i.%i>\n",

@@ -32,31 +32,31 @@ void value::encodegrace (string &into, int indent)
 			into.strcat (")");
 			j++;
 		}
-		if (j && (itype != i_unset))
+		if (j && (_itype != i_unset))
 		{
 			into.strcat (" ->\n%s$val(" %format (dent));
 		}
-		if (j && (itype == i_unset))
+		if (j && (_itype == i_unset))
 		{
 			j = 0;
 		}
-		else if (itype == i_int)
+		else if (_itype == i_int)
 		{
 			into.printf ("%i", ival());
 		}
-		else if (itype == i_unsigned)
+		else if (_itype == i_unsigned)
 		{
 			into.printf ("%u", uval());
 		}
-		else if (itype == i_double)
+		else if (_itype == i_double)
 		{
 			into.printf ("%f", dval());
 		}
-		else if (itype == i_date)
+		else if (_itype == i_date)
 		{
 			into.printf ("(time_t) %i", ival());
 		}
-		else if (itype == i_ipaddr)
+		else if (_itype == i_ipaddr)
 		{
 			into.printf ("(ipaddress) \"%s\"", cval());
 		}

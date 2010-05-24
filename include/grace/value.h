@@ -617,7 +617,7 @@ public:
 					 /// \param v Original value.
 	value			*$val (const value &v)
 					 {
-					 	switch (v.itype)
+					 	switch (v._itype)
 					 	{
 					 		case i_unset: break;
 					 		case i_bool: (*this) = v.bval(); break;
@@ -1187,7 +1187,7 @@ protected:
 	dtenum			 _type; ///< The registered type/class.
 	string			 s; ///< The string value.
 	dtype			 t; ///< The numeric value.
-	unsigned char	 itype; ///< The intrinsic type.
+	unsigned char	 _itype; ///< The intrinsic type.
 	
 	unsigned int	 key; ///< Numeric key.
 	class statstring _name; ///< String key.
@@ -1220,8 +1220,8 @@ protected:
 	void			 relinktree (void);
 	
 public:
-					 
 	void			 init (bool first=true);
+	unsigned char	 itype (void) const { return _itype; }
 };
 
 
