@@ -288,7 +288,7 @@ bool value::fromjson (const string &code)
 void value::encodejsonstring (string &into) const
 {
 	const char *c = cval();
-	int len = sval().strlen();
+	int len = s.strlen();
 	
 	for (int i=0; i<len; ++i)
 	{
