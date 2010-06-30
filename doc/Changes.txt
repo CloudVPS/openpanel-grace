@@ -1,3 +1,13 @@
+0.9.36     Wed Jun 30 2010                           <grace@openpanel.com>
+
+           * Fix memory leak and handling
+           
+           * Fix smtpd implementation class
+           
+           * Rename value::itype to _itype, add value::itype().
+           
+           * Fix temporary string object handling in encodejsonstring.
+
 0.9.35     Thu Apr  1 2010                           <grace@openpanel.com>
 
            * Added AUTH PLAIN / AUTH LOGIN support to the smtpd class.
