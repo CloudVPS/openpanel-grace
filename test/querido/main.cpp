@@ -26,6 +26,12 @@ int queridotestApp::main (void)
 	dbengine DB (dbengine::SQLite);
 	if (! DB.open ($("path","db.sqlite"))) FAIL ("dbopen");
 	
+	value vtmp;
+	DB.query ("PRAGMA table_info(users)", vtmp);
+	vtmp.savexml ("table.users.xml");
+	DB.query ("PRAGMA table_info(messages)", vtmp);
+	vtmp.savexml ("table.messages.xml");
+	
 	dbtable User (DB, "users");
 	dbtable Message (DB, "messages");
 	dbquery Q (DB);
