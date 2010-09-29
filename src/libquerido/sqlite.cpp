@@ -65,7 +65,7 @@ bool sqlitehandle::query (const string &sql, value &into,
 	colcount = sqlite3_column_count (qhandle);
 	if (colcount == 0)
 	{
-		into("rowschaged") = sqlite3_changes (hdl);
+		into("rowschanged") = sqlite3_changes (hdl);
 		sqlite3_finalize (qhandle);
 		return true;
 	}
