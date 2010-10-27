@@ -508,7 +508,6 @@ public:
 	{
 		return (sval().strcmp (other));
 	}
-
 	inline bool operator!= (const statstring &other) const
 	{
 		return (sval().strcmp (other.sval()));
@@ -540,6 +539,10 @@ public:
 	bool operator== (const char *s)
 	{
 		return (sval().strcmp (s) == 0);
+	}
+	inline bool operator== (const string &other) const
+	{
+		return (sval().strcmp (other) == 0);
 	}
 	bool operator== (const statstring &s) const
 	{
