@@ -264,7 +264,7 @@ public:
   if (bool __section_flip = true) \
 	for (lname.lockr(); __section_flip; lname.unlock()) \
 	  for (typeof( lname ) &sectionlock = lname; __section_flip;) \
-		for (typeof(sectionlock.o) &lname = sectionlock.o;__section_flip;) if (! (__section_flip = false))
+		for (const typeof(sectionlock.o) &lname = sectionlock.o;__section_flip;) if (! (__section_flip = false))
 
 #define unprotected(lname) if (bool __section_flip = true) \
 	for (typeof( lname ) &sectionlock = lname; __section_flip;) \
