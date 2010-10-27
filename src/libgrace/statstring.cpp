@@ -29,7 +29,7 @@ stringrefdb *__REF;
 stringrefdb &STRINGREF()
 {
 	static stringrefdb *REF = new stringrefdb;
-	__REF = REF;
+	//__REF = REF;
 	return *REF;
 	
 	// not anymore?
@@ -180,7 +180,6 @@ void stringrefdb::reap (stringref *ref)
 	}
 	if (lower) reap (lower);
 	if (higher) reap (higher);
-	
 }
 
 // ========================================================================
