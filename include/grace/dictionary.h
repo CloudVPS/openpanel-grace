@@ -141,7 +141,7 @@ public:
 					 /// Check the dictionary for a key.
 					 /// \param s The key.
 					 /// \return Result, \b true if the key is in the dictionary.
-	bool			 exists (const statstring &s)
+	bool			 exists (const statstring &s) const
 					 {
 						if (_count == 0)
 						{
@@ -167,7 +167,7 @@ public:
 					 
 					 /// Get item count.
 					 /// \return Number of objects in the dictionary.
-	int				 count (void) { return _count; }
+	int				 count (void) const { return _count; }
 
 protected:
 	class dictionaryEntry	
