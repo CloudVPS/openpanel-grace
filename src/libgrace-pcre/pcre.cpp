@@ -23,17 +23,14 @@ pcre *pcredb::get (const statstring &expr, int options)
 {
 	pcre *res = NULL;
 	
-	sharedsection (expressions)
+	exclusivesection (expressions)
 	{
 		if (expressions.exists (expr))
 		{
 			res = expressions[expr];
 			breaksection return res;
 		}
-	}
-	
-	exclusivesection (expressions)
-	{
+
 		if (! expressions.exists (expr))
 		{
 			int erroffset;
