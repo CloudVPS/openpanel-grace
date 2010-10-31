@@ -93,7 +93,7 @@ protected:
 };
 
 /// Lock template class. Use this to guard your objects.
-template<class kind>
+template<typename kind>
 class lock : public lockbase
 {
 public:
@@ -237,7 +237,7 @@ protected:
 };
 
 /// Lock template class. Use this to guard your objects.
-template<class kind>
+template<typename kind>
 class lock : public lockbase
 {
 public:
@@ -246,34 +246,71 @@ public:
 
 #endif
 
-#define exclusiveaccess(lname) if (bool __section_flip = true) \
-	for (lname.lockw(); __section_flip; lname.unlock()) \
-	  for (; __section_flip;) if (! (__section_flip = false))
 
-#define sharedaccess(lname) if (bool __section_flip = true) \
-	for (lname.lockw(); __section_flip; lname.unlock()) \
-	  for (; __section_flip;) if (! (__section_flip = false))
+/// Locks the provided lock for writing as long as the object is alive. 
+class scopedwrite 
+{
+public:
+    scopedwrite( lockbase& inlock )
+    : thelock(inlock)
+    {
+        thelock.lockw();
+    } 
+    ~scopedwrite()
+    {
+        thelock.unlock();
+    }
 
-#define exclusivesection(lname) if (bool __section_shared = false) {} else \
-  if (bool __section_flip = true) \
-	for (lname.lockw(); __section_flip; lname.unlock()) \
-	  for (typeof( lname ) &sectionlock = lname; __section_flip;) \
-		for (typeof(sectionlock.o) &lname = sectionlock.o;__section_flip;) if (! (__section_flip = false))
+private:
+    lockbase& thelock;
+};
 
-#define sharedsection(lname) if (bool __section_shared = true) \
-  if (bool __section_flip = true) \
-	for (lname.lockr(); __section_flip; lname.unlock()) \
-	  for (typeof( lname ) &sectionlock = lname; __section_flip;) \
-		for (const typeof(sectionlock.o) &lname = sectionlock.o;__section_flip;) if (! (__section_flip = false))
+/// Locks the provided lock for reading as long as the object is alive. 
+class scopedread
+{
+public:
+    scopedread( lockbase& inlock )
+    : thelock(inlock)
+    {
+        thelock.lockr();
+    } 
+    ~scopedread()
+    {
+        thelock.unlock();
+    }
+    
+private:
+    lockbase& thelock;
+};
 
-#define unprotected(lname) if (bool __section_flip = true) \
-	for (typeof( lname ) &sectionlock = lname; __section_flip;) \
-		for (typeof(sectionlock.o) &lname = sectionlock.o; __section_flip;) \
-			if (! (__section_flip = false))
+#define exclusiveaccess(lname) \
+    for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
+    for( typeof( lname ) &sectionlock = lname;          __macrohelper; ) \
+    for( scopedwrite __writelock( sectionlock );        __macrohelper; ) 
 
-#define breaksection if (bool __break_flip = true) \
-	for (sectionlock.unlock(); __break_flip; (void)(__section_shared ? sectionlock.lockr() : sectionlock.lockw())) \
-		for (; __break_flip; ) if (! (__break_flip = false))
+#define sharedaccess(lname) \
+    for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
+    for( typeof( lname ) &sectionlock = lname;          __macrohelper; ) \
+    for( scopedread __readlock( sectionlock );          __macrohelper; ) 
+
+#define exclusivesection(lname) \
+    for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
+    for( typeof( lname ) &sectionlock = lname;          __macrohelper; ) \
+    for( scopedwrite __writelock( sectionlock );        __macrohelper; ) \
+    for( typeof(sectionlock.o) &lname = sectionlock.o;  __macrohelper; ) 
+
+#define sharedsection(lname) \
+    for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
+    for( typeof( lname ) &sectionlock = lname;          __macrohelper; ) \
+    for( scopedread __readlock( sectionlock );          __macrohelper; ) \
+    for( typeof(sectionlock.o) &lname = sectionlock.o;  __macrohelper; ) 
+
+#define unprotected(lname) \
+    for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
+    for( typeof( lname ) &sectionlock = lname;          __macrohelper; ) \
+    for( typeof(sectionlock.o) &lname = sectionlock.o;  __macrohelper; ) 
+
+#define breaksection /* For backward compatibility only, dont use this */
 
 /// Conditional.
 /// Implies a condition that one or more threads can wait on that
