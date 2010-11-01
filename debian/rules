@@ -52,6 +52,7 @@ binary-arch: build install
 	dh_builddeb -a
 
 clean:
+	rm build-stamp
 	rm -f build
 	make clean
 	dh_clean
