@@ -11,9 +11,12 @@ Depends:
 Description: libgrace
  The grace c++ library.
 
-Package: libgrace-devel
+Package: libgrace-dev
 Architecture: any
 Depends: 
+Replaces: libgrace-devel
+Conflicts: libgrace-devel
+Provides: libgrace-devel
 Description: libgrace
  The grace c++ library.
 
@@ -23,9 +26,12 @@ Depends:
 Description: libgrace
  The grace c++ library.
 
-Package: libgrace-dbfile-devel
+Package: libgrace-dbfile-dev
 Architecture: any
 Depends: 
+Replaces: libgrace-dbfile-devel
+Conflicts: libgrace-dbfile-devel
+Provides: libgrace-dbfile-devel
 Description: libgrace
  The grace c++ library.
 
@@ -41,9 +47,12 @@ Depends:
 Description: libgrace
  The grace c++ library.
 
-Package: libgrace-querido-devel
+Package: libgrace-querido-dev
 Architecture: any
 Depends: 
+Replaces: libgrace-querido-devel
+Conflicts: libgrace-querido-devel
+Provides: libgrace-querido-devel
 Description: libgrace
  The grace c++ library.
 
@@ -53,8 +62,11 @@ Depends:
 Description: libgrace
  The grace c++ library.
 
-Package: libgrace-ssl-devel
+Package: libgrace-ssl-dev
 Architecture: any
 Depends: 
+Replaces: libgrace-ssl-devel
+Conflicts: libgrace-ssl-devel
+Provides: libgrace-ssl-devel
 Description: libgrace
  The grace c++ library.
