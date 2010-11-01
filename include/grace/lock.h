@@ -285,30 +285,30 @@ private:
 
 #define exclusiveaccess(lname) \
     for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
-    for( typeof( lname ) &sectionlock = lname;          __macrohelper; ) \
-    for( scopedwrite __writelock( sectionlock );        __macrohelper; ) 
+    for( typeof( lname ) &sectionlock = lname;          __macrohelper; __macrohelper = false ) \
+    for( scopedwrite __writelock( sectionlock );        __macrohelper; __macrohelper = false )
 
 #define sharedaccess(lname) \
     for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
-    for( typeof( lname ) &sectionlock = lname;          __macrohelper; ) \
-    for( scopedread __readlock( sectionlock );          __macrohelper; ) 
+    for( typeof( lname ) &sectionlock = lname;          __macrohelper; __macrohelper = false ) \
+    for( scopedread __readlock( sectionlock );          __macrohelper; __macrohelper = false ) 
 
 #define exclusivesection(lname) \
     for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
-    for( typeof( lname ) &sectionlock = lname;          __macrohelper; ) \
-    for( scopedwrite __writelock( sectionlock );        __macrohelper; ) \
-    for( typeof(sectionlock.o) &lname = sectionlock.o;  __macrohelper; ) 
+    for( typeof( lname ) &sectionlock = lname;          __macrohelper; __macrohelper = false ) \
+    for( scopedwrite __writelock( sectionlock );        __macrohelper; __macrohelper = false ) \
+    for( typeof(sectionlock.o) &lname = sectionlock.o;  __macrohelper; __macrohelper = false ) 
 
 #define sharedsection(lname) \
     for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
-    for( typeof( lname ) &sectionlock = lname;          __macrohelper; ) \
-    for( scopedread __readlock( sectionlock );          __macrohelper; ) \
-    for( typeof(sectionlock.o) &lname = sectionlock.o;  __macrohelper; ) 
+    for( typeof( lname ) &sectionlock = lname;          __macrohelper; __macrohelper = false ) \
+    for( scopedread __readlock( sectionlock );          __macrohelper; __macrohelper = false ) \
+    for( typeof(sectionlock.o) &lname = sectionlock.o;  __macrohelper; __macrohelper = false ) 
 
 #define unprotected(lname) \
     for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
-    for( typeof( lname ) &sectionlock = lname;          __macrohelper; ) \
-    for( typeof(sectionlock.o) &lname = sectionlock.o;  __macrohelper; ) 
+    for( typeof( lname ) &sectionlock = lname;          __macrohelper; __macrohelper = false ) \
+    for( typeof(sectionlock.o) &lname = sectionlock.o;  __macrohelper; __macrohelper = false ) 
 
 #define breaksection /* For backward compatibility only, dont use this */
 
