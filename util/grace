@@ -1,6 +1,6 @@
 #!/bin/sh
 cmd=$(echo "$0" | sed -e "s@.*/@@")
-mypath=$(echo "$0" | sed -e "s@/${cmd}@@")
+mypath=$(echo "$0" | sed -e "s@/${cmd}\$@@")
 if [ "$cmd" = "grace" ]; then
   if [ -z "$1" ]; then
     cmd="interactive"
