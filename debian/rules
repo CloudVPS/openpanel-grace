@@ -2,7 +2,6 @@
 
 build: build-stamp
 build-stamp:
-	# cp version.id src/libgrace/version.id
 	cd src/libgrace && ./configure --prefix /usr && make && cd ../..
 	cd src/grace-configure && ./configure --prefix /usr && make && cd ../..
 	cd src/libgrace-pcre && ./configure --prefix /usr && make && cd ../..
