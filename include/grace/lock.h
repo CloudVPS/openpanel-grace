@@ -248,61 +248,98 @@ public:
 
 
 /// Locks the provided lock for writing as long as the object is alive. 
-class scopedwrite 
+class scopedlock 
 {
+    friend class scopedunlock;
 public:
-    scopedwrite( lockbase& inlock )
+    scopedlock( lockbase& inlock, bool exclusive )
     : thelock(inlock)
+    , exclusive( exclusive )
+    , locked( false )
     {
-        thelock.lockw();
+        lock();      
     } 
-    ~scopedwrite()
+    ~scopedlock()
     {
-        thelock.unlock();
+        unlock();
     }
 
 private:
+    void lock()
+    {
+        if( !locked )
+        {
+            if( exclusive )
+                thelock.lockw();
+            else
+                thelock.lockr();
+                
+            locked = true;
+        }
+    }
+
+    void unlock()
+    {
+        if( locked ) 
+        {
+            thelock.unlock();
+            locked = false;
+        }
+    }
+
     lockbase& thelock;
+    bool exclusive;
+    bool locked;
 };
 
-/// Locks the provided lock for reading as long as the object is alive. 
-class scopedread
+class scopedunlock 
 {
 public:
-    scopedread( lockbase& inlock )
-    : thelock(inlock)
+    scopedunlock( scopedlock& target, bool shouldrelock = true )
+    : target( target )
+    , relocktarget( shouldrelock )
     {
-        thelock.lockr();
-    } 
-    ~scopedread()
+        target.unlock();
+    }
+    
+    ~scopedunlock()
     {
-        thelock.unlock();
+        if( relocktarget )
+        {
+            target.lock();
+        }
+    }
+
+    bool shouldrelock()
+    {
+        relocktarget = true;
     }
     
 private:
-    lockbase& thelock;
+    scopedlock& target;
+    bool relocktarget;
 };
 
 #define exclusiveaccess(lname) \
     for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
     for( typeof( lname ) &sectionlock = lname;          __macrohelper; __macrohelper = false ) \
-    for( scopedwrite __writelock( sectionlock );        __macrohelper; __macrohelper = false )
+    for( scopedlock __scopelock( sectionlock, false );  __macrohelper; __macrohelper = false ) \
 
 #define sharedaccess(lname) \
     for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
     for( typeof( lname ) &sectionlock = lname;          __macrohelper; __macrohelper = false ) \
-    for( scopedread __readlock( sectionlock );          __macrohelper; __macrohelper = false ) 
+    for( scopedlock __scopelock( sectionlock, false );  __macrohelper; __macrohelper = false ) \
 
 #define exclusivesection(lname) \
     for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
     for( typeof( lname ) &sectionlock = lname;          __macrohelper; __macrohelper = false ) \
-    for( scopedwrite __writelock( sectionlock );        __macrohelper; __macrohelper = false ) \
+    for( scopedlock __scopelock( sectionlock, true );   __macrohelper; __macrohelper = false ) \
     for( typeof(sectionlock.o) &lname = sectionlock.o;  __macrohelper; __macrohelper = false ) 
 
 #define sharedsection(lname) \
     for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
     for( typeof( lname ) &sectionlock = lname;          __macrohelper; __macrohelper = false ) \
-    for( scopedread __readlock( sectionlock );          __macrohelper; __macrohelper = false ) \
+    for( scopedlock __scopelock( sectionlock, false );  __macrohelper; __macrohelper = false ) \
     for( typeof(sectionlock.o) &lname = sectionlock.o;  __macrohelper; __macrohelper = false ) 
 
 #define unprotected(lname) \
@@ -310,7 +347,9 @@ private:
     for( typeof( lname ) &sectionlock = lname;          __macrohelper; __macrohelper = false ) \
     for( typeof(sectionlock.o) &lname = sectionlock.o;  __macrohelper; __macrohelper = false ) 
 
-#define breaksection /* For backward compatibility only, dont use this */
+#define breaksection \
+    for( bool __macrohelper = true;                     __macrohelper; __macrohelper = false ) \
+    for( scopedunlock __scopeunlock( __scopelock, 0 );  __macrohelper; __scopeunlock.shouldrelock(),  __macrohelper = false ) 
 
 /// Conditional.
 /// Implies a condition that one or more threads can wait on that
