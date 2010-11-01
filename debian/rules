@@ -4,6 +4,7 @@ build: build-stamp
 build-stamp:
 	# cp version.id src/libgrace/version.id
 	cd src/libgrace && ./configure --prefix /usr && make && cd ../..
+	cd src/grace-configure && ./configure --prefix /usr && make && cd ../..
 	cd src/libgrace-pcre && ./configure --prefix /usr && make && cd ../..
 	cd src/libdbfile && ./configure --prefix /usr && make && cd ../..
 	cd src/matrixssl && ./configure --prefix /usr && make && cd ../..
@@ -23,6 +24,8 @@ install-stamp: build-stamp
 	cp util/mk* debian/libgrace-dev/usr/bin/util-grace/
 	cp util/grace debian/libgrace-dev/usr/bin/grace
 	ln -s util-grace/mkapp debian/libgrace-dev/usr/bin/mkapp
+	install -m 755 src/grace-configure/mkconfigure debian/libgrace-dev/usr/bin/util-grace/mkconfigure
+	cp -p -R src/grace-configure/autoconfigure/* debian/libgrace-dev/usr/lib/grace-configure/
 	## libgrace-dbfile
 	install -m 644 lib/libdbfile.so debian/libgrace-dbfile/usr/lib
 	## libgrace-dbfile-dev
@@ -37,6 +40,7 @@ install-stamp: build-stamp
 	install -m 644 lib/libgrace-ssl.so debian/libgrace-ssl/usr/lib
 	## libgrace-ssl-dev
 	cp -r include/matrixssl debian/libgrace-ssl-dev/usr/include
+	touch install-stamp
 
 binary-indep: build install
 
