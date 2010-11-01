@@ -617,7 +617,7 @@ void tcplistener::listento (ipaddress addr, int port)
 		sock = socket (AF_INET, SOCK_STREAM, 0);
 		if (sock < 0)
 		{
-			breaksection throw socketCreateException();
+			throw socketCreateException();
 		}
 		
 		setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, (char *) &pram,
@@ -631,7 +631,7 @@ void tcplistener::listento (ipaddress addr, int port)
 		if (bind (sock, (struct sockaddr *) &remote, sizeof (remote)) < 0)
 		{
 			close (sock);
-			breaksection throw socketCreateException();
+			throw socketCreateException();
 		}
 		
 		listen (sock, tune::tcplistener::backlog);
@@ -682,7 +682,7 @@ void tcplistener::listento (const string &path)
 		sock = socket (AF_UNIX, SOCK_STREAM, 0);
 		if (sock < 0)
 		{
-			breaksection throw socketCreateException();
+			throw socketCreateException();
 		}
 		
 		setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, (char *) &pram,
@@ -691,7 +691,7 @@ void tcplistener::listento (const string &path)
 		if (bind (sock, (struct sockaddr *) &remote, sizeof (remote)) < 0)
 		{
 			close (sock);
-			breaksection throw socketCreateException();
+			throw socketCreateException();
 		}
 		
 		listen (sock, tune::tcplistener::backlog);

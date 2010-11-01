@@ -28,7 +28,7 @@ pcre *pcredb::get (const statstring &expr, int options)
 		if (expressions.exists (expr))
 		{
 			res = expressions[expr];
-			breaksection return res;
+			return res;
 		}
 
 		if (! expressions.exists (expr))

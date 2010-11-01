@@ -64,7 +64,7 @@ public:
 			while (c)
 			{
 				// We do, return that copy.
-				if (c->thr == me) breaksection return c->obj;
+				if (c->thr == me) return c->obj;
 				c = c->next;
 			}
 		}

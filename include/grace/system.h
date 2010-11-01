@@ -120,10 +120,7 @@ public:
 				p = ::getpwnam (s.str());
 				if (! p)
 				{
-					breaksection
-					{
-						return NULL;
-					}
+					return NULL;
 				}
 				res = pwval (p);
 			}
@@ -153,7 +150,7 @@ public:
 				p = ::getpwuid (uid);
 				if (! p) 
 				{
-					breaksection return NULL;
+					return NULL;
 				}
 				res = pwval (p);
 			}
@@ -171,7 +168,7 @@ public:
 				p = ::getgrnam (s.cval());
 				if (! p)
 				{
-					breaksection return NULL;
+					return NULL;
 				}
 				res = grval (p);
 			}
@@ -192,7 +189,7 @@ public:
 				p = ::getgrgid (gid);
 				if (! p)
 				{
-					breaksection return NULL;
+					return NULL;
 				}
 				res = grval (p);
 			}
