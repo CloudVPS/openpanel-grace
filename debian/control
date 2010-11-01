@@ -13,7 +13,7 @@ Description: libgrace
 
 Package: libgrace-dev
 Architecture: any
-Depends: 
+Depends: libgrace
 Replaces: libgrace-devel
 Conflicts: libgrace-devel
 Provides: libgrace-devel
@@ -28,7 +28,7 @@ Description: libgrace
 
 Package: libgrace-dbfile-dev
 Architecture: any
-Depends: 
+Depends: libgrace-dev, libgrace-dbfile
 Replaces: libgrace-dbfile-devel
 Conflicts: libgrace-dbfile-devel
 Provides: libgrace-dbfile-devel
@@ -41,6 +41,12 @@ Depends: libpcre3
 Description: libgrace
  The grace c++ library.
 
+Package: libgrace-pcre-dev
+Architecture: any
+Depends: libpcre3-dev
+Description: libgrace, libgrace-dev
+ The grace c++ library.
+
 Package: libgrace-querido
 Architecture: any
 Depends: 
@@ -49,7 +55,7 @@ Description: libgrace
 
 Package: libgrace-querido-dev
 Architecture: any
-Depends: 
+Depends: libgrace-querido, libgrace-dev
 Replaces: libgrace-querido-devel
 Conflicts: libgrace-querido-devel
 Provides: libgrace-querido-devel
@@ -64,7 +70,7 @@ Description: libgrace
 
 Package: libgrace-ssl-dev
 Architecture: any
-Depends: 
+Depends: libgrace-ssl, libgrace-dev
 Replaces: libgrace-ssl-devel
 Conflicts: libgrace-ssl-devel
 Provides: libgrace-ssl-devel

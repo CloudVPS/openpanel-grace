@@ -21,6 +21,7 @@ install-stamp: build-stamp
 	install -m 644 lib/libgrace.so debian/libgrace/usr/lib/libgrace.so
 	## libgrace-dev
 	cp -r include/grace debian/libgrace-dev/usr/include/grace
+	rm debian/libgrace-dev/usr/include/grace/pcre.h
 	cp util/mk* debian/libgrace-dev/usr/bin/util-grace/
 	cp util/grace debian/libgrace-dev/usr/bin/grace
 	ln -s util-grace/mkapp debian/libgrace-dev/usr/bin/mkapp
@@ -32,6 +33,8 @@ install-stamp: build-stamp
 	cp -r include/dbfile debian/libgrace-dbfile-dev/usr/include/dbfile
 	## libgrace-pcre
 	install -m 644 lib/libgrace-pcre.so debian/libgrace-pcre/usr/lib
+	## libgrace-pcre-dev
+	cp include/grace/pcre.h debian/libgrace-pcre-dev/usr/include/grace/pcre.h
 	## libgrace-querido
 	install -m 644 lib/libquerido.so debian/libgrace-querido/usr/lib
 	## libgrace-querido-dev
