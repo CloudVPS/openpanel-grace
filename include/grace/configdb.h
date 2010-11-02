@@ -62,7 +62,7 @@ public:
 	
 						 /// Determine if a value object contains
 						 /// this path.
-	bool				 existsin (value &);
+	bool				 existsin (value &) const;
 	
 						 /// Begin loop tp apply path rule to a tree.
 						 /// \param v The value object containing the data.
@@ -73,7 +73,7 @@ public:
 	
 						 /// Get current value for path (should be
 						 /// prepended by begin() or next().
-	const value			&get (void);
+	const value			&get (void) const;
 	
 						 /// Go to the next tree match, if any. Returns
 						 /// false if there are no more matches.
@@ -122,7 +122,7 @@ public:
 				 /// Return a thread-specific copy of a value object.
 				 /// \param from The source object.
 				 /// \param ti The time the source object last changed.
-	const value	&get (const value &from, time_t ti);
+	const value	&get (const value &from, time_t ti) const;
 
 protected:
 	lock<bool>	 lck; ///< Lock on the database.

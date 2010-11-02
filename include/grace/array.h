@@ -234,11 +234,34 @@ public:
 					 	return *(_array[pos].obj);
 					 }
 					 
+					 /// Access operator.
+					 /// If a negative index is provided, the position
+					 /// is measured from the right (with the last element
+					 /// of the array being represented as -1).
+					 ///
+					 /// \param _pos Requested array position.
+					 /// \throws arrayOutOfBoundsException
+	const kind		&operator[] (int _pos) const
+					 {
+					 	int pos = _pos;
+					 	if (pos<0) pos = _count + pos;
+					 	if (pos<0) throw arrayOutOfBoundsException();
+					 	if (pos >= _count) throw arrayOutOfBoundsException();
+					 	return *(_array[pos].obj);
+					 }
+					 					 
 					 /// Item count.
 					 /// Returns the number of entries in the array.
-	int				 count (void) { return _count; }
+	int				 count (void) const { return _count; }
 	
 	kind			*visitchild (int pos)
+					 {
+					 	if (pos<0) return NULL;
+					 	if (pos >= _count) return NULL;
+					 	return (_array[pos].obj);
+					 }
+					 
+	const kind		*visitchild (int pos) const
 					 {
 					 	if (pos<0) return NULL;
 					 	if (pos >= _count) return NULL;

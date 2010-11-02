@@ -169,7 +169,7 @@ void keypath::up (void)
 // Returns true if the keypath can be found inside the tree of a value
 // object.
 // ========================================================================
-bool keypath::existsin (value &val)
+bool keypath::existsin (value &val) const
 {
 	visitor<value> probe (val);
 	unsigned int x;
@@ -221,7 +221,7 @@ void keypath::begin (value &val, keypath &respos)
 // When inside a loop started by keypath::begin() this returns the
 // object at the full path under the current cursor.
 // ========================================================================
-const value &keypath::get (void)
+const value &keypath::get (void) const
 {
 	return crsr->obj();
 }
@@ -318,7 +318,7 @@ tsdb::~tsdb (void)
 // ----------------
 // Access a specific node inside the thread-specific database.
 // ========================================================================
-const value &tsdb::get (const value &from, time_t ti)
+const value &tsdb::get (const value &from, time_t ti) const
 {
 	pthread_t whom = __THREADED ? pthread_self() : (pthread_t) 1;
 	lck.lockw();
