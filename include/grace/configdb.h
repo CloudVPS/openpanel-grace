@@ -122,7 +122,7 @@ public:
 				 /// Return a thread-specific copy of a value object.
 				 /// \param from The source object.
 				 /// \param ti The time the source object last changed.
-	const value	&get (const value &from, time_t ti) const;
+	const value	&get (const value &from, time_t ti);
 
 protected:
 	lock<bool>	 lck; ///< Lock on the database.

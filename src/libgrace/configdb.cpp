@@ -318,7 +318,7 @@ tsdb::~tsdb (void)
 // ----------------
 // Access a specific node inside the thread-specific database.
 // ========================================================================
-const value &tsdb::get (const value &from, time_t ti) const
+const value &tsdb::get (const value &from, time_t ti)
 {
 	pthread_t whom = __THREADED ? pthread_self() : (pthread_t) 1;
 	lck.lockw();
