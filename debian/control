@@ -8,8 +8,14 @@ Standards-Version: 3.7.2
 Package: libgrace
 Architecture: any
 Depends: 
-Description: libgrace
- The grace c++ library.
+Description: The grace library
+ C++ has gotten a bad rep and attracted a lot of haters. Still, the language is 
+ far from dead and not very likely to die any time soon. Lots of effort has been
+ put, through various projects, into creating systems and libraries that hide 
+ some of the more ugly parts and ease programming. Grace is one of those 
+ attempts. It is a project that has grown over a couple of years to introduce,
+ through a combination of useful classes and clever macros, clear and easy ways
+ to perform a lot of computing tasks in C++. 
 
 Package: libgrace-dev
 Architecture: any
@@ -17,14 +23,20 @@ Depends: libgrace
 Replaces: libgrace-devel
 Conflicts: libgrace-devel
 Provides: libgrace-devel
-Description: libgrace
- The grace c++ library.
+Description: The grace library (development files)
+ C++ has gotten a bad rep and attracted a lot of haters. Still, the language is 
+ far from dead and not very likely to die any time soon. Lots of effort has been
+ put, through various projects, into creating systems and libraries that hide 
+ some of the more ugly parts and ease programming. Grace is one of those 
+ attempts. It is a project that has grown over a couple of years to introduce,
+ through a combination of useful classes and clever macros, clear and easy ways
+ to perform a lot of computing tasks in C++. 
 
 Package: libgrace-dbfile
 Architecture: any
-Depends: 
-Description: libgrace
- The grace c++ library.
+Depends: libgrace, libdb4.6
+Description: The grace library - dbm and db support
+ This package adds support for dbm and db4.6 to the grace library 
 
 Package: libgrace-dbfile-dev
 Architecture: any
@@ -32,26 +44,28 @@ Depends: libgrace-dev, libgrace-dbfile
 Replaces: libgrace-dbfile-devel
 Conflicts: libgrace-dbfile-devel
 Provides: libgrace-dbfile-devel
-Description: libgrace
- The grace c++ library.
+Description: The grace library - dbm and db support (Development files)
+ This package adds support for dbm and db4.6 to the grace library 
 
 Package: libgrace-pcre
 Architecture: any
-Depends: libpcre3
-Description: libgrace
- The grace c++ library.
+Depends: libpcre3, libgrace
+Description: The grace library - advanced regular expession support
+ This package adds support for advanced regluar expessions to the grace library 
+ through PCRE.
 
 Package: libgrace-pcre-dev
 Architecture: any
 Depends: libpcre3-dev
-Description: libgrace, libgrace-dev
- The grace c++ library.
+Description: The grace library - advanced regular expession support (Development files)
+ This package adds support for advanced regluar expessions to the grace library 
+ through PCRE.
 
 Package: libgrace-querido
 Architecture: any
-Depends: 
-Description: libgrace
- The grace c++ library.
+Depends: libgrace
+Description: The grace library - database support
+ This package adds support for databases to the grace libary.
 
 Package: libgrace-querido-dev
 Architecture: any
@@ -59,14 +73,14 @@ Depends: libgrace-querido, libgrace-dev
 Replaces: libgrace-querido-devel
 Conflicts: libgrace-querido-devel
 Provides: libgrace-querido-devel
-Description: libgrace
- The grace c++ library.
+Description: The grace library - database support (development files)
+ This package adds support for databases to the grace libary.
 
 Package: libgrace-ssl
 Architecture: any
-Depends: 
-Description: libgrace
- The grace c++ library.
+Depends: libgrace 
+Description: The grace library - SSL support
+ This package adds support for SSL to the grace libary.
 
 Package: libgrace-ssl-dev
 Architecture: any
@@ -74,5 +88,6 @@ Depends: libgrace-ssl, libgrace-dev
 Replaces: libgrace-ssl-devel
 Conflicts: libgrace-ssl-devel
 Provides: libgrace-ssl-devel
-Description: libgrace
- The grace c++ library.
+Description: The grace library - SSL support (development files)
+ This package adds support for SSL to the grace libary.
+
