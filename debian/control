@@ -7,7 +7,7 @@ Standards-Version: 3.7.2
 
 Package: libgrace
 Architecture: any
-Depends: 
+Depends: ${shlibs:Depends}
 Description: The grace library
  C++ has gotten a bad rep and attracted a lot of haters. Still, the language is 
  far from dead and not very likely to die any time soon. Lots of effort has been
@@ -34,7 +34,7 @@ Description: The grace library (development files)
 
 Package: libgrace-dbfile
 Architecture: any
-Depends: libgrace, libdb4.6
+Depends: libgrace, libdb4.6, ${shlibs:Depends}
 Description: The grace library - dbm and db support
  This package adds support for dbm and db4.6 to the grace library 
 
@@ -49,7 +49,7 @@ Description: The grace library - dbm and db support (Development files)
 
 Package: libgrace-pcre
 Architecture: any
-Depends: libpcre3, libgrace
+Depends: libpcre3, libgrace, ${shlibs:Depends}
 Description: The grace library - advanced regular expession support
  This package adds support for advanced regluar expessions to the grace library 
  through PCRE.
@@ -63,7 +63,7 @@ Description: The grace library - advanced regular expession support (Development
 
 Package: libgrace-querido
 Architecture: any
-Depends: libgrace
+Depends: libgrace, ${shlibs:Depends}
 Description: The grace library - database support
  This package adds support for databases to the grace libary.
 
@@ -78,7 +78,7 @@ Description: The grace library - database support (development files)
 
 Package: libgrace-ssl
 Architecture: any
-Depends: libgrace 
+Depends: libgrace,  ${shlibs:Depends}
 Description: The grace library - SSL support
  This package adds support for SSL to the grace libary.
 

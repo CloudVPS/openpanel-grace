@@ -27,19 +27,19 @@ install-stamp: build-stamp
 	install -m 755 src/grace-configure/mkconfigure debian/libgrace-dev/usr/bin/util-grace/mkconfigure
 	cp -p -R src/grace-configure/autoconfigure/* debian/libgrace-dev/usr/local/lib/grace-configure/
 	## libgrace-dbfile
-	install -m 644 lib/libdbfile.so debian/libgrace-dbfile/usr/lib
+	install -sm 644 lib/libdbfile.so debian/libgrace-dbfile/usr/lib
 	## libgrace-dbfile-dev
 	cp -r include/dbfile debian/libgrace-dbfile-dev/usr/include/dbfile
 	## libgrace-pcre
-	install -m 644 lib/libgrace-pcre.so debian/libgrace-pcre/usr/lib
+	install -sm 644 lib/libgrace-pcre.so debian/libgrace-pcre/usr/lib
 	## libgrace-pcre-dev
 	cp include/grace/pcre.h debian/libgrace-pcre-dev/usr/include/grace/pcre.h
 	## libgrace-querido
-	install -m 644 lib/libquerido.so debian/libgrace-querido/usr/lib
+	install -sm 644 lib/libquerido.so debian/libgrace-querido/usr/lib
 	## libgrace-querido-dev
 	cp -r include/querido debian/libgrace-querido-dev/usr/include/querido
 	## libgrace-ssl
-	install -m 644 lib/libgrace-ssl.so debian/libgrace-ssl/usr/lib
+	install -sm 644 lib/libgrace-ssl.so debian/libgrace-ssl/usr/lib
 	## libgrace-ssl-dev
 	cp -r include/matrixssl debian/libgrace-ssl-dev/usr/include
 	touch install-stamp
