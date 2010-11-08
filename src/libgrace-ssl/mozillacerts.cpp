@@ -1,3 +1,10 @@
+// This file is part of the Grace library, ssl addon (libgrace).
+// The Grace library is free software: you can redistribute it and/or modify it 
+// under the terms of the GNU General Public License as published by the Free 
+// Software Foundation, either version 3 of the License.
+// You should have received a copy of the GNU General Public License along with 
+// Grace library. If not, see <http://www.gnu.org/licenses/>.
+
 const char *GRACE_BUILTIN_CERTS =
 
 	"-----BEGIN CERTIFICATE-----\n"

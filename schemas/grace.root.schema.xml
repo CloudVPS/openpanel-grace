@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF8"?>
 
-<!-- GRACE SCHEMA (xml.schema)
-     Copyright (C) 2004 Pim van Riezen, Madscience Labs
-     Freely distributable
-
-     The xml.schema schema coded with the xml.schema schema 
-
-     This schema acts as a reference, since without a schema there would     
-     be no way of parsing it. The schema is coded directly into xmlschema.cpp
-     and defined globally as (xmlschema) XMLRootSchema.
--->
+<!-- This file is part of the Grace library (libgrace). This specific file is 
+provided under the terms of the CC-By-Ca license: Creative Commons Public 
+License, Attribution-ShareAlike 3.0 Unported. -->
 
 <xml.schema>
 

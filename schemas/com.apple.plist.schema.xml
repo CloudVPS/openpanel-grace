@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- This file is part of the Grace library (libgrace). This specific file is 
+provided under the terms of the CC-By-Ca license: Creative Commons Public 
+License, Attribution-ShareAlike 3.0 Unported. -->
+
 <xml.schema>
   <xml.class name="plist">
     <xml.type>container</xml.type>

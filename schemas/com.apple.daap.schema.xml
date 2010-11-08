@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF8"?>
 
+<!-- This file is part of the Grace library (libgrace). This specific file is 
+provided under the terms of the CC-By-Ca license: Creative Commons Public 
+License, Attribution-ShareAlike 3.0 Unported. -->
+
 <!-- CXML schema for iTunes 4.x DAAP protocol                     
      Compiled by Pim van Riezen (pi@madscience.nl)
      With thanks to Chris Boot and the daap.sf.net project
