@@ -1,4 +1,0 @@
-GRACE C++ libraries
-  Pim van Riezen <pi@openpanel.com>
-  Peter van Dijk <peter@openpanel.com>
-  Danny van der Meeren <danny@illogic.nl>
