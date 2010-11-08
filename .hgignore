@@ -23,3 +23,7 @@ src/libgrace/version.cpp
 
 syntax: regexp
 ^include/matrixssl/
+^debian/libgrace
+^.*-stamp
+^src/grace-
+^debian/files$
