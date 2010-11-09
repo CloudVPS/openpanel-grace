@@ -32,7 +32,7 @@ install-stamp: build-stamp
 	cp util/grace debian/libgrace-dev/usr/bin/grace
 	ln -s util-grace/mkapp debian/libgrace-dev/usr/bin/mkapp
 	install -m 755 src/grace-configure/mkconfigure debian/libgrace-dev/usr/bin/util-grace/mkconfigure
-	cp -p -R src/grace-configure/autoconfigure/* debian/libgrace-dev/usr/local/lib/grace-configure/
+	cp -p -R src/grace-configure/autoconfigure/* debian/libgrace-dev/usr/lib/grace-configure/
 	## libgrace-dbfile
 	install -sm 644 lib/libdbfile.so debian/libgrace-dbfile/usr/lib
 	## libgrace-dbfile-dev
