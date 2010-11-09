@@ -1204,6 +1204,9 @@ public:
 	/// the cli is in run() mode.
 	void sendconsole (const string &s) { term.sendconsole (s); }
 	
+	/// Stops the run command from processing any further requests
+	void stoprunning() { keeprunning = false; }
+	
 	/// Send formatted data to the console.
 	void printf (const char *fmt, ...)
 	{
@@ -1221,9 +1224,9 @@ public:
 	/// The embedded terminal object.
 	terminal<cli <ctlclass> > term;
 
+protected:
     bool keeprunning; ///< whether or not the run command should keep running
 
-protected:
 	expandsource *first; ///< First node in the expandsource linked list.
 	expandsource *last; ///< Last node in the expandsource linked list.
 	cmdhandler *hfirst; ///< First node in the cmdhandler linked list.
