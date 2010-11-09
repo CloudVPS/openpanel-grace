@@ -1135,10 +1135,11 @@ public:
 	/// \param p The prompt.
 	void run (const string &p)
 	{
-		bool done = false;
+        keeprunning = true;
+        
 		setprompt (p);
 		
-		while (! done)
+		while (keeprunning)
 		{
 			string res;
 			res = term.readline (prompt);
@@ -1156,7 +1157,7 @@ public:
 					{
 						if (h->path == curcmd)
 						{
-							if (h->runcmd (owner, cmdline)) done = true;
+							h->runcmd (owner, cmdline);
 							break;
 						}
 						
@@ -1170,17 +1171,15 @@ public:
 	
 	/// Start the command line interpreter.
 	/// \param p The prompt.
-	bool singlecmd (const string &c)
+	int singlecmd (const string &c)
 	{
-		bool done = false;
-		
 		term.termbuf.set(c);
 
 		tabhandler (0, term.termbuf);
 		if (curcmd == "@error")
 		{
 			term.termbuf.tprintf (errortext::terminal::incomplete);
-			return false;
+			return 1;
 		}
 		else if (cmdline.count())
 		{
@@ -1189,14 +1188,13 @@ public:
 			{
 				if (h->path == curcmd)
 				{
-					if (h->runcmd (owner, cmdline)) done = true;
-					break;
+					return h->runcmd (owner, cmdline); 
 				}
 				
 				h = h->next;
 			}
 		}
-		return done;
+		return 1;
 	}
 	
 	/// Change the prompt. Can be used by callbacks.
@@ -1222,6 +1220,8 @@ public:
 	
 	/// The embedded terminal object.
 	terminal<cli <ctlclass> > term;
+
+    bool keeprunning; ///< whether or not the run command should keep running
 
 protected:
 	expandsource *first; ///< First node in the expandsource linked list.
