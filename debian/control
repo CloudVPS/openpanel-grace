@@ -8,7 +8,7 @@
 Source: libgrace
 Section: misc
 Priority: optional
-Maintainer: OpenPanel/Panel6 packager <packages@panelsix.com>
+Maintainer: OpenPanel packager <packages@openpanel.com
 Build-Depends: debhelper (>= 5), libpcre3-dev, libgdbm-dev, libdb4.6-dev, libsqlite3-dev
 Standards-Version: 3.7.2
 
