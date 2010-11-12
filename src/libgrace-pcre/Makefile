@@ -12,7 +12,7 @@ OBJ			= 	pcre.o
 AR = ar cr
 
 all: $(OBJ)
-	$(LDSHARED) -o ../../lib/libgrace-pcre.$(DYNEXT) $(OBJ)
+	$(LDSHARED) $(LIBS) -o ../../lib/libgrace-pcre.$(DYNEXT) $(OBJ)
 
 depend:
 	@echo -n >Makefile.depend
