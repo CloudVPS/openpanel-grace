@@ -13,7 +13,7 @@ AR = ar cr
 
 all: $(OBJ)
 	./getmatrixobj.sh
-	$(LDSHARED) -o ../../lib/libgrace-ssl.$(DYNEXT) $(OBJ) matrixobj/*.o
+	$(LDSHARED) $(LIBS) -o ../../lib/libgrace-ssl.$(DYNEXT) $(OBJ) matrixobj/*.o
 
 install: all
 	./makeinstall

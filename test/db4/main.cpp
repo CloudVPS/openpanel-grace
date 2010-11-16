@@ -26,14 +26,14 @@ int db4testApp::main (void)
 	dbf.setencoding (dbfile::shox);
 	if (! dbf.open ("mydb")) FAIL ("could not open db");
 	
-	dbf.db["pi"]["class"] = "weenie";
-	dbf.db["pi"]["email"] = "pi@test.panelsix.com";
-	dbf.db["peter"]["class"] = "wanker";
-	dbf.db["peter"]["email"] = "peter@test.panelsix.com";
-	dbf.db["jeroen"]["class"] = "wimp";
-	dbf.db["jeroen"]["email"] = "jeroen@test.panelsix.com";
-	dbf.db["lennard"]["class"] = "wuss";
-	dbf.db["lennard"]["email"] = "lennard@test.panelsix.com";
+	dbf.db["pi"]["class"] = "piclass";
+	dbf.db["pi"]["email"] = "pi@test.openpanel.com";
+	dbf.db["peter"]["class"] = "peclass";
+	dbf.db["peter"]["email"] = "peter@test.openpanel.com";
+	dbf.db["jeroen"]["class"] = "jeclass";
+	dbf.db["jeroen"]["email"] = "jeroen@test.openpanel.com";
+	dbf.db["lennard"]["class"] = "leclass";
+	dbf.db["lennard"]["email"] = "lennard@test.openpanel.com";
 	dbf.commit ();
 	dbf.close();
 	
@@ -54,7 +54,7 @@ int db4testApp::main (void)
 	
 	if (! X.open ("mydb")) FAIL ("could not re-open db");
 
-	if (X.db["peter"]["class"].sval() != "wanker") FAIL ("readclass");
+	if (X.db["peter"]["class"].sval() != "peclass") FAIL ("readclass");
 	
 	foreach (node, X.db)
 	{
