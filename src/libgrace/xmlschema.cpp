@@ -14,6 +14,8 @@
 #include <grace/valueindex.h>
 #include <grace/xmlschema.h>
 
+$exception (xmlSchemaLoadException, "Could not load XML schema");
+
 // ------------------------------------------------------------------------
 // Static keys used extensively in XML schemas. This will save space and
 // needless hash calculations
@@ -24,6 +26,7 @@
 // ========================================================================
 xmlschema::xmlschema (const string &name)
 {
+	if (! fs.exists (name)) throw (xmlSchemaLoadException());
 	schema.loadxml (name,xmlschema::root());
 }
 
@@ -69,6 +72,7 @@ xmlschema &xmlschema::plist (void)
 // ========================================================================
 void xmlschema::load (const string &name)
 {
+	if (! fs.exists (name)) throw (xmlSchemaLoadException());
 	schema.loadxml (name,xmlschema::root());
 	
 	foreach (cl, schema)
