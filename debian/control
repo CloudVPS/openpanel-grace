@@ -63,7 +63,7 @@ Description: The grace library - advanced regular expession support
 
 Package: libgrace-pcre-dev
 Architecture: any
-Depends: libpcre3-dev
+Depends: libpcre3-dev, libgrace-pcre
 Description: The grace library - advanced regular expession support (Development files)
  This package adds support for advanced regluar expessions to the grace library 
  through PCRE.
