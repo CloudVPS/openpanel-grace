@@ -34,8 +34,8 @@ rm -f configure.flags configure.include
 
 # give me a non-cat version that doesn't change the overall order of arguments
 # in this line, and I'll agree that the cat is useless.
-TINAHGREV="##TINAHGREV##"
-cat $BASEDIR/parts/header | sed "s/__TINAHGREV__/$TINAHGREV/" > configure
+HGREV="##HGREV##"
+cat $BASEDIR/parts/header | sed "s/__HGREV__/$HGREV/" > configure
 
 # clean configure.dep
 rm -f configure.dep
