@@ -48,6 +48,7 @@ void log::write (log::priority prio, const string &mod, const string &text)
 // ========================================================================
 daemon::daemon (const string &title) : application (title)
 {
+	for (int i=3; i<255; i++) ::close (i);
 	MAINDAEMON = this;
 	_foreground = false;
 	LOGTHREAD = NULL;
