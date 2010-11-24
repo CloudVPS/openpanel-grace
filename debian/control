@@ -76,7 +76,7 @@ Description: The grace library - database support
 
 Package: libgrace-querido-dev
 Architecture: any
-Depends: libgrace-querido, libgrace-dev
+Depends: libgrace-querido, libgrace-dev, libsqlite3-dev
 Replaces: libgrace-querido-devel
 Conflicts: libgrace-querido-devel
 Provides: libgrace-querido-devel
