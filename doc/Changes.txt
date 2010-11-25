@@ -1,0 +1,982 @@
+0.9.38     Thu Nov 25 2010                           <grace@openpanel.com>
+
+           * Fix daemon class to be compatible with daemon startups being
+             triggered inside debian package scripts.
+           
+           * Small bugfix to the way a value object's type() is inferred.
+
+0.9.37     Thu Nov 18 2010                           <grace@openpanel.com>
+
+           * Grace mkconfigure is now runtime compatible with GNU autoconf
+           
+           * Added infrastructure for debian packaging
+           
+           * Now throws a decent exception on failed schema loads
+           
+           * Allow applications using the cli<> template class to exit
+             with a return value
+             
+           * Returns out of sharedsection/exclusivesection blocks no longer
+             need an explicit breaksection
+             
+           * Some fixes to constness
+
+0.9.36     Wed Jun 30 2010                           <grace@openpanel.com>
+
+           * Fix memory leak and handling
+           
+           * Fix smtpd implementation class
+           
+           * Rename value::itype to _itype, add value::itype().
+           
+           * Fix temporary string object handling in encodejsonstring.
+
+0.9.35     Thu Apr  1 2010                           <grace@openpanel.com>
+
+           * Added AUTH PLAIN / AUTH LOGIN support to the smtpd class.
+           
+           * Fixed rfc-compliance issues with smtpd.
+           
+           * Added AUTH PLAIN support to the smtp (outbound) class.
+
+0.9.34     Wed Mar 24 2010                           <grace@openpanel.com>
+
+           * Internal interum-release.
+
+           * Extend udpsocket to allow access to the 'unbound' port
+             number.
+
+0.9.33     Tue Mar  9 2010                           <grace@openpanel.com>
+
+           * Fix some issues in libquerido.
+           
+           * Add 'grace mkconfigure' utility to create a new configure
+             script out of a configure.in file.
+
+0.9.32     Sun Feb 28 2010                           <grace@openpanel.com>
+
+           * Fix bug in pwfile/valueauth handling of empty username.
+           
+           * Fix some build issues for debian.
+
+0.9.31     Thu Sep  3 2009                           <grace@openpanel.com>
+
+           * Minor fixes
+           
+           * Fix use of tail in mkproject
+           
+           * Add $?boolname:yes:no$ conditional handling to scriptparser.
+
+0.9.30     Fri May 15 2009                           <grace@openpanel.com>
+
+           * Some BSD compatibility fixes.
+           
+           * Fix value::operator<< for merges of pure arrays.
+           
+           * Improvements to the 'grace mkapp' tool.
+           
+           * Fix in libgrace-ssl for situations where more than one
+             SSL payload is in the final packet of a connection.
+             
+           * Add value::join(char).
+           
+           * The file class is now iterable.
+           
+           * The file class now accepts a path in its constructor.
+           
+           * Some default filtersets for string::filter have been
+             added.
+
+0.9.29     Thu Apr  2 2009                           <grace@openpanel.com>
+
+           * Lots of optimizations
+
+0.9.28     Thu Feb 12 2009                           <peter@openpanel.com>
+
+           * Fixed error reporting in libgrace-ssl.
+
+           * Added a built-in CA certificate chain to libgrace-ssl
+             imported from the mozilla CA certs.
+
+           * Upgrade to matrixssl 1.8.6.
+
+           * Fix boatloads of compiler warnings.
+           
+           * Some stability fixes for issues found with valgrind.
+           
+           * Some 64-bits fixes.
+           
+           * Some fixes to the timestamp class regarding daylight savings
+             time.
+             
+           * Compatibility fixes for opensolaris.
+           
+           * Fixed a bug in tcpsocket that would sometimes leave
+             undecoded data hanging in the iocodec buffers, which could
+             sometimes trigger false timeouts in outgoing SSL connections
+             
+
+0.9.27     Tue Sep  2 2008                           <grace@openpanel.com>
+
+           * Add some thread safety to copying value objects.
+
+0.9.26     Wed Aug 13 2008                           <grace@openpanel.com>
+
+           * Some fixes to the ipaddress class.
+
+0.9.25     Fri Aug  8 2008                           <grace@openpanel.com>
+
+           * Add broadcast option to udpsocket
+           
+           * Thread-ids were not properly resolved on 64bits platforms
+           
+           * Fixed syntax of throws to please gcc3
+           
+           * netdb::resolve() and friends now use getaddrinfo, slowly
+             getting ready for including IPv6 support.
+             
+0.9.24     Mon Jul 21 2008                           <grace@openpanel.com>
+
+           * Put some more sense into the application templates created
+             by grace mkproject.
+           
+           * Add <xml.option.defaulttagkey/> to the xmlschema option
+             section, indicates that any tags with an unknown type
+             should assume their tagname to be the node's key.
+             
+           * Fixed offset-bug in string::strcat().
+           
+           * Added class udpsocket for sending and receiving datagrams.
+
+0.9.23     Mon Jun 30 2008                           <grace@openpanel.com>
+
+           * Fixed a bug in string::replace() when dealing with
+             high ASCII or UTF characters.
+
+           * Rigged the process class to never get the child process
+             confused about outstanding lock objects, by declaring
+             its environment to be single-threaded (which it is).
+             This makes the systemprocess class more robust.
+             
+           * Rewrote the mkproject utility to be more flexible. It now
+             also allows for setting up projects that don't use the
+             .app bundle directory structure.
+           
+           * Rewrote the mkapp utility.
+             
+           * Fixed an issue where value::sort() would still lead to
+             a messed up tree linking node keys.
+             
+           * Changed value::sort()'s sorting algorithm from fugly
+             bubblesort to something a bit more sane.
+
+0.9.22     Fri Jun 13 2008                           <grace@openpanel.com>
+
+           * Removed a lot of unnecessarily inlined code.
+           
+           * Added flag::savetype default argument to value::saveshox().
+           
+           * Added a top-level Makefile and configure script.
+           
+           * Built-in schemas are now grace-encoded in the source.
+           
+0.9.21     Fri Jun  6 2008                           <grace@openpanel.com>
+
+           * Fixed a problem where httpsocket would sometimes deal
+             badly with a dropped connection when it was using
+             HTTP keepalive.
+             
+           * Fixed a bug in string::strstr that would overflow
+             memory bounds in some circumstances.
+             
+           * Fixed timezone handling inside class timestamp.
+           
+           * Fixed a bug in httpsocket GET handler (it never sent
+             a valid HTTP request due to control flow misalignment).
+             
+           * Fixed a parser bug in system regular expression handling.
+
+0.9.20     Fri May 23 2008                           <grace@openpanel.com>
+
+           * Rudimentary support for formatting UTF-8 text in terminal
+             screens.
+
+0.9.19     Fri May 16 2008                           <grace@openpanel.com>
+
+           * Minor bugfix to terminal handling.
+
+0.9.18     Wed Apr 16 2008                           <grace@openpanel.com>
+
+           * Added %M/%Q for mysql/sql escaping.
+
+           * Some minor tweaks.
+
+0.9.17     Wed Mar 19 2008                           <grace@openpanel.com>
+
+           * Improvements to command line handling code.
+
+0.9.16     Thu Mar 13 2008                           <grace@openpanel.com>
+
+           * A string object can now contain a substring of another
+             string object without keeping a private copy.
+             
+           * Added support for Bitvise Tunnelier's braindead interpretation
+             of vt100/xterm emulation (sending <ESC>+'O' where grownups
+             send <ESC>+'[').
+
+0.9.15     Wed Mar 12 2008                           <grace@openpanel.com>
+
+           * Got rid of some more inlining mess.
+
+0.9.14     Tue Mar 11 2008
+
+           * Improved usability of libgrace-pcre
+           
+           * Remove pointless inlining in class string
+           
+           * Fix json encoding bug.
+
+0.9.13     Fri Mar  7 2008                           <grace@openpanel.com>
+
+           * Add value::zip()
+           
+           * Add strutil::splitescaped()
+           
+           * Add $range(start:end) generator
+           
+           * Add value::byvalue()
+           
+           * Add value::join()
+
+0.9.12     Wed Mar  5 2008                           <grace@openpanel.com>
+
+           * Bugfixes
+
+0.9.11     Tue Mar  4 2008                           <grace@openpanel.com>
+
+           * Changed hash used by statstring.
+
+0.9.10     Thu Feb 28 2008                           <grace@openpanel.com>
+
+           * Add libgrace-pcre.
+
+0.9.9      Wed Feb 27 2008                           <grace@openpanel.com>
+
+           * Improvements to httpdfileshare.
+
+0.9.8      Thu Feb 21 2008                           <grace@openpanel.com>
+
+           * Changed packaging.
+
+0.9.7      Tue Feb 19 2008                           <grace@openpanel.com>
+
+           * Optimized string::trim() and family.
+           
+           * Added value::splice().
+           
+           * Improved handling of class ipaddress.
+           
+           * Improvements to class currency.
+           
+           * Fixed problems related to fork() inside class process and
+             the global stringref treelock.
+             
+           * Improved handling of class timestammp.
+
+0.9.6      Thu Feb 14 2008                           <grace@openpanel.com>
+
+           * Fix interaction between class value and class ipaddress
+
+           * Fix bug in parsing a currency value out of a string.
+
+0.9.5      Tue Feb 12 2008                           <grace@openpanel.com>
+
+           * Fix keyboard readahead in class terminal.
+
+0.9.4      Fri Feb  8 2008                           <grace@openpanel.com>
+
+           * Support JSON-encoding through %format.
+
+           * Grace is now a shared library.
+           
+           * Applications using daemon can now use the globally
+             available log::write() function instead of daemon::log().
+             
+           * The fin, fout and ferr file objects are now globally
+             available (no longer tied to the application class).
+             
+           * Trees of value objects can now easily be constructed using
+             the '$(key,value) -> $(key, value)' notation.
+             
+           * Added support for reading and writing JSON-encoded strings.
+           
+           * Added $appobject() macro, deprecates APPOBJECT().
+           
+           * Added $version() macro.
+           
+           * Added $exception() macro, deprecates THROWS_EXCEPTION().
+
+0.9.3      Private release
+
+0.9.2      Private release
+
+0.9.1      Private release
+
+0.9.0      Private release
+
+0.8.15     Fri Oct  5 2007                         <grace@openpanel.com>
+           
+           * Fixed a memory leak in value::rmval().
+           
+           * Fixed a memory leak in the assignment of a tcpsocket object
+             to pointer.
+             
+           * Added python-style string formatting using %format.
+           
+           * Tweak arguments for value::toxml() and value::savexml().
+           
+           * Apple .plist is now a built-in schema.
+           
+           * Tweak thread messaging: It now officially makes more sense
+             to use thread::sendevent ("command") or, its brother,
+             thread::sendevent ("command", (value) data).
+             
+           * Add new database library 'querido'. Currently only supports
+             sqlite.
+           
+           * Add value::insertval() as a sidekick to value::newval().
+           
+           * Fixed some issues with scriptparser.
+           
+           * Added class sessionlist for implementing sessions with
+             timeout over stateless protocols.
+             
+           * kernel.pwcrypt.verify() now supports salted MD5 passwords
+             regardless of what the native crypt() supports.
+
+0.8.14     Tue Mar 13 2007                         <grace@openpanel.com>
+
+           * Fixed a number of tab-handling bugs in terminal/cli.
+           
+           * Cleaned up some casting issues that surfaced when using
+             dbfile.
+           
+           * Removed hardcoded mapping between keys like ^D and ^Z
+             from the cli/terminal class.
+             
+           * Added a mechanism to extract the command line history from
+             the terminal class, allowing the application to load/save
+             it.
+             
+           * Improved handling of extraneous whitespace in cli.
+           
+           * When daemon::daemonize() was called without a delayed
+             exit setting, stdin/stdout/stderr were not closed
+             properly, leading to terminal leakage.
+           
+           * Fixed a memory leak error in the dictionary<kind> template
+             class.
+
+0.8.13     Fri Jan 05 2007                         <grace@openpanel.com>
+
+           * Internalized md5 crypt can now generate BSD-style MD5 hashes
+             natively.
+
+           * Fixed a timing bug in class conditional.
+
+           * The XML parser is much stricter now and will complain about
+             such things as unbalanced tags. More forgiving behavior can
+             still be requested through a global flag.
+
+           * Added leak detection to the management of memory involving
+             temporary objects.
+
+           * Added perthread<kind> template class to wrap the behavior of
+             keeping thread-local copies of instances of a class.
+
+           * Improved resolving of the location of the application bundle
+             directory.
+
+           * Executables will look for a function called grace_init and
+             call this before creating the main application object, allowing
+             you to override default settings for the runtime at the
+             earliest opportunity.
+
+           * Moved lots of default limits and sizes into a static tree
+             of global namespaces/variables that can be altered at
+             runtime.
+
+           * Added 'Serialized Hierarchical Object eXchange' (SHOX)
+             as a method for storing varlue objects in a compact binary
+             format that is endian-safe.
+
+           * Improved behavior of value objects in const context that
+             are cast to a string.
+
+           * Improved handling of escaped data inside XML attributes.
+
+           * Migrated inter-thread event messaging to a specialty
+             class eventq.
+
+           * Improved usability of the array and dictionary templates.
+
+           * Added an exception base class, making it easier to catch
+             targeted exceptions.
+
+           * Added sub-project libdbfile for accessing database files
+             through an easy interface. Currently supports gdbm and
+             berkeleydb version 4.
+
+           * Added a template iterator class to improve the foreach
+             macro.
+
+           * Added VT100 terminal emulation for keyboard input,
+             including classes to set up a fully fledged assistive
+             IOS-style command line interface with complex syntaxes
+             and callbacks.
+
+           * Moved default values from macro-definition to initialized
+             globals. Runtime changes to these defaults can be achieved
+             by defining an optional init function in your code that
+             gets executed before the application object is created.
+             This is in preparation for the 0.9 series that will be
+             built as a shared library (which also implies we need
+             to focus on stabilizing the API/ABI at that point).
+
+           * Fixed a bug in the retained copy-constructor of string.
+
+           * Added exclusivesection (var) {...}, sharedsection (var)
+             and unprotected (var) {...} macros to access values wrapped
+             inside a lock<> template with a clear indication of the
+             scope of the lock.
+
+           * Cleaned up test system.
+           
+           * Added caseselector { incaseof() : ...; defaultcase : ...; }
+             macros that allow switch/case with string keys.
+
+           * Created new baseclass memory::retainable, uses more
+             efficient preallocation for temporary return values.
+           
+           * Added "returnclass (type) name retain" macro to make
+             it easy to create return values that can be passed
+             as a pointer but can be accessed with a reference
+             throughout the function.
+
+           * Added nifty foreach macro to visitor.h.
+
+           * Moved codebase to a mercurial repository.
+           
+           * Allow xml schemas to define the tag type of an xml
+             node as implied by the object's datatype.
+
+           * <danny@illogic.nl> Overhauled class timestamp, phase 1.
+             Added test scenarios.
+
+           * Cleaned up value_ascii (formatting code was bug-ridden).
+
+           * Added the smtpd class and friends for implementing an SMTP
+             daemon with flexible delivery handling.
+
+           * Fixed proper handling of <grace.help/> and <grace.default/>
+             for runoptions.
+
+           * Default runoption handler for --help.
+
+           * Added new class currency, representing fixed point arithmetic
+             with 3 decimals accuracy.
+             
+           * Added a currency internal type to the value class.
+
+           * Fixed export of floating point numbers.
+
+           * Added timeofday class for microsecond measurements and
+             higher precision 'wait until' functionality. Submitted by
+             <danny@illogic.nl>.
+             
+           * Improved handling of PHP serialized arrays.
+
+           * Fixed handling of SSL cipher exchange for connections that
+             act non-blocking.
+             
+           * Fixed buffer allocation strategy for SSL initialization.
+           
+           * Fixed handling of timeout conditions in SSL context.
+           
+           * Fixed handling of timeout conditions in HTTP/1.1 chunked-
+             encoding transfers.
+
+           * Added string::chomp().
+
+           * Added string::replace().
+
+           * Added <xml.option.rootclass/> specification to the xml.schema
+             language.
+
+           * Added smtpsocket class for sending email through SMTP.
+
+           * The file class now recognizes an optional iocodec member
+             object that can be linked to handle transparent coding
+             of the data stream.
+
+           * Integrated the MatrixSSL library as part of the optional
+             grace-ssl component, which offers the sslclientcodec,
+             sslsocket and httpssocket classes (server classes will follow,
+             as well as proper certificate checking).
+
+           * The mkproject utility now creates better project templates
+             for application or daemon based programs.
+
+           * The daemon::log() function emits to stdout when the
+             application has not yet been daemonized.
+             
+           * The new configdb template class makes it easier to handle
+             configuration and live configuration changes. By binding
+             methods of your application class to different paths of
+             your configuration file, you can easily translate a
+             configuration layout to an object hierarchy and keep track
+             of changes.
+             
+           * Integrated new sval utility for validating xml.schema and
+             grace.validator. 
+
+0.8.12     Fri Sep  2 2005                            <pi@madscience.nl>
+
+           * XML schema support for union objects.
+           
+           * XML schema support for wrapping/unwrapping chained
+             object hierarchies into a single object.
+             
+           * XML schema support for implicit arrays according to
+             object class.
+             
+           * The httpd class would not return a content-length for
+             a reply body with zero length.
+             
+           * Added more operators to string/statstring/value to deal
+             with const/non-const.
+             
+           * Added class validator for handling data-validation.
+           
+           * Added schema specifics for the <grace.validator> objects.
+           
+           * Fixed strutil::pad() to not crop data if the string is longer
+             than the padding size. That stunt interfered with the
+             possiblity of jumping up and down in a binary stream
+             through the string::binputfoo() methods.
+             
+           * Added support for encoding value objects to serialized
+             PHP arrays (with or without attributes) through
+             string::phpserialize() and string::phpdeserialize().
+             
+           * The "home:", "var:", "log:" and "run:" aliases were
+             screwed up on initialization. Now they're not, so the
+             checkpid()/writepid() stuff in daemon actually works:).
+             
+           * If a null character (or no second argument) is passed
+             to strutil::splitquoted, the split will be on the basis
+             of any whitespace character. This was necessary to make
+             strutil::xmlreadtag() understand tags where attributes
+             only have tabs inbetween.
+
+0.8.11     Mon Jul 18 2005                            <pi@madscience.nl>
+
+           * GCC4.0 compatibility fixes.
+           
+           * Added str::cutatlast, cutafter, cutafterlast.
+           
+           * Added str::copyuntil, copyuntillast, copyafter, copyafterlast.
+
+           * Added doxygen documentation to all classes.             
+           
+           * Added file::writeln.
+           
+           * Added class serverpage, a httpdobject that pre-parses
+             HTTP POST variables.
+             
+           * XML schemas can now defina a doctype inside the options
+             section.
+             
+           * The cmdtoken_root class is now natively called scriptparser.
+
+0.8.10     Sat May 15 2005                            <pi@madscience.nl>
+
+           * Bugfix: tcpsocket::connect() was using a thread-unsafe
+             method for resolving the hostname.
+             
+           * Bugfix: the reference counting of the stringref database tracked
+             for statstring objects was not entirely threadsafe, this screwed
+             up during garbage collection.
+             
+           * Datablocks allocated for a string now contain a thread-specific
+             reference. In situations where a string was copied to several
+             threads, an issue could rise where the stringref got decreased
+             in ways that are not 100% threadsafe.
+             
+           * The value class now uses a somewhat less intensive power-of-two
+             allocation scheme for arrays. This saves on reallocations.
+           
+           * New class ringbuffer implements a fixed-size ringbuffer for
+             character data.
+           
+           * File i/o now takes place through a ringbuffer instead of
+             a string object. Especially in situations where lots of
+             bandwidth passes a file or tcpsocket this operation is now
+             much speedier.
+             
+           * Added a readuntil() method to the file class, allowing for
+             convenient streaming of file/socket data up to a provided
+             marker.
+             
+           * Bugfix: value::rmval() had some issues under duress.
+           
+           * Bugfix: string::pad() didn't work properly
+           
+           * A string object can now be initialized with a defined initial
+             allocation size.
+             
+           * A checksum64() function is added, this is a fairly quick hash
+             from a string to a unique 64 bit integer. It has a very low
+             tested collision rate against message-ids.
+             
+           * A non-blocking version of file::read() was added as well as a
+             file::waitforline() method that allows for a timed wait for
+             a terminated line (<LF> or <CRLF>).
+             
+           * Line reading methods of the file class now have a maximum
+             length parameter.
+             
+           * A tcpsocket yields to false if it is not initialized.
+           
+           * Added tcplistener::tryaccept() method for a timed wait on
+             a new connection.
+
+0.8.9      Mon Feb 14 2005                            <pi@madscience.nl>
+
+           * Applications now actually work if they are in your $PATH
+             and you invoke them without an explicit path. The startup
+             code only checked the apps: alias but never the tools: alias
+             which is where the old $PATH is hiding.
+
+           * Added a ::tryaccept method to tcplistener which allows for
+             a timeout.
+
+           * The httpd class now has a ::shutdown method that gracefully
+             exits all threads after handling any outstanding connections.
+
+           * New default aliases var:, state:, log: and run: implement the
+             /var hierarchy. All these can be overruled with $PATH_VAR &c.
+
+           * The daemon class now creates a proper pid-file on daemonize()
+             and will not start if an earlier copy is already running.
+
+           * All logfiles (coming out of daemon and httpdlogger) allow for
+             automatic logrotation.
+
+           * Created a new grace/defaults.h to collect all those more or
+             less arbitrary integer defaults for things like buffer
+             sizes.
+
+           * Created a test/ subtree with some unit tests.
+
+0.8.8      Sun Oct 31 2004                            <pi@madscience.nl>
+
+           * Resurrected the dictionary template class into working
+             condition.
+
+           * Added an array template class.
+
+           * Added a more convenient name 'scriptparser' for the
+             cmdtoken_root class. There is also a grace/scriptparser.h
+             header file.
+
+           * The httpd class can now incorporate the scriptparser class
+             for handling documents with a provided extension.
+
+           * A httpdfiletypehandler base class allows for specific handling
+             of certain filetype extensions.
+
+           * The http class can now deal with chunked encoding.
+
+           * Added string::cutatlast methods
+
+           * Fixed some compilation issues with SGI MIPSPro compilers
+
+0.8.7      Mon Sep  6 2004                            <pi@madscience.nl>
+
+           * Added a timestamp class that can assist in bridging
+             various date formats.
+
+           * The stringrefdb was a mess. It now retains values for a
+             while, only if the grand total of abandoned nodes amounts
+             to more than 32K will the reaper be invoked. I'm not a
+             big fan of garbage collection, but key data tends to get
+             reused a lot and immediately flushing nodes puts an
+             unreasonable strain on the treelock.
+
+           * The XML schema language now supports the concept of
+             containers that can adequately morph seriously weird
+             tag-wrapping concepts like apple's plist and xmlrpc
+             easy.
+
+           * The XML schema now has a concept for nodes that indicate
+             a boolean that is set to either true or false, as used
+             for plist bool types (you have to wonder why they chose
+             to be compact and elegant _just_ for this _one_ type).
+
+           * For reasons stated above, value::*plist is now
+             depcrecated and is now just an attempt to load the file
+             "schema:com.apple.plist.schema.xml" as a schema followed
+             by a load/save/from/toxml with that schema.
+
+           * Specific string classes in an XML schema can now contain
+             base64-encoded data.
+              
+           * Path volumes now support entries that can have a low
+             priority but are skipped by the right-to-left considerations
+             of transw(). This allows for the "conf:" volume to point
+             to 'app:Contents/Configuration Defaults' as a source of
+             last resort without defaulting to that directory when
+             writing changed preferences to disk.
+             
+           * Implemented upstream changes in tina in the configure
+             script to help out compilation on more platforms.
+
+           * The lock::trylockw() and lock::trylockr() methods now
+             have an optional timeout argument in seconds.
+
+           * Added httpd.cpp/httpd.h implementing a multithreaded
+             daemon that can easily be embedded into other programs
+             that wish to interface with the outside world with a 
+             http daemon. By creating a chain of classes, the exact
+             functionality needed can be added.
+
+           * Added support for sendfile() to class tcpsocket. On
+             platforms that do not support this system call (currently
+             meaning every OS but linux) this will trigger a normal
+             read()/write() cycle.
+
+           * Added a filesystem::size (filename) method.
+
+           * Value attributes are now themselves value objects when
+             asked for through operator(). Thus ends the era of
+             braindead string conversions on attributes within a class
+             that itself can deal perfectly well with other data types.
+
+           * Fixed a metric buttload of errors dealing with statstring
+             objects that contained a null-value.
+             
+           * Individual threads were already spawned with their flags
+             set to ignore SIGPIPE. This signal is now deferred globally.
+             The 
+
+0.8.6      Sat Aug 28 2004                            <pi@madscience.nl>
+
+           * Fixed memory leaks in xmlschema.
+
+           * Fixed memory leaks in visitor.
+
+           * Fixed memory leaks in httpsocket.
+
+           * Fixed bugs in string.
+
+           * Fixed up leaky nature of regexpression.
+
+0.8.5      Sat Aug 21 2004                            <pi@madscience.nl>
+
+           * Got the loading of configuration files through conf: right
+             for a change.
+           
+           * Fixed configure scripts for proper rpm builds.
+
+           * Added a mkconf util that will install the default configuration
+             in the proper place.
+
+           * Fixed compiling issues with FreeBSD and NetBSD.
+
+           * Added peer_name and peer_host to tcpsocket.
+
+           * Added more robustness to httpsocket.
+
+0.8.4      Sun Aug  1 2004                            <pi@madscience.nl>
+
+           * Added support for Unix Domain sockets to tcpsocket.
+
+           * Added passing of credentials/filedescriptors to tcpsocket.
+
+           * Fixed proper implementation of grace.runoptions in the
+             application class.
+
+           * Added a 'daemon' application class for service application
+             models. Includes a background log thread that can relay
+             events to a file or unix syslog.
+
+           * Fixed thread implementation and event passing between
+             thread objects.
+
+           * Added a default file 'resources.xml' to be loaded into
+             the application::rsrc value object. The daemon class
+             uses this to determine log dispatching. Ideally, the
+             definition of commandline arguments should move to this
+             file as well. Currently the file operates without a
+             schema.
+
+0.8.3      Tue May 11 2004                            <pi@madscience.nl>
+
+           * Added methods for parsing windows-style INI files in various
+             iterations of this "standard".
+
+           * Cleaned up some inlining to reduce library size with 300K.
+
+           * Added mkproject/mkapp tools for creating project directories
+             and application bundles.
+
+           * Split up some files to ease up compilation.
+
+0.8.2      Thu May 06 2004                            <pi@madscience.nl>
+
+           * XML schema files now have a section that can define
+             namespaces by their URI and actions to perform when
+             encountering tag types or attribute names that have
+             a namespace prefix corresponding to an xmlns-definition
+             with that URI.
+
+           * The value class can now destinguish child nodes with a key
+             from those without much easier; Unkeyed items are always
+             inserted in front of keyed items. A value::arraysize()
+             method returns the count of unkeyed items. Given an
+             arraysize() as of 4 for value foo, it is a given that
+             foo[0]...foo[3] are unkeyed children.
+
+           * Merged the dictionary template class, to be used for keeping
+             a container of keyed objects of any class.
+
+           * Fixed XML parser to not break when encountering an XML
+             string like <foo></foo>.
+
+0.8.1      Mon Mar 29 2004                            <pi@madscience.nl>
+
+           * New methods in value to import and export CSV-format files
+             into/from two-dimensional arrays (optionally with named
+             keys). This is not entirely perfect yet with regard to
+             native encoding of special characters.
+        
+           * Cleaned up some mess that stops cygwin's gcc from yelling
+             at me. Implemented an atoll replacement for the same purpose.
+        
+0.8.0      Fri Jan  9 2004                            <pi@madscience.nl>
+
+           * Extra value-types: bool, unsigned, long, ulong, short,
+                                ushort, char, uchar, date
+               
+           * Visitor template class defines a way to browse tree data
+             objects without resorting to manual pointer-chasing.
+           
+           * Support for "tdict"-style text schemas has been replaced
+             with the "xml.schema" schema-definition syntax
+               
+           * Support for recursion in volume paths, ie:
+               PATH_SCHEMAS=app\:schemas:etc\:schemas
+               
+           * Can now interact with DAAP-style binary XML streams, with
+             definitions within the XML schemas
+               
+           * Default scheme to start a GRACE application on a Unix
+             system now uses a bundle directory combined with a
+             softlink, ie:
+             
+             MyApplication -> MyApplication.app/exec
+             MyApplication.app/
+               .:<mime> system/application-bundle
+               exec -> code/linux.i386/exec
+               icon/
+                 64.png
+               schemas/
+                 nl.madscience.schemas.myapp.defaults.xml
+               defaults/
+                 nl.madscience.defaults.myapp.xml
+             
+             This makes it relatively easy to define schemas that
+             determine the layout of the data when it is serialized
+             to XML or CXML.
+           
+           * myValue[-1] now returns the last child in the array
+           
+0.7.2      Fri Oct 24 2003                            <pi@madscience.nl>
+
+           * Split up the value class implementation over several files.
+
+           * The XML functionality of the value class has been greatly
+             enhanced, including automatic translation between keys and
+             tag types on load and save.
+
+           * Metadata moved to dotfiles.
+
+           * Implement "app:" volume pointing to the directory that
+             contains application resources.
+
+0.7.1      Fri Sep 12 2003                            <pi@madscience.nl>
+
+           * Added a valueindex class as a means of indexing a value
+             array by an arbitrary attribute or child value.
+             
+           * The application class now picks up all environment variables.
+
+0.7.0      Sat Aug 30 2003                            <pi@madscience.nl>
+
+           * The value class can now read and write XML files using
+             an extended version of the Apple plist DTD.
+
+           * UDBC has been changed to return an array of records instead
+             of a record of arrays. Record keys are now statstring
+             objects, making this possible without memory waste.
+
+           * The main() loop is now defined in the library. This means
+             today's message is: Derive the application class or die.
+
+           * Added fs::load() and fs::save() for reading data directly
+             to a string object.
+
+0.6.4      Sun Jun 29 2003                            <pi@madscience.nl>
+
+           * Created a new class statstring, intended for referencing
+             large number of constant strings containing a high number of
+             duplicates.
+             
+           * The value class now uses statstring for its label, making it
+             practical to use an array of values-acting-as-structs as a
+             return type without wasting space on $ARRAYSIZE times the
+             allocation overhead of the label names.
+
+0.6.3      Tue Jun 10 2003                            <pi@madscience.nl>
+           
+           * Added db.insert_id() method and backend handling to save on
+             stupid-looking select last_insertid() queries.
+         
+           * Added pathvolume parsing for locating database driver module.
+
+0.6.2      Fri Feb 28 2003                            <pi@madscience.nl>
+
+           * Added extra parsing of cmdtoken templates with support
+             for function calls through pseudo-tags.
+           * Fixed minor bug
+
+0.6.1      Wed Feb 26 2003                            <pi@madscience.nl>
+           
+           * Added cmdtoken handlers as a replacement for the existing
+             cgitemplate class, added benefit is loop-control and
+             conditionals from within the parsed template. Makes it
+             easier to generate row-output for queries, since the
+             template can now better control its own dataflow.
+           
+           * Added kernel.time.now() to system.h
+           
+0.6.0      Sun Feb 23 2003                            <pi@madscience.nl>
+
+           * Added loads of infrastructure to fs, including
+             fs.ls() with preliminary support for both extension-
+             based mimetypes and inherent mimetypes through
+             generated softlinks.
+           
+           * Path Volumes with overlays now work correctly for all
+             file operations.
