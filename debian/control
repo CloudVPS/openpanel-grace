@@ -6,11 +6,11 @@
 # along with Grace library. If not, see <http://www.gnu.org/licenses/>.
 
 Source: libgrace
-Section: misc
+Section: lib
 Priority: optional
 Maintainer: OpenPanel packager <packages@openpanel.com>
-Build-Depends: debhelper (>= 5), libpcre3-dev, libgdbm-dev, libdb4.6-dev, libsqlite3-dev
-Standards-Version: 3.7.2
+Build-Depends: debhelper (>= 7), libpcre3-dev, libgdbm-dev, libdb4.6-dev, libsqlite3-dev
+Standards-Version: 3.9.1
 
 Package: libgrace
 Architecture: any
@@ -25,8 +25,9 @@ Description: The grace library
  to perform a lot of computing tasks in C++. 
 
 Package: libgrace-dev
+Section: libdevel
 Architecture: any
-Depends: libgrace
+Depends: libgrace, ${misc:Depends}
 Replaces: libgrace-devel
 Conflicts: libgrace-devel
 Provides: libgrace-devel
@@ -46,8 +47,9 @@ Description: The grace library - dbm and db support
  This package adds support for dbm and db4.6 to the grace library 
 
 Package: libgrace-dbfile-dev
+Section: libdevel
 Architecture: any
-Depends: libgrace-dev, libgrace-dbfile, libdb4.6-dev, libgdbm-dev
+Depends: libgrace-dev, libgrace-dbfile, libdb4.6-dev, libgdbm-dev, ${misc:Depends}
 Replaces: libgrace-dbfile-devel
 Conflicts: libgrace-dbfile-devel
 Provides: libgrace-dbfile-devel
@@ -56,14 +58,15 @@ Description: The grace library - dbm and db support (Development files)
 
 Package: libgrace-pcre
 Architecture: any
-Depends: libpcre3, libgrace, ${shlibs:Depends}
+Depends: libpcre3, libgrace, ${shlibs:Depends}, ${misc:Depends}
 Description: The grace library - advanced regular expession support
  This package adds support for advanced regluar expessions to the grace library 
  through PCRE.
 
 Package: libgrace-pcre-dev
+Section: libdevel
 Architecture: any
-Depends: libpcre3-dev, libgrace-pcre
+Depends: libpcre3-dev, libgrace-pcre, ${misc:Depends}
 Description: The grace library - advanced regular expession support (Development files)
  This package adds support for advanced regluar expessions to the grace library 
  through PCRE.
@@ -72,29 +75,31 @@ Package: libgrace-querido
 Architecture: any
 Depends: libgrace, ${shlibs:Depends}, ${misc:Depends}
 Description: The grace library - database support
- This package adds support for databases to the grace libary.
+ This package adds support for databases to the grace library.
 
 Package: libgrace-querido-dev
+Section: libdevel
 Architecture: any
-Depends: libgrace-querido, libgrace-dev, libsqlite3-dev
+Depends: libgrace-querido, libgrace-dev, libsqlite3-dev, ${misc:Depends}
 Replaces: libgrace-querido-devel
 Conflicts: libgrace-querido-devel
 Provides: libgrace-querido-devel
 Description: The grace library - database support (development files)
- This package adds support for databases to the grace libary.
+ This package adds support for databases to the grace library.
 
 Package: libgrace-ssl
 Architecture: any
 Depends: libgrace, ${shlibs:Depends}, ${misc:Depends}
 Description: The grace library - SSL support
- This package adds support for SSL to the grace libary.
+ This package adds support for SSL to the grace library.
 
 Package: libgrace-ssl-dev
+Section: libdevel
 Architecture: any
-Depends: libgrace-ssl, libgrace-dev
+Depends: libgrace-ssl, libgrace-dev, ${misc:Depends}
 Replaces: libgrace-ssl-devel
 Conflicts: libgrace-ssl-devel
 Provides: libgrace-ssl-devel
 Description: The grace library - SSL support (development files)
- This package adds support for SSL to the grace libary.
+ This package adds support for SSL to the grace library.
 
