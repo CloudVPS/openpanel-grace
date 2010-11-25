@@ -1415,7 +1415,7 @@ value &value::operator[] (int i)
 {
 	static value emptyvalue;
 
-	if (isbuiltin (_type))
+	if (_type == t_unset)
 		_type = t_array;
 
 	if ((i<0) && ((arraysz+i) >=0)) return *(array[arraysz+i]);
@@ -2041,7 +2041,7 @@ const value &value::operator[] (const string &str) const
 
 value &value::operator[] (const string &str)
 {
-	if (isbuiltin (_type))
+	if (_type == t_unset)
 		_type = t_dict;
 		
 	value *v = findchild (str.str());
