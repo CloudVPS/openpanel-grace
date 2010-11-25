@@ -475,7 +475,7 @@ value &value::operator= (int i)
 	cleararray ();
 	t.ival = i;
 	_itype = i_int;
-	if (isbuiltin (_type)) _type  = t_int;
+	if (_type == t_unset || isbuiltin (_type)) _type  = t_int;
 	return *this;
 }
 
@@ -484,7 +484,7 @@ value &value::operator= (unsigned int i)
 	cleararray ();
 	t.uval = i;
 	_itype = i_unsigned;
-	if (isbuiltin (_type)) _type = t_unsigned;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_unsigned;
 	return *this;
 }
 
@@ -493,7 +493,7 @@ value &value::operator= (double d)
 	cleararray ();
 	t.dval = d;
 	_itype = i_double;
-	if (isbuiltin (_type)) _type = t_double;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_double;
 	return *this;
 }
 
@@ -502,7 +502,7 @@ value &value::operator= (bool bval)
 	cleararray ();
 	t.ival = bval ? 1 : 0;
 	_itype = i_bool;
-	if (isbuiltin (_type)) _type = t_bool;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_bool;
 	return *this;
 }
 
@@ -511,7 +511,7 @@ value &value::operator= (long long dval)
 	cleararray ();
 	t.lval = dval;
 	_itype = i_long;
-	if (isbuiltin (_type)) _type = t_long;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_long;
 	return *this;
 }
 
@@ -532,7 +532,7 @@ value &value::operator= (unsigned long long val)
 	cleararray ();
 	t.ulval = val;
 	_itype = i_ulong;
-	if (isbuiltin (_type)) _type = t_ulong;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_ulong;
 	return *this;
 }
 
@@ -541,7 +541,7 @@ value &value::operator= (const char *str)
 	cleararray ();
 	s = str;
 	_itype = i_string;
-	if (isbuiltin (_type)) _type = t_string;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_string;
 	return *this;
 }
 
@@ -550,7 +550,7 @@ value &value::operator= (const unsigned char *str)
 	cleararray ();
 	s = str;
 	_itype = i_string;
-	if (isbuiltin (_type)) _type = t_string;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_string;
 	return *this;
 }
 
@@ -559,7 +559,7 @@ value &value::operator= (const string &str)
 	cleararray ();
 	s = str;
 	_itype = i_string;
-	if (isbuiltin (_type)) _type = t_string;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_string;
 	return *this;
 }
 
@@ -568,7 +568,7 @@ value &value::operator= (string *str)
 	cleararray();
 	s = str;
 	_itype = i_string;
-	if (isbuiltin (_type)) _type = t_string;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_string;
 }
 
 value &value::operator= (const statstring &str)
@@ -576,7 +576,7 @@ value &value::operator= (const statstring &str)
 	cleararray ();
 	s = str.sval();
 	_itype = i_string;
-	if (isbuiltin (_type)) _type = t_string;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_string;
 	return *this;
 }
 
@@ -585,7 +585,7 @@ value &value::operator= (statstring *str)
 	cleararray ();
 	s = str->sval();
 	_itype = i_string;
-	if (isbuiltin (_type)) _type= t_string;
+	if (_type == t_unset || isbuiltin (_type)) _type= t_string;
 	delete str;
 	return *this;
 }
@@ -1932,7 +1932,7 @@ void value::assign (const currency &c)
 {
 	t.lval = c.value();
 	_itype = i_currency;
-	if (isbuiltin (_type)) _type = t_currency;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_currency;
 }
 
 void value::assign (currency *c)
@@ -1940,7 +1940,7 @@ void value::assign (currency *c)
 	t.lval = c->value();
 	delete c;
 	_itype = i_currency;
-	if (isbuiltin (_type)) _type = t_currency;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_currency;
 }
 
 // ========================================================================
@@ -2025,7 +2025,7 @@ const value &value::operator[] (const char *str) const
 
 value &value::operator[] (const char *str)
 {
-	if (isbuiltin (_type)) _type = t_dict;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_dict;
 	value *v = findchild (str);
 	return *v;
 }
@@ -2059,7 +2059,7 @@ const value &value::operator[] (const statstring &str) const
 
 value &value::operator[] (const statstring &str)
 {
-	if (isbuiltin (_type)) _type = t_dict;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_dict;
 	
 	value *v;
 	v = findchild ((unsigned int) str.key(), (const char *) str.str());
@@ -2071,12 +2071,12 @@ value &value::operator[] (const value &va)
 	value *v;
 	if (va.type() == t_int)
 	{
-		if (isbuiltin (_type)) _type = t_array;
+		if (_type == t_unset || isbuiltin (_type)) _type = t_array;
 		v = getposition (va.uval());
 	}
 	else
 	{
-		if (isbuiltin (_type)) _type = t_dict;
+		if (_type == t_unset || isbuiltin (_type)) _type = t_dict;
 		v = findchild (va.sval());
 	}
 	
@@ -2475,7 +2475,7 @@ void value::setcurrency (long long cnew)
 	cleararray ();
 	t.lval = cnew;
 	_itype = i_currency;
-	if (isbuiltin (_type)) _type = t_currency;
+	if (_type == t_unset || isbuiltin (_type)) _type = t_currency;
 }
 
 long long value::getcurrency (void) const
