@@ -460,7 +460,7 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 								 $("httpver", httpver) ->
 								 $("uri", uri) ->
 								 $("file", env["file"]) ->
-								 $("ip", s.peer_name) ->
+								 $("ip", env["ip"]) ->
 								 $("user", env["user"]) ->
 								 $("referrer", inhdr["Referer"]) ->
 								 $("useragent", inhdr["User-Agent"]) ->
@@ -481,7 +481,7 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 								 $("httpver", httpver) ->
 								 $("uri", uri) ->
 								 $("file", env["file"]) ->
-								 $("ip", s.peer_name) ->
+								 $("ip", env["ip"]) ->
 								 $("user", env["user"]) ->
 								 $("referrer", inhdr["Referer"]) ->
 								 $("useragent", inhdr["User-Agent"]) ->
@@ -523,7 +523,7 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 					 $("httpver", httpver) ->
 					 $("uri", uri) ->
 					 $("file", "") ->
-					 $("ip", s.peer_name) ->
+					 $("ip", env["ip"]) ->
 					 $("user", "") ->
 					 $("referrer", inhdr["Referer"]) ->
 					 $("useragent", inhdr["User-Agent"]) ->

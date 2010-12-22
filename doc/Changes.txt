@@ -1,3 +1,5 @@
+0.9.39                                               <grace@openpanel.com>
+
 0.9.38     Thu Nov 25 2010                           <grace@openpanel.com>
 
            * Fix daemon class to be compatible with daemon startups being
