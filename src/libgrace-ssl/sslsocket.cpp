@@ -17,23 +17,13 @@
 
 extern void setupMatrixSSL (void);
 
-/// Exception values emitted by sslclientcodec
-enum sslException
-{
-	EX_SSL_BUFFER_SNAFU		= 0xf95877be, ///< Buffer management error.
-	EX_SSL_PROTOCOL_ERROR	= 0xa3ecd69e, ///< SSL protocol related error.
-	EX_SSL_CLIENT_ALERT		= 0xe6950536, ///< MatrixSSL client alert.
-	EX_SSL_NO_HANDSHAKE		= 0xcc30b80b, ///< Action after failed handshake.
-	EX_SSL_INIT 			= 0x9fcc10c0  ///< Could not init SSL.
-};
-
 /// An iocodec implementing SSL client traffic through MatrixSSL.
 /// Used by sslsocket as the iocodec of choice.
-class sslclientcodec : public iocodec
+class sslcodec : public iocodec
 {
 public:
-					 sslclientcodec (void);
-					~sslclientcodec (void);
+					 sslcodec ( bool server, sslKeys_t* keys=0 );
+					~sslcodec (void);
 	
 					 /// Initiates the SSL handshake.
 	bool			 setup (void);
@@ -69,11 +59,13 @@ public:
 	
 protected:
 	ssl_t			*ssl;
+	sslKeys_t		*keys;
 	sslBuf_t		 inbuf;
 	sslBuf_t		 insock;
 	sslBuf_t		 outsock;
 	sslSessionId_t	 session;
 	bool			 disablecerts;
+	bool 			 server;
 	
 	bool			 handshakedone;
 };
@@ -133,10 +125,12 @@ void setupMatrixSSL (void)
 }
 
 // =================================================================
-// CONSTRUCTOR sslclientcodec
+// CONSTRUCTOR sslcodec
 // =================================================================
-sslclientcodec::sslclientcodec (void)
+sslcodec::sslcodec (bool server, sslKeys_t* keys)
 	: iocodec ()
+	, keys( keys?keys:MATRIXSSLKEYS )
+	, server (server)
 {
 	inbuf.buf = new unsigned char[16384];
 	inbuf.start = inbuf.end = inbuf.buf;
@@ -159,9 +153,9 @@ sslclientcodec::sslclientcodec (void)
 }
 
 // =================================================================
-// DESTRUCTOR sslclientcodec
+// DESTRUCTOR sslcodec
 // =================================================================
-sslclientcodec::~sslclientcodec (void)
+sslcodec::~sslcodec (void)
 {
 	delete[] inbuf.buf;
 	delete[] insock.buf;
@@ -171,7 +165,7 @@ sslclientcodec::~sslclientcodec (void)
 // =================================================================
 // METHOD setup
 // =================================================================
-bool sslclientcodec::setup (void)
+bool sslcodec::setup (void)
 {
 	// Initialize the library
 	int rc;
@@ -181,7 +175,7 @@ bool sslclientcodec::setup (void)
 		insock.start = insock.end = insock.buf;
 		outsock.start = outsock.end = outsock.buf;
 		//::printf ("setting up client hello\n");
-		if (matrixSslNewSession (&ssl, MATRIXSSLKEYS, NULL /*&session*/, 0) < 0)
+		if (matrixSslNewSession (&ssl, keys, NULL /*&session*/, server?SSL_FLAGS_SERVER:0 ) < 0)
 		{
 			//::printf ("ssl session creation failed\n");
 			err = "MatrixSSL Session Error";
@@ -191,20 +185,23 @@ bool sslclientcodec::setup (void)
 		if (disablecerts)
 			matrixSslSetCertValidator (ssl, dummyCertValidator, NULL);
 			
-		//::printf ("%08x setup2\n", this);
-		rc = matrixSslEncodeClientHello (ssl, &outsock, 0);
-		if (rc < 0)
+		if (!server)
 		{
-			err = "MatrixSSL Handshake Error";
-			return false;
+			//::printf ("%08x setup2\n", this);
+			rc = matrixSslEncodeClientHello (ssl, &outsock, 0);
+			if (rc < 0)
+			{
+				err = "MatrixSSL Handshake Error";
+				return false;
+			}
+			//::printf ("%08x setup3\n", this);
+			handshakedone = true;
 		}
-		//::printf ("%08x setup3\n", this);
-		handshakedone = true;
 	}
 	return true;
 }
 
-void sslclientcodec::nocertcheck (void)
+void sslcodec::nocertcheck (void)
 {
 	disablecerts = true;
 }
@@ -212,7 +209,7 @@ void sslclientcodec::nocertcheck (void)
 // =================================================================
 // METHOD reset
 // =================================================================
-void sslclientcodec::reset (void)
+void sslcodec::reset (void)
 {
 	inbuf.start = inbuf.end = inbuf.buf;
 	insock.start = insock.end = insock.buf;
@@ -229,7 +226,7 @@ void sslclientcodec::reset (void)
 // =================================================================
 // METHOD addinput
 // =================================================================
-bool sslclientcodec::addinput (const char *data, size_t sz)
+bool sslcodec::addinput (const char *data, size_t sz)
 {
 	if ((insock.size - (insock.end - insock.buf)) < sz) return false;
 	memcpy (insock.end, data, sz);
@@ -240,7 +237,7 @@ bool sslclientcodec::addinput (const char *data, size_t sz)
 // =================================================================
 // METHOD fetchinput
 // =================================================================
-bool sslclientcodec::fetchinput (ringbuffer &into)
+bool sslcodec::fetchinput (ringbuffer &into)
 {
 	int rc;
 	unsigned int room = 0;
@@ -278,6 +275,8 @@ again:
 			return false;
 		
 		case SSL_PARTIAL:
+			if (server && !handshakedone && matrixSslHandshakeIsComplete(ssl) != 0) 
+				handshakedone=true;
 			
 			if (inbuf.start == inbuf.end) return true;
 			
@@ -293,6 +292,9 @@ again:
 				return true;
 			} */
 			
+			if (server && !handshakedone && matrixSslHandshakeIsComplete(ssl) != 0) 
+				handshakedone=true;
+			
 			into.add ((const char *) inbuf.start, inbuf.end-inbuf.start);
 			inbuf.start = inbuf.end = inbuf.buf;
 			if (insock.end - insock.start) goto again;
@@ -306,6 +308,9 @@ again:
 				err = "buffer snafu #18472";
 				throw (EX_SSL_BUFFER_SNAFU);
 			}
+
+			if (server && !handshakedone && matrixSslHandshakeIsComplete(ssl) != 0) 
+				handshakedone=true;
 			
 			memmove (outsock.start+(inbuf.end-inbuf.start), outsock.start, outsock.end-outsock.start);
 			memcpy (outsock.start, inbuf.start, inbuf.end-inbuf.start);
@@ -314,6 +319,7 @@ again:
 			return true;
 			
 		case SSL_ERROR:
+		
 			switch (myerror)
 			{
 				case SSL_ALERT_UNEXPECTED_MESSAGE:
@@ -373,7 +379,7 @@ again:
 // =================================================================
 // METHOD addclose
 // =================================================================
-void sslclientcodec::addclose (void)
+void sslcodec::addclose (void)
 {
 	if (handshakedone)
 	{
@@ -386,7 +392,7 @@ void sslclientcodec::addclose (void)
 // =================================================================
 // METHOD addoutput
 // =================================================================
-bool sslclientcodec::addoutput (const char *dat, size_t sz)
+bool sslcodec::addoutput (const char *dat, size_t sz)
 {
 	int rc;
 	if (outsock.buf < outsock.start)
@@ -425,7 +431,7 @@ bool sslclientcodec::addoutput (const char *dat, size_t sz)
 // =================================================================
 // METHOD canoutput
 // =================================================================
-bool sslclientcodec::canoutput (unsigned int sz)
+bool sslcodec::canoutput (unsigned int sz)
 {
 	if (((outsock.end - outsock.buf)+sz) >= outsock.size)
 		return false;
@@ -435,7 +441,7 @@ bool sslclientcodec::canoutput (unsigned int sz)
 // =================================================================
 // METHOD peekoutput
 // =================================================================
-void sslclientcodec::peekoutput (string &into)
+void sslcodec::peekoutput (string &into)
 {
 	unsigned int nsz;
 	
@@ -449,7 +455,7 @@ void sslclientcodec::peekoutput (string &into)
 // =================================================================
 // METHOD doneoutput
 // =================================================================
-void sslclientcodec::doneoutput (unsigned int sz)
+void sslcodec::doneoutput (unsigned int sz)
 {
 	if ((outsock.start + sz) > outsock.end)
 		throw (EX_SSL_BUFFER_SNAFU);
@@ -466,7 +472,7 @@ void sslclientcodec::doneoutput (unsigned int sz)
 // =================================================================
 sslsocket::sslsocket (void)
 {
-	codec = new sslclientcodec;
+	codec = new sslcodec( false );
 }
 
 // =================================================================
@@ -489,12 +495,75 @@ sslsocket &sslsocket::operator= (sslsocket *orig)
 	return *this;
 }
 
+void ssllistener::loadkeyfile( const string& cert, const string& priv )
+{
+	string cert_data = fs.load(cert);
+	string priv_data = fs.load(priv ? priv : cert );
+	
+	loadkeystring( cert_data, priv_data );
+}
+
+void ssllistener::loadkeystring( const string& cert, const string& priv )
+{
+
+	
+	string cert_base64 = cert;
+	cert_base64.cropafter("-----BEGIN CERTIFICATE-----");
+	cert_base64.cropat("-----END CERTIFICATE-----");
+	string cert_data = cert_base64.decode64();
+	
+	string priv_base64 = priv ? priv : cert;
+	priv_base64.cropafter("-----BEGIN RSA PRIVATE KEY-----");
+	priv_base64.cropat("-----END RSA PRIVATE KEY-----");
+	string priv_data = priv_base64.decode64();
+	
+	if (keys)
+	{
+		matrixSslFreeKeys( (sslKeys_t*)keys );
+	}
+
+	matrixSslReadKeysMem( (sslKeys_t**)&keys,
+		(unsigned char*)cert_data.str(), cert_data.strlen(),
+		(unsigned char*)priv_data.str(), priv_data.strlen(),
+		0,0
+	 );
+}
+
+
+tcpsocket *ssllistener::accept (void)
+{
+	tcpsocket* result = tcplistener::accept();
+	if (result)
+	{
+		result->codec = new sslcodec( true, (sslKeys_t*)keys );
+		result->codec->setup();
+		result->readbuffer(1);
+	}
+	return result;
+}
+	
+tcpsocket *ssllistener::tryaccept(double timeout)
+{
+	tcpsocket* result = tcplistener::tryaccept( timeout );
+	if (result)
+	{
+		result->codec = new sslcodec( true, (sslKeys_t*)keys );
+		result->codec->setup();
+		result->readbuffer(1);
+	}
+	return result;
+}
+
+
+
+
+
 // =================================================================
 // CONSTRUCTOR httpssocket
 // =================================================================
 httpssocket::httpssocket() : httpsocket ()
 {
-	_sock.codec = new sslclientcodec;
+	_sock.codec = new sslcodec( false );
 }
 
 // =================================================================
@@ -512,4 +581,6 @@ void httpssocket::nocertcheck (void)
 {
 	_sock.codec->nocertcheck();
 }
+
+
 

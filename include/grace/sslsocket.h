@@ -13,6 +13,18 @@
 #include <grace/file.h>
 #include <grace/http.h>
 
+
+/// Exception values emitted by sslcodec
+enum sslException
+{
+	EX_SSL_BUFFER_SNAFU		= 0xf95877be, ///< Buffer management error.
+	EX_SSL_PROTOCOL_ERROR	= 0xa3ecd69e, ///< SSL protocol related error.
+	EX_SSL_CLIENT_ALERT		= 0xe6950536, ///< MatrixSSL client alert.
+	EX_SSL_NO_HANDSHAKE		= 0xcc30b80b, ///< Action after failed handshake.
+	EX_SSL_INIT 			= 0x9fcc10c0  ///< Could not init SSL.
+};
+
+
 /// Implementation of tcpsocket with SSL support.
 /// Uses sslclientcodec to encapsulate with MatrixSSL.
 class sslsocket : public tcpsocket
@@ -38,6 +50,32 @@ public:
 					 	codec->nocertcheck ();
 					 }
 };
+
+/// Listening TCP socket.
+/// Opens a socket that listens for tcp connections on a configured
+/// port. Acts as a factory for connected tcpsocket objects.
+class ssllistener : public tcplistener
+{
+public:
+				 ssllistener() : keys(0) {}
+
+	void		 loadkeyfile( const string& cert, const string& priv = "" );
+	void		 loadkeystring( const string& cert, const string& priv = "" );
+
+				 /// Wait for a new connection.
+				 /// \return Pointer to a new tcpsocket bound to the connection.
+				 /// \throw socketCreateAcception Error creating a BSD socket.
+	tcpsocket	*accept (void);
+	
+				 /// Wait for a new connection.
+				 /// \param timeout Timeout in seconds.
+				 /// \return Pointer to a new tcpsocket bound to the connection,
+				 ///         or NULL when it failed.
+	tcpsocket	*tryaccept (double timeout);
+private:
+	void      	*keys;
+};
+
 
 /// Implementation of httpsocket with SSL support.
 /// A lightweight wrapper that sets up a httpsocket with an
