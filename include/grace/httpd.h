@@ -620,13 +620,8 @@ protected:
 	string				 errorPath; ///< Path to the error log
 };
 
-// ------------------------------------------------------------------------
-// CLASS httpd: The root http daemon. Will only return 404s unless if
-//              you add httpdobjects to do something interesting.
-//              This class will just do the housekeeping of httpdworker
-//              threadds and keep track of the httpdobject chain as
-//              well as the httpdeventhandler chain.
-// ------------------------------------------------------------------------
+
+$exception (httpdNoListenerException, "Daemon cannot start without listener");
 
 /// The root httpd daemon class.
 /// This will only return generic 404 errors if no httpdobjects are linked
@@ -685,7 +680,11 @@ public:
 					 /// started on construction, to allow a full chain
 					 /// of httpdobjects to be built before serving
 					 /// requests.
-	void			 start (void) { spawn(); };	
+	void			 start (void)
+					 {
+					 	if (! listener) throw httpdNoListenerException();
+					 	spawn();
+					 };	
 	
 					 /// Get current server load.
 					 /// \return Number of open connections.
@@ -773,7 +772,7 @@ public:
 	void			 shutdown (void);
 	
 	value			 defaultdocuments; ///< Default document database.
-	tcplistener		 listener; ///< The listening socket.
+	tcplistener		*listener; ///< The listening socket.
 	lock<int>		 load; ///< The current connection load.
 	lock<int>		 tcplock; ///< Lock for the tcp listener.
 	threadgroup		 workers; ///< The httpd worker threads.

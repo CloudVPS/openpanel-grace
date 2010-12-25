@@ -26,9 +26,9 @@
 // CONSTRUCTOR httpd
 // ========================================================================
 httpd::httpd (const string &DomainSocket, int inmint, int inmaxt)
-   : thread ("httpd"),
-     listener (DomainSocket)
+   : thread ("httpd")
 {
+	listener = new tcplistener (DomainSocket);
 	if (inmaxt < inmint) inmaxt = inmint;
 	_maxpostsize = defaults::lim::httpd::postsize;
 	minthr = inmint;
@@ -41,9 +41,9 @@ httpd::httpd (const string &DomainSocket, int inmint, int inmaxt)
 }
 
 httpd::httpd (int listenport, int inmint, int inmaxt)
-	: thread ("httpd"),
-	  listener (listenport)
+	: thread ("httpd")
 {
+	listener = new tcplistener (listenport);
 	if (inmaxt < inmint) inmaxt = inmint;
 	_maxpostsize = defaults::lim::httpd::postsize;
 	minthr = inmint;
@@ -56,9 +56,9 @@ httpd::httpd (int listenport, int inmint, int inmaxt)
 }
 
 httpd::httpd (void)
-	: thread ("httpd"),
-	  listener ()
+	: thread ("httpd")
 {
+	listener = NULL;
 	_maxpostsize = defaults::lim::httpd::postsize;
 	minthr = 2;
 	maxthr = 4;
@@ -83,17 +83,20 @@ httpd::~httpd (void)
 // ========================================================================
 void httpd::listento (int port)
 {
-	listener.listento (port);
+	if (! listener) listener = new tcplistener;
+	listener->listento (port);
 }
 
 void httpd::listento (ipaddress addr, int port)
 {
-	listener.listento (addr, port);
+	if (! listener) listener = new tcplistener;
+	listener->listento (addr, port);
 }
 
 void httpd::listento (const string &path)
 {
-	listener.listento (path);
+	if (! listener) listener = new tcplistener;
+	listener->listento (path);
 }
 
 // ========================================================================
@@ -607,7 +610,7 @@ void httpdworker::run (void)
 			
 			while (! s)
 			{
-				s = parent->listener.tryaccept(2.0);
+				s = parent->listener->tryaccept(2.0);
 				if (!s)
 				{
 					ev = nextevent();
