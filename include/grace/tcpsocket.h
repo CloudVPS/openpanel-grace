@@ -134,10 +134,20 @@ protected:
 	void		 derive (tcpsocket &s);
 };
 
+/// Base class for tcplistener implementations.
+class listenerbase
+{
+public:
+						 listenerbase (void);
+	virtual				~listenerbase (void);
+	virtual tcpsocket	*accept (void);
+	virtual tcpsocket	*tryaccept (double timeout);
+};
+
 /// Listening TCP socket.
 /// Opens a socket that listens for tcp connections on a configured
 /// port. Acts as a factory for connected tcpsocket objects.
-class tcplistener
+class tcplistener : public listenerbase
 {
 public:
 				 /// Constructor.

@@ -557,6 +557,36 @@ void tcpsocket::derive (tcpsocket &s)
 }
 
 // ========================================================================
+// BASE CONSTRUCTOR listenerbase
+// ========================================================================
+listenerbase::listenerbase (void)
+{
+}
+
+// ========================================================================
+// BASE DESTRUCTOR listenerbase
+// ========================================================================
+listenerbase::~listenerbase (void)
+{
+}
+
+// ========================================================================
+// METHOD listenerbase::accept
+// ========================================================================
+tcpsocket *listenerbase::accept (void)
+{
+	return NULL;
+}
+
+// ========================================================================
+// METHOD listenerbase::tryaccept
+// ========================================================================
+tcpsocket *listenerbase::tryaccept (double t)
+{
+	return NULL;
+}
+
+// ========================================================================
 // CONSTRUCTOR
 // -----------
 // Creator for a listener object for a listening tcp socket
