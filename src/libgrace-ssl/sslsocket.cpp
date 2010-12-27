@@ -129,7 +129,7 @@ void setupMatrixSSL (void)
 // =================================================================
 sslcodec::sslcodec (bool server, sslKeys_t* keys)
 	: iocodec ()
-	, keys( keys?keys:MATRIXSSLKEYS )
+	, keys( keys )
 	, server (server)
 {
 	inbuf.buf = new unsigned char[16384];
@@ -148,6 +148,9 @@ sslcodec::sslcodec (bool server, sslKeys_t* keys)
 	disablecerts = false;
 	
 	setupMatrixSSL();
+	
+	if (!this->keys)
+		this->keys = MATRIXSSLKEYS;
 	//::printf ("session created\n");
 
 }
