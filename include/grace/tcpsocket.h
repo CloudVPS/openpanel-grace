@@ -188,13 +188,13 @@ public:
 				 /// Wait for a new connection.
 				 /// \return Pointer to a new tcpsocket bound to the connection.
 				 /// \throw socketCreateAcception Error creating a BSD socket.
-	tcpsocket	*accept (void);
+	virtual tcpsocket *accept (void);
 	
 				 /// Wait for a new connection.
 				 /// \param timeout Timeout in seconds.
 				 /// \return Pointer to a new tcpsocket bound to the connection,
 				 ///         or NULL when it failed.
-	tcpsocket	*tryaccept (double timeout);
+	virtual tcpsocket *tryaccept (double timeout);
 
 protected:
 	bool		 listening; ///< True if the socket is listening.

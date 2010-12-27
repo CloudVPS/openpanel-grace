@@ -76,6 +76,7 @@ httpd::httpd (void)
 // ========================================================================
 httpd::~httpd (void)
 {
+	delete listener;
 }
 
 // ========================================================================
@@ -83,19 +84,19 @@ httpd::~httpd (void)
 // ========================================================================
 void httpd::listento (int port)
 {
-	if (! listener) listener = new tcplistener;
+	if (! listener) createlistener();
 	listener->listento (port);
 }
 
 void httpd::listento (ipaddress addr, int port)
 {
-	if (! listener) listener = new tcplistener;
+	if (! listener) createlistener();
 	listener->listento (addr, port);
 }
 
 void httpd::listento (const string &path)
 {
-	if (! listener) listener = new tcplistener;
+	if (! listener) createlistener();
 	listener->listento (path);
 }
 
@@ -538,6 +539,13 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 	keepalive = false;
 }
 
+virtual void httpd::createlistener()
+{
+	if (listener) delete listener;
+	listener = new tcplistener;
+}
+	
+	
 // ========================================================================
 // CONSTRUCTOR httpdworker
 // ========================================================================

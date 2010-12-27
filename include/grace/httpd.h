@@ -787,6 +787,39 @@ protected:
 	int					_maxpostsize; ///< Max post size.
 	bool				_shutdown; ///< True if shutdown mode is on.
 	conditional			 shutdowndone; ///< Shutdown conditional
+	
+	virtual void createlistener();
+};
+
+class httpsd : public httpd
+{
+public:
+					 /// Constructor, create httpd object
+					 //  using a Unix Domain Socket for 
+					 /// communication
+					 /// \param path listening socket path
+					 /// \param mint Minimum number of threads
+					 /// \param maxt Maximum number of threads
+					 httpsd (const string &path,  int mint=2, int maxt=4);
+
+					 /// Constructor.
+					 /// \param listenport The tcp port to listen to
+					 /// \param inmint Minimum number of threads.
+					 /// \param inmaxt Maximum number of threads.
+					 httpsd (int listenport, int inmint=2, int inmaxt=4);
+
+					 /// Delayed initialization constructor.
+					 /// For situations where you want to define the
+					 /// listenport later.
+					 httpsd (void);
+					 
+	void		 	 loadkeyfile( const string& cert, const string& priv = "" );
+	void		 	 loadkeystring( const string& cert, const string& priv = "" );
+
+protected:
+	virtual void createlistener();
+	string cert_data;
+	string priv_data;
 };
 
 // ------------------------------------------------------------------------
