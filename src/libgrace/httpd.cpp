@@ -539,7 +539,7 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 	keepalive = false;
 }
 
-virtual void httpd::createlistener()
+void httpd::createlistener()
 {
 	if (listener) delete listener;
 	listener = new tcplistener;
