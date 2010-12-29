@@ -66,6 +66,27 @@ bool file::eof (void)
 }
 
 // ========================================================================
+// METHOD ::eof
+// ------------
+// Returns true if the end-of-file marker has been reached
+// ========================================================================
+void file::flush (void)
+{
+	if (codec)
+	{
+		string outbuf;
+		codec->peekoutput (outbuf);
+		if (outbuf.strlen())
+		{
+			int szdone = write (filno, outbuf.str(), outbuf.strlen());
+			if (szdone>0) codec->doneoutput ((unsigned int) szdone);
+
+		}
+	}
+}
+
+
+// ========================================================================
 // METHOD ::openread
 // -----------------
 // Opens a filesystem object for reading. The path argument understands
@@ -867,9 +888,9 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 	FD_SET(filno,&fds);
 	
 	int ssz;
-	ssz = ::read (filno, buf, (rsz<65536) ? rsz : 65536);
+	ssz = ::read (filno, buf, sizeof(buf));
 	
-	if ((ssz==0) && (errno==EAGAIN) && ((!timeout_ms) || 
+	if ((ssz < rsz) && (errno==EAGAIN) && ((!timeout_ms) || 
 	                 (select (filno+1, &fds, NULL, NULL, &tv) > 0)))
 	{
 		ssz = ::read (filno, buf, (rsz<65536) ? rsz : 65536);
@@ -883,7 +904,9 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 			{
 				if (codec->addinput (buf, ssz))
 				{
+					unsigned int startsz = buffer.backlog();
 					codec->fetchinput (buffer);
+					ssz = buffer.backlog() - startsz;
 				}
 			}
 			else
