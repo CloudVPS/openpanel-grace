@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grace.runoptions>
+  <grace.option id="-h">
+    <grace.long>--help</grace.long>
+  </grace.option>
+  <grace.option id="--help">
+    <grace.argc>0</grace.argc>
+  </grace.option>
+</grace.runoptions>
