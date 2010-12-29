@@ -15,6 +15,8 @@
 
 extern void setupMatrixSSL (void);
 
+void __sslsocket_breakme (void) {}
+
 /// An iocodec implementing SSL client traffic through MatrixSSL.
 /// Used by sslsocket as the iocodec of choice.
 class sslcodec : public iocodec
@@ -268,6 +270,9 @@ bool sslcodec::fetchinput (ringbuffer &into)
 again:
 	rc = matrixSslDecode (ssl, &insock, &inbuf, &myerror, &alertLevel,
 						  &alertDescription);
+
+	::printf ("%i = matrixSslDecode (...)\n", rc);
+	if (rc == -1) __sslsocket_breakme();
 
 	switch (rc)
 	{
@@ -533,18 +538,32 @@ void ssllistener::loadkeystring( const string& cert, const string& priv )
 
 tcpsocket *ssllistener::accept (void)
 {
-	tcpsocket* result = tcplistener::accept();
-	if (result)
+	tcpsocket* result = NULL;
+	
+	while (! result)
 	{
-		sslcodec* codec = new sslcodec( true, (sslKeys_t*)keys );
-		result->codec = codec;
-		codec->refcnt=1;
-		codec->setup();
-		
-		while (!codec->handshakedone )
+		result = tcplistener::accept();
+		if (result)
 		{
-			result->readbuffer( 128, 0 );
-			result->flush();
+			sslcodec* codec = new sslcodec( true, (sslKeys_t*)keys );
+			result->codec = codec;
+			codec->refcnt=1;
+			codec->setup();
+			
+			while (!codec->handshakedone )
+			{
+				try
+				{
+					result->readbuffer( 128, 0 );
+					result->flush();
+				}
+				catch (...)
+				{
+					delete result;
+					result = NULL;
+					break;
+				}
+			}
 		}
 	}
 	return result;
@@ -562,8 +581,17 @@ tcpsocket *ssllistener::tryaccept(double timeout)
 		
 		while (!codec->handshakedone )
 		{
-			result->readbuffer( 128, 0 );
-			result->flush();
+			try
+			{
+				result->readbuffer( 128, 0 );
+				result->flush();
+			}
+			catch (...)
+			{
+				delete result;
+				result = NULL;
+				break;
+			}
 		}
 	}
 	return result;

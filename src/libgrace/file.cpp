@@ -637,15 +637,24 @@ readagain:
 				{
 					if (codec->fetchinput (buffer))
 					{
-						string t;
-						codec->peekoutput (t);
-						if (t.strlen())
+						string dt;
+						codec->peekoutput (dt);
+						
+						if (dt.strlen())
 						{
-							int wsz = ::write (filno, t.str(), t.strlen());
-
-							if( wsz > 0 )
-								codec->doneoutput (wsz);
-
+							int szleft = dt.strlen();
+							int szdone = 0;
+							int sz;
+							
+							while (szleft > 0)
+							{
+								sz = ::write (filno, dt.str() + szdone, szleft);
+								if (sz<=0) break;
+								szdone += sz;
+								szleft -=sz;
+							}
+							
+							if (szdone) codec->doneoutput (szdone);
 						}
 						goto readagain;
 					}
@@ -1125,12 +1134,22 @@ string *file::read (size_t sz, int timeout_ms)
 		
 		if (ssz <= 0)
 		{
-			codec->fetchinput (buffer);
-			if (! buffer.backlog())
+			try
 			{
-				errcode = FERR_TIMEOUT;
-				err = errortext::file::rdto_read;
-				return NULL;
+				codec->fetchinput (buffer);
+				if (! buffer.backlog())
+				{
+					errcode = FERR_TIMEOUT;
+					err = errortext::file::rdto_read;
+					return NULL;
+				}
+			}
+			catch (...)
+			{
+				errcode = FERR_BUFFER;
+				err.crop(0);
+				err.printf (errortext::file::bufexc);
+				throw fileReadException();
 			}
 		}
 		
