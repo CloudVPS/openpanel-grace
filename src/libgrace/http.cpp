@@ -327,6 +327,10 @@ tryagain:
 			if (!_sock.puts ("Host: %s\r\n" %format (hostpart))) break;
 		}
 		
+		// RFC2616 14.3 states that HTTP/1.1 servers may assume that
+		// clients not specifying an Accept-Encoding header are capable
+		// of handling gzip and compress.
+		
 		if (! postheaders.exists ("Accept-Encoding"))
 		{
 			if (! _sock.puts ("Accept-Encoding: \r\n")) break;
