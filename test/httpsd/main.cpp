@@ -48,7 +48,7 @@ int httpsApp::main (void)
 	
 	httpssocket hs;
 	hs.nocertcheck();
-	hs.nokeepalive();
+	hs.keepalive(true);
 	
 	string public_local;
 	string public_default;
@@ -83,6 +83,7 @@ int httpsApp::main (void)
 	}
 
 	hs.authentication ("me","password");
+	hs.keepalive (true);
 	
 	for (int i=0; i<10; ++i)
 	{

@@ -912,7 +912,28 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 				if (codec->addinput (buf, ssz))
 				{
 					unsigned int startsz = buffer.backlog();
-					codec->fetchinput (buffer);
+					if (codec->fetchinput (buffer))
+					{
+						string dt;
+						codec->peekoutput (dt);
+						
+						if (dt.strlen())
+						{
+							int szleft = dt.strlen();
+							int szdone = 0;
+							int sz;
+							
+							while (szleft > 0)
+							{
+								sz = ::write (filno, dt.str() + szdone, szleft);
+								if (sz<=0) break;
+								szdone += sz;
+								szleft -=sz;
+							}
+							
+							if (szdone) codec->doneoutput (szdone);
+						}
+					}
 					ssz = buffer.backlog() - startsz;
 				}
 			}

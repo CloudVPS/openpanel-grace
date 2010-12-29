@@ -11,8 +11,6 @@
 #include <grace/sslsocket.h>
 #include <grace/filesystem.h>
 
-
-
 #include <matrixssl/matrixSsl.h>
 
 extern void setupMatrixSSL (void);
