@@ -77,6 +77,7 @@ AR = ar cr
 all: ../../include/grace/platform.h $(OBJ)
 	mkdir -p ../../lib
 	$(LDSHARED) $(LIBS) -o ../../lib/libgrace.$(DYNEXT) $(OBJ)
+	$(AR) ../../lib/libgrace.a $(OBJ)
 
 version.cpp:
 	../../util/mkversion version.cpp

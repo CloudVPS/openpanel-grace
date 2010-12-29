@@ -14,6 +14,7 @@ AR = ar cr
 all: $(OBJ)
 	$(LDSHARED) $(LIBS) -o ../../lib/libquerido.$(DYNEXT) $(OBJ)
 	cp platform.h ../../include/querido/platform.h
+	$(AR) ../../lib/libquerido.a $(OBJ)
 
 depend:
 	@echo -n > Makefile.depend
