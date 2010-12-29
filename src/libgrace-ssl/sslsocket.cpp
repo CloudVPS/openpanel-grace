@@ -56,6 +56,8 @@ public:
 	
 					 /// If called, certificate checking will be disabled.
 	void			 nocertcheck (void);
+
+	bool			 handshakedone;
 	
 protected:
 	ssl_t			*ssl;
@@ -67,7 +69,6 @@ protected:
 	bool			 disablecerts;
 	bool 			 server;
 	
-	bool			 handshakedone;
 };
 
 
@@ -509,7 +510,6 @@ void ssllistener::loadkeyfile( const string& cert, const string& priv )
 void ssllistener::loadkeystring( const string& cert, const string& priv )
 {
 
-	
 	string cert_base64 = cert;
 	cert_base64.cropafter("-----BEGIN CERTIFICATE-----");
 	cert_base64.cropat("-----END CERTIFICATE-----");
@@ -538,9 +538,15 @@ tcpsocket *ssllistener::accept (void)
 	tcpsocket* result = tcplistener::accept();
 	if (result)
 	{
-		result->codec = new sslcodec( true, (sslKeys_t*)keys );
-		result->codec->setup();
-		result->readbuffer(1);
+		sslcodec* codec = new sslcodec( true, (sslKeys_t*)keys );
+		result->codec = codec;
+		codec->setup();
+		
+		while (!codec->handshakedone )
+		{
+			result->readbuffer( 128, 0 );
+			result->flush();
+		}
 	}
 	return result;
 }
@@ -550,9 +556,15 @@ tcpsocket *ssllistener::tryaccept(double timeout)
 	tcpsocket* result = tcplistener::tryaccept( timeout );
 	if (result)
 	{
-		result->codec = new sslcodec( true, (sslKeys_t*)keys );
-		result->codec->setup();
-		result->readbuffer(1);
+		sslcodec* codec = new sslcodec( true, (sslKeys_t*)keys );
+		result->codec = codec;
+		codec->setup();
+		
+		while (!codec->handshakedone )
+		{
+			result->readbuffer( 128, 0 );
+			result->flush();
+		}
 	}
 	return result;
 }
