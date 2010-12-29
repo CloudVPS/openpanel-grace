@@ -28,6 +28,8 @@ enum fsfiletype {
 	fsBundle ///< A bundle.
 };
 
+$exception (fileLoadException, "Could not load file");
+
 /// Easy access class to the filesystem.
 /// Programs can use a global instance of this class called 'fs'.
 /// Automatically resolves alias paths.
