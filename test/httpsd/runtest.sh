@@ -10,7 +10,7 @@ make > test.log 2>&1 || {
 }
 $(which echo) -n "."
 echo "--- start run" >> test.log
-./http >> test.log 2>&1 || {
+./https >> test.log 2>&1 || {
   echo "  failed(RUN)"
   exit 1
 }
