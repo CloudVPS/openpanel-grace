@@ -540,6 +540,7 @@ tcpsocket *ssllistener::accept (void)
 	{
 		sslcodec* codec = new sslcodec( true, (sslKeys_t*)keys );
 		result->codec = codec;
+		codec->refcnt=1;
 		codec->setup();
 		
 		while (!codec->handshakedone )
@@ -558,6 +559,7 @@ tcpsocket *ssllistener::tryaccept(double timeout)
 	{
 		sslcodec* codec = new sslcodec( true, (sslKeys_t*)keys );
 		result->codec = codec;
+		codec->refcnt=1;
 		codec->setup();
 		
 		while (!codec->handshakedone )
