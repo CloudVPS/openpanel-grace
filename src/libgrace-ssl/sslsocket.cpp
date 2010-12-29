@@ -271,9 +271,6 @@ again:
 	rc = matrixSslDecode (ssl, &insock, &inbuf, &myerror, &alertLevel,
 						  &alertDescription);
 
-	::printf ("%i = matrixSslDecode (...)\n", rc);
-	if (rc == -1) __sslsocket_breakme();
-
 	switch (rc)
 	{
 		case SSL_SUCCESS:
