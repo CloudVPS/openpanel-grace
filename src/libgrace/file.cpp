@@ -387,9 +387,12 @@ bool file::puts (const char *str, size_t sz)
 	
 	if (codec)
 	{
+	
 		//::printf ("codec called\n");
 		if (codec->addoutput (str, sz))
 		{
+			int sz;
+			
 			string dat;
 			codec->peekoutput(dat);
 			szleft = dat.strlen();
@@ -602,7 +605,7 @@ string *file::gets (int maxlinesize)
 	while (buffer.room() && (! buffer.hasline()))
 	{
 		char buf[defaults::sz::file::readbuf];
-		size_t sz;
+		int sz;
 		size_t wanted;
 		
 		wanted = defaults::sz::file::readbuf;
@@ -638,8 +641,10 @@ readagain:
 						codec->peekoutput (t);
 						if (t.strlen())
 						{
-							size_t wsz = ::write (filno, t.str(), t.strlen());
-							codec->doneoutput (wsz);
+							int wsz = ::write (filno, t.str(), t.strlen());
+
+							if( wsz > 0 )
+								codec->doneoutput (wsz);
 
 						}
 						goto readagain;
