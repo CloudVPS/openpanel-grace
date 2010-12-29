@@ -123,7 +123,8 @@ public:
 					else openread (inpath);
 				 }
 				 
-				~file (void);
+	virtual		~file (void);
+				
 				
 				 /// Open a disk file for reading.
 				 /// \param fn Name (and path) of the file.
