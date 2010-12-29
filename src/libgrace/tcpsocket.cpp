@@ -524,6 +524,7 @@ void tcpsocket::derive (tcpsocket *s)
 	buffer.flush();
 	filno = s->filno;
 	feof = s->feof;
+	codec = s->codec;
 	peer_pid = s->peer_pid;
 	peer_uid = s->peer_uid;
 	peer_gid = s->peer_gid;
@@ -535,7 +536,9 @@ void tcpsocket::derive (tcpsocket *s)
 	ti_established = s->ti_established;
 	s->filno = -1;
 	s->feof = true;
-	//buffer = s->buffer;
+	s->codec = 0;
+		
+	buffer.copy(s->buffer);
 	delete s;
 }
 
@@ -544,6 +547,7 @@ void tcpsocket::derive (tcpsocket &s)
 	buffer.flush();
 	filno = s.filno;
 	feof = s.feof;
+	codec = s.codec;
 	peer_pid = s.peer_pid;
 	peer_uid = s.peer_uid;
 	peer_gid = s.peer_gid;
@@ -553,7 +557,8 @@ void tcpsocket::derive (tcpsocket &s)
 	err = s.err;
 	errcode = s.errcode;
 	ti_established = s.ti_established;
-	buffer = s.buffer;
+	buffer.copy( s.buffer );
+	s.codec = 0;
 }
 
 // ========================================================================
@@ -871,28 +876,36 @@ tcpsocket *tcplistener::tryaccept (double timeout)
 void tcpsocket::sendfile (const string &path, unsigned int amount)
 {
 #ifdef HAVE_SENDFILE
-	file fi;
-	off_t off = 0;
+	if (!codec)
+	{
+		file fi;
+		off_t off = 0;
 	
-	fi.openread (path);
-	::sendfile (filno, fi.filno, &off, amount);
-	fi.close();
-#else
+		fi.openread (path);
+		::sendfile (filno, fi.filno, &off, amount);
+		fi.close();
+	}
+#endif
+	
 	file fi;
 	string buf;
 	
 	fi.openread (path);
 	
 	try {
-		while (! fi.eof())
+		
+		
+		while (! fi.eof() && amount > 0)
 		{
-			buf = fi.read (4096);
+			unsigned int sz = amount > 4096 ? 4096 : amount;
+			buf = fi.read (sz);
 			if (buf.strlen()) puts (buf);
+			
+			amount -= buf.strlen();
 		}
 	}
 	catch (...)
 	{
 	}
 	fi.close ();
-#endif
 }
