@@ -338,9 +338,13 @@ tryagain:
 		}
 		
 		if (_keepalive)
+		{
 			if (! _sock.puts ("Connection: keep-alive\r\n")) break;
+		}
 		else
+		{
 			if (! _sock.puts ("Connection: close\r\n")) break;
+		}
 			
 		if (! _sock.puts ("\r\n")) break;
 		
