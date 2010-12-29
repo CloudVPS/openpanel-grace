@@ -893,15 +893,17 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 	FD_SET(filno,&fds);
 	
 	int ssz;
-	ssz = ::read (filno, buf, sizeof(buf));
+	ssz = ::read (filno, buf, rsz < sizeof(buf) ? rsz : sizeof(buf));
 	
-	if ((ssz < rsz) && (errno==EAGAIN) && ((!timeout_ms) || 
-	                 (select (filno+1, &fds, NULL, NULL, &tv) > 0)))
+	if( timeout_ms )
 	{
-		ssz = ::read (filno, buf, (rsz<65536) ? rsz : 65536);
+		if ((ssz == 0) && (errno==EAGAIN) && (select (filno+1, &fds, NULL, NULL, &tv) > 0) )
+		{
+			ssz = ::read (filno, buf, rsz < sizeof(buf) ? rsz : sizeof(buf) );
+		}
 	}
 	
-	if (ssz > 0)
+	if (ssz >= 0)
 	{
 		try
 		{
