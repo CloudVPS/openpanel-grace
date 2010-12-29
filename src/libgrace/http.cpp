@@ -22,7 +22,7 @@
 // ========================================================================
 httpsocket::httpsocket (void)
 {
-	_keepalive = true;
+	_keepalive = false;
 	status = 0;
 	errorcode = 0;
 	_timeout = 0;
