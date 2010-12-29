@@ -13,6 +13,8 @@
 
 #include <matrixssl/matrixSsl.h>
 
+$exception( noKeysAvailableException, "No certificate or private key is available." )
+
 extern void setupMatrixSSL (void);
 
 void __sslsocket_breakme (void) {}
@@ -535,6 +537,11 @@ void ssllistener::loadkeystring( const string& cert, const string& priv )
 
 tcpsocket *ssllistener::accept (void)
 {
+	if( !keys )
+	{
+		throw noKeysAvailableException();
+	}
+
 	tcpsocket* result = NULL;
 	
 	while (! result)
@@ -568,6 +575,11 @@ tcpsocket *ssllistener::accept (void)
 	
 tcpsocket *ssllistener::tryaccept(double timeout)
 {
+	if( !keys )
+	{
+		throw noKeysAvailableException();
+	}
+	
 	tcpsocket* result = tcplistener::tryaccept( timeout );
 	if (result)
 	{
