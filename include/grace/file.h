@@ -263,6 +263,9 @@ public:
 				 /// Write out what's left in the buffer.
 	void		 flush (void);
 	
+				 /// Write out any data that's waiting to get out of the codec.
+	void		 flushcodec (void);
+	
 				 /// End-of-file.
 				 /// \return EOF status, \b true if the end of the file has 
 				 ///         been reached.

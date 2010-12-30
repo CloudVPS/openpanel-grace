@@ -85,6 +85,29 @@ void file::flush (void)
 	}
 }
 
+void file::flushcodec (void)
+{
+	if (! codec) return;
+	string dt;
+	codec->peekoutput (dt);
+	
+	if (dt.strlen())
+	{
+		int szleft = dt.strlen();
+		int szdone = 0;
+		int sz;
+		
+		while (szleft > 0)
+		{
+			sz = ::write (filno, dt.str() + szdone, szleft);
+			if (sz<=0) break;
+			szdone += sz;
+			szleft -=sz;
+		}
+		
+		if (szdone) codec->doneoutput (szdone);
+	}
+}
 
 // ========================================================================
 // METHOD ::openread
@@ -637,25 +660,7 @@ readagain:
 				{
 					if (codec->fetchinput (buffer))
 					{
-						string dt;
-						codec->peekoutput (dt);
-						
-						if (dt.strlen())
-						{
-							int szleft = dt.strlen();
-							int szdone = 0;
-							int sz;
-							
-							while (szleft > 0)
-							{
-								sz = ::write (filno, dt.str() + szdone, szleft);
-								if (sz<=0) break;
-								szdone += sz;
-								szleft -=sz;
-							}
-							
-							if (szdone) codec->doneoutput (szdone);
-						}
+						flushcodec ();
 						goto readagain;
 					}
 					else if (buffer.backlog() == 0) goto readagain;
@@ -788,7 +793,10 @@ readmore:
 						{
 							if (codec->addinput (buf, ssz))
 							{
-								codec->fetchinput (buffer);
+								if (codec->fetchinput (buffer))
+								{
+									flushcodec ();
+								}
 							}
 						}
 						else
@@ -921,28 +929,7 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 				if (codec->addinput (buf, ssz))
 				{
 					unsigned int startsz = buffer.backlog();
-					if (codec->fetchinput (buffer))
-					{
-						string dt;
-						codec->peekoutput (dt);
-						
-						if (dt.strlen())
-						{
-							int szleft = dt.strlen();
-							int szdone = 0;
-							int sz;
-							
-							while (szleft > 0)
-							{
-								sz = ::write (filno, dt.str() + szdone, szleft);
-								if (sz<=0) break;
-								szdone += sz;
-								szleft -=sz;
-							}
-							
-							if (szdone) codec->doneoutput (szdone);
-						}
-					}
+					if (codec->fetchinput (buffer)) flushcodec();
 					ssz = buffer.backlog() - startsz;
 				}
 			}
@@ -1017,7 +1004,7 @@ string *file::read (size_t psz)
 				{
 					if (codec->addinput (buf, ssz))
 					{
-						codec->fetchinput (buffer);
+						if (codec->fetchinput (buffer)) flushcodec ();
 					}
 				}
 				else
@@ -1136,7 +1123,7 @@ string *file::read (size_t sz, int timeout_ms)
 		{
 			try
 			{
-				codec->fetchinput (buffer);
+				if (codec->fetchinput (buffer)) flushcodec ();
 				if (! buffer.backlog())
 				{
 					errcode = FERR_TIMEOUT;
@@ -1163,7 +1150,7 @@ string *file::read (size_t sz, int timeout_ms)
 			{
 				if (codec->addinput (buf, ssz))
 				{
-					codec->fetchinput (buffer);
+					if (codec->fetchinput (buffer)) flushcodec ();
 				}
 			}
 			else
