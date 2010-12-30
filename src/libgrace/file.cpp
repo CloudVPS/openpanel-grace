@@ -66,25 +66,16 @@ bool file::eof (void)
 }
 
 // ========================================================================
-// METHOD ::eof
-// ------------
-// Returns true if the end-of-file marker has been reached
+// METHOD ::flush
 // ========================================================================
 void file::flush (void)
 {
-	if (codec)
-	{
-		string outbuf;
-		codec->peekoutput (outbuf);
-		if (outbuf.strlen())
-		{
-			int szdone = write (filno, outbuf.str(), outbuf.strlen());
-			if (szdone>0) codec->doneoutput ((unsigned int) szdone);
-
-		}
-	}
+	flushcodec ();
 }
 
+// ========================================================================
+// METHOD ::flushcodec
+// ========================================================================
 void file::flushcodec (void)
 {
 	if (! codec) return;
