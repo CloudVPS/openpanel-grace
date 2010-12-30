@@ -110,7 +110,10 @@ public:
 				 /// Set the value an output header.
 				 /// \param name The header name.
 				 /// \param value The header value.
-	void		 setheader (const statstring &name, const string &value);
+	void		 setheader (const statstring &name, const string &value)
+				 {
+				 	postheaders[name] = value;
+				 }
 
 	value		 postheaders; ///< Custom headers for POST/GET.
 	string		 error; ///< Error string storage.
