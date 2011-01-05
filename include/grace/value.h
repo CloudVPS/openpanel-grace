@@ -18,6 +18,7 @@
 #include <grace/retain.h>
 #include <grace/flags.h>
 #include <grace/timestamp.h>
+#include <grace/ipaddress.h>
 
 #include <grace/checksum.h>
 #include <stdlib.h>
@@ -92,7 +93,7 @@ enum itypes {
   i_ulong, ///< Unsigned 64 bits integer.
   i_bool, ///< Boolean.
   i_string, ///< String data.
-  i_ipaddr, ///< IPv4 address
+  i_ipaddr, ///< IPv6 address
   i_date, ///< date/time stamp.
   i_currency ///< fixed point currency
 };
@@ -310,8 +311,6 @@ public:
 						 /// \param val Attribute's value.
 	void				 setattrib (const statstring &ki, bool val);
 
-						 /// Set as an IPv4 address. Address is in host format.	
-	value				&setip (unsigned int);
 	value				&settime (const class timestamp &);
 	
 	value				&operator= (const value &v);
@@ -404,11 +403,8 @@ public:
 						 /// Cast as 64 bits unsigned integer.
 	unsigned long long	 ulval (void) const;
 	
-						 /// Cast as 32 bits IPv4 address.
-	unsigned int		 ipval (void);
-
-						 /// Cast as 32 bits IPv4 address.
-	unsigned int		 ipval (void) const;
+						 /// Cast as IPv6 address.
+	ipaddress			 ipval (void) const;
 
 						 /// Cast as boolean.
 	bool				 bval (void) const; 
@@ -625,29 +621,7 @@ public:
 					 /// are skipped unless if the original is
 					 /// of an array type.
 					 /// \param v Original value.
-	value			*$val (const value &v)
-					 {
-					 	switch (v._itype)
-					 	{
-					 		case i_unset: break;
-					 		case i_bool: (*this) = v.bval(); break;
-					 		case i_long: (*this) = v.lval();
-					 		case i_unsigned: (*this) = v.uval();
-					 		case i_ulong: (*this) = v.ulval();
-					 		case i_ipaddr: setip (v.ipval());
-					 		case i_int: (*this) = v.ival(); break;
-					 		case i_double: (*this) = v.dval(); break;
-					 		case i_string:
-					 		case i_date:
-					 		case i_currency:
-					 			(*this) = v.sval();
-					 			break;
-					 		default:
-					 			(*this) = v;
-					 			break;
-					 	}
-					 	return this;
-					 }
+	value			*$val (const value &v);
 	
 					 /// Return reference to a new unkeyed child.
 					 /// \param typ Registered type of the new child.
@@ -1233,10 +1207,6 @@ public:
 	void			 init (bool first=true);
 	unsigned char	 itype (void) const { return _itype; }
 };
-
-
-string *ip2str (unsigned int ipaddr);
-unsigned int str2ip (const string &str);
 
 time_t __parse_timestr (const string &);
 string *__make_timestr (time_t);

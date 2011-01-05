@@ -6,7 +6,7 @@ all: tcpsocket.exe
 		mkapp tcpsocket
 
 tcpsocket.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o tcpsocket.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -g -o tcpsocket.exe $(OBJ) ../../lib/libgrace.a $(LIBS)
 
 clean:
 		rm -f *.o *.exe

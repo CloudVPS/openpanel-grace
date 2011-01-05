@@ -25,7 +25,7 @@ string *operator% (const char *args, const value &arglist)
 	int szoffset = 1;
 	statstring key;
 	bool useskey;
-	unsigned int ip;
+	ipaddress ip;
 	
 	#define KEYORARG (useskey ? arglist[0][key] : arglist[argptr++])
 	
@@ -225,17 +225,7 @@ string *operator% (const char *args, const value &arglist)
 					}
 					*copy_p = 0;
 					goto CONTINUE;
-					
-				case 'P':
-					ip = KEYORARG.ipval();
-					sprintf (sprintf_out, "%i.%i.%i.%i",
-							   (ip & 0xff000000) >> 24,
-							   (ip & 0xff0000) >> 16,
-							   (ip & 0xff00) >> 8,
-							   ip & 0xff);
-					res.strcat (sprintf_out);
-					goto CONTINUE;
-				
+								
 				case 'Z':
 					copy_p = (char *) KEYORARG.cval();
 					while (*copy_p)
@@ -305,6 +295,7 @@ string *operator% (const char *args, const value &arglist)
 					res.strcat (copy_s);
 					goto CONTINUE;
 				
+				case 'P':
 				case 's':
 					*copy_p = 0;
 					sz = atoi ((const char *)copy+1);

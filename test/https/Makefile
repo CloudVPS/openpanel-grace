@@ -6,7 +6,7 @@ all: https.exe
 		mkapp https
 
 https.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o https.exe $(OBJ) -L../../lib -lgrace -lgrace-ssl $(LIBS)
+		$(CXX) $(LDFLAGS) -o https.exe $(OBJ) ../../lib/libgrace.a ../../lib/libgrace-ssl.a $(LIBS)
 
 clean:
 		rm -f *.o *.exe

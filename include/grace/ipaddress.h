@@ -8,184 +8,114 @@
 #ifndef _IPADDRESS_H
 #define _IPADDRESS_H 1
 
-#include <grace/value.h>
+#include "str.h"
 
-/// Representation of an IPv4 address.
-/// This class is meant to be passed-by-value. It only contains
-/// a single unsigned int and mainly acts as a convenient type-
-/// indicator when handling with ip-addresses in the context of
-/// value objects, for different encoding standards where there
-/// needs to be a choice between writing an integer (shox, SQL)
-/// or a string (XML). A plain unsigned int doesn't have those
-/// needs and it is hard to dinstinguish the two if an ipaddress
-/// where just a typedef.
-/// The constructors and operators implemented should make this
-/// a drop-in replacement for wielding sockaddr_in or unsigned
-/// ints.
+/// Representation of an IPv6 address.
 class ipaddress
 {
 public:
-						 /// Default constructor. Sets the value
-						 /// to 0.0.0.0
-						 ipaddress (void)
-						 {
-						 	addr = 0;
-						 }
-						 
-						 /// Constructor from unsigned int.
-						 ipaddress (unsigned int o)
-						 {
-						 	addr = o;
-						 }
-						 
-						 /// Constructor from a plain int (ugly).
-						 ipaddress (int o)
-						 {
-						 	addr = o;
-						 }
-						 
-						 /// Constructor from a string. 
-						 ipaddress (const string &o)
-						 {
-						 	addr = str2ip (o);
-						 }
-						 
-						 /// Constructor from a c-string. Needed
-						 /// because gcc can't figure out whether
-						 /// to cast it to value or string otherwise.
-						 /// Where's #pragma this_one_bitch when you
-						 /// need it?.
-						 ipaddress (const char *o)
-						 {
-						 	addr = str2ip (o);
-						 }
-						 
-						 /// Copy-constructor.
-						 ipaddress (const ipaddress &o)
-						 {
-						 	addr = o.addr;
-						 }
-						 
-						 /// Constructor from a value.
-						 /// Just calls ipval().
-						 ipaddress (const value &o)
-						 {
-						 	addr = o.ipval ();
-						 }
-						 
+	static bool			str2ip( const char*, unsigned char* );
+	static bool			str2ip( const char* c, ipaddress& i ) { return str2ip(c, i.addr); }
+	static string*		ip2str( const unsigned char* c );	
+	static string*		ip2str( const ipaddress& c ) { return ip2str (c.addr); }	
+
+public:
+						/// Default constructor. Sets the value
+						/// to ::
+						ipaddress (void)
+						{
+							memset( addr, 0, sizeof(addr) );
+						}
+	
+						/// Copy-constructor.
+						ipaddress (const ipaddress &o)
+						{
+						 	memcpy(addr, o.addr, sizeof(addr));
+						}
+						
+						/// Constructor from a string. 
+						ipaddress (const char *o);
+
+						/// Constructor from system structs
+						ipaddress (const struct in_addr&);
+						ipaddress (const struct in6_addr&);
+						
+						ipaddress (const string& str);
+
+						/// Constructor from a value.
+						/// Just calls ipval().
+						ipaddress (const value &o);
+
 						 /// Boring destructor.
 						~ipaddress (void)
 						 {
 						 }
-						
+
 						 /// Assignment operator.
 						 /// \param o The original.
 	ipaddress			&operator= (const ipaddress &o)
 						 {
-						 	addr = o.addr;
+						 	memcpy(addr, o.addr, sizeof(addr));
 						 	return *this;
 						 }
 						 
-	ipaddress			&operator= (const value &v)
-						 {
-						 	addr = v.ipval();
-						 	return *this;
-						 }
+	ipaddress			&operator= (const value &v);
 						 
-	ipaddress			&operator= (int i)
+	ipaddress	&operator= (const char *c);
+
+
+						 operator bool () const
 						 {
-						 	addr = i;
-						 	return *this;
-						 }
-						 
-	ipaddress			&operator= (const char *c)
+						 	for (int i=0; i<sizeof(addr); i++)
+						 	{
+						 		if( addr[i] ) return true;
+						 	}
+						 	return false;
+						 }						 
+
+						 operator bool ()
 						 {
-						 	addr = str2ip (c);
-						 	return *this;
-						 }
+						 	for (int i=0; i<sizeof(addr); i++)
+						 	{
+						 		if( addr[i] ) return true;
+						 	}
+						 	return false;
+						 }						 
 						 
 						 /// Cast-o-matic operator to unsigned int.
-						 operator unsigned int (void) const
-						 {
-						 	return addr;
-						 }
-						 
-						 /// Increment operator.
-						 /// \todo Implement prefix/postfix properly.
-	ipaddress			&operator++ (int i)
-						 {
-						 	addr++;
-						 	return *this;
-						 }
+						 operator const struct in_addr& (void) const;
+						 operator const struct in6_addr& (void) const;
 
-						 /// Decrement operator.
-						 /// \todo Implement prefix/postfix properly.
-	ipaddress			&operator-- (int i)
-						 {
-						 	addr--;
-						 	return *this;
-						 }
-
-	ipaddress			&operator+= (const ipaddress &o)
-						 {
-						 	addr += o.addr;
-						 	return *this;
-						 }
-
-	ipaddress			&operator-= (const ipaddress &o)
-						 {
-						 	addr -= o.addr;
-						 	return *this;
-						 }
-
-	ipaddress			&operator&= (const ipaddress &o)
-						 {
-						 	addr &= o.addr;
-						 	return *this;
-						 }
-
-	ipaddress			&operator|= (const ipaddress &o)
-						 {
-						 	addr |= o.addr;
-						 	return *this;
-						 }
-						 
-						 #define INTOP(thetype) \
-						 	bool operator== (thetype o) const \
-						 	{ \
-						 		return o == (thetype) addr; \
-						 	} \
-						 	bool operator!= (thetype o) const \
-						 	{ \
-						 		return o != (thetype) addr; \
-						 	}
-						 
-						 INTOP (int)
-						 INTOP (unsigned int)
-						 
-						 
-	bool				 operator== (const value &o) const
-						 {
-						 	return o.ipval() == addr;
-						 }
-						 
-	bool				 operator!= (const value &o) const
-						 {
-						 	return o.ipval() != addr;
-						 }
-						 
 	bool				 operator== (const ipaddress &o) const
 						 {
-						 	return addr == o.addr;
+						 	return memcmp(addr,o.addr,sizeof(addr)) == 0;
 						 }
 	
 	bool				 operator!= (const ipaddress &o) const
 						 {
-						 	return addr != o.addr;
+						 	return !( this->operator==(o) );
+						 }
+
+	bool				 operator== (const value &o) const;
+						 
+	bool				 operator!= (const value &o) const
+						 {
+						 	return !( this->operator==(o) );
 						 }
 						 
+						 
+	bool				 isv4() const
+						 {
+						 	return 
+						 		addr[ 0] == 0x00 && addr[ 1] == 0x00 && 
+						 		addr[ 2] == 0x00 && addr[ 3] == 0x00 && 
+						 		addr[ 4] == 0x00 && addr[ 5] == 0x00 && 
+						 		addr[ 6] == 0x00 && addr[ 7] == 0x00 && 
+						 		addr[ 8] == 0x00 && addr[ 9] == 0x00 && 
+						 		addr[10] == 0xFF && addr[11] == 0xFF; 
+						 }						 
 protected:
-	unsigned int		 addr; ///< The IPv4 address in host format.
+	unsigned char	 	 addr[16]; // The IPv6 address in network order
 };
 
 #endif

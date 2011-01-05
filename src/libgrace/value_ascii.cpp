@@ -162,7 +162,7 @@ void value::load (file &f)
 					value v;
 					v = dst;
 					
-					CCHILD.setip (v.ipval());
+					CCHILD = v.ipval();
 				}
 				
 				// If it was a string there should be a quote in the source 
@@ -274,7 +274,7 @@ void value::decode (string &f)
 					value v;
 					v = dst;
 					
-					CCHILD.setip (v.ipval());
+					CCHILD = v.ipval();
 				}
 				
 				// If it was a string there should be a quote in the source line. This

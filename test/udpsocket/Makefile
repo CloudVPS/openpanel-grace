@@ -6,7 +6,7 @@ all: udpsocket.exe
 	mkapp udpsocket
 
 udpsocket.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o udpsocket.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o udpsocket.exe $(OBJ) ../../lib/libgrace.a $(LIBS)
 
 clean:
 	rm -f *.o *.exe

@@ -23,7 +23,7 @@ APPOBJECT(httpsApp);
 
 void __breakme (void) {}
 
-#define debug_out if(0) ::printf
+#define debug_out if(1) ::printf
 
 int httpsApp::main (void)
 {

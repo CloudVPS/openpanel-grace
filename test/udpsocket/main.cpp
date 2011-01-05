@@ -33,6 +33,7 @@ int udpsockettestApp::main (void)
 	string in = s2.receive (a, 1000);
 	if (in != "hello, world")
 	{
+		fout.writeln ("%P" %format (in));
 		FAIL ("mismatch");
 	}
 	

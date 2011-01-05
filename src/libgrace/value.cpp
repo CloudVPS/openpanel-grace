@@ -198,7 +198,7 @@ value::value (creatorlabel l, const string &k)
 value::value (const ipaddress &o)
 {
 	init ();
-	setip (o);
+	operator=(o);
 }
 
 // ========================================================================
@@ -233,7 +233,6 @@ value::value (value &v)
 	switch (v._itype)
 	{
 		case i_unsigned:
-		case i_ipaddr:
 		case i_date:
 		case i_int:
 		case i_bool:
@@ -241,8 +240,9 @@ value::value (value &v)
 			t.uval = v.t.uval;
 			break;
 		
+		case i_ipaddr:
 		case i_string:
-			_itype = i_string;
+			_itype = v._itype;
 			s = v.s;
 			break;
 		
@@ -608,9 +608,9 @@ value &value::operator= (const value &v)
 	
 	switch (v._itype)
 	{
+		case i_ipaddr:
 		case i_string: s.strclone (v.s); break;
 		case i_bool:
-		case i_ipaddr:
 		case i_unsigned:
 		case i_date:
 		case i_int: t.uval = v.t.uval; break;
@@ -676,12 +676,12 @@ value &value::operator= (value *v)
 	{
 		switch (v->_itype)
 		{
+			case i_ipaddr:
 			case i_string: s = v->s; break;
 			case i_bool:
 			case i_unsigned:
 			case i_int:
 			case i_date:
-			case i_ipaddr: t.uval = v->t.uval; break;
 			case i_double: t.dval = v->t.dval; break;
 			case i_long:
 			case i_ulong: t.ulval = v->t.ulval; break;
@@ -767,6 +767,7 @@ const string &value::sval (void) const
 
 	switch (_itype)
 	{
+		case i_ipaddr:
 		case i_string:
 			return s;
 			
@@ -788,15 +789,6 @@ const string &value::sval (void) const
 		
 		case i_double:
 			S.crop(); S.printf ("%f", t.dval);
-			return s;
-		
-		case i_ipaddr:
-			S.crop();
-			S.printf ("%i.%i.%i.%i",
-					  (t.uval & 0xff000000) >> 24,
-					  (t.uval & 0x00ff0000) >> 16,
-					  (t.uval & 0x0000ff00) >> 8,
-					  (t.uval & 0x000000ff));
 			return s;
 
 		case i_currency:
@@ -874,10 +866,10 @@ unsigned int value::uval (void) const
 		case i_int:
 		case i_bool:
 		case i_date:
-		case i_ipaddr:
 		case i_unsigned:
 			return t.uval;
 
+		case i_ipaddr:
 		case i_string:
 			return ::strtoul (s.str(),NULL,10);
 
@@ -931,9 +923,9 @@ long long value::lval (void) const
 			if (t.ival >= 0) return (long long) t.ival;
 			return ((long long) t.ival) | 0xffffffff00000000LL;
 		case i_date:
-		case i_ipaddr:
 		case i_bool:
 		case i_unsigned: return (long long) t.uval;
+		case i_ipaddr:
 		case i_string: return strtoll (s.str(),NULL,10);
 		case i_currency: return t.lval/1000;
 	}
@@ -955,9 +947,9 @@ unsigned long long value::ulval (void) const
 			if (t.ival >= 0) return (long long) t.ival;
 			return ((long long) t.ival) | 0xffffffff00000000LL;
 		case i_date:
-		case i_ipaddr:
 		case i_bool:
 		case i_unsigned: return (unsigned long long) t.uval;
+		case i_ipaddr:
 		case i_string: return strtoull (s.str(),NULL,10);
 		case i_currency:
 			if (t.lval<0) return (unsigned long long) (-t.lval);
@@ -976,6 +968,8 @@ bool value::bval (void) const
 		return (bool) t.ival;
 	if (_itype == i_double)
 		return (bool) t.dval;
+	if (_itype == i_ipaddr)
+		return (bool)ipaddress(s);
 	if (_itype == i_string)
 		return s.strcasecmp ("true") ? false : true;
 	if ((_itype == i_long) || (_itype == i_ulong) || (_itype == i_currency))
@@ -1424,6 +1418,40 @@ value &value::operator[] (int i)
 	return *v;
 }
 
+					 /// Valuebuilder: set explicit value.
+					 /// \param v The explicit value. Attributes
+					 /// are skipped unless if the original is
+					 /// of an array type.
+					 /// \param v Original value.
+
+// ========================================================================
+// METHOD ::$val
+// ---------------
+value* value::$val (const value &v)
+{
+	switch (v._itype)
+	{
+		case i_unset: break;
+		case i_bool: (*this) = v.bval(); break;
+		case i_long: (*this) = v.lval();
+		case i_unsigned: (*this) = v.uval();
+		case i_ulong: (*this) = v.ulval();
+		case i_int: (*this) = v.ival(); break;
+		case i_double: (*this) = v.dval(); break;
+		case i_ipaddr: 
+		case i_string:
+		case i_date:
+		case i_currency:
+			(*this) = v.sval();
+			break;
+		default:
+			(*this) = v;
+			break;
+	}
+	return this;
+}
+					 
+					 
 // ========================================================================
 // METHOD ::newval
 // ---------------

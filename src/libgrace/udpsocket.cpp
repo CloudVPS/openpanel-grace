@@ -37,24 +37,34 @@ udpsocket::~udpsocket (void)
 // ==========================================================================
 bool udpsocket::bind (int port)
 {
-	struct sockaddr_in local_addr;
+	struct sockaddr_in6 local_addr;
 
-	local_addr.sin_addr.s_addr = INADDR_ANY;
-	local_addr.sin_port = htons (port);
-	local_addr.sin_family = AF_INET;
+	local_addr.sin6_addr = in6addr_any;
+	local_addr.sin6_port = htons (port);
+	local_addr.sin6_family = AF_INET6;
 
 	if (::bind (sock, (struct sockaddr *) &local_addr, sizeof (local_addr)))
 	{
 		return false;
 	}
 	
-	if (port) boundport = port;
+	if (port) 
+	{
+	    boundport = port;
+    }
 	else
 	{
-		socklen_t slen = sizeof (local_addr);
-		if (! getsockname (sock, (struct sockaddr *) &local_addr, &slen))
+	    sockaddr_storage boundaddr;
+	    
+		socklen_t slen = sizeof (boundaddr);
+		if (! getsockname (sock, (struct sockaddr *) &boundaddr, &slen))
 		{
-			boundport = local_addr.sin_port;
+		    if( boundaddr.ss_family == AF_INET )
+		        boundport = ((sockaddr_in*)&boundaddr)->sin_port;
+            else if( boundaddr.ss_family == AF_INET6 )
+		        boundport = ((sockaddr_in6*)&boundaddr)->sin6_port;
+            else
+                boundport = 0;
 		}
 		else
 		{
@@ -67,24 +77,34 @@ bool udpsocket::bind (int port)
 
 bool udpsocket::bind (ipaddress addr, int port)
 {
-	struct sockaddr_in local_addr;
+	struct sockaddr_in6 local_addr;
 
-	local_addr.sin_family = AF_INET;
-	local_addr.sin_addr.s_addr = htonl (addr);
-	local_addr.sin_port = htons (port);
+	local_addr.sin6_family = AF_INET6;
+	local_addr.sin6_addr = addr;
+	local_addr.sin6_port = htons (port);
 
 	if (::bind (sock, (struct sockaddr *) &local_addr, sizeof (local_addr)))
 	{
 		return false;
 	}
 	
-	if (port) boundport = port;
+	if (port) 
+	{
+	    boundport = port;
+    }
 	else
 	{
-		socklen_t slen = sizeof (local_addr);
-		if (! getsockname (sock, (struct sockaddr *) &local_addr, &slen))
+	    sockaddr_storage boundaddr;
+	    
+		socklen_t slen = sizeof (boundaddr);
+		if (! getsockname (sock, (struct sockaddr *) &boundaddr, &slen))
 		{
-			boundport = ntohs (local_addr.sin_port);
+		    if( boundaddr.ss_family == AF_INET )
+		        boundport = ((sockaddr_in*)&boundaddr)->sin_port;
+            else if( boundaddr.ss_family == AF_INET6 )
+		        boundport = ((sockaddr_in6*)&boundaddr)->sin6_port;
+            else
+                boundport = 0;
 		}
 		else
 		{
@@ -109,10 +129,10 @@ void udpsocket::setbroadcast (bool to)
 // ==========================================================================
 bool udpsocket::sendto (ipaddress addr, int port, const string &data)
 {
-	struct sockaddr_in remote_addr;
-	remote_addr.sin_addr.s_addr = htonl (addr);
-	remote_addr.sin_port = htons (port);
-	remote_addr.sin_family = AF_INET;
+	struct sockaddr_in6 remote_addr;
+	remote_addr.sin6_addr = addr;
+	remote_addr.sin6_port = htons (port);
+	remote_addr.sin6_family = AF_INET;
 	
 	if (::sendto (sock, data.str(), data.strlen(), 0,
 				(struct sockaddr *) &remote_addr, sizeof (remote_addr)))
@@ -154,7 +174,7 @@ string *udpsocket::receive (int timeout_ms)
 string *udpsocket::receive (ipaddress &addr, int timeout_ms)
 {
 	returnclass (string) res retain;
-	struct sockaddr_in remote_addr;
+	struct sockaddr_storage remote_addr;
 	char buf[2048];
 	int sz;
 	socklen_t addrsz = sizeof (remote_addr);
@@ -179,7 +199,11 @@ string *udpsocket::receive (ipaddress &addr, int timeout_ms)
 	sz = recvfrom (sock, buf, 2048, 0, (struct sockaddr *) &remote_addr,
 				   &addrsz);
 	
-	addr = ntohl (remote_addr.sin_addr.s_addr);
+    if( remote_addr.ss_family == AF_INET )
+        addr = ((sockaddr_in*)&remote_addr)->sin_addr;
+    else if( remote_addr.ss_family == AF_INET6 )
+        addr = ((sockaddr_in6*)&remote_addr)->sin6_addr;
+
 	if (sz>0) res.strcpy (buf, sz);
 	return &res;
 }

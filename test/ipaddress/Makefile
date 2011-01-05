@@ -6,7 +6,7 @@ all: ipaddress.exe
 	mkapp ipaddress
 
 ipaddress.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o ipaddress.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -g -o ipaddress.exe $(OBJ) ../../lib/libgrace.a $(LIBS)
 
 clean:
 	rm -f *.o *.exe

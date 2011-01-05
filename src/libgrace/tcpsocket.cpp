@@ -139,10 +139,10 @@ bool tcpsocket::connect (const string &host, int port)
 
 bool tcpsocket::connect (ipaddress addr, int port)
 {
-	struct sockaddr_in	 remote;
-	struct sockaddr_in	 local;
-	struct in_addr		 bindaddr;
-	int					 pram = 1;
+	sockaddr_in6	 remote;
+	sockaddr_in6	 local;
+	in6_addr		 bindaddr;
+	int				 pram = 1;
 	
 	if (! addr) return false;
 	
@@ -155,15 +155,15 @@ bool tcpsocket::connect (ipaddress addr, int port)
 		return false;
 	}
 	
-	filno = socket (PF_INET, SOCK_STREAM, 0);
+	filno = socket (PF_INET6, SOCK_STREAM, 0);
 	if (filno >= 0)
 	{
 		setsockopt (filno, SOL_SOCKET, SO_KEEPALIVE,
 					(char *) &pram, sizeof (int));
 					
-		remote.sin_family = AF_INET;
-		remote.sin_port   = htons (port);
-		remote.sin_addr.s_addr = htonl (addr);
+		remote.sin6_family = AF_INET6;
+		remote.sin6_port   = htons (port);
+		remote.sin6_addr   = addr;
 		
 		peer_addr = addr;
 		peer_port = port;
@@ -171,15 +171,15 @@ bool tcpsocket::connect (ipaddress addr, int port)
 		// If an address to bind is set.. first bind 
 		if( localbindaddr )
 		{
-			local.sin_family = AF_INET;
-			local.sin_port = 0;
-			local.sin_addr.s_addr = htonl (localbindaddr);
+			local.sin6_family = AF_INET6;
+			local.sin6_port = 0;
+			local.sin6_addr = localbindaddr;
 				  
 			::bind( filno, (struct sockaddr *)&local, sizeof(local) );
 		}
 			
 		if (::connect (filno, (const sockaddr *) &remote,
-					   sizeof (struct sockaddr_in)) != 0)
+					   sizeof (remote)) != 0)
 		{
 			::close (filno);
 			filno = -1;
@@ -636,24 +636,24 @@ void tcplistener::listento (ipaddress addr, int port)
 		tcpdomain = true;
 		tcpdomainport = port;
 		
-		struct sockaddr_in	 remote;
-		struct in_addr		 bindaddr;
+		struct sockaddr_in6	 remote;
+		struct in6_addr		 bindaddr;
 		struct hostent 		*myhostent;
 		int					 pram = 1;
 	
-		bzero ((char *) &remote, sizeof (remote));
-		remote.sin_family = AF_INET;
-		if (addr == 0)
+		memset (&remote, 0, sizeof (remote));
+		remote.sin6_family = AF_INET6;
+		if (!addr)
 		{
-			remote.sin_addr.s_addr = htonl (INADDR_ANY);
+			remote.sin6_addr = in6addr_any;
 		}
 		else
 		{
-			remote.sin_addr.s_addr = htonl (addr);
+			remote.sin6_addr = addr;
 		}
-		remote.sin_port = htons (port);
+		remote.sin6_port = htons (port);
 		
-		sock = socket (AF_INET, SOCK_STREAM, 0);
+		sock = socket (AF_INET6, SOCK_STREAM, 0);
 		if (sock < 0)
 		{
 			throw socketCreateException();
@@ -673,7 +673,12 @@ void tcplistener::listento (ipaddress addr, int port)
 			throw socketCreateException();
 		}
 		
-		listen (sock, tune::tcplistener::backlog);
+		if ( listen (sock, tune::tcplistener::backlog) < 0 )
+		{
+			close (sock);
+			throw socketCreateException();
+		}
+
 		listening = true;
 	}
 }
@@ -756,11 +761,10 @@ tcplistener::~tcplistener (void)
 // ========================================================================
 tcpsocket *tcplistener::accept (void)
 {
-	struct sockaddr_in	remote;
-	struct sockaddr_in	peer;
+	struct sockaddr_in6	remote;
+	struct sockaddr_in6	peer;
 	socklen_t anint=1;
 	int pram=1;
-	unsigned int raddr;
 	
 	int s;
 	unprotected (sock)
@@ -777,7 +781,6 @@ tcpsocket *tcplistener::accept (void)
 	{
 		anint = sizeof (peer);
 		getpeername (s, (struct sockaddr *) &peer, &anint);
-		raddr = ntohl (peer.sin_addr.s_addr);
 	}
 
 	setsockopt (s, SOL_SOCKET, SO_KEEPALIVE, (char *) &pram,
@@ -787,9 +790,9 @@ tcpsocket *tcplistener::accept (void)
 	(*myfil).openread (s);
 	if (tcpdomain)
 	{
-		(*myfil).peer_addr = raddr;
-		(*myfil).peer_port = ntohs (peer.sin_port);
-		(*myfil).peer_name = ip2str (raddr);
+		(*myfil).peer_addr = ipaddress( peer.sin6_addr );
+		(*myfil).peer_port = ntohs (peer.sin6_port);
+		(*myfil).peer_name = ipaddress::ip2str ( (*myfil).peer_addr );
 	}
 	(*myfil).ti_established = core.time.now();
 	return myfil;
@@ -810,11 +813,7 @@ tcpsocket *tcplistener::accept (void)
 // ========================================================================
 tcpsocket *tcplistener::tryaccept (double timeout)
 {
-	struct sockaddr_in	remote;
-	struct sockaddr_in	peer;
-	socklen_t anint=1;
 	int pram=1;
-	unsigned int raddr;
 	fd_set fds;
 	int s = -1;
 	struct timeval tv;
@@ -841,7 +840,9 @@ tcpsocket *tcplistener::tryaccept (double timeout)
 			tv.tv_sec = tv.tv_usec = 0;
 			if (select (sock+1, &fds, NULL, NULL, &tv) > 0)
 			{
-				s = ::accept (sock, (struct sockaddr *) &remote, &anint);
+				struct sockaddr_in6	remote;
+				socklen_t remote_len = sizeof(remote);
+				s = ::accept (sock, (struct sockaddr *) &remote, &remote_len);
 			}
 		}
 	}
@@ -851,18 +852,30 @@ tcpsocket *tcplistener::tryaccept (double timeout)
 		return NULL;
 	}
 	
-	anint = sizeof (peer);
+	struct sockaddr_storage	peer;
+	socklen_t anint = sizeof (peer);
 	getpeername (s, (struct sockaddr *) &peer, &anint);
-	raddr = ntohl (peer.sin_addr.s_addr);
 
 	setsockopt (s, SOL_SOCKET, SO_KEEPALIVE, (char *) &pram,
 				sizeof (int));	
 	
 	tcpsocket *myfil = new tcpsocket;
 	(*myfil).openread (s);
-	(*myfil).peer_addr = raddr;
-	(*myfil).peer_port = ntohs (peer.sin_port);
-	(*myfil).peer_name = ip2str (raddr);
+	
+	if( peer.ss_family == AF_INET )
+	{
+		sockaddr_in* peer_in = (sockaddr_in*)&peer;
+		(*myfil).peer_addr = ipaddress( peer_in->sin_addr );
+		(*myfil).peer_port = ntohs (peer_in->sin_port);
+	}
+	else if( peer.ss_family == AF_INET6 )
+	{
+		sockaddr_in6* peer_in6 = (sockaddr_in6*)&peer;
+		(*myfil).peer_addr = ipaddress( peer_in6->sin6_addr );
+		(*myfil).peer_port = ntohs (peer_in6->sin6_port);
+	}
+	
+	(*myfil).peer_name = ipaddress::ip2str ( (*myfil).peer_addr );
 	(*myfil).ti_established = core.time.now();
 	return myfil;
 }

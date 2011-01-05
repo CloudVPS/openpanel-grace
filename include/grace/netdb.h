@@ -23,7 +23,7 @@ public:
 	static value *gethostbyname (const string &name);
 	
 	/// Quickly resolve a host from its hostname to an ip address.
-	static ipaddress resolve (const string &name);
+	static ipaddress resolve (const string &name, bool v4=true, bool v6=true);
 	
 	/// Resolve an address to a name.
 	/// \param addr The address in dotted quad notation

@@ -722,7 +722,7 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 						else if (tp == t_ipaddr)
 						{
 							ipaddress i = tag.data;
-							newcrsr->setip (i);
+							*newcrsr = i;
 							
 							if (tagtype != t_ipaddr)
 							{
