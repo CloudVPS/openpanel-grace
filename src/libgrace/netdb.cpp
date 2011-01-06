@@ -91,8 +91,8 @@ ipaddress netdb::resolve (const string &name, bool v4, bool v6)
 	struct addrinfo *crsr = ainf;
 	for (;crsr;crsr = crsr->ai_next)
 	{
-		if (crsr->ai_family != AF_INET && !v4) continue;
-		if (crsr->ai_family != AF_INET6 && !v6) continue;
+		if (crsr->ai_family == AF_INET && !v4) continue;
+		if (crsr->ai_family == AF_INET6 && !v6) continue;
 		if (crsr->ai_family != AF_INET && crsr->ai_family != AF_INET6) continue;
 		if (crsr->ai_socktype && (crsr->ai_socktype != SOCK_STREAM)) continue;
 		
