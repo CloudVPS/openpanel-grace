@@ -104,6 +104,9 @@ public:
 					 /// Copy-constructor (C string).
 					 string (const char *);
 					 
+					 /// Copy-constructor (Sized blob)
+					 string (const char *, size_t);
+					 
 					 /// Copy-constructor (C unsigned string)
 					 string (const unsigned char *);
 					 

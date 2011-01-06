@@ -98,6 +98,17 @@ int ipaddresstestApp::main (void)
 	string backval = "%P" %format (fromval);
 	if (backval != "172.17.2.255") FAIL ("fromvalue");
 	
+	v.clear ();
+	v.newval() = ipaddress ("1.2.3.4");
+	v.newval() = ipaddress ("cdea:8712:5ef5:36fd:a91:2ba2:b09e:9321");
+	v.savexml ("addrlist.xml");
+	string s = v.tojson();
+	fs.save ("addrlist.json", s);
+	
+	value vv;
+	vv.loadxml ("addrlist.xml");
+	vv.savexml ("addrlist-readback.xml");
+	
 	return 0;
 }
 

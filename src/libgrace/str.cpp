@@ -174,6 +174,13 @@ string::string (const char *s) : retainable()
 	}
 }
 
+string::string (const char *s, size_t sz) : retainable()
+{
+	data = NULL;
+	size = alloc = offs = 0;
+	strcpy (s, sz);
+}
+
 // ========================================================================
 // CONSTRUCTOR
 // ========================================================================
