@@ -61,7 +61,8 @@ public:
 						 
 	ipaddress			&operator= (const value &v);
 						 
-	ipaddress	&operator= (const char *c);
+	ipaddress			&operator= (const char *c);
+	ipaddress			&operator= (const string &);
 
 
 						 operator bool () const

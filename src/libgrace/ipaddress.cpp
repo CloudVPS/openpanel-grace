@@ -14,7 +14,7 @@
 #include <arpa/inet.h>
 #include <string.h>
 
-bool ipaddress::str2ip( const char* ipstr, unsigned char* out_result )
+bool ipaddress::str2ip (const char* ipstr, unsigned char* out_result)
 {
 	if (strchr( ipstr, ':') == NULL )
 	{
@@ -47,8 +47,7 @@ bool ipaddress::str2ip( const char* ipstr, unsigned char* out_result )
 // ========================================================================
 // FUNCTION ip2str
 // ========================================================================
-
-string*	ipaddress::ip2str( const unsigned char* c )
+string*	ipaddress::ip2str (const unsigned char* c)
 {
 	ipaddress* ipaddr = (ipaddress*)(void*)c;
 	
@@ -131,6 +130,15 @@ ipaddress::operator const struct in6_addr& (void) const
 	return (const in6_addr&)addr[0];
 }
 
+ipaddress &ipaddress::operator= (const string &s)
+{
+	if(s)
+		str2ip( s, addr );
+	else
+		memset( addr, 0, sizeof(addr) );
+
+	return *this;
+}
 
 ipaddress &ipaddress::operator= (const char *s)
 {
@@ -148,11 +156,8 @@ ipaddress& ipaddress::operator= (const value &v)
     return *this;
 }
 
-
 bool ipaddress::operator== (const value &o) const
 {
     return o.ipval() == *this;
 }
-
-
 
