@@ -93,9 +93,10 @@ enum itypes {
   i_ulong, ///< Unsigned 64 bits integer.
   i_bool, ///< Boolean.
   i_string, ///< String data.
-  i_ipaddr, ///< IPv6 address
+  i_ipaddr, ///< IPv4/IPv6 address
   i_date, ///< date/time stamp.
-  i_currency ///< fixed point currency
+  i_currency, ///< fixed point currency
+  i_ipv6encoded = 0x1f /// encoded as ipv6 (only relevant for SHoX-encoding)
 };
 
 $exception (valueFileNotFoundException, "File not found");

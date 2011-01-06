@@ -68,7 +68,7 @@ bool value::fromshox (const string &shox)
 	// ourselves.
 	offs = shox.binget16u (offs, t_ushort);
 	if (! offs) return false; // read error
-	if (t_ushort > 0x0100) return false; // wrong version
+	if (t_ushort > 0x0101) return false; // wrong version
 	
 	// read the number of stringdict entries
 	offs = shox.bingetvint (offs, t_uint);
@@ -108,6 +108,9 @@ bool value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 	unsigned int attrcount;
 	unsigned int chcount;
 	unsigned int i;
+	ipaddress tmpip;
+	string tmpstr;
+	
 	value *crsr;
 	statstring tskey;
 	
@@ -192,6 +195,21 @@ bool value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 				break;
 			
 			case i_ipaddr:
+				if ((offs+4) > shox.strlen()) return false;
+				tmpstr = shox.mid (offs,4);
+				offs += 4;
+				tmpip.fromblob (tmpstr);
+				operator= (tmpip);
+				break;
+			
+			case i_ipv6encoded:
+				if ((offs+16) > shox.strlen()) return false;
+				tmpstr = shox.mid (offs, 16);
+				offs += 16;
+				tmpip.fromblob (tmpstr);
+				operator= (tmpip);
+				return true;
+			
 			case i_date:
 			case i_unsigned:
 				if (! (offs = shox.binget32u (offs, vunsigned))) return false;
@@ -238,8 +256,8 @@ string *value::toshox (void) const
 	size_t offs;
 	
 	res.strcat ("SHoX");
-	offs = res.binput16u (4, 0x0100); // Data format version
-	offs = res.binput16u (6, 0x0100); // Minimum required version
+	offs = res.binput16u (4, 0x0101); // Data format version
+	offs = res.binput16u (6, 0x0101); // Minimum required version
 	
 	string		 shoxdata;
 	stringdict	 shoxdict;
@@ -263,6 +281,9 @@ string *value::toshox (void) const
 // ========================================================================
 void value::printshox (string &outstr, stringdict &sdict) const
 {
+	ipaddress tmpip;
+	string tmpstr;
+	
 	// Encode the id (if set)
 	if (_name)
 	{
@@ -279,6 +300,15 @@ void value::printshox (string &outstr, stringdict &sdict) const
 	if (! value::isbuiltin (_type)) xtype |= SHOX_HAS_CLASSNAME;
 	if (attrib && attrib->count()) xtype |= SHOX_HAS_ATTRIB;
 	if (arraysz) xtype |= SHOX_HAS_CHILDREN;
+	
+	if (_itype == i_ipaddr)
+	{
+		tmpip = ipval();
+		if (! tmpip.isv4())
+		{
+			xtype = (xtype & 0xe0) | i_ipv6encoded;
+		}
+	}
 	
 	outstr.binput8u (outstr.strlen(), xtype);
 	
@@ -321,6 +351,10 @@ void value::printshox (string &outstr, stringdict &sdict) const
 				break;
 				
 			case i_ipaddr:
+				tmpstr = tmpip.toblob();
+				outstr.strcat (tmpstr);
+				break;
+			
 			case i_date:
 			case i_unsigned:
 				outstr.binput32u (outstr.strlen(), uval());
