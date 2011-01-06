@@ -53,7 +53,7 @@ string*	ipaddress::ip2str (const unsigned char* c)
 	
 	if( ipaddr->isv4() )
 	{
-		string *s = new string;
+		string *s = new (memory::retainable::onstack) string;
 		s->printf ("%i.%i.%i.%i", 
 			c[12], c[13], c[14], c[15] );
 		return s;
@@ -61,9 +61,9 @@ string*	ipaddress::ip2str (const unsigned char* c)
 	else
 	{
 		char addr_str[INET6_ADDRSTRLEN];
-		if( inet_ntop( AF_INET6, c, addr_str, sizeof(addr_str) ) != NULL )
+		if (inet_ntop (AF_INET6, c, addr_str, sizeof (addr_str)) != NULL)
 		{
-			return new string( addr_str );
+			return new (memory::retainable::onstack) string (addr_str);
 		}
 	}
 	
@@ -106,7 +106,7 @@ ipaddress::ipaddress (const struct in_addr& address)
 	addr[11] = 0xFF;
 	
 	
-	const unsigned char* bytes = (const unsigned char*)&address.s_addr;
+	const unsigned char* bytes = (const unsigned char*) &address.s_addr;
 	// bytes are in network order.
 	addr[12] = bytes[0];
 	addr[13] = bytes[1];
@@ -161,3 +161,35 @@ bool ipaddress::operator== (const value &o) const
     return o.ipval() == *this;
 }
 
+string *ipaddress::toblob (void) const
+{
+	returnclass (string) res retain;
+	if (isv4())
+	{
+		res.strcpy ((const char *) addr+12, 4);
+	}
+	else
+	{
+		res.strcpy ((const char *) addr, 16);
+	}
+	return &res;
+}
+
+void ipaddress::fromblob (const string &blob)
+{
+	if (blob.strlen() == 4)
+	{
+		memset(addr,0,10);
+		addr[10] = 0xFF;
+		addr[11] = 0xFF;
+		memcpy (addr+12, blob.str(), 4);
+	}
+	else if (blob.strlen() == 16)
+	{
+		memcpy (addr, blob.str(), 16);
+	}
+	else
+	{
+		memset (addr, 0, sizeof(addr));
+	}
+}

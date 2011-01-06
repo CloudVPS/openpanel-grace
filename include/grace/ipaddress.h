@@ -103,7 +103,9 @@ public:
 						 {
 						 	return !( this->operator==(o) );
 						 }
-						 
+	
+	string				*toblob (void) const;
+	void				 fromblob (const string &s);
 						 
 	bool				 isv4() const
 						 {
