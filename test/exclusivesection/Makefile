@@ -6,7 +6,7 @@ all: exclusivesection.exe
 	mkapp exclusivesection
 
 exclusivesection.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o exclusivesection.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o exclusivesection.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

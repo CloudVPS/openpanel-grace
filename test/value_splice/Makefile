@@ -6,7 +6,7 @@ all: value_splice.exe
 	mkapp value_splice
 
 value_splice.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o value_splice.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o value_splice.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

@@ -6,7 +6,7 @@ all: value_json.exe
 	mkapp value_json
 
 value_json.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o value_json.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o value_json.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

@@ -6,7 +6,7 @@ all: arraybuilder.exe
 	mkapp arraybuilder
 
 arraybuilder.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o arraybuilder.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o arraybuilder.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

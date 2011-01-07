@@ -6,7 +6,7 @@ all: value_tagkey.exe
 	mkapp value_tagkey
 
 value_tagkey.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o value_tagkey.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o value_tagkey.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

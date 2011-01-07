@@ -6,7 +6,7 @@ all: strformat.exe
 	mkapp strformat
 
 strformat.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o strformat.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o strformat.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

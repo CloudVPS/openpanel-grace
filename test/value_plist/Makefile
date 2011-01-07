@@ -6,7 +6,7 @@ all: value_plist.exe
 		mkapp value_plist
 
 value_plist.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_plist.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_plist.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

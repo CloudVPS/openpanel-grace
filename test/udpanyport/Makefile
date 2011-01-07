@@ -6,7 +6,7 @@ all: udpanyport.exe
 	mkapp udpanyport
 
 udpanyport.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o udpanyport.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o udpanyport.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

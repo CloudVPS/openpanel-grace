@@ -6,7 +6,7 @@ all: http.exe
 		mkapp http
 
 http.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o http.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o http.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

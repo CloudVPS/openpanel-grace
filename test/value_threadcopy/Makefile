@@ -6,7 +6,7 @@ all: value_threadcopy.exe
 	mkapp value_threadcopy
 
 value_threadcopy.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o value_threadcopy.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o value_threadcopy.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

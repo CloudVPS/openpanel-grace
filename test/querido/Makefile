@@ -5,8 +5,8 @@ OBJ	= main.o
 all: querido.exe
 	mkapp querido
 
-querido.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o querido.exe $(OBJ) -L../../lib -lgrace -lquerido $(LIBS)
+querido.exe: $(OBJ) ../../lib/libquerido.a  ../../lib/libgrace.a
+	$(CXX) $(LDFLAGS) -o querido.exe $(OBJ) ../../lib/libquerido.a  ../../lib/libgrace.a $(LIBS)
 
 clean:
 	rm -f *.o *.exe

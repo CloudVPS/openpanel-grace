@@ -6,7 +6,7 @@ all: value_const.exe
 	mkapp value_const
 
 value_const.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o value_const.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o value_const.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

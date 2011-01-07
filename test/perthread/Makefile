@@ -6,7 +6,7 @@ all: perthread.exe
 	mkapp perthread
 
 perthread.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o perthread.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o perthread.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

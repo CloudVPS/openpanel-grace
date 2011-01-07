@@ -6,7 +6,7 @@ all: value_xmlgremlins.exe
 		mkapp value_xmlgremlins
 
 value_xmlgremlins.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_xmlgremlins.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_xmlgremlins.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

@@ -7,7 +7,7 @@ all: appath.exe
 	ln -s appath extrasoftlink
 
 appath.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o appath.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o appath.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

@@ -6,7 +6,7 @@ all: fileforeach.exe
 	mkapp fileforeach
 
 fileforeach.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o fileforeach.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o fileforeach.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

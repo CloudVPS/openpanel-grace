@@ -6,7 +6,7 @@ all: value_byint.exe
 		mkapp value_byint
 
 value_byint.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_byint.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_byint.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

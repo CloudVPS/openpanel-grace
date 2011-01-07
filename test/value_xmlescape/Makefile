@@ -6,7 +6,7 @@ all: value_xmlescape.exe
 	mkapp value_xmlescape
 
 value_xmlescape.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o value_xmlescape.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o value_xmlescape.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

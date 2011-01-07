@@ -6,7 +6,7 @@ all: value_xmlbase64.exe
 		mkapp value_xmlbase64
 
 value_xmlbase64.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_xmlbase64.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_xmlbase64.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

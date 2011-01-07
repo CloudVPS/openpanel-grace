@@ -6,7 +6,7 @@ all: fork.exe
 	mkapp fork
 
 fork.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o fork.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o fork.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

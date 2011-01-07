@@ -6,7 +6,7 @@ all: value_insert.exe
 	mkapp value_insert
 
 value_insert.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o value_insert.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o value_insert.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe
