@@ -21,7 +21,9 @@ diff out.txt reference.txt >> test.log 2>&1 || {
   echo " failed (DIFF)"
   exit 1
 }
-diff out.xml reference.xml >> test.log 2>&1 || {
+goodref=reference.xml
+diff out.xml $goodref >/dev/null 2>&1 || goodref=reference-alt.xml
+diff out.xml $goodref >> test.log 2>&1 || {
   echo " failed (DIFF)"
   exit 1
 }
