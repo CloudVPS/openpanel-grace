@@ -13,6 +13,7 @@ AR = ar cr
 
 all: $(OBJ)
 	$(LDSHARED) -o ../../lib/libdbfile.$(DYNEXT) $(OBJ)
+	$(AR) ../../lib/libdbfile.a $(OBJ)
 
 depend:
 	@echo -n >Makefile.depend
