@@ -86,7 +86,7 @@ int cxmltype (const string &type)
 		(*types)[t_date] = 10;
 		(*types)[t_ulong] = 8;
 		(*types)[t_bool] = 1;
-		(*types)[t_ipaddr] = 6;
+		(*types)[t_ipaddr] = 9;
 		(*types)[t_array] = 12;
 		(*types)[t_dict] = 12;
 		(*types)[t_string] = 9;

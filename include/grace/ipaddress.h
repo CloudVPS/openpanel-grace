@@ -16,7 +16,9 @@ class ipaddress
 public:
 	static bool			str2ip( const char*, unsigned char* );
 	static bool			str2ip( const char* c, ipaddress& i ) { return str2ip(c, i.addr); }
-	static string*		ip2str( const unsigned char* c );	
+	static bool 		ip2str( const unsigned char* c, string& into );	
+	static bool 		ip2str( const ipaddress& c , string& into ) { return ip2str (c.addr, into); }	
+	static string*      ip2str( const unsigned char* c) { string* s = new (memory::retainable::onstack) string; ip2str(c,*s); return s; }
 	static string*		ip2str( const ipaddress& c ) { return ip2str (c.addr); }	
 
 public:
@@ -39,6 +41,8 @@ public:
 						/// Constructor from system structs
 						ipaddress (const struct in_addr&);
 						ipaddress (const struct in6_addr&);
+						ipaddress (const struct in_addr*);
+						ipaddress (const struct in6_addr*);
 						
 						ipaddress (const string& str);
 
@@ -64,6 +68,18 @@ public:
 	ipaddress			&operator= (const char *c);
 	ipaddress			&operator= (const string &);
 
+						 /// Cast-o-matic operator to socket structs
+	ipaddress           &operator= (const struct in_addr* a);
+	ipaddress           &operator= (const struct in6_addr* a);
+	ipaddress           &operator= (const struct in_addr&a) { return *this=&a;}
+	ipaddress           &operator= (const struct in6_addr&a) { return *this=&a;}
+						 
+						 /// Cast-o-matic operator to socket structs
+						 operator const struct in_addr* (void) const;
+						 operator const struct in6_addr* (void) const;
+						 operator const struct in_addr& (void) const { return *(const struct in_addr*)*this; }
+						 operator const struct in6_addr& (void) const { return *(const struct in6_addr*)*this; }
+
 
 						 operator bool () const
 						 {
@@ -81,11 +97,7 @@ public:
 						 		if( addr[i] ) return true;
 						 	}
 						 	return false;
-						 }						 
-						 
-						 /// Cast-o-matic operator to unsigned int.
-						 operator const struct in_addr& (void) const;
-						 operator const struct in6_addr& (void) const;
+						 }	
 
 	bool				 operator== (const ipaddress &o) const
 						 {

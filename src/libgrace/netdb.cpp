@@ -85,7 +85,7 @@ ipaddress netdb::resolve (const string &name, bool v4, bool v6)
 	
 	if (getaddrinfo (name.cval(), NULL, NULL, &ainf))
 	{
-		return 0;
+		return ipaddress();
 	}
 	
 	struct addrinfo *crsr = ainf;
@@ -119,7 +119,7 @@ ipaddress netdb::resolve (const string &name, bool v4, bool v6)
 
 	ipaddress li (name);
 	if (li) return li;
-	return 0;
+	return ipaddress();
 }
 
 // ========================================================================

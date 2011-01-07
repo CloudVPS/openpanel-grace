@@ -236,11 +236,11 @@ value::value (value &v)
 		case i_date:
 		case i_int:
 		case i_bool:
+		case i_ipaddr:
 			_itype = v._itype;
-			t.uval = v.t.uval;
+			t = v.t;
 			break;
 		
-		case i_ipaddr:
 		case i_string:
 			_itype = v._itype;
 			s = v.s;
@@ -608,16 +608,16 @@ value &value::operator= (const value &v)
 	
 	switch (v._itype)
 	{
-		case i_ipaddr:
 		case i_string: s.strclone (v.s); break;
+		case i_ipaddr:
 		case i_bool:
 		case i_unsigned:
 		case i_date:
-		case i_int: t.uval = v.t.uval; break;
-		case i_double: t.dval = v.t.dval; break;
 		case i_currency:
 		case i_ulong:
-		case i_long: t.ulval = v.t.ulval; break;
+		case i_double:
+		case i_long:
+		case i_int: t = v.t; break;
 	}
 	
 	// Now clone the children if needed
@@ -676,7 +676,7 @@ value &value::operator= (value *v)
 	{
 		switch (v->_itype)
 		{
-			case i_ipaddr:
+			case i_ipaddr: t = v->t; break;
 			case i_string: s = v->s; break;
 			case i_bool:
 			case i_unsigned:
@@ -767,10 +767,14 @@ const string &value::sval (void) const
 
 	switch (_itype)
 	{
-		case i_ipaddr:
 		case i_string:
 			return s;
-			
+
+		case i_ipaddr:
+		    S.crop(); 
+		    ipaddress::ip2str( t.ipval, S );
+		    return s;
+
 		case i_bool:
 			S = t.ival ? "true" : "false";
 			return s;
@@ -868,8 +872,7 @@ unsigned int value::uval (void) const
 		case i_date:
 		case i_unsigned:
 			return t.uval;
-
-		case i_ipaddr:
+		    
 		case i_string:
 			return ::strtoul (s.str(),NULL,10);
 
@@ -925,7 +928,6 @@ long long value::lval (void) const
 		case i_date:
 		case i_bool:
 		case i_unsigned: return (long long) t.uval;
-		case i_ipaddr:
 		case i_string: return strtoll (s.str(),NULL,10);
 		case i_currency: return t.lval/1000;
 	}
@@ -949,7 +951,6 @@ unsigned long long value::ulval (void) const
 		case i_date:
 		case i_bool:
 		case i_unsigned: return (unsigned long long) t.uval;
-		case i_ipaddr:
 		case i_string: return strtoull (s.str(),NULL,10);
 		case i_currency:
 			if (t.lval<0) return (unsigned long long) (-t.lval);
@@ -969,7 +970,7 @@ bool value::bval (void) const
 	if (_itype == i_double)
 		return (bool) t.dval;
 	if (_itype == i_ipaddr)
-		return (bool)ipaddress(s);
+		return (bool)ipval();
 	if (_itype == i_string)
 		return s.strcasecmp ("true") ? false : true;
 	if ((_itype == i_long) || (_itype == i_ulong) || (_itype == i_currency))
@@ -1438,7 +1439,7 @@ value* value::$val (const value &v)
 		case i_ulong: (*this) = v.ulval();
 		case i_int: (*this) = v.ival(); break;
 		case i_double: (*this) = v.dval(); break;
-		case i_ipaddr: 
+		case i_ipaddr: (*this) = v.ipval(); break;
 		case i_string:
 		case i_date:
 		case i_currency:

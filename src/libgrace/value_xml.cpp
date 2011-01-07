@@ -721,7 +721,8 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 						}
 						else if (tp == t_ipaddr)
 						{
-							ipaddress i = tag.data;
+							ipaddress i;
+							ipaddress::str2ip(tag.data.str(),i);
 							*newcrsr = i;
 							
 							if (tagtype != t_ipaddr)

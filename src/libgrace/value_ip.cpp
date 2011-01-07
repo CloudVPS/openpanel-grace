@@ -32,15 +32,20 @@ ipaddress value::ipval (void) const
 {
 	if (arraysz) return array[0]->ipval();
 
-	ipaddress result;
 	
-	if (_type == t_string || _type == t_ipaddr )
+	if (_type == t_ipaddr)
 	{
+		return ipaddress( (const in6_addr*)t.ipval );
+    }
+    else if (_type == t_string )
+	{
+		ipaddress result;
 		const string& ip_str = sval();
 		ipaddress::str2ip( ip_str, result );
+		return result;
 	}	
 	
-	return result;
+	return ipaddress();
 }
 
 value &value::operator= (const ipaddress &o)
@@ -49,20 +54,17 @@ value &value::operator= (const ipaddress &o)
 	_itype = i_ipaddr;
 	_type = t_ipaddr;
 	
-	string* ipstr = ipaddress::ip2str(o);
-	s = *ipstr;
-	
-	delete ipstr;
+	memcpy( t.ipval, &(const in6_addr&)o, 16 );
 
 	return *this;
 }
 
 bool value::operator== (const ipaddress &o)
 {
-	return o == (*this);
+	return o == this->ipval();
 }
 
 bool value::operator!= (const ipaddress &o)
 {
-	return o != (*this);
+	return o != this->ipval();
 }

@@ -47,27 +47,30 @@ bool ipaddress::str2ip (const char* ipstr, unsigned char* out_result)
 // ========================================================================
 // FUNCTION ip2str
 // ========================================================================
-string*	ipaddress::ip2str (const unsigned char* c)
+bool ipaddress::ip2str (const unsigned char* c, string& into)
 {
 	ipaddress* ipaddr = (ipaddress*)(void*)c;
 	
 	if( ipaddr->isv4() )
 	{
-		string *s = new (memory::retainable::onstack) string;
-		s->printf ("%i.%i.%i.%i", 
+		string *s = new string;
+		into.printf ("%i.%i.%i.%i", 
 			c[12], c[13], c[14], c[15] );
-		return s;
 	}
 	else
 	{
 		char addr_str[INET6_ADDRSTRLEN];
-		if (inet_ntop (AF_INET6, c, addr_str, sizeof (addr_str)) != NULL)
+		if( inet_ntop( AF_INET6, c, addr_str, sizeof(addr_str) ) != NULL )
 		{
-			return new (memory::retainable::onstack) string (addr_str);
+			into.strcat( addr_str );
 		}
+		else
+		{
+		    return false;
+        }
+		
 	}
-	
-	return NULL;
+	return true;
 }
 
 
@@ -100,34 +103,60 @@ ipaddress::ipaddress (const char* s)
 /// Constructor from system structs
 ipaddress::ipaddress (const struct in_addr& address)
 {
-	memset(addr,0,10);
-	
-	addr[10] = 0xFF;
-	addr[11] = 0xFF;
-	
-	
-	const unsigned char* bytes = (const unsigned char*) &address.s_addr;
-	// bytes are in network order.
-	addr[12] = bytes[0];
-	addr[13] = bytes[1];
-	addr[14] = bytes[2];
-	addr[15] = bytes[3];
+    *this=address;
 	
 }
 
 ipaddress::ipaddress (const struct in6_addr& address)
 {
-	memcpy( addr, address.s6_addr, 16 );
+    *this=address;
 }
 
-ipaddress::operator const struct in_addr& (void) const
+
+/// Constructor from system structs
+ipaddress::ipaddress (const struct in_addr* address)
 {
-	return (const in_addr&)addr[12];
+    *this=address;
+	
 }
 
-ipaddress::operator const struct in6_addr& (void) const
+ipaddress::ipaddress (const struct in6_addr* address)
 {
-	return (const in6_addr&)addr[0];
+    *this=address;
+}
+
+ipaddress& ipaddress::operator= (const struct in_addr* address)
+{
+    memset(addr,0,10);
+	
+	addr[10] = 0xFF;
+	addr[11] = 0xFF;
+	
+	
+	const unsigned char* bytes = (const unsigned char*)&(address->s_addr);
+	// bytes are in network order.
+	addr[12] = bytes[0];
+	addr[13] = bytes[1];
+	addr[14] = bytes[2];
+	addr[15] = bytes[3];
+	return *this;
+}
+
+ipaddress& ipaddress::operator= (const struct in6_addr* address)
+{
+	memcpy( addr, address->s6_addr, 16 );
+	return *this;
+}
+
+
+ipaddress::operator const struct in_addr* (void) const
+{
+	return (const in_addr*)&addr[12];
+}
+
+ipaddress::operator const struct in6_addr* (void) const
+{
+	return (const in6_addr*)&addr[0];
 }
 
 ipaddress &ipaddress::operator= (const string &s)
@@ -193,3 +222,5 @@ void ipaddress::fromblob (const string &blob)
 		memset (addr, 0, sizeof(addr));
 	}
 }
+	
+

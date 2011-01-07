@@ -38,6 +38,7 @@ typedef union dtypes
 	unsigned int		uval;
 	long long			lval;
 	unsigned long long	ulval;
+	unsigned char       ipval[16];
 } dtype;
 
 #ifdef _VALUE_CPP

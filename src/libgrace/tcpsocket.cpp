@@ -110,7 +110,7 @@ tcpsocket::tcpsocket (void)
 	peer_pid = 0;
 	peer_uid = 65534;
 	peer_gid = 65534;
-	peer_addr = 0;
+	peer_addr = ipaddress();
 	peer_port = 0;
 	ti_established = core.time.now();
 	
@@ -329,7 +329,7 @@ bool tcpsocket::uconnect (const string &path)
 	}
 	
 	feof = false;
-	peer_addr = 0;
+	peer_addr = ipaddress();
 	peer_name = path;
 	peer_port = 0;
 
@@ -613,7 +613,7 @@ tcplistener::tcplistener (void)
 
 void tcplistener::listento (int port)
 {
-	listento (0, port);
+	listento (ipaddress(), port);
 }
 
 // ========================================================================

@@ -197,7 +197,7 @@ string *udpsocket::receive (ipaddress &addr, int timeout_ms)
 		
 		if (select (sock+1, &fds, NULL, NULL, &tv) < 1)
 		{
-			addr = 0;
+			addr = ipaddress();
 			return &res;
 		}
 	}

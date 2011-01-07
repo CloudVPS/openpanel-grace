@@ -55,6 +55,7 @@ int ipaddresstestApp::main (void)
 	
 	{
 		value v = ipaddress("127.0.0.1");
+		
 		if( v != "127.0.0.1" ) FAIL("value conversion 1");
 		if( v != ipaddress("127.0.0.1") ) FAIL("value conversion 2");
 		
@@ -89,6 +90,7 @@ int ipaddresstestApp::main (void)
 	
 	value v;
 	v.loadxml ("out.xml");
+	v.savexml ("out2.xml");
 
 	if (addr != v) FAIL ("readabck compare");
 	if (v != addr) FAIL ("readback compare flip");
