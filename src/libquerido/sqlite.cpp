@@ -54,7 +54,7 @@ bool sqlitehandle::query (const string &sql, value &into,
 	
 	into.clear ();
 	
-	if (sqlite3_prepare_v2 (hdl, sql.str(), sql.strlen(), &qhandle, 0) != SQLITE_OK)
+	if (sqlite3_prepare (hdl, sql.str(), sql.strlen(), &qhandle, 0) != SQLITE_OK)
 	{
 		errcode = 1;
 		errstr = "Could not prepare: %s" %format (sqlite3_errmsg(hdl));
@@ -95,6 +95,7 @@ bool sqlitehandle::query (const string &sql, value &into,
 		{
 			case SQLITE_BUSY:
 				sleep (1);
+				sqlite3_reset(qhandle);
 				continue;
 			
 			case SQLITE_MISUSE: // achtung, fallthrough
@@ -103,7 +104,7 @@ bool sqlitehandle::query (const string &sql, value &into,
 				errstr = "Error in sqlite3_step: %s" %format (sqlite3_errmsg(hdl));
 				done = true;
 				break;
-			
+
 			case SQLITE_DONE:
 				done = true;
 				break;
@@ -149,7 +150,8 @@ bool sqlitehandle::query (const string &sql, value &into,
 		rowcount++;
 	} while ((qres = sqlite3_step (qhandle)) && !done);
 	
-	if (sqlite3_finalize (qhandle) != SQLITE_OK)
+	int finalize_result = sqlite3_finalize (qhandle);
+	if (finalize_result != SQLITE_OK && finalize_result != SQLITE_SCHEMA)
 	{
 		errcode = 1;
 		errstr = "Error finalizing: %s" %format (sqlite3_errmsg(hdl));
