@@ -54,7 +54,7 @@ bool sqlitehandle::query (const string &sql, value &into,
 	
 	into.clear ();
 	
-	if (sqlite3_prepare (hdl, sql.str(), -1, &qhandle, 0) != SQLITE_OK)
+	if (sqlite3_prepare_v2 (hdl, sql.str(), sql.strlen(), &qhandle, 0) != SQLITE_OK)
 	{
 		errcode = 1;
 		errstr = "Could not prepare: %s" %format (sqlite3_errmsg(hdl));
