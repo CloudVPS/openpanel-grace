@@ -6,7 +6,7 @@ all: ssl.exe
 		mkapp ssl
 
 ssl.exe: $(OBJ) ../../lib/libgrace.a ../../lib/libgrace-ssl.a
-		$(CXX) -g -o0 $(LDFLAGS) -o ssl.exe $(OBJ) ../../lib/libgrace-ssl.a ../../lib/libgrace.a $(LIBS)
+		$(CXX) -g -O0 $(LDFLAGS) -o ssl.exe $(OBJ) ../../lib/libgrace-ssl.a ../../lib/libgrace.a $(LIBS)
 
 clean:
 		rm -f *.o *.exe
@@ -15,5 +15,5 @@ clean:
 
 SUFFIXES: .cpp .o
 .cpp.o:
-		$(CXX) $(CXXFLAGS) -g -o0 -I"../../include" -c $<
+		$(CXX) $(CXXFLAGS) -g -O0 -I"../../include" -c $<
 
