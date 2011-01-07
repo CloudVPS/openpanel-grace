@@ -103,11 +103,25 @@ int ipaddresstestApp::main (void)
 	v.newval() = ipaddress ("cdea:8712:5ef5:36fd:a91:2ba2:b09e:9321");
 	v.savexml ("addrlist.xml");
 	string s = v.tojson();
-	fs.save ("addrlist.json", s);
 	
 	value vv;
 	vv.loadxml ("addrlist.xml");
-	vv.savexml ("addrlist-readback.xml");
+
+	if (vv[0] != v[0]) FAIL ("readback1-compare1");
+	if (vv[1] != v[1]) FAIL ("readback1-compare2");
+	
+	fs.rm ("addrlist.xml");
+	
+	vv.fromjson (s);
+
+	if (vv[0] != v[0]) FAIL ("readback2-compare1");
+	if (vv[1] != v[1]) FAIL ("readback2-compare2");
+	
+	s = v.toshox();
+	vv.fromshox (s);
+	
+	if (vv[0] != v[0]) FAIL ("readback3-compare1");
+	if (vv[1] != v[1]) FAIL ("readback3-compare2");
 	
 	return 0;
 }
