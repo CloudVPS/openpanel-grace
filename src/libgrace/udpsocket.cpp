@@ -20,7 +20,7 @@ $exception (udpSocketException, "Could not create UDP socket");
 udpsocket::udpsocket (void)
 {
 	boundport = 0;
-	sock = socket (AF_INET, SOCK_DGRAM, 0);
+	sock = socket (AF_INET6, SOCK_DGRAM, 0);
 	if (sock<0) throw (udpSocketException());
 }
 
@@ -60,14 +60,21 @@ bool udpsocket::bind (int port)
 		if (! getsockname (sock, (struct sockaddr *) &boundaddr, &slen))
 		{
 		    if( boundaddr.ss_family == AF_INET )
+		    {
 		        boundport = ((sockaddr_in*)&boundaddr)->sin_port;
+		    }
             else if( boundaddr.ss_family == AF_INET6 )
+            {
 		        boundport = ((sockaddr_in6*)&boundaddr)->sin6_port;
+		    }
             else
+            {
                 boundport = 0;
+            }
 		}
 		else
 		{
+			::printf ("getsockname failed\n");
 			boundport = 0;
 		}
 	}
