@@ -36,6 +36,7 @@ public:
 	bool		 deliver (const string &body, value &env)
 				 {
 				 	fs.save ("out.msg", body);
+				 	if (env["ip"] == "127.0.0.1") env["ip"] = "::1";
 				 	env.rmval ("transaction-id");
 				 	env.rmval ("helo");
 				 	env.savexml ("out.xml");
