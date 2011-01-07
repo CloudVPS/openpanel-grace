@@ -11,6 +11,8 @@
 #include <grace/str.h>
 #include <grace/ipaddress.h>
 
+$exception (udpAddressFamilyException, "Unknown address family");
+
 /// Class for sending and receiving data using UDP.
 class udpsocket
 {

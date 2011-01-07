@@ -74,7 +74,6 @@ bool udpsocket::bind (int port)
 		}
 		else
 		{
-			::printf ("getsockname failed\n");
 			boundport = 0;
 		}
 	}
@@ -139,10 +138,10 @@ bool udpsocket::sendto (ipaddress addr, int port, const string &data)
 	struct sockaddr_in6 remote_addr;
 	remote_addr.sin6_addr = addr;
 	remote_addr.sin6_port = htons (port);
-	remote_addr.sin6_family = AF_INET;
+	remote_addr.sin6_family = AF_INET6;
 	
 	if (::sendto (sock, data.str(), data.strlen(), 0,
-				(struct sockaddr *) &remote_addr, sizeof (remote_addr)))
+				(struct sockaddr *) &remote_addr, sizeof (remote_addr)) <0)
 	{
 		return false;
 	}
@@ -185,7 +184,7 @@ string *udpsocket::receive (ipaddress &addr, int timeout_ms)
 	char buf[2048];
 	int sz;
 	socklen_t addrsz = sizeof (remote_addr);
-	
+
 	if (timeout_ms>=0)
 	{
 		fd_set fds;
@@ -206,11 +205,18 @@ string *udpsocket::receive (ipaddress &addr, int timeout_ms)
 	sz = recvfrom (sock, buf, 2048, 0, (struct sockaddr *) &remote_addr,
 				   &addrsz);
 	
-    if( remote_addr.ss_family == AF_INET )
+    if (remote_addr.ss_family == AF_INET)
+    {
         addr = ((sockaddr_in*)&remote_addr)->sin_addr;
-    else if( remote_addr.ss_family == AF_INET6 )
+    }
+    else if (remote_addr.ss_family == AF_INET6)
+    {
         addr = ((sockaddr_in6*)&remote_addr)->sin6_addr;
-
+    }
+    else
+    {
+    	throw udpAddressFamilyException();
+    }
 	if (sz>0) res.strcpy (buf, sz);
 	return &res;
 }

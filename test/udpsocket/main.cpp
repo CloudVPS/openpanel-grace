@@ -33,14 +33,14 @@ int udpsockettestApp::main (void)
 	string in = s2.receive (a, 1000);
 	if (in != "hello, world")
 	{
-		fout.writeln ("%P" %format (in));
+		fout.writeln ("%s" %format (in));
 		FAIL ("mismatch");
 	}
 	
 	if (a != (ipaddress) "127.0.0.1")
 	{
 		fout.writeln ("%P" %format (a));
-		FAIL ("recvip");
+		FAIL ("recvip: %s");
 	}
 	
 	return 0;
