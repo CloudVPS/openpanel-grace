@@ -17,7 +17,9 @@ echo "--- start run" >> test.log
 }
 $(which echo) -n "."
 echo "--- start diff" >> test.log
-diff out.txt reference.txt >> test.log 2>&1 || {
+goodref=reference.txt
+diff out.txt reference.txt >/dev/null 2>&1 || goodref=reference-alt.txt
+diff out.txt $goodref >> test.log 2>&1 || {
   echo " failed (DIFF)"
   exit 1
 }
