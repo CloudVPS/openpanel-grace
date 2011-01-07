@@ -5,9 +5,8 @@ OBJ		= main.o
 all: ssl.exe
 		mkapp ssl
 
-ssl.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o ssl.exe $(OBJ) -L../../lib -lgrace \
-			-lgrace-ssl $(LIBS)
+ssl.exe: $(OBJ) ../../lib/libgrace.a ../../lib/libgrace-ssl.a
+		$(CXX) -g -o0 $(LDFLAGS) -o ssl.exe $(OBJ) ../../lib/libgrace-ssl.a ../../lib/libgrace.a $(LIBS)
 
 clean:
 		rm -f *.o *.exe
@@ -16,5 +15,5 @@ clean:
 
 SUFFIXES: .cpp .o
 .cpp.o:
-		$(CXX) $(CXXFLAGS) -I"../../include" -c $<
+		$(CXX) $(CXXFLAGS) -g -o0 -I"../../include" -c $<
 

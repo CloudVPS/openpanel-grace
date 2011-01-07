@@ -6,7 +6,7 @@ all: iocodec.exe
 		mkapp iocodec
 
 iocodec.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o iocodec.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o iocodec.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

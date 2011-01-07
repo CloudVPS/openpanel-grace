@@ -6,7 +6,7 @@ all: gdbm.exe
 	mkapp gdbm
 
 gdbm.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o gdbm.exe $(OBJ) -L../../lib -ldbfile -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o gdbm.exe $(OBJ) ../../lib/libdbfile.a ../../lib/libgrace.a $(LIBS)
 
 clean:
 	rm -f *.o *.exe

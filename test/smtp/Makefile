@@ -6,7 +6,7 @@ all: smtp.exe
 		mkapp smtp
 
 smtp.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o smtp.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o smtp.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

@@ -6,7 +6,7 @@ all: retain_concurrency.exe
 	mkapp retain_concurrency
 
 retain_concurrency.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o retain_concurrency.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o retain_concurrency.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

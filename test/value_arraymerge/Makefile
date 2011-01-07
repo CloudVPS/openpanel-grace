@@ -6,7 +6,7 @@ all: value_arraymerge.exe
 	mkapp value_arraymerge
 
 value_arraymerge.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o value_arraymerge.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o value_arraymerge.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

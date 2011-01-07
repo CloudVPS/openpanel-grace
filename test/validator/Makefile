@@ -6,7 +6,7 @@ all: validator.exe
 		mkapp validator
 
 validator.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o validator.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o validator.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

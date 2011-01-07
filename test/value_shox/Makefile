@@ -6,7 +6,7 @@ all: value_shox.exe
 		mkapp value_shox
 
 value_shox.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_shox.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_shox.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

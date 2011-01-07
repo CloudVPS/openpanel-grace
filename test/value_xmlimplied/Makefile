@@ -6,7 +6,7 @@ all: value_xmlimplied.exe
 		mkapp value_xmlimplied
 
 value_xmlimplied.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_xmlimplied.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_xmlimplied.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

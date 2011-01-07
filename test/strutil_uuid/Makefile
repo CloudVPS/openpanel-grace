@@ -6,7 +6,7 @@ all: strutil_uuid.exe
 		mkapp strutil_uuid
 
 strutil_uuid.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o strutil_uuid.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o strutil_uuid.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

@@ -6,7 +6,7 @@ all: value_ini.exe
 		mkapp value_ini
 
 value_ini.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_ini.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_ini.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

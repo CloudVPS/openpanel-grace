@@ -6,7 +6,7 @@ all: value_xmlwrap.exe
 		mkapp value_xmlwrap
 
 value_xmlwrap.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_xmlwrap.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_xmlwrap.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

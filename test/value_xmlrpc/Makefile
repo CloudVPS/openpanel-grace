@@ -6,7 +6,7 @@ all: value_xmlrpc.exe
 		mkapp value_xmlrpc
 
 value_xmlrpc.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_xmlrpc.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_xmlrpc.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

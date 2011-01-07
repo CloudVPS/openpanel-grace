@@ -6,7 +6,7 @@ all: value_cxml.exe
 		mkapp value_cxml
 
 value_cxml.exe: $(OBJ)
-		$(CXX) $(LDFLAGS) -o value_cxml.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+		$(CXX) $(LDFLAGS) -o value_cxml.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 		rm -f *.o *.exe

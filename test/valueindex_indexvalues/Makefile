@@ -6,7 +6,7 @@ all: valueindex_indexvalues.exe
 	mkapp valueindex_indexvalues
 
 valueindex_indexvalues.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o valueindex_indexvalues.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o valueindex_indexvalues.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe

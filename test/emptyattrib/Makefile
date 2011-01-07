@@ -6,7 +6,7 @@ all: emptyattrib.exe
 	mkapp emptyattrib
 
 emptyattrib.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o emptyattrib.exe $(OBJ) -L../../lib -lgrace $(LIBS)
+	$(CXX) $(LDFLAGS) -o emptyattrib.exe $(OBJ) ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe
