@@ -86,7 +86,7 @@ int ipaddresstestApp::main (void)
 		a &= mask;
 		if( a != ipaddress("10.0.90.0") ) FAIL("Netmask 3");
 		
-		a |= "0.0.0.12";
+		a |= ipaddress("0.0.0.12");
 		if( a != ipaddress("10.0.90.12") ) FAIL("Netmask 4");
 	}
 

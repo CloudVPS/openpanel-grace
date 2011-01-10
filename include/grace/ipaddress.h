@@ -41,8 +41,6 @@ public:
 						/// Constructor from system structs
 						ipaddress (const struct in_addr&);
 						ipaddress (const struct in6_addr&);
-						ipaddress (const struct in_addr*);
-						ipaddress (const struct in6_addr*);
 						
 						ipaddress (const string& str);
 
@@ -68,17 +66,13 @@ public:
 	ipaddress			&operator= (const char *c);
 	ipaddress			&operator= (const string &);
 
-						 /// Cast-o-matic operator to socket structs
-	ipaddress           &operator= (const struct in_addr* a);
-	ipaddress           &operator= (const struct in6_addr* a);
-	ipaddress           &operator= (const struct in_addr&a) { return *this=&a;}
-	ipaddress           &operator= (const struct in6_addr&a) { return *this=&a;}
+						 /// Assign-o-matic operator from socket structs
+	ipaddress           &operator= (const struct in_addr&a);
+	ipaddress           &operator= (const struct in6_addr&a);
 						 
 						 /// Cast-o-matic operator to socket structs
-						 operator const struct in_addr* (void) const;
-						 operator const struct in6_addr* (void) const;
-						 operator const struct in_addr& (void) const { return *(const struct in_addr*)*this; }
-						 operator const struct in6_addr& (void) const { return *(const struct in6_addr*)*this; }
+						 operator const struct in_addr& (void) const;
+						 operator const struct in6_addr& (void) const;
 
 
 						 operator bool () const

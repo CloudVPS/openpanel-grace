@@ -35,7 +35,7 @@ ipaddress value::ipval (void) const
 	
 	if (_type == t_ipaddr)
 	{
-		return ipaddress( (const in6_addr*)t.ipval );
+		return ipaddress( *(const in6_addr*)t.ipval );
     }
     else if (_type == t_string )
 	{

@@ -113,19 +113,7 @@ ipaddress::ipaddress (const struct in6_addr& address)
 }
 
 
-/// Constructor from system structs
-ipaddress::ipaddress (const struct in_addr* address)
-{
-    *this=address;
-	
-}
-
-ipaddress::ipaddress (const struct in6_addr* address)
-{
-    *this=address;
-}
-
-ipaddress& ipaddress::operator= (const struct in_addr* address)
+ipaddress& ipaddress::operator= (const struct in_addr& address)
 {
     memset(addr,0,10);
 	
@@ -133,7 +121,7 @@ ipaddress& ipaddress::operator= (const struct in_addr* address)
 	addr[11] = 0xFF;
 	
 	
-	const unsigned char* bytes = (const unsigned char*)&(address->s_addr);
+	const unsigned char* bytes = (const unsigned char*)&(address.s_addr);
 	// bytes are in network order.
 	addr[12] = bytes[0];
 	addr[13] = bytes[1];
@@ -142,21 +130,21 @@ ipaddress& ipaddress::operator= (const struct in_addr* address)
 	return *this;
 }
 
-ipaddress& ipaddress::operator= (const struct in6_addr* address)
+ipaddress& ipaddress::operator= (const struct in6_addr& address)
 {
-	memcpy( addr, address->s6_addr, 16 );
+	memcpy( addr, address.s6_addr, 16 );
 	return *this;
 }
 
 
-ipaddress::operator const struct in_addr* (void) const
+ipaddress::operator const struct in_addr& (void) const
 {
-	return (const in_addr*)&addr[12];
+	return (const in_addr&)addr[12];
 }
 
-ipaddress::operator const struct in6_addr* (void) const
+ipaddress::operator const struct in6_addr& (void) const
 {
-	return (const in6_addr*)&addr[0];
+	return (const in6_addr&)addr[0];
 }
 
 ipaddress &ipaddress::operator= (const string &s)

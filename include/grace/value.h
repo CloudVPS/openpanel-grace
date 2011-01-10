@@ -176,6 +176,13 @@ friend class validator;
 public:
 						 /// Constructor.
 						 value (void);
+
+						 /// Constructor to prevent void* to bool conversions on assignment;
+						 value ( const void*) 
+						 { 
+						    void __CANNOT_ASSIGN_GRACE_VALUE_FROM_POINTER(); 
+						    __CANNOT_ASSIGN_GRACE_VALUE_FROM_POINTER(); 
+						 }
 						 
 						 /// Constructor with integer key argument.
 						 value (creatorlabel, unsigned int);
@@ -335,6 +342,10 @@ public:
 	value				&operator= (int i);
 	value				&operator= (unsigned int i);
 	value				&operator= (double d);
+
+	void				operator= (void*) 
+	{ void __CANNOT_ASSIGN_GRACE_VALUE_FROM_POINTER(); __CANNOT_ASSIGN_GRACE_VALUE_FROM_POINTER; }
+
 
 	value				&operator<< (value *v);
 	value				&operator<< (const value &v);
