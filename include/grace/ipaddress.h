@@ -115,6 +115,25 @@ public:
 						 {
 						 	return !( this->operator==(o) );
 						 }
+						 
+
+    ipaddress&			operator&=(const ipaddress& other);
+    ipaddress&			operator|=(const ipaddress& other);
+    
+    ipaddress			operator&(const ipaddress& other) const
+                        { 
+                            ipaddress result = *this; 
+                            result &= other; 
+                            return result; 
+                        }
+                        
+    ipaddress			operator|(const ipaddress& other) const
+                        { 
+                            ipaddress result = *this; 
+                            result |= other; 
+                            return result; 
+                        }
+					 
 	
 	string				*toblob (void) const;
 	void				 fromblob (const string &s);
@@ -128,7 +147,9 @@ public:
 						 		addr[ 6] == 0x00 && addr[ 7] == 0x00 && 
 						 		addr[ 8] == 0x00 && addr[ 9] == 0x00 && 
 						 		addr[10] == 0xFF && addr[11] == 0xFF; 
-						 }						 
+						 }		
+						 
+
 protected:
 	unsigned char	 	 addr[16]; // The IPv6 address in network order
 };

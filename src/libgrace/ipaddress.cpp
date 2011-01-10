@@ -190,6 +190,28 @@ bool ipaddress::operator== (const value &o) const
     return o.ipval() == *this;
 }
 
+
+ipaddress& ipaddress::operator&=(const ipaddress& other)
+{
+    for( int i=0; i<sizeof(addr); i+= sizeof(unsigned int) )
+    {
+        unsigned int* a = (unsigned int*)&addr[i];
+        const unsigned int* b = (const unsigned int*)&other.addr[i];
+        *a &= *b;
+    }
+}
+
+ipaddress& ipaddress::operator|=(const ipaddress& other)
+{
+    for( int i=0; i<sizeof(addr); i+= sizeof(unsigned int) )
+    {
+        unsigned int* a = (unsigned int*)&addr[i];
+        const unsigned int* b = (const unsigned int*)&other.addr[i];
+        *a |= *b;
+    }
+}
+
+
 string *ipaddress::toblob (void) const
 {
 	returnclass (string) res retain;

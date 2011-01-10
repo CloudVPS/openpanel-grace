@@ -76,6 +76,20 @@ int ipaddresstestApp::main (void)
 		if( v.ipval() != ipaddress("::1") ) FAIL("ipv6 value conversion 4")		
 	}
 
+	{
+		ipaddress a("10.0.90.12");
+		ipaddress mask("255.255.255.0");
+		
+		if( (a & mask ) != ipaddress("10.0.90.0") ) FAIL("Netmask 1");
+		if( (a | mask ) != ipaddress("255.255.255.12") ) FAIL("Netmask 2");
+		
+		a &= mask;
+		if( a != ipaddress("10.0.90.0") ) FAIL("Netmask 3");
+		
+		a |= "0.0.0.12";
+		if( a != ipaddress("10.0.90.12") ) FAIL("Netmask 4");
+	}
+
 	
 	ipaddress addr = netdb::resolve ("localhost");
 	test (netdb::resolve ("localhost"));
