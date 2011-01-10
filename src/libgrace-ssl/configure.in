@@ -1,4 +1,4 @@
-cxx
+cxx-grace
 ranlib
 shared
 pthread
