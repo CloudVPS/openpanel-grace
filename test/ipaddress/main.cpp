@@ -90,6 +90,17 @@ int ipaddresstestApp::main (void)
 		if( a != ipaddress("10.0.90.12") ) FAIL("Netmask 4");
 	}
 
+	{
+		ipaddress a("10.0.90.12");
+		
+		a[15] = 1;
+		if( a != ipaddress("10.0.90.1") ) FAIL("Array access 1");
+
+		a[-1] = 0;
+		if( a != ipaddress("10.0.90.0") ) FAIL("Array access 2");
+	}
+
+
 	
 	ipaddress addr = netdb::resolve ("localhost");
 	test (netdb::resolve ("localhost"));

@@ -133,6 +133,9 @@ public:
                             result |= other; 
                             return result; 
                         }
+                        
+    unsigned char&      operator[]( int a) { return addr[a&0x0F]; }       
+    const unsigned char operator[]( int a) const { return addr[a&0x0F]; }       
 					 
 	
 	string				*toblob (void) const;
