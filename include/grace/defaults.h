@@ -117,6 +117,14 @@ namespace defaults
 		/// Should the parser accept data mixed with nested tags?
 		parameter bool permitmixed defaultvalue (true);
 	}
+	
+	/// Settings for filesystem
+	namespace fs
+	{
+		/// Should trying to load files that don't exist cause an
+		/// exception?
+		parameter bool strictload defaultvalue (true);
+	}
 }
 
 /// Tunable parameters

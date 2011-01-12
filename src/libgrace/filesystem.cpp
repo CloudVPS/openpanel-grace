@@ -1146,7 +1146,12 @@ string *filesystem::load (const string &_vpath)
 	returnclass (string) b retain;
 	file f;
 	
-	if (! f.openread (_vpath)) throw (fileLoadException());
+	if (! f.openread (_vpath))
+	{
+		if (defaults::fs::strictload) throw (fileLoadException());
+		return &b;
+	}
+		
 	while (! f.eof())
 	{
 		b.strcat (f.read (8192));
