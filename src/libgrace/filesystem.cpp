@@ -18,6 +18,7 @@
 #include <dirent.h>
 #include <signal.h>
 #include <grace/system.h>
+#include <grace/defaults.h>
 
 extern char **environ;
 
