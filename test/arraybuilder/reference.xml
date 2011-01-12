@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dict>
+	<string id="name">John Woe</string>
+	<string id="address">Dark Alley</string>
+	<string id="email">john@woe.org</string>
+	<string id="url">http://www.woe.org/tree/</string>
+	<dict id="friends" ordering="random">
+		<string id="jdoe">John Doe</string>
+		<string id="janed">Jane Doe</string>
+	</dict>
+	<integer id="level">11</integer>
+	<bool id="included">true</bool>
+</dict>

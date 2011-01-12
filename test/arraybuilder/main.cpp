@@ -38,7 +38,7 @@ int arraybuildertestApp::main (void)
 						 -> $("jdoe","John Doe")
 			  		     -> $("janed","Jane Doe"))
 			-> $("level", 11)
-			-> $(includeme);
+			-> $merge(includeme);
 	
 	fout.writeln (v["friends"].type());
 	v.savexml ("out.xml");
