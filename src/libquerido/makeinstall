@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # This file is part of the Grace library (libgrace).
 # The Grace library is free software: you can redistribute it and/or modify it
 # under the terms of the GNU Lesser General Public License as published by the
@@ -5,7 +7,6 @@
 # You should have received a copy of the GNU Lesser General Public License 
 # along with Grace library. If not, see <http://www.gnu.org/licenses/>.
 
-#!/bin/sh
 if [ ! -f configure.paths ]; then
   echo "No configure.paths found, please run ./configure" >&2
   exit 1
@@ -13,24 +14,24 @@ fi
 
 . ./configure.paths
 
-path_bin="$CONFIG_BINPATH"
-path_lib="$CONFIG_LIBPATH"
-path_include="$CONFIG_INCLUDEPATH"
+path_bin="${DESTDIR}$CONFIG_BINPATH"
+path_lib="${DESTDIR}$CONFIG_LIBPATH"
+path_include="${DESTDIR}$CONFIG_INCLUDEPATH"
 
 if [ ! -d "$path_bin" ]; then
-  mkdir "$path_bin"
+  mkdir -p "$path_bin"
 fi
 
 if [ ! -d "$path_lib" ]; then
-  mkdir "$path_lib"
+  mkdir -p "$path_lib"
 fi
 
 if [ ! -d "$path_include" ]; then
-  mkdir "$path_include"
+  mkdir -p "$path_include"
 fi
 
 if [ ! -d "$path_include/querido" ]; then
-  mkdir "$path_include/querido"
+  mkdir -p "$path_include/querido"
 fi
 
 echo "Installing library in $path_lib"

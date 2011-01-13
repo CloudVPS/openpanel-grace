@@ -14,9 +14,9 @@ fi
 
 . ./configure.paths
 
-path_bin="$CONFIG_BINPATH"
-path_lib="$CONFIG_LIBPATH"
-path_include="$CONFIG_INCLUDEPATH"
+path_bin="${DESTDIR}$CONFIG_BINPATH"
+path_lib="${DESTDIR}$CONFIG_LIBPATH"
+path_include="${DESTDIR}$CONFIG_INCLUDEPATH"
 
 if [ ! -d $path_bin ]; then
   mkdir $path_bin

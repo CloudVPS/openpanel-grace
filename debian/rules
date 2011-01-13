@@ -1,78 +1,9 @@
 #!/usr/bin/make -f
 
-# This file is part of the Grace library (libgrace).
-# The Grace library is free software: you can redistribute it and/or modify it
-# under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation, using version 3 of the License.
-# You should have received a copy of the GNU Lesser General Public License 
-# along with Grace library. If not, see <http://www.gnu.org/licenses/>.
+export DH_VERBOSE=1
 
-build: build-stamp
-build-stamp:
+%:
 	LDFLAGS="${LDFLAGS} -fPIC"
-	CXXFLAGS="${LDFLAGS} -fPIC"
+	CXXFLAGS="${CXXFLAGS} -fPIC"
+	dh $@
 
-	cd src/libgrace && ./configure --prefix /usr && make && cd ../..
-	cd src/grace-configure && ./configure --prefix /usr && make && cd ../..
-	cd src/libgrace-pcre && ./configure --prefix /usr && make && cd ../..
-	cd src/libdbfile && ./configure --prefix /usr && make && cd ../..
-	cd src/matrixssl && ./configure --prefix /usr && make && cd ../..
-	cd src/libgrace-ssl && ./configure --prefix /usr && make && cd ../..
-	cd src/libquerido && ./configure --prefix /usr && make && cd ../..
-	touch build-stamp
-
-install: install-stamp
-install-stamp: build-stamp
-	dh_testdir
-	dh_testroot
-	dh_installdirs
-	## libgrace
-	install -m 644 lib/libgrace.so debian/libgrace/usr/lib/libgrace.so
-	## libgrace-dev
-	cp -r include/grace debian/libgrace-dev/usr/include/grace
-	rm debian/libgrace-dev/usr/include/grace/pcre.h
-	cp util/mk* debian/libgrace-dev/usr/bin/util-grace/
-	cp util/grace debian/libgrace-dev/usr/bin/grace
-	ln -s util-grace/mkapp debian/libgrace-dev/usr/bin/mkapp
-	install -m 755 src/grace-configure/mkconfigure debian/libgrace-dev/usr/bin/util-grace/mkconfigure
-	cp -p -R src/grace-configure/autoconfigure/* debian/libgrace-dev/usr/lib/grace-configure/
-	## libgrace-dbfile
-	install -sm 644 lib/libdbfile.so debian/libgrace-dbfile/usr/lib
-	## libgrace-dbfile-dev
-	cp -r include/dbfile debian/libgrace-dbfile-dev/usr/include/dbfile
-	## libgrace-pcre
-	install -sm 644 lib/libgrace-pcre.so debian/libgrace-pcre/usr/lib
-	## libgrace-pcre-dev
-	cp include/grace/pcre.h debian/libgrace-pcre-dev/usr/include/grace/pcre.h
-	## libgrace-querido
-	install -sm 644 lib/libquerido.so debian/libgrace-querido/usr/lib
-	## libgrace-querido-dev
-	cp -r include/querido debian/libgrace-querido-dev/usr/include/querido
-	## libgrace-ssl
-	install -sm 644 lib/libgrace-ssl.so debian/libgrace-ssl/usr/lib
-	## libgrace-ssl-dev
-	cp -r include/matrixssl debian/libgrace-ssl-dev/usr/include
-	touch install-stamp
-
-binary-indep: build install
-
-binary-arch: build install
-	if [ -d debian/tmp ] ; then dh_install -a --sourcedir=debian/tmp ; fi
-	dh_installdocs -a
-	dh_installdeb -a
-	dh_compress -a
-	dh_fixperms -a
-	dh_shlibdeps -a
-	dh_gencontrol -a
-	dh_md5sums -a
-	dh_builddeb -a
-
-clean:
-	rm -f build-stamp
-	rm -f build
-	make clean
-	dh_clean
-
-binary: binary-indep binary-arch
-
-.PHONY: build clean binary binary-arch binary-indep clean

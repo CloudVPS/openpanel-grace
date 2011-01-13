@@ -1,44 +1,23 @@
 #!/bin/sh
-root="n"
-if [ "$UID" = "0" ]; then
-  root="y"
-fi
-if [ -z "$UID" ]; then
-  WHOAMI=`which whoami 2>/dev/null`
-  if [ ! -f "$WHOAMI" ]; then
-    WHOAMI="who am i | cut -f1 -d\" \""
-  else
-    WHOAMI="whoami"
-  fi
-  iam=`$WHOAMI`
-  if [ "$iam" = "root" ]; then
-    root="y"
-  fi
-fi
-if [ "$root" = "y" ]; then
-  path_bin=/usr/bin
-  path_lib=/usr/lib
-  path_include=/usr/include
-else
-  path_bin=$HOME/.bin
-  path_lib=$HOME/.lib
-  path_include=$HOME/.include
-fi
+
+path_bin=${DESTDIR}/usr/bin
+path_lib=${DESTDIR}/usr/lib
+path_include=${DESTDIR}/usr/include
 
 if [ ! -d "$path_bin" ]; then
-  mkdir "$path_bin"
+  mkdir -p "$path_bin"
 fi
 
 if [ ! -d "$path_lib" ]; then
-  mkdir "$path_lib"
+  mkdir -p "$path_lib"
 fi
 
 if [ ! -d "$path_include" ]; then
-  mkdir "$path_include"
+  mkdir -p "$path_include"
 fi
 
 if [ ! -d "$path_include/matrixssl" ]; then
-  mkdir "$path_include/matrixssl"
+  mkdir -p "$path_include/matrixssl"
 fi
 
 cp src/libmatrixsslstatic.a "$path_lib/"

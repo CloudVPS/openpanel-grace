@@ -14,13 +14,13 @@ fi
 
 . ./configure.paths
 
-path_bin="$CONFIG_BINPATH"
-path_lib="$CONFIG_LIBPATH"
-path_include="$CONFIG_INCLUDEPATH"
+path_bin="${DESTDIR}$CONFIG_BINPATH"
+path_lib="${DESTDIR}$CONFIG_LIBPATH"
+path_include="${DESTDIR}$CONFIG_INCLUDEPATH"
 
 
 if [ ! -d "$path_lib" ]; then
-  mkdir "$path_lib"
+  mkdir -p "$path_lib"
 fi
 
 if [ -e /usr/bin/install_name_tool ]; then

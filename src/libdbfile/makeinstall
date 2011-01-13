@@ -15,25 +15,25 @@ fi
 
 . ./configure.paths
 
-path_bin="$CONFIG_BINPATH"
-path_lib="$CONFIG_LIBPATH"
-path_include="$CONFIG_INCLUDEPATH"
+path_bin="${DESTDIR}$CONFIG_BINPATH"
+path_lib="${DESTDIR}$CONFIG_LIBPATH"
+path_include="${DESTDIR}$CONFIG_INCLUDEPATH"
 
 
 if [ ! -d "$path_bin" ]; then
-  mkdir "$path_bin"
+  mkdir -p "$path_bin"
 fi
 
 if [ ! -d "$path_lib" ]; then
-  mkdir "$path_lib"
+  mkdir -p "$path_lib"
 fi
 
 if [ ! -d "$path_include" ]; then
-  mkdir "$path_include"
+  mkdir -p "$path_include"
 fi
 
 if [ ! -d "$path_include/dbfile" ]; then
-  mkdir "$path_include/dbfile"
+  mkdir -p "$path_include/dbfile"
 fi
 
 if [ -e /usr/bin/install_name_tool ]; then
