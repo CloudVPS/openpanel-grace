@@ -15,19 +15,6 @@
 #include <grace/flags.h>
 #include <grace/perthread.h>
 
-/// Filetypes used in directory entries.
-enum fsfiletype {
-	fsUnknown, ///< Unknown type.
-	fsFile, ///< Regular file.
-	fsDirectory, ///< Directory.
-	fsCharacterDevice, ///< A device node.
-	fsBlockDevice, ///< A device node.
-	fsFIFO, ///< A fifo.
-	fsSoftLink, ///< A soft link.
-	fsSocket, ///< A unix domain socket.
-	fsBundle ///< A bundle.
-};
-
 $exception (fileLoadException, "Could not load file");
 
 /// Easy access class to the filesystem.
@@ -40,6 +27,9 @@ public:
 					~filesystem (void);
 					
 	enum loadoptions { mustexist, optional };
+	enum filetype { unknown, data, directory,
+					chardevice, blockdevice, fifo,
+					softlink, socket, bundle };
 			
 					 /// Check if a filesystem object exists.
 					 /// \param path Relative or absolute path to the file.

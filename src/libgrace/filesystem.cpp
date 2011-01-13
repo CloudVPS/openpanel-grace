@@ -333,9 +333,9 @@ value *filesystem::getinfo (const string &_path)
 		switch (st.st_mode & S_IFMT)
 		{
 			case S_IFSOCK:
-				result["type"] = fsSocket; break;
+				result["type"] = socket; break;
 			case S_IFLNK:
-				result["type"] = fsSoftLink;
+				result["type"] = softlink;
 				if (( t = ::readlink (p.str(), linkbuf, 511))>=0)
 				{
 					linkbuf[t] = 0;
@@ -343,16 +343,16 @@ value *filesystem::getinfo (const string &_path)
 				}
 				break;
 			case S_IFREG:
-				result["type"] = fsFile; break;
+				result["type"] = data; break;
 			case S_IFBLK:
-				result["type"] = fsBlockDevice; break;
+				result["type"] = blockdevice; break;
 			case S_IFCHR:
-				result["type"] = fsCharacterDevice; break;
+				result["type"] = chardevice; break;
 			case S_IFDIR:
-				result["type"] = fsDirectory;
+				result["type"] = directory;
 				break;
 			default:
-				result["type"] = fsUnknown; break;
+				result["type"] = unknown; break;
 		}
 		result["mode"] = (unsigned int) st.st_mode & 07777;
 		result["uid"] = (unsigned int) st.st_uid;
@@ -396,7 +396,7 @@ value *filesystem::getinfo (const string &_path)
 			result["mime"] = linkbuf;
 			if ((st.st_mode & S_IFMT) == S_IFDIR)
 			{
-				result["type"] = fsBundle;
+				result["type"] = bundle;
 			}
 		}
 	}
@@ -869,7 +869,7 @@ value *filesystem::dir (const string &_path)
 //
 // inode		The object's inode
 // nlink		The number of links to the inode
-// type			The basic filetype (fsFile, fsDirectory, fsSocket, etc)
+// type			The basic filetype (filesystem::data, filesystem::directory, &c)
 // link			The destination of a softlink (type=fsSoftLink)
 // mode			The unix mode permissions
 // fuid			The owner uid
@@ -968,9 +968,9 @@ value *filesystem::ls (const string &_path, bool longformat, bool showhidden)
 						switch (st.st_mode & S_IFMT)
 						{
 							case S_IFSOCK:
-								resref["type"] = fsSocket; break;
+								resref["type"] = socket; break;
 							case S_IFLNK:
-								resref["type"] = fsSoftLink;
+								resref["type"] = softlink;
 								if (( t = ::readlink (pad.str(), linkbuf, 511))>=0)
 								{
 									linkbuf[t] = 0;
@@ -978,16 +978,16 @@ value *filesystem::ls (const string &_path, bool longformat, bool showhidden)
 								}
 								break;
 							case S_IFREG:
-								resref["type"] = fsFile; break;
+								resref["type"] = data; break;
 							case S_IFBLK:
-								resref["type"] = fsBlockDevice; break;
+								resref["type"] = blockdevice; break;
 							case S_IFCHR:
-								resref["type"] = fsCharacterDevice; break;
+								resref["type"] = chardevice; break;
 							case S_IFDIR:
-								resref["type"] = fsDirectory;
+								resref["type"] = directory;
 								break;
 							default:
-								resref["type"] = fsUnknown; break;
+								resref["type"] = unknown; break;
 						}
 						resref["mode"] = (unsigned int) st.st_mode & 07777;
 						resref["fuid"] = (unsigned int) st.st_uid;
@@ -1007,7 +1007,7 @@ value *filesystem::ls (const string &_path, bool longformat, bool showhidden)
 							
 							if ((st.st_mode & S_IFMT) == S_IFDIR)
 							{
-								resref["type"] = fsBundle;
+								resref["type"] = bundle;
 							}
 						}
 					}
