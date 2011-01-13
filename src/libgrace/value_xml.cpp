@@ -40,8 +40,11 @@ bool value::loadxml (const string &path, xmlschema *schema, string *err)
 {
 	string xml;
 	
-	xml = fs.load (path);
-	if (! xml.strlen())
+	try
+	{
+		xml = fs.load (path);
+	}
+	catch (...)
 	{
 		if (err) err->strcpy ("Could not load file");
 		return false;

@@ -979,7 +979,7 @@ int httpdbasicauth::run (string &uri, string &postbody,
 		
 		if (parent->havedefault (401))
 		{
-			out = fs.load (parent->defaultdocument (401));
+			out = fs.load (parent->defaultdocument (401), filesystem::optional);
 		}
 		else
 		{
@@ -1203,7 +1203,7 @@ int httpdvhost::run (string &uri, string &postbody, value &inhdr,
 	outhdr["Content-type"] = "text/html";
 	if (parent->havedefault (404))
 	{
-		out = fs.load (parent->defaultdocument (404));
+		out = fs.load (parent->defaultdocument (404), filesystem::optional);
 	}
 	else
 	{

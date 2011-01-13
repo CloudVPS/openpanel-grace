@@ -38,6 +38,8 @@ class filesystem
 public:
 					 filesystem (void);
 					~filesystem (void);
+					
+	enum loadoptions { mustexist, optional };
 			
 					 /// Check if a filesystem object exists.
 					 /// \param path Relative or absolute path to the file.
@@ -177,7 +179,7 @@ public:
 					 /// to a newly allocated string object.
 					 /// \param _vpath Relative or absolute path of the file.
 					 /// \return New string object with the file contents.
-	string			*load (const string &_vpath);
+	string			*load (const string &_vpath, loadoptions o = mustexist);
 					 
 					 /// Save a string object into a file.
 					 /// \param _vpath Relative or absolute path for the file.

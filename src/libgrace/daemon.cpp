@@ -241,7 +241,7 @@ bool daemon::checkpid (void)
 	if (fs.exists (tpath))
 	{
 		// Load the pid-file into a string and parse the pid.
-		line = fs.load (tpath);
+		line = fs.load (tpath, filesystem::optional);
 		pid = ::strtoul (line.str(), &p, 10);
 		
 		// If the pid is not 0, test if the pid exists by sending it

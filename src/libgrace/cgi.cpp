@@ -390,7 +390,7 @@ bool cgitemplate::load (const string &fnam)
 {
 	string tfil;
 	
-	tfil = fs.load (fnam);
+	tfil = fs.load (fnam, filesystem::optional);
 	if (! tfil.strlen()) return false;
 	
 	bool done = false;

@@ -99,7 +99,7 @@ int httpdscriptparser::run (string &path, string &postbody, value &inhdr,
 	
 	if (! scriptcache.exists (path))
 	{
-		scripttext = fs.load (path);
+		scripttext = fs.load (path, filesystem::optional);
 		scriptcache[path].build (scripttext);
 	}
 	

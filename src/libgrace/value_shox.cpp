@@ -27,7 +27,16 @@
 // ========================================================================
 bool value::loadshox (const string &fname)
 {
-	return fromshox (fs.load (fname));
+	bool res = false;
+	try
+	{
+		res = fromshox (fs.load (fname));
+	}
+	catch (...)
+	{
+		res = false;
+	}
+	return res;
 }
 
 // ========================================================================

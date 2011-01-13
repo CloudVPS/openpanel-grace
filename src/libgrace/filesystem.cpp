@@ -1142,14 +1142,17 @@ string &filesystem::pwd (void)
 // ========================================================================
 // METHOD ::load
 // ========================================================================
-string *filesystem::load (const string &_vpath)
+string *filesystem::load (const string &_vpath, loadoptions opt)
 {
 	returnclass (string) b retain;
 	file f;
 	
 	if (! f.openread (_vpath))
 	{
-		if (defaults::fs::strictload) throw (fileLoadException());
+		if ((opt != optional) && defaults::fs::strictload)
+		{
+			throw (fileLoadException());
+		}
 		return &b;
 	}
 		
