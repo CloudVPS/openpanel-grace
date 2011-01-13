@@ -47,7 +47,9 @@ parseopt() {
 # Part two of the "--foo bar" eq "--foo=bar" trick: Use sed to strip the
 # --foo= off the second variation. In either case we'll end up with "bar".
 parsearg() {
-	echo "$2" | sed -e "s/--${1}=//"
+	# we need to replace ${prefix} with ${CONFIG_INSTALLROOT} because 
+	# dpkg-buidpackage relies on some autoconf internals there
+	echo "$2" | sed -e "s/--${1}=//" | sed -e 's/\${prefix}/\${CONFIG_INSTALLROOT}/'
 }
 
 # Determine whether we're logged in as root.
