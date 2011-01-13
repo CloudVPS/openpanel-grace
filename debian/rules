@@ -9,6 +9,9 @@
 
 build: build-stamp
 build-stamp:
+	LDFLAGS="${LDFLAGS} -fPIC"
+	CXXFLAGS="${LDFLAGS} -fPIC"
+
 	cd src/libgrace && ./configure --prefix /usr && make && cd ../..
 	cd src/grace-configure && ./configure --prefix /usr && make && cd ../..
 	cd src/libgrace-pcre && ./configure --prefix /usr && make && cd ../..
