@@ -315,16 +315,15 @@ int foo (int i) { return i; }
 _eof_
 $CXX $CXXFLAGS $SHARED -c -o conftest.o conftest.cpp >/dev/null 2>&1
 if $LDSHARED -Wl,-soname,conftest.$DYNEXT conftest.o -o conftest.$DYNEXT >/dev/null 2>&1; then
-  LDSONAME="-Wl,-soname"
+  LDSHARED="$LDSHARED -Wl,-soname,\$(LIBNAME).$DYNEXT.\$(LIBVERSION)"
+  LIBFILENAME="\$(LIBNAME).$DYNEXT.\$(LIBVERSION)"
 else
   if $LDSHARED -Wl,-dylib_install_name,conftest.$DYNEXT conftest.o -o conftest.$DYNEXT >/dev/null 2>&1; then
-    LDSONAME="-Wl,-dylib_install_name"
-  else
-    LDSONAME=""
+    LDSHARED="$LDSHARED -Wl,-dylib_install_name,\$(LIBNAME).$DYNEXT"
   fi
+  LIBFILENAME="\$(LIBNAME).$DYNEXT"
 fi
-saypass "OK"
-
+saypass "ok"
 # ---------------------------------------------------------------------------
 # Figure out if there's a Vendorware C++ compiler on board
 # ---------------------------------------------------------------------------
@@ -858,7 +857,7 @@ LD = $LD
 LDFLAGS = $LDFLAGS $LIBDL_LDFLAGS
 LDL = $LIBDL
 LDSHARED = $LDSHARED
-LDSONAME = $LDSONAME
+LIBFILENASME = $LIBFILENAME
 LIBS = $LIBPTHREAD $LIBDL $LIBSOCKET $LIBNSL $LIBCRYPT
 LPTHREAD = $LIBPTHREAD
 LSOCKET = $LIBSOCKET $LIBNSL

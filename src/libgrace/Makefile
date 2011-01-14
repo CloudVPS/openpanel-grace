@@ -74,10 +74,12 @@ OBJ			= 	application.o \
 				valueindex.o
 
 AR = ar cr
+LIBNAME = libgrace
+LIBVERSION = 1.0
 
 all: ../../include/grace/platform.h $(OBJ)
 	mkdir -p ../../lib
-	$(LDSHARED) $(LIBS) $(LDSONAME),libgrace.so.1.0 -o ../../lib/libgrace.$(DYNEXT) $(OBJ)
+	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ)
 	$(AR) ../../lib/libgrace.a $(OBJ)
 
 version.cpp:

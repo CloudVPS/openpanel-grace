@@ -63,13 +63,12 @@ int foo (int i) { return i; }
 _eof_
 $CXX $CXXFLAGS $SHARED -c -o conftest.o conftest.cpp >/dev/null 2>&1
 if $LDSHARED -Wl,-soname,conftest.$DYNEXT conftest.o -o conftest.$DYNEXT >/dev/null 2>&1; then
-  LDSONAME="-Wl,-soname"
+  LDSHARED="$LDSHARED -Wl,-soname,\$(LIBNAME).$DYNEXT.\$(LIBVERSION)"
+  LIBFILENAME="\$(LIBNAME).$DYNEXT.\$(LIBVERSION)"
 else
   if $LDSHARED -Wl,-dylib_install_name,conftest.$DYNEXT conftest.o -o conftest.$DYNEXT >/dev/null 2>&1; then
-    LDSONAME="-Wl,-dylib_install_name"
-  else
-    LDSONAME=""
+    LDSHARED="$LDSHARED -Wl,-dylib_install_name,\$(LIBNAME).$DYNEXT"
   fi
+  LIBFILENAME="\$(LIBNAME).$DYNEXT"
 fi
-saypass "OK"
-
+saypass "ok"
