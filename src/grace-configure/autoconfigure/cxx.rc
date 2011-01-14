@@ -64,7 +64,7 @@ _eof_
 $CXX $CXXFLAGS $SHARED -c -o conftest.o conftest.cpp >/dev/null 2>&1
 if $LDSHARED -Wl,-soname,conftest.$DYNEXT conftest.o -o conftest.$DYNEXT >/dev/null 2>&1; then
   LDSHARED="$LDSHARED -Wl,-soname,\$(LIBNAME).$DYNEXT.\$(LIBVERSION)"
-  LIBFILENAME="\$(LIBNAME).$DYNEXT.\$(LIBVERSION)"
+  LIBFILENAME="\$(LIBNAME).$DYNEXT"
 else
   if $LDSHARED -Wl,-dylib_install_name,conftest.$DYNEXT conftest.o -o conftest.$DYNEXT >/dev/null 2>&1; then
     LDSHARED="$LDSHARED -Wl,-dylib_install_name,\$(LIBNAME).$DYNEXT"
