@@ -10,9 +10,11 @@ include makeinclude
 OBJ			= 	engine.o query.o row.o table.o sqlite.o
 
 AR = ar cr
+LIBNAME = libquerido
+LIBVERSION = 1.0
 
 all: $(OBJ)
-	$(LDSHARED) $(LIBS) -Wl,-soname,libquerido.so.1.0 -o ../../lib/libquerido.$(DYNEXT) $(OBJ)
+	$(LDSHARED) $(LIBS)-o ../../lib/$(LIBFILENAME) $(OBJ)
 	cp platform.h ../../include/querido/platform.h
 	$(AR) ../../lib/libquerido.a $(OBJ)
 

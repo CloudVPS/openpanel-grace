@@ -10,9 +10,11 @@ include makeinclude
 OBJ			= 	dbfile.o gdbmfile.o db4file.o
 
 AR = ar cr
+LIBNAME = libdbfile
+LIBVERSION = 1.0
 
 all: $(OBJ)
-	$(LDSHARED) -Wl,-soname,libdbfile.so.1.0 -o ../../lib/libdbfile.$(DYNEXT) $(OBJ)
+	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ)
 	$(AR) ../../lib/libdbfile.a $(OBJ)
 
 depend:

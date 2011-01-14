@@ -10,9 +10,11 @@ include makeinclude
 OBJ			= 	pcre.o
 
 AR = ar cr
+LIBNAME = libgrace-pcre
+LIBVERSION = 1.0
 
 all: $(OBJ)
-	$(LDSHARED) -Wl,-soname,libgrace-pcre.so.1.0 $(LIBS) -o ../../lib/libgrace-pcre.$(DYNEXT) $(OBJ)
+	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ)
 	$(AR) ../../lib/libgrace-pcre.a $(OBJ)
 
 depend:

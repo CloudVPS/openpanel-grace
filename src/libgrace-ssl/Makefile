@@ -10,10 +10,12 @@ include makeinclude
 OBJ			= 	sslsocket.o httpsd.o mozillacerts.o
 
 AR = ar cr
+LIBNAME = libgrace-ssl
+LIBVERSION = 1.0
 
 all: $(OBJ)
 	./getmatrixobj.sh
-	$(LDSHARED) $(LIBS) -Wl,-soname,libgrace-ssl.so.1.0 -o ../../lib/libgrace-ssl.$(DYNEXT) $(OBJ) matrixobj/*.o
+	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ) matrixobj/*.o
 	$(AR) ../../lib/libgrace-ssl.a $(OBJ) matrixobj/*.o
 
 install: all
