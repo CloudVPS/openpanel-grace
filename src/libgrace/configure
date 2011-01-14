@@ -295,7 +295,7 @@ else
       DYNEXT="dylib"
     else
       SHARED="-shared -fPIC"
-      LDSHARED="\$(COMPILER) -shared \$(LDFLAGS)"
+      LDSHARED="$CXX -shared $LDFLAGS"
     fi
     LD="$CXX"
     LDFLAGS=""
@@ -305,6 +305,9 @@ else
     exit 1;
   fi
 fi
+
+COMPILER=${CXX}
+COMPILERFLAGS=${CXXFLAGS}
 
 saypending "checking for soname"
 cat > conftest.cpp << _eof_
@@ -322,8 +325,6 @@ else
 fi
 saypass "OK"
 
-COMPILER=${CXX}
-COMPILERFLAGS=${CXXFLAGS}
 # ---------------------------------------------------------------------------
 # Figure out if there's a Vendorware C++ compiler on board
 # ---------------------------------------------------------------------------
