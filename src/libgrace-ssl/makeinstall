@@ -39,11 +39,14 @@ if [ -e /usr/bin/install_name_tool ]; then
   install_name_tool -id $path_lib/libgrace-ssl.dylib ../../lib/libgrace-ssl.dylib
 fi
 
-cp ../../lib/libgrace-ssl.so "$path_lib/libgrace-ssl.so.1.0"
-cp ../../lib/libgrace-ssl.a "$path_lib/libgrace-ssl.a"
-ln -s "$path_lib/libgrace-ssl.so.1.0" "$path_lib/libgrace-ssl.so.1"
-ln -s "$path_lib/libgrace-ssl.so.1" "$path_lib/libgrace-ssl.so"
-
+if [ -e ../../lib/libgrace-ssl.dylib ]; then
+  cp ../../lib/libgrace-ssl.dylib $path_lib/
+else
+  cp ../../lib/libgrace-ssl.so "$path_lib/libgrace-ssl.so.1.0"
+  cp ../../lib/libgrace-ssl.a "$path_lib/libgrace-ssl.a"
+  ln -s "$path_lib/libgrace-ssl.so.1.0" "$path_lib/libgrace-ssl.so.1"
+  ln -s "$path_lib/libgrace-ssl.so.1" "$path_lib/libgrace-ssl.so"
+fi
 
 cp ../../lib/libgrace-ssl.* "$path_lib/"
 cp ../../include/matrixssl/*.h "$path_include/matrixssl"
