@@ -306,6 +306,22 @@ else
   fi
 fi
 
+saypending "checking for soname"
+cat > conftest.cpp << _eof_
+int foo (int i) { return i; }
+_eof_
+$CXX $CXXFLAGS $SHARED -c -o conftest.o conftest.cpp >/dev/null 2>&1
+if $LDSHARED -Wl,-soname,conftest.$DYNEXT conftest.o -o conftest.$DYNEXT >/dev/null 2>&1; then
+  LDSONAME="-Wl,-soname"
+else
+  if $LDSHARED -Wl,-dylib_install_name,conftest.$DYNEXT conftest.o -o conftest.$DYNEXT >/dev/null 2>&1; then
+    LDSONAME="-Wl,-dylib_install_name"
+  else
+    LDSONAME=""
+  fi
+fi
+saypass "OK"
+
 COMPILER=${CXX}
 COMPILERFLAGS=${CXXFLAGS}
 # ---------------------------------------------------------------------------
@@ -841,6 +857,7 @@ LD = $LD
 LDFLAGS = $LDFLAGS $LIBDL_LDFLAGS
 LDL = $LIBDL
 LDSHARED = $LDSHARED
+LDSONAME = $LDSONAME
 LIBS = $LIBPTHREAD $LIBDL $LIBSOCKET $LIBNSL $LIBCRYPT
 LPTHREAD = $LIBPTHREAD
 LSOCKET = $LIBSOCKET $LIBNSL
