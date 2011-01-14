@@ -2,9 +2,7 @@ cxx-grace
 ranlib
 shared
 pthread
-libdl
 libsocket
-libcrypt
 gmtoff
 sendfile
 passcred
