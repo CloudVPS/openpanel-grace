@@ -16,6 +16,8 @@ all: $(OBJ)
 	cp platform.h ../../include/querido/platform.h
 	$(AR) ../../lib/libquerido.a $(OBJ)
 
+
+
 depend:
 	@echo -n > Makefile.depend
 	@makedepend -Y../../include -fMakefile.depend *.cpp 2>/dev/null

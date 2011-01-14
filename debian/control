@@ -47,7 +47,7 @@ Description: The grace library - dbm and db support
 Package: libgrace-dbfile-dev
 Section: libdevel
 Architecture: any
-Depends: libgrace-dev, libgrace-dbfile1.0, libdb-dev, libgdbm-dev, ${misc:Depends}
+Depends: libgrace-dev, libgrace-dbfile1.0, libdb4.6-dev, libgdbm-dev, ${misc:Depends}
 Description: The grace library - dbm and db support (Development files)
  This package adds support for dbm and db4.6 to the grace library 
 
