@@ -32,7 +32,7 @@ if [ -e ../../lib/libgrace-pcre.dylib ]; then
 else
   cp ../../lib/libgrace-pcre.so "$path_lib/libgrace-pcre.so.1.0"
   cp ../../lib/libgrace-pcre.a "$path_lib/libgrace-pcre.a"
-  ln -s "$path_lib/libgrace-pcre.so.1.0" "$path_lib/libgrace-pcre.so.1"
-  ln -s "$path_lib/libgrace-pcre.so.1" "$path_lib/libgrace-pcre.so"
+  ln -s "./libgrace-pcre.so.1.0" "$path_lib/libgrace-pcre.so.1"
+  ln -s "./libgrace-pcre.so.1" "$path_lib/libgrace-pcre.so"
 fi
 

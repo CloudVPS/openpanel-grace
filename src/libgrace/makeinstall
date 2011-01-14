@@ -39,8 +39,8 @@ if [ -e ../../lib/libgrace.dylib ]; then
 else
   cp ../../lib/libgrace.so "$path_lib/libgrace.so.1.0"
   cp ../../lib/libgrace.a "$path_lib/libgrace.a"
-  ln -s "$path_lib/libgrace.so.1.0" "$path_lib/libgrace.so.1"
-  ln -s "$path_lib/libgrace.so.1" "$path_lib/libgrace.so"
+  ln -s "./libgrace.so.1.0" "$path_lib/libgrace.so.1"
+  ln -s "./libgrace.so.1" "$path_lib/libgrace.so"
 fi
 
 echo "Installing headers in $path_include"
