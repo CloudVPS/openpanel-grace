@@ -2,8 +2,6 @@ cxx-grace
 ranlib
 shared
 pthread
-libdl
 libsocket
-libcrypt
 pcre
 

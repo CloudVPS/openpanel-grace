@@ -3,3 +3,5 @@
 /usr/include/grace
 /usr/bin/util-grace/
 /usr/lib/grace-configure/
+/usr/lib/libgrace.so
+/usr/lib/libgrace.a

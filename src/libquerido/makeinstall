@@ -34,11 +34,16 @@ if [ ! -d "$path_include/querido" ]; then
   mkdir -p "$path_include/querido"
 fi
 
+
 echo "Installing library in $path_lib"
 if [ -e /usr/bin/install_name_tool ]; then
   install_name_tool -id $path_lib/libquerido.dylib ../../lib/libquerido.dylib
 fi
-cp ../../lib/libquerido.* "$path_lib/"
+cp ../../lib/libquerido.so "$path_lib/libquerido.so.1.0"
+cp ../../lib/libquerido.a "$path_lib/libquerido.a"
+ln -s "$path_lib/libquerido.so.1.0" "$path_lib/libquerido.so.1"
+ln -s "$path_lib/libquerido.so.1" "$path_lib/libquerido.so"
+
 echo "Installing headers in $path_include"
 cp ../../include/querido/*.h "$path_include/querido/"
 

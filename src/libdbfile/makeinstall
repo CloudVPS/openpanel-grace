@@ -39,6 +39,11 @@ fi
 if [ -e /usr/bin/install_name_tool ]; then
   install_name_tool -id $path_lib/libdbfile.dylib ../../lib/libdbfile.dylib
 fi
-cp ../../lib/libdbfile.* "$path_lib/"
+
+cp ../../lib/libdbfile.so "$path_lib/libdbfile.so.1.0"
+cp ../../lib/libdbfile.a "$path_lib/libdbfile.a"
+ln -s "$path_lib/libdbfile.so.1.0" "$path_lib/libdbfile.so.1"
+ln -s "$path_lib/libdbfile.so.1" "$path_lib/libdbfile.so"
+
 cp ../../include/dbfile/*.h "$path_include/dbfile/"
 

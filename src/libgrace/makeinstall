@@ -34,7 +34,12 @@ echo "Installing library in $path_lib"
 if [ -e /usr/bin/install_name_tool ]; then
   install_name_tool -id $path_lib/libgrace.dylib ../../lib/libgrace.dylib
 fi
-cp ../../lib/libgrace.* "$path_lib/"
+cp ../../lib/libgrace.so "$path_lib/libgrace.so.1.0"
+cp ../../lib/libgrace.a "$path_lib/libgrace.a"
+ln -s "$path_lib/libgrace.so.1.0" "$path_lib/libgrace.so.1"
+ln -s "$path_lib/libgrace.so.1" "$path_lib/libgrace.so"
+
+
 echo "Installing headers in $path_include"
 cp ../../include/grace/*.h "$path_include/grace/"
 

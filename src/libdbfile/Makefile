@@ -12,7 +12,7 @@ OBJ			= 	dbfile.o gdbmfile.o db4file.o
 AR = ar cr
 
 all: $(OBJ)
-	$(LDSHARED) -o ../../lib/libdbfile.$(DYNEXT) $(OBJ)
+	$(LDSHARED) -Wl,-soname,libdbfile.so.1.0 -o ../../lib/libdbfile.$(DYNEXT) $(OBJ)
 	$(AR) ../../lib/libdbfile.a $(OBJ)
 
 depend:

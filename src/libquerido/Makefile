@@ -12,7 +12,7 @@ OBJ			= 	engine.o query.o row.o table.o sqlite.o
 AR = ar cr
 
 all: $(OBJ)
-	$(LDSHARED) $(LIBS) -o ../../lib/libquerido.$(DYNEXT) $(OBJ)
+	$(LDSHARED) $(LIBS) -Wl,-soname,libquerido.so.1.0 -o ../../lib/libquerido.$(DYNEXT) $(OBJ)
 	cp platform.h ../../include/querido/platform.h
 	$(AR) ../../lib/libquerido.a $(OBJ)
 
