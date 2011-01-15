@@ -864,6 +864,17 @@ public:
 
 					 /// Convert to a JSON-encoded string.
 	string			*tojson (void) const;
+
+					 /// Convert from a MSGPACK-encoded blob.
+					 /// \param j JSON string.
+	bool			 frommsgpack (const string &j, size_t& offset);
+	bool			 frommsgpack (const string &j) { size_t o=0; return frommsgpack(j,o); }
+
+					 /// Convert to a MSGPACK-encoded blob.
+	void             tomsgpack ( string& s ) const;
+	string			*tomsgpack (void) const;
+
+
 	
 	void			 encodegrace (string &into, int indent);
 

@@ -57,6 +57,7 @@ OBJ			= 	application.o \
 				value_ip.o \
 				value_grace.o \
 				value_json.o \
+				value_msgpack.o \
 				value_php.o \
 				value_plist.o \
 				value_sort.o \
