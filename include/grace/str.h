@@ -496,24 +496,24 @@ public:
 	
 					 //@{
 					 /// Add binary data.
-	size_t			 binput64  (size_t offset, long long val);
+	size_t			 binput64  (size_t offset, signed long long val);
 	size_t			 binput64u (size_t offset, unsigned long long val);
 	
 	size_t			 binput32u (size_t offset, unsigned int val);
-	size_t			 binput32  (size_t offset, int);
+	size_t			 binput32  (size_t offset, signed int);
 	size_t			 binput32o (size_t offset, const char *offs);
 	size_t			 binput16u (size_t offset, unsigned short val);
-	size_t			 binput16  (size_t offset, short);
+	size_t			 binput16  (size_t offset, signed short);
 	size_t			 binput8u  (size_t offset, unsigned char val);
-	size_t			 binput8   (size_t offset, char);
+	size_t			 binput8   (size_t offset, signed char);
 	
-	size_t			 binget8   (size_t offset, char &) const;
+	size_t			 binget8   (size_t offset, signed char &) const;
 	size_t			 binget8u  (size_t offset, unsigned char &) const;
-	size_t			 binget16  (size_t offset, short &) const;
+	size_t			 binget16  (size_t offset, signed short &) const;
 	size_t			 binget16u (size_t offset, unsigned short &) const;
-	size_t			 binget32  (size_t offset, int &) const;
+	size_t			 binget32  (size_t offset, signed int &) const;
 	size_t			 binget32u (size_t offset, unsigned int &) const;
-	size_t			 binget64  (size_t offset, long long &) const;
+	size_t			 binget64  (size_t offset, signed long long &) const;
 	size_t			 binget64u (size_t offset, unsigned long long &) const;
 					 // @}
 	
@@ -561,10 +561,10 @@ public:
 					 /// Read a SHOX variable string.
 	size_t			 bingetvstr (size_t atoffset, string &into) const;
 	
-					 /// Write an 8 byte network order IEEE754 double.
+					 /// Write an 8 byte network order IEEE754 binary64.
 	size_t			 binputieee (size_t offset, double val);
 	
-					 /// Read an 8 byte network order IEEE754 double.
+					 /// Read an 8 byte network order IEEE754 binary64.
 	size_t			 bingetieee (size_t offset, double &into) const;
 	
 	// --------------------------------------------------------------------

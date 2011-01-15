@@ -1873,7 +1873,7 @@ size_t string::binput8u (size_t offset, unsigned char val)
 // ========================================================================
 // METHOD ::binput8
 // ========================================================================
-size_t string::binput8 (size_t offset, char val)
+size_t string::binput8 (size_t offset, signed char val)
 {
 	docopyonwrite ();
 	size_t crsr = offset+1;
@@ -1976,7 +1976,7 @@ size_t string::binputstr (size_t offset, const char *opcode,
 // ========================================================================
 // METHOD ::binget8
 // ========================================================================
-size_t string::binget8 (size_t offset, char &into) const
+size_t string::binget8 (size_t offset, signed char &into) const
 {
 	if ((offset+1)>size) return 0;
 	into = data->v[offs+offset];
@@ -1996,7 +1996,7 @@ size_t string::binget8u (size_t offset, unsigned char &into) const
 // ========================================================================
 // METHOD ::binget16
 // ========================================================================
-size_t string::binget16 (size_t offset, short &into) const
+size_t string::binget16 (size_t offset, signed short &into) const
 {
 	if ((offset+2) > size) return 0;
 	into = ((data->v[offs+offset]&0xff) << 8) | (data->v[offs+offset+1] & 0xff);
@@ -2016,7 +2016,7 @@ size_t string::binget16u (size_t offset, unsigned short &into) const
 // ========================================================================
 // METHOD ::binget32
 // ========================================================================
-size_t string::binget32 (size_t offset, int &into) const
+size_t string::binget32 (size_t offset, signed int &into) const
 {
 	if ((offset+4) > size) return 0;
 	into = ((data->v[offs+offset] & 0xff) << 24) |
@@ -2042,7 +2042,7 @@ size_t string::binget32u (size_t offset, unsigned int &into) const
 // ========================================================================
 // METHOD ::binget64
 // ========================================================================
-size_t string::binget64 (size_t offset, long long &into) const
+size_t string::binget64 (size_t offset, signed long long &into) const
 {
 	if (offset+8 > size) return 0;
 	into = ((long long)(data->v[offs+offset] & 0xff) << 56) |
@@ -2187,6 +2187,7 @@ size_t string::bingetieee (size_t offset, double &dat) const
 	dat = grace::ntohd (net);
 	return offset+8;
 }
+
 
 // ========================================================================
 // METHOD ::binputvstr
