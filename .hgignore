@@ -19,11 +19,13 @@ doxygen.warnings
 __.SYMDEF SORTED
 Makefile.depend.bak
 version.id.*
-src/libgrace/version.cpp
 
 syntax: regexp
 ^include/matrixssl/
-^debian/libgrace
-^.*-stamp
-^src/grace-
+^debian/libgrace.*/
+^debian/libgrace.*(.substvars|.debhelper|.debhelper.log)$
+^debian/tmp*/
 ^debian/files$
+^src/libgrace/version.cpp
+^src/grace-configure/mkconfigure$
+

@@ -45,8 +45,8 @@ if [ -e ../../lib/libdbfile.dylib ]; then
 else
   cp ../../lib/libdbfile.so "$path_lib/libdbfile.so.1.0"
   cp ../../lib/libdbfile.a "$path_lib/libdbfile.a"
-  ln -s "$path_lib/libdbfile.so.1.0" "$path_lib/libdbfile.so.1"
-  ln -s "$path_lib/libdbfile.so.1" "$path_lib/libdbfile.so"
+  ln -s "./libdbfile.so.1.0" "$path_lib/libdbfile.so.1"
+  ln -s "./libdbfile.so.1" "$path_lib/libdbfile.so"
 fi
 
 cp ../../include/dbfile/*.h "$path_include/dbfile/"
