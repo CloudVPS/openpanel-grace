@@ -28,6 +28,7 @@ Description: The grace library
 Package: libgrace-dev
 Section: libdevel
 Architecture: any
+Conflicts: libgrace (<< 1.0)
 Depends: libgrace1.0, ${misc:Depends}
 Description: The grace library (development files)
  C++ has gotten a bad rep and attracted a lot of haters. Still, the language is 
@@ -47,6 +48,7 @@ Description: The grace library - dbm and db support
 
 Package: libgrace-dbfile-dev
 Section: libdevel
+Conflicts: libgrace-dbfile (<< 1.0)
 Architecture: any
 Depends: libgrace-dev, libgrace-dbfile1.0, libdb4.6-dev, libgdbm-dev, ${misc:Depends}
 Description: The grace library - dbm and db support (Development files)
@@ -62,6 +64,7 @@ Description: The grace library - advanced regular expession support
 
 Package: libgrace-pcre-dev
 Section: libdevel
+Conflicts: libgrace-pcre (<< 1.0)
 Architecture: any
 Depends: libgrace-dev, libgrace-pcre1.0, libpcre3-dev, ${misc:Depends}
 Description: The grace library - advanced regular expession support (Development files)
@@ -77,6 +80,7 @@ Description: The grace library - database support
 
 Package: libgrace-querido-dev
 Section: libdevel
+Conflicts: libgrace-querido (<< 1.0)
 Architecture: any
 Depends: libgrace-querido1.0, libgrace-dev, libsqlite3-dev, ${misc:Depends}
 Description: The grace library - database support (development files)
@@ -92,6 +96,7 @@ Description: The grace library - SSL support
 Package: libgrace-ssl-dev
 Section: libdevel
 Architecture: any
+Conflicts: libgrace-ssl (<< 1.0)
 Depends: libgrace-ssl1.0, libgrace-dev, ${misc:Depends}
 Description: The grace library - SSL support (development files)
  This package adds support for SSL to the grace library.
