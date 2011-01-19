@@ -15,6 +15,13 @@
 // ========================================================================
 unsigned int checksum (const char *str)
 {
+#if __arm__
+	// FIXME: Ugly, ugly, ugly hack...
+	// somehow, the checkum or its consumers are incorrect on ARM. For now,
+	// just enforce collisions for EVERY hash
+	return 0;
+#else
+	
 	if (! str) return 0;
 	
 	const unsigned int m = 0x7fd652ad;
@@ -46,6 +53,7 @@ unsigned int checksum (const char *str)
 	h ^= h >> 17;
 
 	return h;	
+#endif
 }
 
 const unsigned char obox64[64] = {2,47,54,7,10,37,34,15,6,43,38,9,24,41,8,
