@@ -6,7 +6,7 @@ all: pcre.exe
 	mkapp pcre
 
 pcre.exe: $(OBJ)
-	$(CXX) $(LDFLAGS) -o pcre.exe $(OBJ) ../../lib/libgrace-pcre.a ../../lib/libgrace.a  $(LIBS)
+	$(CXX) $(LDFLAGS) -o pcre.exe $(OBJ) -ldl -lcrypt ../../lib/libgrace-pcre.a ../../lib/libgrace.a  $(LIBS)
 
 clean:
 	rm -f *.o *.exe
