@@ -636,24 +636,47 @@ void tcplistener::listento (ipaddress addr, int port)
 		tcpdomain = true;
 		tcpdomainport = port;
 		
-		struct sockaddr_in6	 remote;
+		struct sockaddr_storage remote;
+		struct sockaddr_in6& remotev6 = *(sockaddr_in6*)&remote;
+		struct sockaddr_in&  remotev4 = *(sockaddr_in*)&remote;
 		struct in6_addr		 bindaddr;
 		struct hostent 		*myhostent;
 		int					 pram = 1;
 	
 		memset (&remote, 0, sizeof (remote));
-		remote.sin6_family = AF_INET6;
+		
 		if (!addr)
 		{
-			remote.sin6_addr = in6addr_any;
+			remotev6.sin6_family = AF_INET6;
+			remotev6.sin6_addr = in6addr_any;
+			remotev6.sin6_port = htons (port);
+				
+			sock = socket (AF_INET6, SOCK_STREAM, 0);
+			
+			if( sock < 0 && errno == EAFNOSUPPORT )
+			{
+				remotev4.sin_family = AF_INET;
+				remotev4.sin_addr.s_addr = INADDR_ANY;
+				remotev4.sin_port = htons (port);
+				
+				sock = socket (AF_INET, SOCK_STREAM, 0);						
+			}
 		}
-		else
+		else if( addr.isv4() )
 		{
-			remote.sin6_addr = addr;
+			remotev4.sin_family = AF_INET;
+			remotev4.sin_addr = addr;
+			remotev4.sin_port = htons (port);
+				
+			sock = socket (AF_INET, SOCK_STREAM, 0);			
 		}
-		remote.sin6_port = htons (port);
+		else 
+		{
+			remotev6.sin6_family = AF_INET6;
+			remotev6.sin6_addr = addr;
+			remotev6.sin6_port = htons (port);
+		}
 		
-		sock = socket (AF_INET6, SOCK_STREAM, 0);
 		if (sock < 0)
 		{
 			throw socketCreateException();
