@@ -18,8 +18,24 @@ unsigned int checksum (const char *str)
 #if __arm__
 	// FIXME: Ugly, ugly, ugly hack...
 	// somehow, the checkum or its consumers are incorrect on ARM. For now,
-	// just enforce collisions for EVERY hash
-	return 0;
+	// use a different hash on ARM
+
+	if (!str || !*str) return 0;
+
+	unsigned int result = *str;
+	unsigned int shift = 0;
+
+	while( *(++str) )
+	{
+		unsigned int c = *str;
+		int s = result % 31;
+	
+		result ^= (s << s);
+		result ^= (s << (s-32) );
+	}
+
+	return result;
+
 #else
 	
 	if (! str) return 0;
