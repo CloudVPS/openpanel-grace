@@ -681,6 +681,15 @@ readagain:
 		else
 		{
 			feof = true;
+			if (sz == 0 && buffer.backlog())
+			{
+				if (buffer.backlog() > maxlinesize)
+				{
+					return buffer.read (maxlinesize);
+				}
+				return buffer.read (buffer.backlog());
+			}
+			feof = true;
 			err = errortext::file::brokenpipe;
 			return NULL;
 		}
