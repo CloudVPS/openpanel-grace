@@ -689,7 +689,6 @@ readagain:
 				}
 				return buffer.read (buffer.backlog());
 			}
-			feof = true;
 			err = errortext::file::brokenpipe;
 			return NULL;
 		}

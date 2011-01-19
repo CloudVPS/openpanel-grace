@@ -360,10 +360,12 @@ public:
 	bool				operator== (const class value &) const;
 	bool				operator!= (const class value &) const;
 						
-	inline bool			operator!= (const statstring &str) const
-						{
-							if (key() == str.key()) return false;
-							if (id() == str.id()) return false;
+    inline bool         operator!= (const statstring &str) const
+                        {
+                            if ((key() == str.key()) && (id() == str.id()))
+                            {
+                            	return false;
+                            }
 							return true;
 						}
 						
