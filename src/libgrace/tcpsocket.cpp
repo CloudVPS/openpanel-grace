@@ -139,8 +139,14 @@ bool tcpsocket::connect (const string &host, int port)
 
 bool tcpsocket::connect (ipaddress addr, int port)
 {
-	sockaddr_in6	 remote;
-	sockaddr_in6	 local;
+	sockaddr_storage remote;
+	sockaddr_in6 &remotev6 = *(sockaddr_in6*)&remote;
+	sockaddr_in  &remotev4 = *(sockaddr_in *)&remote;
+
+	sockaddr_storage local;
+	sockaddr_in6 &localv6 = *(sockaddr_in6*)&local;
+	sockaddr_in  &localv4 = *(sockaddr_in *)&local;
+	
 	in6_addr		 bindaddr;
 	int				 pram = 1;
 	
@@ -155,15 +161,39 @@ bool tcpsocket::connect (ipaddress addr, int port)
 		return false;
 	}
 	
-	filno = socket (PF_INET6, SOCK_STREAM, 0);
+	memset (&remote, 0, sizeof (remote));
+	memset (&local, 0, sizeof (local));
+		
+	if( addr.isv4() )
+	{
+		filno = socket (AF_INET6, SOCK_STREAM, 0);	
+		
+		if (filno < 0 && errno == EAFNOSUPPORT )
+		{
+			filno = socket (AF_INET, SOCK_STREAM, 0);	
+			remotev4.sin_family = AF_INET;
+			remotev4.sin_addr = addr;
+			remotev4.sin_port = htons (port);
+		}		
+		else
+		{
+			remotev6.sin6_family = AF_INET6;
+			remotev6.sin6_addr = addr;
+			remotev6.sin6_port = htons (port);			
+		}		
+	}
+	else 
+	{
+		remotev6.sin6_family = AF_INET6;
+		remotev6.sin6_addr = addr;
+		remotev6.sin6_port = htons (port);
+		filno = socket (PF_INET6, SOCK_STREAM, 0);
+	}
+	
 	if (filno >= 0)
 	{
 		setsockopt (filno, SOL_SOCKET, SO_KEEPALIVE,
 					(char *) &pram, sizeof (int));
-					
-		remote.sin6_family = AF_INET6;
-		remote.sin6_port   = htons (port);
-		remote.sin6_addr   = addr;
 		
 		peer_addr = addr;
 		peer_port = port;
@@ -171,9 +201,19 @@ bool tcpsocket::connect (ipaddress addr, int port)
 		// If an address to bind is set.. first bind 
 		if( localbindaddr )
 		{
-			local.sin6_family = AF_INET6;
-			local.sin6_port = 0;
-			local.sin6_addr = localbindaddr;
+			if( localbindaddr.isv4() )
+			{
+				localv4.sin_family = AF_INET;
+				localv4.sin_port = 0;
+				localv4.sin_addr = localbindaddr;
+			}
+			else
+			{
+				localv6.sin6_family = AF_INET6;
+				localv6.sin6_port = 0;
+				localv6.sin6_addr = localbindaddr;
+			}
+			
 				  
 			::bind( filno, (struct sockaddr *)&local, sizeof(local) );
 		}
