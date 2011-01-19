@@ -47,6 +47,8 @@ int httpApp::main (void)
 	string public_default;
 	string restr_local;
 	string restr_default;
+	string ctype_text;
+	value rhdr;
 
 	public_local = hs.get ("http://localhost:4269/public.dat");
 	if (! public_local.strlen ())
@@ -60,6 +62,13 @@ int httpApp::main (void)
 		ferr.printf ("FAIL public default\n");
 		return 2;
 	}
+	ctype_text = hs.get ("http://127.0.0.1:4269/contenttypetest.html",rhdr);
+	if (rhdr["Content-type"] != "text/html")
+	{
+		ferr.printf ("FAIL content-type\n");
+		return 2;
+	}
+	
 	restr_local = hs.get ("http://localhost:4269/restricted.dat");
 	if (hs.status == 200)
 	{
