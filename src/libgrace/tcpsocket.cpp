@@ -139,13 +139,10 @@ bool tcpsocket::connect (const string &host, int port)
 
 bool tcpsocket::connect (ipaddress addr, int port)
 {
-	sockaddr_storage remote;
-	sockaddr_in6 &remotev6 = *(sockaddr_in6*)&remote;
-	sockaddr_in  &remotev4 = *(sockaddr_in *)&remote;
-
-	sockaddr_storage local;
-	sockaddr_in6 &localv6 = *(sockaddr_in6*)&local;
-	sockaddr_in  &localv4 = *(sockaddr_in *)&local;
+	sockaddr_in6 remotev6;
+	sockaddr_in remotev4;
+	sockaddr_in6 localv6;
+	sockaddr_in localv4;
 	
 	in6_addr		 bindaddr;
 	int				 pram = 1;
@@ -161,8 +158,11 @@ bool tcpsocket::connect (ipaddress addr, int port)
 		return false;
 	}
 	
-	memset (&remote, 0, sizeof (remote));
-	memset (&local, 0, sizeof (local));
+	memset (&remotev6, 0, sizeof (remotev6));
+	memset (&remotev4, 0, sizeof (remotev4));
+	memset (&localv6, 0, sizeof (localv6));
+	memset (&localv4, 0, sizeof (localv4));
+	bool usev4 = false;
 		
 	if( addr.isv4() )
 	{
@@ -174,6 +174,7 @@ bool tcpsocket::connect (ipaddress addr, int port)
 			remotev4.sin_family = AF_INET;
 			remotev4.sin_addr = addr;
 			remotev4.sin_port = htons (port);
+			usev4 = true;
 		}		
 		else
 		{
@@ -206,20 +207,29 @@ bool tcpsocket::connect (ipaddress addr, int port)
 				localv4.sin_family = AF_INET;
 				localv4.sin_port = 0;
 				localv4.sin_addr = localbindaddr;
+				::bind( filno, (struct sockaddr *)&localv4, sizeof(localv4) );
 			}
 			else
 			{
 				localv6.sin6_family = AF_INET6;
 				localv6.sin6_port = 0;
 				localv6.sin6_addr = localbindaddr;
+				::bind( filno, (struct sockaddr *)&localv6, sizeof(localv6) );
 			}
-			
-				  
-			::bind( filno, (struct sockaddr *)&local, sizeof(local) );
+		}
+
+		int r;
+		
+		if (usev4)
+		{
+			r = ::connect (filno, (const sockaddr *) &remotev4, sizeof(remotev4));
+		}
+		else
+		{
+			r = ::connect (filno, (const sockaddr *) &remotev6, sizeof(remotev6));
 		}
 			
-		if (::connect (filno, (const sockaddr *) &remote,
-					   sizeof (remote)) != 0)
+		if (r != 0)
 		{
 			::close (filno);
 			filno = -1;
@@ -676,14 +686,15 @@ void tcplistener::listento (ipaddress addr, int port)
 		tcpdomain = true;
 		tcpdomainport = port;
 		
-		struct sockaddr_storage remote;
-		struct sockaddr_in6& remotev6 = *(sockaddr_in6*)&remote;
-		struct sockaddr_in&  remotev4 = *(sockaddr_in*)&remote;
+		struct sockaddr_in6 remotev6;
+		struct sockaddr_in  remotev4;
 		struct in6_addr		 bindaddr;
 		struct hostent 		*myhostent;
 		int					 pram = 1;
+		bool usev4 = false;
 	
-		memset (&remote, 0, sizeof (remote));
+		memset (&remotev4, 0, sizeof (remotev4));
+		memset (&remotev6, 0, sizeof (remotev6));
 		
 		if (!addr)
 		{
@@ -699,7 +710,8 @@ void tcplistener::listento (ipaddress addr, int port)
 				remotev4.sin_addr.s_addr = INADDR_ANY;
 				remotev4.sin_port = htons (port);
 				
-				sock = socket (AF_INET, SOCK_STREAM, 0);						
+				sock = socket (AF_INET, SOCK_STREAM, 0);
+				usev4 = true;
 			}
 		}
 		else if( addr.isv4() )
@@ -708,17 +720,20 @@ void tcplistener::listento (ipaddress addr, int port)
 			remotev4.sin_addr = addr;
 			remotev4.sin_port = htons (port);
 				
-			sock = socket (AF_INET, SOCK_STREAM, 0);			
+			sock = socket (AF_INET, SOCK_STREAM, 0);	
+			usev4 = true;
 		}
 		else 
 		{
 			remotev6.sin6_family = AF_INET6;
 			remotev6.sin6_addr = addr;
 			remotev6.sin6_port = htons (port);
+			sock = socket (AF_INET6, SOCK_STREAM, 0);	
 		}
 		
 		if (sock < 0)
 		{
+			::printf ("sock <0\n");
 			throw socketCreateException();
 		}
 		
@@ -730,10 +745,22 @@ void tcplistener::listento (ipaddress addr, int port)
 					sizeof (int));
 	#endif
 	
-		if (bind (sock, (struct sockaddr *) &remote, sizeof (remote)) < 0)
+		
+		if (usev4)
 		{
-			close (sock);
-			throw socketCreateException();
+			if (bind (sock, (struct sockaddr *) &remotev4, sizeof (remotev4)) < 0)
+			{
+				close (sock);
+				throw socketCreateException();
+			}
+		}
+		else
+		{
+			if (bind (sock, (struct sockaddr *) &remotev6, sizeof (remotev6)) < 0)
+			{
+				close (sock);
+				throw socketCreateException();
+			}
 		}
 		
 		if ( listen (sock, tune::tcplistener::backlog) < 0 )
