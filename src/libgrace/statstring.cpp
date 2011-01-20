@@ -108,7 +108,7 @@ void stringrefdb::rmref (stringref *ref)
 void stringrefdb::unref (stringref *ref)
 {
 	if (! root) return;
-	exclusivesection (treelock)
+	exclusiveaccess (treelock)
 	{
 		ref->refcnt--;
 		
@@ -142,7 +142,7 @@ void stringrefdb::unref (stringref *ref)
 // ========================================================================
 void stringrefdb::cpref (stringref *ref)
 {
-	exclusivesection (treelock) ref->refcnt++;
+	exclusiveaccess (treelock) ref->refcnt++;
 }
 
 // ========================================================================
@@ -223,7 +223,7 @@ stringref *stringrefdb::getref (const char *str, unsigned int key)
 	size_t slen = ::strlen (str);
 	
 	// Need write-lock because we'll add stuff if there's no match.
-	exclusivesection (treelock)
+	exclusiveaccess (treelock)
 	{
 		crsr = root;
 		oldcrsr = root;

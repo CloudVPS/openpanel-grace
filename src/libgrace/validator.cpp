@@ -189,8 +189,6 @@ bool validator::matchOr (const value &obj, const value &def, string &error)
 bool validator::matchMandatory (const value &obj, const value &def,
 								string &error)
 {
-	int i;
-	int j;
 	string action;
 	string matchtype;
 	string matchid;

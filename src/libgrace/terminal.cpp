@@ -87,7 +87,7 @@ unsigned int _calcunipos (const char *buf, unsigned int ucrsr)
 	while (buf[res] && (pos < ucrsr))
 	{
 		res++;
-		while (buf[res] & 0xc0 == 0x80) res++;
+		while ((buf[res] & 0xc0) == 0x80) res++;
 		pos++;
 	}
 	
@@ -218,7 +218,7 @@ void termbuffer::del (void)
 		memmove (buffer+crsr, buffer+crsr+1, len-(crsr+1));
 		len--;
 		buffer[len] = 0;
-	} while ((crsr < len) && (buffer[crsr] & 0xc0 == 0x80));
+	} while ((crsr < len) && ((buffer[crsr] & 0xc0) == 0x80));
 }
 
 // ==========================================================================
@@ -240,7 +240,7 @@ void termbuffer::crleft (void)
 	{
 		if (crsr > prompt.strlen()) crsr--;
 		else return;
-	} while (crsr && (buffer[crsr-1] & 0xc0 == 0x80));
+	} while (crsr && ((buffer[crsr-1] & 0xc0) == 0x80));
 	
 	unsigned int rcrsr = _calcutfpos (buffer, crsr);
 	unsigned int rwcrsr = _calcutfpos (buffer, wcrsr);
@@ -271,7 +271,7 @@ void termbuffer::crright (void)
 			tputc (7); // beep
 			return;
 		}
-	} while (buffer[crsr] & 0xc0 == 0x80);
+	} while ((buffer[crsr] & 0xc0) == 0x80);
 	
 	advance();
 }

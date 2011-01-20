@@ -185,7 +185,6 @@ bool value::readshox (stringdict &sdict, size_t &offs, const string &shox)
 	}
 	else // No children, read data member.
 	{
-		int pival;
 		unsigned char ucval;
 		unsigned int vunsigned;
 		int vint;

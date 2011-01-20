@@ -109,7 +109,16 @@ void daemon::daemonize (bool delayedexit)
 	int backpipe[2]; // Comms channel for delayedexit.
 	int i; // Counter
 
-	if (delayedexit) pipe (backpipe);
+	if (delayedexit)
+	{
+		int result = pipe (backpipe);
+		
+		if (result == -1)
+		{
+			ferr.printf ("Daemonize: Couldn't create pipe");
+			exit (1);
+		}
+	}
 	
 	switch (fork())
 	{

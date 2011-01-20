@@ -55,6 +55,8 @@ int tcpsocketApp::testconnect( tcplistener& ls, const ipaddress& addr, string ta
 	}
 	outs.close();
 	ins.close();
+	
+	return 0;
 }
 
 int tcpsocketApp::main (void)

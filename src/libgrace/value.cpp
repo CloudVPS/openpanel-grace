@@ -569,6 +569,7 @@ value &value::operator= (string *str)
 	s = str;
 	_itype = i_string;
 	if (_type == t_unset || isbuiltin (_type)) _type = t_string;
+	return *this;
 }
 
 value &value::operator= (const statstring &str)
@@ -1490,7 +1491,7 @@ value &value::newval (dtenum typ)
 // ========================================================================
 value &value::insertval (int atpos, dtenum typ)
 {
-	if (ucount > atpos)
+	if (ucount > (size_t)atpos)
 	{
 		++arraysz;
 		alloc (arraysz);
@@ -1803,21 +1804,25 @@ value *value::copyright (int pcnt) const
 // ========================================================================
 value *value::splice (int _pos, int _count) const
 {
-	int pos = _pos;
-	if (pos < 0) pos += arraysz;
-	if (pos < 0) pos = arraysz;
-	else if (pos > arraysz) pos = arraysz;
+	if (_pos < 0) _pos += arraysz;
+	if (_pos < 0) _pos = arraysz;
 	
-	int count = _count;
-	if (count < 0) count = arraysz - pos;
-	if (count < 0) count = 0;
+	size_t pos = _pos;
 	
-	if (! count) return NULL;
-	int endpos = pos+count;
+	if (pos > arraysz) pos = arraysz;
+	
+	if (_count < 0) _count = arraysz - pos;
+	if (_count < 0) _count = 0;
+
+	if (! _count) return NULL;
+	
+	size_t count = _count;
+
+	size_t endpos = pos+count;
 	if (endpos > arraysz) endpos = arraysz;
 	
 	returnclass (value) res retain;
-	for (int i=pos; i<endpos; ++i)
+	for (size_t i=pos; i<endpos; ++i)
 	{
 		if (array[i]->id())
 		{

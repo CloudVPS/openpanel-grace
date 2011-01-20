@@ -52,7 +52,7 @@ struct hostent *__grace_internal_gethostbyname (const char *name)
 	struct hostent *reply;
 	struct hostent *result = NULL;
 	
-	exclusivesection (lck)
+	exclusiveaccess (lck)
 	{
 		reply = ::gethostbyname (name);
 		if (reply)
@@ -144,7 +144,6 @@ bool tcpsocket::connect (ipaddress addr, int port)
 	sockaddr_in6 localv6;
 	sockaddr_in localv4;
 	
-	in6_addr		 bindaddr;
 	int				 pram = 1;
 	
 	if (! addr) return false;
@@ -501,8 +500,6 @@ file *tcpsocket::getfd (void)
 	int fd;
 	char buf[16];
 	unsigned bufsiz = 8;
-	void *addr;
-	socklen_t *alen;
 	file *res = new file;
 	
 	int z;
@@ -688,8 +685,6 @@ void tcplistener::listento (ipaddress addr, int port)
 		
 		struct sockaddr_in6 remotev6;
 		struct sockaddr_in  remotev4;
-		struct in6_addr		 bindaddr;
-		struct hostent 		*myhostent;
 		int					 pram = 1;
 		bool usev4 = false;
 	
@@ -943,6 +938,7 @@ tcpsocket *tcplistener::tryaccept (double timeout)
 	}
 	
 	struct sockaddr_storage	peer;
+	
 	socklen_t anint = sizeof (peer);
 	getpeername (s, (struct sockaddr *) &peer, &anint);
 
@@ -950,19 +946,19 @@ tcpsocket *tcplistener::tryaccept (double timeout)
 				sizeof (int));	
 	
 	tcpsocket *myfil = new tcpsocket;
-	(*myfil).openread (s);
+	myfil->openread (s);
 	
 	if( peer.ss_family == AF_INET )
 	{
 		sockaddr_in* peer_in = (sockaddr_in*)&peer;
-		(*myfil).peer_addr = ipaddress( peer_in->sin_addr );
-		(*myfil).peer_port = ntohs (peer_in->sin_port);
+		myfil->peer_addr = ipaddress( peer_in->sin_addr );
+		myfil->peer_port = ntohs (peer_in->sin_port);
 	}
 	else if( peer.ss_family == AF_INET6 )
 	{
 		sockaddr_in6* peer_in6 = (sockaddr_in6*)&peer;
-		(*myfil).peer_addr = ipaddress( peer_in6->sin6_addr );
-		(*myfil).peer_port = ntohs (peer_in6->sin6_port);
+		myfil->peer_addr = ipaddress( peer_in6->sin6_addr );
+		myfil->peer_port = ntohs (peer_in6->sin6_port);
 	}
 	
 	(*myfil).peer_name = ipaddress::ip2str ( (*myfil).peer_addr );

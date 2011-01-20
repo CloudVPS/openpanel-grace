@@ -45,7 +45,7 @@ public:
 	{
 		perthreadnode<kind> *c, *nc;
 		
-		exclusivesection (lck)
+		exclusiveaccess (lck)
 		{
 			c = first;
 			while (c)
@@ -65,7 +65,7 @@ public:
 		pthread_t me = pthread_self();
 		
 		// First let's see if we already have a copy.
-		sharedsection (lck)
+		exclusiveaccess (lck)
 		{
 			perthreadnode<kind> *c = first;
 			while (c)
@@ -85,7 +85,7 @@ public:
 		// create a new object) would be prone to race-conditions if
 		// we were adding anything other than a bit of data that is
 		// uniquely bound to the calling thread.
-		exclusivesection (lck)
+		exclusiveaccess (lck)
 		{
 			c->thr = me;
 			c->next = NULL;

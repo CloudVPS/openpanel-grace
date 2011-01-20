@@ -317,7 +317,7 @@ mainloop:
 						}
 						line = line.decode64();
 						
-						for (int i=0; i<line.strlen(); ++i)
+						for (size_t i=0; i<line.strlen(); ++i)
 						{
 							if (line[i] == '\0') ++wpos;
 							else

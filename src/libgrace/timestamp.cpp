@@ -223,7 +223,6 @@ const string &timestamp::format (const string &formatstr) const
 	if (stset && (stformat == formatstr)) return stval;
 	
 	string fstr = formatstr;
-	bool addtz = false;
 	if (formatstr.strstr ("%z") >= 0)
 	{
 		string tstr = fstr.cutat ("%z");
@@ -449,9 +448,7 @@ void timestamp::rfc822 (const string &timestr)
 		tmval.tm_min = ::atoi (tim+3);
 		tmval.tm_sec = ::atoi (tim+6);
 	}
-	
-	int off;
-	
+		
 	if (splt[5].sval().strlen() > 4)
 	{
 		bool negative = false;

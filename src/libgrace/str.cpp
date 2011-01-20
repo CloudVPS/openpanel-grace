@@ -60,7 +60,7 @@ namespace grace
 
 // Handy macro to round up a size for allocating a buffer to multiples of
 // 16 for numbers <256 or multiples of 256 in other cases.
-#define GROW(n) ( (n<256) ? 16 + (n-(n&15)) : 256 + (n-(n&255)) )
+#define GROW(n) ( ((n)<256) ? 16 + ((n)-((n)&15)) : 256 + ((n)-((n)&255)) )
 
 // Conversion table for printing hexadecimal numbers
 const char __HEXTAB[] = "0123456789abcdef";
@@ -1150,7 +1150,7 @@ unsigned int string::utf8pos (int i) const
 		crsr = size-1;
 		while (crsr && ii)
 		{
-			if (data->v[offs+crsr] & 0xc0 != 0x80) ii++;
+			if ((data->v[offs+crsr] & 0xc0) != 0x80) ii++;
 			crsr--;
 		}
 		return crsr;
@@ -1159,7 +1159,7 @@ unsigned int string::utf8pos (int i) const
 	crsr = 0;
 	while ((crsr<size) && ii)
 	{
-		if (data->v[offs+crsr] & 0xc0 != 0x80) ii--;
+		if ((data->v[offs+crsr] & 0xc0) != 0x80) ii--;
 		crsr++;
 	}
 	return crsr;

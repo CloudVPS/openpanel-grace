@@ -60,8 +60,8 @@ bool lockbase::trylockr (int secs)
 	struct timespec ts;
 	ts.tv_sec = secs + ::time (NULL);
 	ts.tv_nsec = 0;
-	int res;
-	if (res = pthread_rwlock_timedrdlock (rwlock, &ts))
+	int res = pthread_rwlock_timedrdlock (rwlock, &ts);
+	if (res)
 	{
 		if (res == ETIMEDOUT)
 			return false;

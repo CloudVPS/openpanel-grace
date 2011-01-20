@@ -344,7 +344,7 @@ public:
 	value				&operator= (double d);
 
 	void				operator= (void*) 
-	{ void __CANNOT_ASSIGN_GRACE_VALUE_FROM_POINTER(); __CANNOT_ASSIGN_GRACE_VALUE_FROM_POINTER; }
+	{ void __CANNOT_ASSIGN_GRACE_VALUE_FROM_POINTER(); __CANNOT_ASSIGN_GRACE_VALUE_FROM_POINTER(); }
 
 
 	value				&operator<< (value *v);

@@ -71,13 +71,13 @@ public:
 	ipaddress           &operator= (const struct in6_addr&a);
 						 
 						 /// Cast-o-matic operator to socket structs
-						 operator const struct in_addr& (void) const;
-						 operator const struct in6_addr& (void) const;
+						 operator const struct in_addr (void) const;
+						 operator const struct in6_addr (void) const;
 
 
 						 operator bool () const
 						 {
-						 	for (int i=0; i<sizeof(addr); i++)
+						 	for (size_t i=0; i<sizeof(addr); i++)
 						 	{
 						 		if( addr[i] ) return true;
 						 	}
@@ -86,7 +86,7 @@ public:
 
 						 operator bool ()
 						 {
-						 	for (int i=0; i<sizeof(addr); i++)
+						 	for (size_t i=0; i<sizeof(addr); i++)
 						 	{
 						 		if( addr[i] ) return true;
 						 	}

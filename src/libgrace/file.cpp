@@ -270,7 +270,17 @@ void file::close (void)
 		string dat;
 		codec->addclose();
 		codec->peekoutput (dat);
-		write (filno, dat.str(), dat.strlen());
+		int result = write (filno, dat.str(), dat.strlen());
+		if (result == -1)
+		{
+			// assume a temporary hickup
+			result = write (filno, dat.str() + result, dat.strlen() - result);
+			
+			if (result == -1)
+			{
+				// ignore
+			}
+		}
 	}
 	if (filno>=0) ::close (filno);
 	filno = -1;
@@ -683,7 +693,7 @@ readagain:
 			feof = true;
 			if (sz == 0 && buffer.backlog())
 			{
-				if (buffer.backlog() > maxlinesize)
+				if (buffer.backlog() > (size_t)maxlinesize)
 				{
 					return buffer.read (maxlinesize);
 				}

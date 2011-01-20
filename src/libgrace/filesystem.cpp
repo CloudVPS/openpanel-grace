@@ -51,7 +51,7 @@ filesystem::filesystem (void)
 	
 	_groupcnt = getgroups (0, NULL);
 	_groups = new gid_t[_groupcnt+1];
-	getgroups (_groupcnt, _groups);
+	_groupcnt = getgroups (_groupcnt, _groups);
 	_groups[_groupcnt++] = getgid();
 	
 	while (environ[c])

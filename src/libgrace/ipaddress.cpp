@@ -53,7 +53,6 @@ bool ipaddress::ip2str (const unsigned char* c, string& into)
 	
 	if( ipaddr->isv4() )
 	{
-		string *s = new string;
 		into.printf ("%i.%i.%i.%i", 
 			c[12], c[13], c[14], c[15] );
 	}
@@ -137,14 +136,18 @@ ipaddress& ipaddress::operator= (const struct in6_addr& address)
 }
 
 
-ipaddress::operator const struct in_addr& (void) const
+ipaddress::operator const struct in_addr (void) const
 {
-	return (const in_addr&)addr[12];
+	in_addr result;
+	memcpy( &result, addr+12, sizeof(result) );
+	return result;
 }
 
-ipaddress::operator const struct in6_addr& (void) const
+ipaddress::operator const struct in6_addr (void) const
 {
-	return (const in6_addr&)addr[0];
+	in6_addr result;
+	memcpy( &result, addr, sizeof(result) );
+	return result;
 }
 
 ipaddress &ipaddress::operator= (const string &s)
@@ -181,22 +184,25 @@ bool ipaddress::operator== (const value &o) const
 
 ipaddress& ipaddress::operator&=(const ipaddress& other)
 {
-    for( int i=0; i<sizeof(addr); i+= sizeof(unsigned int) )
+    for( size_t i=0; i<sizeof(addr); i+= sizeof(unsigned int) )
     {
         unsigned int* a = (unsigned int*)&addr[i];
         const unsigned int* b = (const unsigned int*)&other.addr[i];
         *a &= *b;
     }
+    
+    return *this;
 }
 
 ipaddress& ipaddress::operator|=(const ipaddress& other)
 {
-    for( int i=0; i<sizeof(addr); i+= sizeof(unsigned int) )
+    for( size_t i=0; i<sizeof(addr); i+= sizeof(unsigned int) )
     {
         unsigned int* a = (unsigned int*)&addr[i];
         const unsigned int* b = (const unsigned int*)&other.addr[i];
         *a |= *b;
     }
+    return *this;
 }
 
 

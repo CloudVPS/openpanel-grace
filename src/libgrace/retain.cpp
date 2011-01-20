@@ -271,12 +271,12 @@ namespace memory
 	
 	void pool::dumpmem (block *b, size_t sz, FILE *finto)
 	{
-		int i,j;
+		size_t j;
 		
-		for (i=0; i<sz; i+=8)
+		for (size_t i=0; i<sz; i+=8)
 		{
 			fprintf (finto, "        ");
-			for (j=0;(j<8)&&((i+j)<sz);++j)
+			for (j=0; (j<8)&&((i+j)<sz); ++j)
 			{
 				fprintf (finto, "%02x ", b->dt[i+j]);
 			}

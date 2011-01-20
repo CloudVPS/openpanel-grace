@@ -286,7 +286,7 @@ bool value::fromjson (const string &code)
 	int pos = 0;
 	while (isspace (code[pos])) pos++;
 
-	decodejson (code.cval() + pos);	
+	return decodejson (code.cval() + pos) != NULL;
 }
 
 // ==========================================================================

@@ -317,7 +317,7 @@ public:
         }
     }
 
-    bool shouldrelock()
+    void shouldrelock()
     {
         relocktarget = true;
     }

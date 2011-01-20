@@ -122,7 +122,7 @@ public:
 			struct passwd *p;
 			value *res = NULL;
 			
-			exclusivesection (pwdbSpinLock)
+			exclusiveaccess (pwdbSpinLock)
 			{
 				p = ::getpwnam (s.str());
 				if (! p)
@@ -152,7 +152,7 @@ public:
 			string uids;
 			uids.printf ("%u", uid);
 			
-			exclusivesection (pwdbSpinLock)
+			exclusiveaccess (pwdbSpinLock)
 			{
 				p = ::getpwuid (uid);
 				if (! p) 
@@ -170,7 +170,7 @@ public:
 			struct group *p;
 			value *res = NULL;
 			
-			exclusivesection (pwdbSpinLock)
+			exclusiveaccess (pwdbSpinLock)
 			{
 				p = ::getgrnam (s.cval());
 				if (! p)
@@ -191,7 +191,7 @@ public:
 			string gids;
 			gids.printf ("%u", gid);
 			
-			exclusivesection (pwdbSpinLock)
+			exclusiveaccess (pwdbSpinLock)
 			{
 				p = ::getgrgid (gid);
 				if (! p)

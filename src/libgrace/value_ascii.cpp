@@ -217,7 +217,6 @@ void value::decode (string &f)
 	value tmp;
 	int i;
 	bool mnenomic = false;
-    bool named = true;
 	string mn;
 	
 	while (f.strlen() && (f.strchr('\n')>=0))
