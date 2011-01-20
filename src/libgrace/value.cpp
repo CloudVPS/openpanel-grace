@@ -1489,9 +1489,9 @@ value &value::newval (dtenum typ)
 // ========================================================================
 // METHOD ::insertval
 // ========================================================================
-value &value::insertval (int atpos, dtenum typ)
+value &value::insertval (unsigned int atpos, dtenum typ)
 {
-	if (ucount > (size_t)atpos)
+	if (ucount > atpos)
 	{
 		++arraysz;
 		alloc (arraysz);

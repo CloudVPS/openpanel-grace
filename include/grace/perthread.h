@@ -65,7 +65,7 @@ public:
 		pthread_t me = pthread_self();
 		
 		// First let's see if we already have a copy.
-		exclusiveaccess (lck)
+		sharedaccess (lck)
 		{
 			perthreadnode<kind> *c = first;
 			while (c)
