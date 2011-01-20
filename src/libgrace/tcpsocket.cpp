@@ -166,11 +166,11 @@ bool tcpsocket::connect (ipaddress addr, int port)
 		
 	if( addr.isv4() )
 	{
-		filno = socket (AF_INET6, SOCK_STREAM, 0);	
+		filno = socket (PF_INET6, SOCK_STREAM, 0);	
 		
 		if (filno < 0 && errno == EAFNOSUPPORT )
 		{
-			filno = socket (AF_INET, SOCK_STREAM, 0);	
+			filno = socket (PF_INET, SOCK_STREAM, 0);	
 			remotev4.sin_family = AF_INET;
 			remotev4.sin_addr = addr;
 			remotev4.sin_port = htons (port);
@@ -702,7 +702,7 @@ void tcplistener::listento (ipaddress addr, int port)
 			remotev6.sin6_addr = in6addr_any;
 			remotev6.sin6_port = htons (port);
 				
-			sock = socket (AF_INET6, SOCK_STREAM, 0);
+			sock = socket (PF_INET6, SOCK_STREAM, 0);
 			
 			if( sock < 0 && errno == EAFNOSUPPORT )
 			{
@@ -710,7 +710,7 @@ void tcplistener::listento (ipaddress addr, int port)
 				remotev4.sin_addr.s_addr = INADDR_ANY;
 				remotev4.sin_port = htons (port);
 				
-				sock = socket (AF_INET, SOCK_STREAM, 0);
+				sock = socket (PF_INET, SOCK_STREAM, 0);
 				usev4 = true;
 			}
 		}
@@ -720,7 +720,7 @@ void tcplistener::listento (ipaddress addr, int port)
 			remotev4.sin_addr = addr;
 			remotev4.sin_port = htons (port);
 				
-			sock = socket (AF_INET, SOCK_STREAM, 0);	
+			sock = socket (PF_INET, SOCK_STREAM, 0);	
 			usev4 = true;
 		}
 		else 
@@ -728,7 +728,7 @@ void tcplistener::listento (ipaddress addr, int port)
 			remotev6.sin6_family = AF_INET6;
 			remotev6.sin6_addr = addr;
 			remotev6.sin6_port = htons (port);
-			sock = socket (AF_INET6, SOCK_STREAM, 0);	
+			sock = socket (PF_INET6, SOCK_STREAM, 0);	
 		}
 		
 		if (sock < 0)
@@ -813,7 +813,7 @@ void tcplistener::listento (const string &path)
 		strncpy (remote.sun_path, realpath.str(), 107);
 		remote.sun_path[107] = 0;
 		
-		sock = socket (AF_UNIX, SOCK_STREAM, 0);
+		sock = socket (PF_UNIX, SOCK_STREAM, 0);
 		if (sock < 0)
 		{
 			throw socketCreateException();
