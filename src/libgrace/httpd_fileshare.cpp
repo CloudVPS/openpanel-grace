@@ -342,20 +342,30 @@ int httpdfileshare::run (string &uri, string &postbody,
 			return -304;
 		}
 	}
-	
+
 	int maxage = (tnow.unixtime() - tmodif.unixtime()) / 2;
 	if (maxage < 60) maxage = 60;
 	
 	timestamp texp = tnow.unixtime () + maxage;
+
+	string gzpath = realpath;
+	gzpath += ".gz";
 	
-	s.puts ("HTTP/1.1 200 OK\r\n"
+	if ( fs.exists (gzpath) && 
+		inhdr.exists ("Accept-Encoding") && 
+		inhdr["Accept-Encoding"].sval().strstr("gzip") != -1 )
+	{
+		
+		outsz = fs.size (gzpath);
+		s.puts ("HTTP/1.1 200 OK\r\n"
 			"Connection: %s\r\n"
-			"Content-type: %s\r\n"
-			"Cache-control: max-age=%i\r\n"
+			"Content-Type: %s\r\n"
+			"Cache-Control: max-age=%i\r\n"
 			"Date: %s\r\n"
 			"Last-Modified: %s\r\n"
 			"Expires: %s\r\n"
-			"Content-length: %i\r\n\r\n"
+			"Content-Encoding: gzip\r\n"
+			"Content-Length: %i\r\n\r\n"
 			%format (keepalive ? "keepalive" : "close",
 					 mimetype,
 					 maxage,
@@ -363,8 +373,29 @@ int httpdfileshare::run (string &uri, string &postbody,
 					 smodif,
 					 texp.format (HTTP_F),
 					 outsz));
+					 
+		s.sendfile (gzpath, outsz);
+	}
+	else 
+	{
+		s.puts ("HTTP/1.1 200 OK\r\n"
+				"Connection: %s\r\n"
+				"Content-Type: %s\r\n"
+				"Cache-Control: max-age=%i\r\n"
+				"Date: %s\r\n"
+				"Last-Modified: %s\r\n"
+				"Expires: %s\r\n"
+				"Content-Length: %i\r\n\r\n"
+				%format (keepalive ? "keepalive" : "close",
+						 mimetype,
+						 maxage,
+						 tnow.format (HTTP_F),
+						 smodif,
+						 texp.format (HTTP_F),
+						 outsz));
 
-	s.sendfile (realpath, outsz);
+		s.sendfile (realpath, outsz);
+	}
 	env["sentbytes"] = outsz;
 	return -200;
 }
