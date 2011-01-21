@@ -923,7 +923,7 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 	
 	if( timeout_ms )
 	{
-		if ((ssz == 0) && (errno==EAGAIN) && (select (filno+1, &fds, NULL, NULL, &tv) > 0) )
+		if ((ssz <= 0) && (errno==EAGAIN) && (select (filno+1, &fds, NULL, NULL, &tv) > 0) )
 		{
 			ssz = ::read (filno, buf, rsz < sizeof(buf) ? rsz : sizeof(buf) );
 		}
