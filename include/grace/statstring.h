@@ -28,12 +28,12 @@
 /// the bookkeeping.
 struct stringref
 {
-	stringref			*parent; ///< Link to parent node in the hash tree.
-	stringref			*lower, *higher; ///< Link to siblings in the hash tree.
-	unsigned int		 key; ///< This string's hash key.
-	unsigned short		 id; ///< This stringref's unique id.
-	unsigned short		 refcnt; ///< Reference count.
-	string				 str; ///< Actual string data.
+	stringref					*parent; ///< Link to parent node in the hash tree.
+	stringref					*lower, *higher; ///< Link to siblings in the hash tree.
+	unsigned int				 key; ///< This string's hash key.
+	unsigned short				 id; ///< This stringref's unique id.
+	volatile unsigned short		 refcnt; ///< Reference count.
+	string						 str; ///< Actual string data.
 };
 
 #endif
