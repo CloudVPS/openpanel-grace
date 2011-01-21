@@ -561,7 +561,7 @@ tcpsocket *ssllistener::accept (void)
 				numrounds++;
 				if (numrounds > 16)
 				{
-					result->close;
+					result->close();
 					delete result;
 					result = NULL;
 				}
