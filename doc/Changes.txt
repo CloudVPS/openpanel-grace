@@ -1,5 +1,25 @@
 0.9.39                                               <grace@openpanel.com>
 
+           * Added IPv6 support to ipaddress and all necessary classes that
+             use this (tcpsocket, netdb, etc).
+             
+           * Changed fs.load() to throw an exception when the requested
+             file could not be loaded.
+             
+           * Added SSL server support to libgrace-ssl.
+           
+           * Fixed file::gets() for allowing the last line in a file
+             without a newline.
+             
+           * In httpd_fileshare, if the client accepts gzip-encoding and
+             a file is requested that also exists with a .gz extension,
+             the gzipped version will be served.
+
+           * Added decoding support for msgpack to value.
+           
+           * Improved the robustness of the storage for shared references
+             to immutable strings used by statstring.
+
 0.9.38     Thu Nov 25 2010                           <grace@openpanel.com>
 
            * Fix daemon class to be compatible with daemon startups being
