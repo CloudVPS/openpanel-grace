@@ -929,7 +929,7 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 		}
 	}
 	
-	if (ssz >= 0)
+	if (ssz > 0)
 	{
 		try
 		{
@@ -956,7 +956,7 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 		}
 		return ssz;
 	}
-	else if (ssz < 0)
+	else if (ssz <= 0)
 	{
 		if (errno != EAGAIN) feof = true;
 	}
