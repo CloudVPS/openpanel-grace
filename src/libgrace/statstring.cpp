@@ -118,9 +118,12 @@ void stringrefdb::rmref (stringref *ref)
 void stringrefdb::unref (stringref *ref)
 {
 	if (! root) return;
-	exclusiveaccess (treelock)
+	treelock.lockw();
 	{
-		ref->refcnt--;
+		assert (ref->refcnt > 0);
+		unsigned short x = ref->refcnt;
+		x--;
+		ref->refcnt = x;
 		
 		if (ref->parent && (ref->refcnt == 0))
 		{
@@ -152,6 +155,7 @@ void stringrefdb::unref (stringref *ref)
 			}
 		}
 	}
+	treelock.unlock();
 }
 
 // ========================================================================
@@ -161,7 +165,13 @@ void stringrefdb::unref (stringref *ref)
 // ========================================================================
 void stringrefdb::cpref (stringref *ref)
 {
-	exclusiveaccess (treelock) ref->refcnt++;
+	treelock.lockw();
+	{
+		unsigned short x = ref->refcnt;
+		x++;
+		ref->refcnt = x;
+	}
+	treelock.unlock();
 }
 
 // ========================================================================
@@ -251,7 +261,7 @@ stringref *stringrefdb::getref (const char *str, unsigned int key)
 	size_t slen = ::strlen (str);
 	
 	// Need write-lock because we'll add stuff if there's no match.
-	exclusiveaccess (treelock)
+	treelock.lockw();
 	{
 		crsr = root;
 		oldcrsr = root;
@@ -265,19 +275,19 @@ stringref *stringrefdb::getref (const char *str, unsigned int key)
 				if ((crsr->str.strlen() == slen) &&
 					(::strcmp (crsr->str.str(), str) == 0))
 				{
-					crsr->refcnt++;
-					cnt = crsr->refcnt;
-					breaksection
+					unsigned short x = crsr->refcnt;
+					x++;
+					crsr->refcnt = x;
+					cnt = x;
+					if (cnt == 1)
 					{
-						if (cnt == 1)
+						exclusivesection (dirtycount)
 						{
-							exclusivesection (dirtycount)
-							{
-								dirtycount -= crsr->str.strlen();
-							}
+							dirtycount -= crsr->str.strlen();
 						}
-						return crsr;
 					}
+					treelock.unlock();
+					return crsr;
 				}
 				else crsr = crsr->lower;
 			}
@@ -298,6 +308,7 @@ stringref *stringrefdb::getref (const char *str, unsigned int key)
 		if (oldcrsr->key < key) oldcrsr->higher = crsr;
 		else oldcrsr->lower = crsr;
 	}
+	treelock.unlock();
 	return crsr;
 }
 
