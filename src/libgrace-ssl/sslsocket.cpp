@@ -558,7 +558,13 @@ tcpsocket *ssllistener::accept (void)
 			{
 				try
 				{
-					result->readbuffer( 128, 0 );
+					result->readbuffer( 128, 100 );
+					if (result->eof())
+					{
+						result->close;
+						delete result;
+						return NULL;
+					}
 					result->flush();
 				}
 				catch (...)
@@ -592,7 +598,13 @@ tcpsocket *ssllistener::tryaccept(double timeout)
 		{
 			try
 			{
-				result->readbuffer( 128, 0 );
+				result->readbuffer( 128, 100 );
+				if (result->eof())
+				{
+					result->close;
+					delete result;
+					return NULL;
+				}
 				result->flush();
 			}
 			catch (...)
