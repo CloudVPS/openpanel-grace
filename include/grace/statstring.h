@@ -30,8 +30,8 @@ struct stringref
 {
 	stringref					*parent; ///< Link to parent node in the hash tree.
 	stringref					*lower, *higher; ///< Link to siblings in the hash tree.
-	unsigned int				 key; ///< This string's hash key.
-	unsigned short				 id; ///< This stringref's unique id.
+	volatile unsigned int		 key; ///< This string's hash key.
+	volatile unsigned short		 id; ///< This stringref's unique id.
 	volatile unsigned short		 refcnt; ///< Reference count.
 	string						 str; ///< Actual string data.
 };
@@ -57,6 +57,7 @@ public:
 							 {
 							 	root = newref();
 							 	root->key = 0x80000000;
+							 	nukeroot = NULL;
 							 	sequence = 0;
 							 	dirtycount.o = 0;
 							 	cleanups = 0;
@@ -114,6 +115,7 @@ public:
 							 
 protected:
 	stringref				*root; ///< Root node of the database.
+	stringref				*nukeroot; ///< Root node of deleted entries
 	unsigned short			 sequence; ///< Current sequence number.
 	lock<int>				 treelock; ///< Lock for the database.
 	

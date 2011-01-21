@@ -10,6 +10,7 @@
 // ========================================================================
 #include <grace/statstring.h>
 #include <grace/thread.h>
+#include <assert.h>
 
 statstring nokey;
 
@@ -96,7 +97,16 @@ void stringrefdb::rmref (stringref *ref)
 {
 	if (ref->lower) rmref (ref->lower);
 	if (ref->higher) rmref (ref->higher);
-	delete ref;
+	
+	ref->lower = NULL;
+	ref->higher = NULL;
+	stringref *r = nukeroot;
+	if (! r) nukeroot = ref;
+	else
+	{
+		while (r->lower) r = r->lower;
+		r->lower = ref;
+	}
 }
 
 // ========================================================================
@@ -124,11 +134,20 @@ void stringrefdb::unref (stringref *ref)
 				if ((dirtycount > 65536) || (sz && (dirtycount <= oldcount)))
 				{
 					dirtycount = 0;
-					breaksection
+					if (nukeroot)
 					{
-						reap (root);
-						cleanups++;
+						stringref *nx;
+						stringref *x = nukeroot;
+						while (x)
+						{
+							nx = x->lower;
+							delete x;
+							x = nx;
+						}
+						nukeroot = NULL;
 					}
+					reap (root);
+					cleanups++;
 				}
 			}
 		}
@@ -154,7 +173,7 @@ void stringrefdb::reap (stringref *ref)
 {
 	stringref *lower = ref->lower;
 	stringref *higher = ref->higher;
-	
+
 	if ( (ref->parent) && (ref->refcnt == 0) )
 	{
 		if (ref->parent->lower == ref)
@@ -180,7 +199,16 @@ void stringrefdb::reap (stringref *ref)
 		
 		ref->lower = NULL;
 		ref->higher = NULL;
-		delete ref;
+		stringref *r = nukeroot;
+		if (! r) nukeroot = ref;
+		else
+		{
+			while (r->lower)
+			{
+				r = r->lower;
+			}
+			r->lower = ref;
+		}
 	}
 	if (lower) reap (lower);
 	if (higher) reap (higher);
@@ -346,6 +374,7 @@ void statstring::assign (const string &str)
 {
 	if (ref)
 	{
+		assert (ref->refcnt != 0);
 		STRINGREF().unref (ref);
 		ref = NULL;
 	}
@@ -357,6 +386,7 @@ void statstring::assign (const char *str)
 {
 	if (ref)
 	{
+		assert (ref->refcnt != 0);
 		STRINGREF().unref (ref);
 		ref = NULL;
 	}
@@ -368,6 +398,7 @@ void statstring::assign (string *str)
 {
 	if (ref)
 	{
+		assert (ref->refcnt != 0);
 		STRINGREF().unref (ref);
 		ref = NULL;
 	}
@@ -385,6 +416,7 @@ void statstring::assign (const statstring &str)
 {
 	if (ref)
 	{
+		assert (ref->refcnt != 0);
 		STRINGREF().unref (ref);
 	}
 	
@@ -403,6 +435,7 @@ void statstring::assign (statstring *str)
 {
 	if (ref)
 	{
+		assert (ref->refcnt != 0);
 		STRINGREF().unref (ref);
 	}
 	
@@ -427,6 +460,7 @@ void statstring::assign (const char *str, unsigned int k)
 	}
 	if (ref)
 	{
+		assert (ref->refcnt != 0);
 		STRINGREF().unref (ref);
 		ref = NULL;
 	}
@@ -438,6 +472,7 @@ void statstring::assign (unsigned int k)
 {
 	if (ref)
 	{
+		assert (ref->refcnt != 0);
 		STRINGREF().unref (ref);
 		ref = NULL;
 	}
@@ -469,7 +504,11 @@ void statstring::init (bool first)
 	if (first) ref = NULL;
 	else
 	{
-		if (ref) STRINGREF().unref (ref);
+		if (ref)
+		{
+			assert (ref->refcnt != 0);
+			STRINGREF().unref (ref);
+		}
 		ref = NULL;
 	}
 }
