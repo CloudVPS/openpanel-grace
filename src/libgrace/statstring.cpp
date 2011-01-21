@@ -121,7 +121,7 @@ void stringrefdb::unref (stringref *ref)
 	treelock.lockw();
 	{
 		assert (ref->refcnt > 0);
-		unsigned short x = ref->refcnt;
+		unsigned int x = ref->refcnt;
 		x--;
 		ref->refcnt = x;
 		
@@ -167,7 +167,7 @@ void stringrefdb::cpref (stringref *ref)
 {
 	treelock.lockw();
 	{
-		unsigned short x = ref->refcnt;
+		unsigned int x = ref->refcnt;
 		x++;
 		ref->refcnt = x;
 	}
@@ -257,7 +257,7 @@ stringref *stringrefdb::getref (const char *str, unsigned int key)
 	
 	stringref *crsr;
 	stringref *oldcrsr;
-	unsigned short cnt;
+	unsigned int cnt;
 	size_t slen = ::strlen (str);
 	
 	// Need write-lock because we'll add stuff if there's no match.
@@ -275,7 +275,7 @@ stringref *stringrefdb::getref (const char *str, unsigned int key)
 				if ((crsr->str.strlen() == slen) &&
 					(::strcmp (crsr->str.str(), str) == 0))
 				{
-					unsigned short x = crsr->refcnt;
+					unsigned int x = crsr->refcnt;
 					x++;
 					crsr->refcnt = x;
 					cnt = x;

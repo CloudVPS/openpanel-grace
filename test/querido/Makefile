@@ -6,7 +6,7 @@ all: querido.exe
 	mkapp querido
 
 querido.exe: $(OBJ) ../../lib/libquerido.a  ../../lib/libgrace.a
-	$(CXX) $(LDFLAGS) -lpthread -ldl -lcrypt -o querido.exe $(OBJ) ../../lib/libquerido.a  ../../lib/libgrace.a $(LIBS)
+	$(CXX) $(LDFLAGS) -lpthread -o querido.exe $(OBJ) ../../lib/libquerido.a  ../../lib/libgrace.a $(LIBS)
 
 clean:
 	rm -f *.o *.exe
