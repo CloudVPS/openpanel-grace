@@ -561,7 +561,7 @@ tcpsocket *ssllistener::accept (void)
 					result->readbuffer( 128, 100 );
 					if (result->eof())
 					{
-						result->close;
+						result->close();
 						delete result;
 						return NULL;
 					}
@@ -601,7 +601,7 @@ tcpsocket *ssllistener::tryaccept(double timeout)
 				result->readbuffer( 128, 100 );
 				if (result->eof())
 				{
-					result->close;
+					result->close();
 					delete result;
 					return NULL;
 				}
