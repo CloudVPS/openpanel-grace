@@ -554,16 +554,25 @@ tcpsocket *ssllistener::accept (void)
 			codec->refcnt=1;
 			codec->setup();
 			
+			int numrounds = 0;
+			
 			while (!codec->handshakedone )
 			{
+				numrounds++;
+				if (numrounds > 16)
+				{
+					result->close;
+					delete result;
+					result = NULL;
+				}
 				try
 				{
-					result->readbuffer( 128, 100 );
+					result->readbuffer( 128, 500 );
 					if (result->eof())
 					{
 						result->close();
 						delete result;
-						return NULL;
+						result = NULL;
 					}
 					result->flush();
 				}
@@ -594,8 +603,17 @@ tcpsocket *ssllistener::tryaccept(double timeout)
 		codec->refcnt=1;
 		codec->setup();
 		
+		int numrounds = 0;
+		
 		while (!codec->handshakedone )
 		{
+			numrounds++;
+			if (numrounds > 8)
+			{
+				result->close();
+				delete result;
+				return NULL;
+			}
 			try
 			{
 				result->readbuffer( 128, 100 );
