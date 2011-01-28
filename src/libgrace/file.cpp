@@ -411,32 +411,35 @@ bool file::puts (const char *str, size_t sz)
 	
 	if (codec)
 	{
-	
-		//::printf ("codec called\n");
-		if (codec->addoutput (str, sz))
+		size_t inszleft = sz;
+		while (inszleft > 0)
 		{
-			int sz;
-			
-			string dat;
-			codec->peekoutput(dat);
-			szleft = dat.strlen();
-			//::printf ("2.szleft=%i\n", szleft);
-			while (szleft>0)
+			//::printf ("codec called\n");
+			if (codec->addoutput (str, (inszleft > 4096 ? 4096 : inszleft)))
 			{
-				sz = write (filno, dat.str() + szdone, szleft);
-				if (sz<=0)
+				int sz;
+				inszleft -= (inszleft > 4096 ? 4096 : inszleft);
+				
+				string dat;
+				codec->peekoutput(dat);
+				szleft = dat.strlen();
+				//::printf ("2.szleft=%i\n", szleft);
+				while (szleft>0)
 				{
-					feof = true;
-					return false;
+					sz = write (filno, dat.str() + szdone, szleft);
+					if (sz<=0)
+					{
+						feof = true;
+						return false;
+					}
+					szdone += sz;
+					szleft -= sz;
 				}
-				szdone += sz;
-				szleft -= sz;
+				codec->doneoutput (szdone);
 			}
-			codec->doneoutput (szdone);
-			return true;
+			else return false;
 		}
-		//::printf ("addoutput failed %s\n", codec->error().str());
-		return false;
+		return true;
 	}
 
 	while (szleft)
