@@ -281,7 +281,7 @@ bool naturalSort (value *l, value *r, const string &opt)
 			{
 				// Skip over them
 				while (isspace (leftChar = leftString[++lpos]));
-				while (isspace (rightChar == rightString[++rpos]));
+				while (isspace (rightChar = rightString[++rpos]));
 				
 				// Do the length evaluation thingy
 				if (lpos == leftLength)
