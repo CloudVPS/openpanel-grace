@@ -17,29 +17,29 @@ extern bool __system_timezone_set;
 
 
 
-timeofday::timeofday( void )
+timeofday::timeofday (void)
 {
-	init();
+	init ();
 }
 
 
 
-timeofday::timeofday( const timeofday &orig )
+timeofday::timeofday (const timeofday &orig)
 {
-	copy( orig );
+	copy (orig);
 }
 
 
 
-timeofday::timeofday( timeofday *orig )
+timeofday::timeofday (timeofday *orig)
 {
-	copy( *orig );
-	delete( orig );
+	copy (*orig);
+	delete (orig);
 }
 
 
 
-timeofday::timeofday( timeval orig)
+timeofday::timeofday (timeval orig)
 {
 	Tval.tv_sec 	= orig.tv_sec;
 	Tval.tv_usec	= orig.tv_usec;
@@ -47,20 +47,19 @@ timeofday::timeofday( timeval orig)
 
 
 
-void timeofday::setTime( int 	stSeconds,
+void timeofday::setTime (int 	stSeconds,
 						 int 	stMinutes,
 						 int 	stHours,
 						 int 	stDay,
 						 eMonth stMonth,
-						 int 	stYear
-					   )
+						 int 	stYear)
 {
 	time_t	t;				// new timestamp
 	struct 	tm tm_time;		// The given time struct
 	
 	// This function will set altzone which is the differnce between UTC and
 	// our local time.
-	tzset();
+	tzset ();
 	
 	tm_time.tm_sec	=	stSeconds;
 	tm_time.tm_min	=	stMinutes;
@@ -73,11 +72,11 @@ void timeofday::setTime( int 	stSeconds,
 	
 
 	// Create new time
-	t = mktime( &tm_time );
+	t = mktime (&tm_time);
 
 	// Change the object it's timestamp,
 	// after this you can use this new time on onother 
-	// time object, by example: waitUntil( const timeofday & )...
+	// time object, by example: waitUntil (const timeofday &)...
 	// 
 	// t = prefered time
 	// tv_usec will be default 0... no u_secs given 
@@ -95,7 +94,7 @@ void timeofday::setTime( int 	stSeconds,
 // will be updated every 10s when waiting. 
 // DON'T USE THIS FUNCTION WHEN YOU USE THIS OBJECT 
 // as a TIMESTAMP 
-void timeofday::waitUntil( const timeofday &destTime )
+void timeofday::waitUntil (const timeofday &destTime)
 {
 	// Remaining time
 	timeofday	TRemain;
@@ -107,36 +106,36 @@ void timeofday::waitUntil( const timeofday &destTime )
 
 	// First initialize the current time
 	
-	this->init();
+	this->init ();
 	
-	while( true )
+	while (true)
 	{
 		// If the current time is greater than the given time
 		// we should not wait anymore
-		if( *this >= destTime )
+		if (*this >= destTime)
 		{
 			return;
 		}
 			
 		TRemain 	= destTime - *this;
-		usecRemain 	= TRemain.getusec();
+		usecRemain 	= TRemain.getusec ();
 		
 		// Sleep 10s or The last miliseconds
-		if( usecRemain > 10000000LL ) {
-			__musleep( 10000LL ); 
+		if (usecRemain > 10000000LL) {
+			__musleep (10000LL); 
 		} else {
-			__musleep( TRemain.getusec() / 1000LL );
+			__musleep (TRemain.getusec () / 1000LL);
 			return;
 		};
 			
-		this->init();
+		this->init ();
 	}
 }
 
 
-void timeofday::init()
+void timeofday::init (void)
 {
-	gettimeofday( &Tval, NULL );
+	gettimeofday (&Tval, NULL);
 	
 	// Get timezone information
 	if (! __system_timezone_set)
@@ -144,7 +143,7 @@ void timeofday::init()
 		struct tm tmp;
 		time_t ti;
 		
-		ti = core.time.now();
+		ti = core.time.now ();
 		localtime_r (&ti, &tmp);
 #ifdef HAVE_GMTOFF
 		__system_local_timezone = tmp.tm_gmtoff;

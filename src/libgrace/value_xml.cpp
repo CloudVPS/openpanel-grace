@@ -344,16 +344,16 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 					{
 						if (schema->isimplicitarray (tagtype))
 						{
-							newcrsr = &( (*crsr)[impid].newval() );
+							newcrsr = &((*crsr)[impid].newval());
 						}
 						else
 						{
-							newcrsr= &( (*crsr)[impid] );
+							newcrsr= &((*crsr)[impid]);
 						}
 					}
 					else
 					{
-						newcrsr = &( (*crsr).newval() );
+						newcrsr = &((*crsr).newval());
 					}
 					
 					newcrsr->_type = tagtype;
@@ -438,14 +438,14 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 						
 						if (containerhasid)
 						{
-							newcrsr = &( (*crsr)[containerid] );
+							newcrsr = &((*crsr)[containerid]);
 						}
 						else
 						{
 							if ( (! schema->iswrap (tagtype)) ||
-								 (! (insidecontainer || insidecontainervalue)))
+								 (!(insidecontainer || insidecontainervalue)))
 							{
-								newcrsr = &( (*crsr).newval() );
+								newcrsr = &((*crsr).newval());
 							}
 							else
 							{
@@ -501,7 +501,7 @@ bool value::fromxml (const string &xml, xmlschema *schema, string *err)
 					}
 					else if ((!ignorethis) && tag.properties.exists(__id__))
 					{
-						newcrsr = &( (*crsr)[tag.properties[__id__].sval()] );
+						newcrsr = &((*crsr)[tag.properties[__id__].sval()]);
 						newcrsr->_type = tagtype;
 					}
 					else if (! ignorethis)
@@ -902,8 +902,8 @@ void value::printxml (int indent, string &out, bool compact,
 		
 		// If the outer type is a container, we need to perform
 		// some special work here.
-		if ( ((indent<0) && schema->iscontainerclass (rtype)) ||
-		     (schema->iswrapcontainer (rtype)) )
+		if (((indent<0) && schema->iscontainerclass (rtype)) ||
+		     (schema->iswrapcontainer (rtype)))
 		{
 			statstring containeridclass;
 			wascontainer = true;
@@ -927,7 +927,7 @@ void value::printxml (int indent, string &out, bool compact,
 				foreach (attr, (*attrib))
 				{
 					sn = attr.label();
-					if ( (!rid) || (sn != __id__) ) // we already covered the index
+					if ((!rid) || (sn != __id__)) // we already covered the index
 					{
 						if (schema->containerhasattribute (rtype,
 								attr.id()))
@@ -1153,7 +1153,7 @@ void value::printxml (int indent, string &out, bool compact,
 			if (hadattr && schema->containerhasattribute (containerclass, sn))
 				continue;
 
-			if ( (!rid) || (sn != __id__) ) // we already covered the index
+			if ((!rid) || (sn != __id__)) // we already covered the index
 			{
 				if (attr.count() > 1) // multiple attributes?
 				{
@@ -1176,12 +1176,12 @@ void value::printxml (int indent, string &out, bool compact,
 	
 	// if the value is empty and there are no children, the story ends here
 	
-	if ( (! arraysz) &&
-	     ( (_itype != i_unsigned) && (_itype != i_int) &&
+	if ((! arraysz) &&
+	     ((_itype != i_unsigned) && (_itype != i_int) &&
 	       (_itype != i_long) && (_itype != i_ulong) &&
 	       (_itype != i_double) && 
 	       (_itype != i_bool) && (_itype != i_currency) &&
-	       (! sval().strlen()) ) )
+	       (! sval().strlen())))
 	{
 		out.printf ("/>%s", _VEOL);
 		if (wascontainer)

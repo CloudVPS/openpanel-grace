@@ -108,7 +108,7 @@ ipaddress netdb::resolve (const string &name, bool v4, bool v6)
 			else if (crsr->ai_addr->sa_family == AF_INET6)
 			{
 				struct sockaddr_in6 *sa_in = (struct sockaddr_in6 *) crsr->ai_addr;
-				ipaddress result = ipaddress( sa_in->sin6_addr );
+				ipaddress result = ipaddress (sa_in->sin6_addr );
 				freeaddrinfo (ainf); 
 				return result;
 			}
@@ -198,7 +198,7 @@ value *netdb::converthostentry (struct hostent *he)
 		for (int i=0; he->h_addr_list[i]; ++i)
 		{
 			struct in_addr *sin = ((struct in_addr *)he->h_addr_list[i]);
-			res["address"].newval() = ipaddress( *sin ) ;
+			res["address"].newval() = ipaddress(*sin) ;
 		}
 	}
 	else if (he->h_addrtype == AF_INET6) // h_addr == h_addr_list[0];
@@ -206,7 +206,7 @@ value *netdb::converthostentry (struct hostent *he)
 		for (int i=0; he->h_addr_list[i]; ++i)
 		{
 			struct in6_addr *sin = ((struct in6_addr *)he->h_addr_list[i]);
-			res["address"].newval() = ipaddress( *sin ) ;
+			res["address"].newval() = ipaddress(*sin) ;
 		}
 	}
 	

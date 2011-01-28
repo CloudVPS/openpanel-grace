@@ -317,13 +317,13 @@ string *ringbuffer::readline (void)
 // ========================================================================
 void ringbuffer::copy (ringbuffer &orig)
 {
-	if( orig.backlog() > count )
+	if (orig.backlog() > count)
 	{
 		init( orig.backlog() );
 	}
-	else if ( !buffer && orig.backlog() )
+	else if (!buffer && orig.backlog())
 	{
-		init( count );
+		init (count);
 	}
 	
 	readcursor = 0;
@@ -334,12 +334,12 @@ void ringbuffer::copy (ringbuffer &orig)
 	
 	if ( rsz > toend )
 	{
-		memcpy( buffer, orig.buffer + orig.readcursor, (size_t) toend );
-		memcpy( buffer, orig.buffer , (size_t) (rsz - toend) );
+		memcpy (buffer, orig.buffer + orig.readcursor, (size_t) toend);
+		memcpy (buffer, orig.buffer , (size_t) (rsz - toend));
 	}
 	else if (rsz)
 	{
-		memcpy( buffer, orig.buffer + orig.readcursor,rsz );
+		memcpy (buffer, orig.buffer + orig.readcursor,rsz);
 	}
 }
 

@@ -25,7 +25,7 @@ unsigned int checksum (const char *str)
 	unsigned int result = *str;
 	unsigned int shift = 0;
 
-	while( *(++str) )
+	while (*(++str))
 	{
 		unsigned int c = *str;
 		int s = result % 31;

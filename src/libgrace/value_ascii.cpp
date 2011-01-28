@@ -76,7 +76,7 @@ void value::load (file &f)
 			if (ln)
 			{
 				for (i=0; (ln[i]==' ')||(ln[i]=='\t'); ++i);
-				ln = ln.mid(i);
+				ln = ln.mid (i);
 			}
 			
 			// Split up the line
@@ -120,7 +120,7 @@ void value::load (file &f)
 				else
 				{
 					treestack.push (crsr);
-					crsr = crsr->findchild(tmp[0]);
+					crsr = crsr->findchild (tmp[0]);
 				}
 			}
 			
@@ -147,8 +147,8 @@ void value::load (file &f)
 				// Using this macro we can use the named boolean to determine
 				// whether to update a named child node or an unnamed one
 				// that has to be created with newval().
-				#define CCHILD (named ? (*(crsr->findchild(tmp[0].cval()))) : \
-							    mnenomic ? (*(crsr->findchild(resid (mn.str()), NULL))) : \
+				#define CCHILD (named ? (*(crsr->findchild (tmp[0].cval()))) : \
+							    mnenomic ? (*(crsr->findchild (resid (mn.str()), NULL))) : \
 								crsr->newval())
 				
 				// Check for unnamed condition
@@ -179,7 +179,7 @@ void value::load (file &f)
 				else
 				{
 					// A decimal point is a sure giveaway
-					if (dst.strchr('.') >= 0)
+					if (dst.strchr ('.') >= 0)
 					{
 						CCHILD = tmp[2].dval();
 					}

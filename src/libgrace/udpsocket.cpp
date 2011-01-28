@@ -21,7 +21,7 @@ udpsocket::udpsocket (void)
 {
 	boundport = 0;
 	sock = socket (AF_INET6, SOCK_DGRAM, 0);
-	if (sock<0) throw (udpSocketException());
+	if (sock<0) throw (udpSocketException ());
 }
 
 // ==========================================================================
@@ -59,11 +59,11 @@ bool udpsocket::bind (int port)
 		socklen_t slen = sizeof (boundaddr);
 		if (! getsockname (sock, (struct sockaddr *) &boundaddr, &slen))
 		{
-		    if( boundaddr.ss_family == AF_INET )
+		    if (boundaddr.ss_family == AF_INET)
 		    {
 		        boundport = ((sockaddr_in*)&boundaddr)->sin_port;
 		    }
-            else if( boundaddr.ss_family == AF_INET6 )
+            else if (boundaddr.ss_family == AF_INET6)
             {
 		        boundport = ((sockaddr_in6*)&boundaddr)->sin6_port;
 		    }
@@ -105,12 +105,18 @@ bool udpsocket::bind (ipaddress addr, int port)
 		socklen_t slen = sizeof (boundaddr);
 		if (! getsockname (sock, (struct sockaddr *) &boundaddr, &slen))
 		{
-		    if( boundaddr.ss_family == AF_INET )
+		    if (boundaddr.ss_family == AF_INET)
+		    {
 		        boundport = ((sockaddr_in*)&boundaddr)->sin_port;
-            else if( boundaddr.ss_family == AF_INET6 )
+		    }
+            else if (boundaddr.ss_family == AF_INET6)
+            {
 		        boundport = ((sockaddr_in6*)&boundaddr)->sin6_port;
+		    }
             else
-                boundport = 0;
+            {
+            	boundport = 0;
+            }
 		}
 		else
 		{
@@ -140,7 +146,7 @@ bool udpsocket::sendto (ipaddress addr, int port, const string &data)
 	remote_addr.sin6_port = htons (port);
 	remote_addr.sin6_family = AF_INET6;
 	
-	if (::sendto (sock, data.str(), data.strlen(), 0,
+	if (::sendto (sock, data.str (), data.strlen (), 0,
 				(struct sockaddr *) &remote_addr, sizeof (remote_addr)) <0)
 	{
 		return false;
@@ -197,7 +203,7 @@ string *udpsocket::receive (ipaddress &addr, int timeout_ms)
 		
 		if (select (sock+1, &fds, NULL, NULL, &tv) < 1)
 		{
-			addr = ipaddress();
+			addr = ipaddress ();
 			return &res;
 		}
 	}
@@ -215,7 +221,7 @@ string *udpsocket::receive (ipaddress &addr, int timeout_ms)
     }
     else
     {
-    	throw udpAddressFamilyException();
+    	throw udpAddressFamilyException ();
     }
 	if (sz>0) res.strcpy (buf, sz);
 	return &res;

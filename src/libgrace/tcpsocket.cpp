@@ -163,11 +163,11 @@ bool tcpsocket::connect (ipaddress addr, int port)
 	memset (&localv4, 0, sizeof (localv4));
 	bool usev4 = false;
 		
-	if( addr.isv4() )
+	if (addr.isv4())
 	{
 		filno = socket (PF_INET6, SOCK_STREAM, 0);	
 		
-		if (filno < 0 && errno == EAFNOSUPPORT )
+		if (filno < 0 && errno == EAFNOSUPPORT)
 		{
 			filno = socket (PF_INET, SOCK_STREAM, 0);	
 			remotev4.sin_family = AF_INET;
@@ -199,21 +199,21 @@ bool tcpsocket::connect (ipaddress addr, int port)
 		peer_port = port;
 
 		// If an address to bind is set.. first bind 
-		if( localbindaddr )
+		if (localbindaddr)
 		{
-			if( localbindaddr.isv4() )
+			if (localbindaddr.isv4())
 			{
 				localv4.sin_family = AF_INET;
 				localv4.sin_port = 0;
 				localv4.sin_addr = localbindaddr;
-				::bind( filno, (struct sockaddr *)&localv4, sizeof(localv4) );
+				::bind (filno, (struct sockaddr *)&localv4, sizeof(localv4));
 			}
 			else
 			{
 				localv6.sin6_family = AF_INET6;
 				localv6.sin6_port = 0;
 				localv6.sin6_addr = localbindaddr;
-				::bind( filno, (struct sockaddr *)&localv6, sizeof(localv6) );
+				::bind (filno, (struct sockaddr *)&localv6, sizeof(localv6));
 			}
 		}
 
@@ -268,7 +268,7 @@ bool tcpsocket::connect (ipaddress addr, int port)
 		
 handshakes:
 		string dt;
-		codec->peekoutput(dt);
+		codec->peekoutput (dt);
 		szleft = dt.strlen();
 		szdone = 0;
 		
@@ -321,7 +321,7 @@ handshakes:
 				catch (...)
 				{
 					errcode = FERR_CODEC;
-					err.crop(0);
+					err.crop (0);
 					err.printf (errortext::sock::codec, codec->error().str());
 					codec->reset();
 					return false;
@@ -485,7 +485,7 @@ void tcpsocket::sendfd (file &fil)
 	
 	do {
 		z = sendmsg (filno, &msgh, 0);
-	} while ( (z==-1) && (errno==EINTR) );
+	} while ((z==-1) && (errno==EINTR));
 #endif
 }
 
@@ -524,7 +524,7 @@ file *tcpsocket::getfd (void)
 	
 	do {
 		z = recvmsg (filno, &msgh, 0);
-	} while ( (z==-1)&&(errno==EINTR) );
+	} while ((z==-1)&&(errno==EINTR));
 	
 	if (z != -1)
 	{
@@ -585,7 +585,7 @@ void tcpsocket::derive (tcpsocket *s)
 	s->feof = true;
 	s->codec = 0;
 		
-	buffer.copy(s->buffer);
+	buffer.copy (s->buffer);
 	delete s;
 }
 
@@ -604,7 +604,7 @@ void tcpsocket::derive (tcpsocket &s)
 	err = s.err;
 	errcode = s.errcode;
 	ti_established = s.ti_established;
-	buffer.copy( s.buffer );
+	buffer.copy (s.buffer);
 	s.codec = 0;
 }
 
@@ -699,7 +699,7 @@ void tcplistener::listento (ipaddress addr, int port)
 				
 			sock = socket (PF_INET6, SOCK_STREAM, 0);
 			
-			if( sock < 0 && errno == EAFNOSUPPORT )
+			if (sock < 0 && errno == EAFNOSUPPORT)
 			{
 				remotev4.sin_family = AF_INET;
 				remotev4.sin_addr.s_addr = INADDR_ANY;
@@ -709,7 +709,7 @@ void tcplistener::listento (ipaddress addr, int port)
 				usev4 = true;
 			}
 		}
-		else if( addr.isv4() )
+		else if (addr.isv4())
 		{
 			remotev4.sin_family = AF_INET;
 			remotev4.sin_addr = addr;
@@ -758,7 +758,7 @@ void tcplistener::listento (ipaddress addr, int port)
 			}
 		}
 		
-		if ( listen (sock, tune::tcplistener::backlog) < 0 )
+		if (listen (sock, tune::tcplistener::backlog) < 0)
 		{
 			close (sock);
 			throw socketCreateException();
@@ -875,9 +875,9 @@ tcpsocket *tcplistener::accept (void)
 	(*myfil).openread (s);
 	if (tcpdomain)
 	{
-		(*myfil).peer_addr = ipaddress( peer.sin6_addr );
+		(*myfil).peer_addr = ipaddress(peer.sin6_addr);
 		(*myfil).peer_port = ntohs (peer.sin6_port);
-		(*myfil).peer_name = ipaddress::ip2str ( (*myfil).peer_addr );
+		(*myfil).peer_name = ipaddress::ip2str ((*myfil).peer_addr);
 	}
 	(*myfil).ti_established = core.time.now();
 	return myfil;
@@ -906,7 +906,7 @@ tcpsocket *tcplistener::tryaccept (double timeout)
 	if (timeout < 0.0) return NULL;
 	
 	tv.tv_sec = (int) timeout;
-	tv.tv_usec = (int) (10000.0 * ( timeout - ((double) tv.tv_sec)));
+	tv.tv_usec = (int) (10000.0 * (timeout - ((double) tv.tv_sec)));
 
 	int selresult;
 	unprotected (sock)
@@ -942,26 +942,25 @@ tcpsocket *tcplistener::tryaccept (double timeout)
 	socklen_t anint = sizeof (peer);
 	getpeername (s, (struct sockaddr *) &peer, &anint);
 
-	setsockopt (s, SOL_SOCKET, SO_KEEPALIVE, (char *) &pram,
-				sizeof (int));	
+	setsockopt (s, SOL_SOCKET, SO_KEEPALIVE, (char *) &pram, sizeof (int));
 	
 	tcpsocket *myfil = new tcpsocket;
 	myfil->openread (s);
 	
-	if( peer.ss_family == AF_INET )
+	if (peer.ss_family == AF_INET)
 	{
 		sockaddr_in* peer_in = (sockaddr_in*)&peer;
-		myfil->peer_addr = ipaddress( peer_in->sin_addr );
+		myfil->peer_addr = ipaddress (peer_in->sin_addr);
 		myfil->peer_port = ntohs (peer_in->sin_port);
 	}
-	else if( peer.ss_family == AF_INET6 )
+	else if (peer.ss_family == AF_INET6)
 	{
 		sockaddr_in6* peer_in6 = (sockaddr_in6*)&peer;
-		myfil->peer_addr = ipaddress( peer_in6->sin6_addr );
+		myfil->peer_addr = ipaddress (peer_in6->sin6_addr);
 		myfil->peer_port = ntohs (peer_in6->sin6_port);
 	}
 	
-	(*myfil).peer_name = ipaddress::ip2str ( (*myfil).peer_addr );
+	(*myfil).peer_name = ipaddress::ip2str ((*myfil).peer_addr);
 	(*myfil).ti_established = core.time.now();
 	return myfil;
 }

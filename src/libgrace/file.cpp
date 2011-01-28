@@ -331,8 +331,8 @@ int file::tryputs (const char *str, size_t sz, unsigned int timeout_ms)
 	if (! nonblocking)
 	{
 		int opts;
-		opts = fcntl(filno,F_GETFL);
-		fcntl(filno,F_SETFL, opts | (O_NONBLOCK));
+		opts = fcntl (filno,F_GETFL);
+		fcntl (filno,F_SETFL, opts | (O_NONBLOCK));
 		nonblocking = true;
 	}
 
@@ -401,10 +401,10 @@ bool file::puts (const char *str, size_t sz)
 	if (nonblocking)
 	{
 		int opts;
-		opts = fcntl(filno,F_GETFL);
+		opts = fcntl (filno,F_GETFL);
 		if (opts>=0)
 		{
-			fcntl(filno,F_SETFL, opts & (!O_NONBLOCK));
+			fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
 			nonblocking = false;
 		}
 	}
@@ -424,7 +424,7 @@ bool file::puts (const char *str, size_t sz)
 				inszleft -= (inszleft > 4096 ? 4096 : inszleft);
 				
 				string dat;
-				codec->peekoutput(dat);
+				codec->peekoutput (dat);
 				szleft = dat.strlen();
 				//::printf ("2.szleft=%i\n", szleft);
 				while (szleft>0)
@@ -609,7 +609,7 @@ CONTINUE:;
 	}
 	
 	va_end (ap);
-	return puts(out);
+	return puts (out);
 }
 
 // ========================================================================
@@ -642,10 +642,10 @@ string *file::gets (int maxlinesize)
 		if (wanted > buffer.room()) wanted = buffer.room();
 
 		int opts;
-		opts = fcntl(filno,F_GETFL);
+		opts = fcntl (filno,F_GETFL);
 		if (opts & O_NONBLOCK)
 		{
-			fcntl(filno,F_SETFL, opts & (!O_NONBLOCK));
+			fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
 			nonblocking = false;
 		}
 		
@@ -711,7 +711,7 @@ readagain:
 	}
 	
 	unsigned int eolpos;
-	if (buffer.hasline(eolpos))
+	if (buffer.hasline (eolpos))
 	{
 		if (eolpos >= (unsigned int) maxlinesize)
 		{
@@ -752,9 +752,9 @@ bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 		if (! nonblocking)
 		{
 			int opts;
-			opts = fcntl(filno,F_GETFL);
-				fcntl(filno,F_SETFL, opts | (O_NONBLOCK));
-				nonblocking = true;
+			opts = fcntl (filno,F_GETFL);
+			fcntl (filno,F_SETFL, opts | (O_NONBLOCK));
+			nonblocking = true;
 		}
 		
 		fd_set fds;
@@ -834,7 +834,7 @@ readmore:
 
 	unsigned int eolpos;
 
-	if (buffer.hasline(eolpos))
+	if (buffer.hasline (eolpos))
 	{
 		if (! eolpos)
 		{
@@ -909,9 +909,9 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 	if (! nonblocking)
 	{
 		int opts;
-		opts = fcntl(filno,F_GETFL);
-			fcntl(filno,F_SETFL, opts | (O_NONBLOCK));
-			nonblocking = true;
+		opts = fcntl (filno,F_GETFL);
+		fcntl(filno,F_SETFL, opts | (O_NONBLOCK));
+		nonblocking = true;
 	}
 	
 	fd_set fds;
@@ -927,7 +927,7 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 	int ssz;
 	ssz = ::read (filno, buf, rsz < sizeof(buf) ? rsz : sizeof(buf));
 	
-	if( timeout_ms )
+	if (timeout_ms)
 	{
 		if ((ssz <= 0) && (errno==EAGAIN) && (select (filno+1, &fds, NULL, NULL, &tv) > 0) )
 		{
@@ -996,10 +996,10 @@ string *file::read (size_t psz)
 	if (nonblocking)
 	{
 		int opts;
-		opts = fcntl(filno,F_GETFL);
+		opts = fcntl (filno,F_GETFL);
 		if (opts>=0)
 		{
-			fcntl(filno,F_SETFL, opts & (!O_NONBLOCK));
+			fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
 			nonblocking = false;
 		}
 	}
@@ -1042,7 +1042,7 @@ string *file::read (size_t psz)
 		}
 	}
 	
-	return buffer.read(sz);
+	return buffer.read (sz);
 }
 
 string *file::read (size_t sz, int timeout_ms)
@@ -1062,8 +1062,8 @@ string *file::read (size_t sz, int timeout_ms)
 	if (! nonblocking)
 	{
 		int opts;
-		opts = fcntl(filno,F_GETFL);
-		fcntl(filno,F_SETFL, opts | O_NONBLOCK);
+		opts = fcntl (filno,F_GETFL);
+		fcntl (filno,F_SETFL, opts | O_NONBLOCK);
 		nonblocking = true;
 	}
 	
@@ -1108,10 +1108,10 @@ string *file::read (size_t sz, int timeout_ms)
 		if (nonblocking)
 		{
 			int opts;
-			opts = fcntl(filno,F_GETFL);
+			opts = fcntl (filno,F_GETFL);
 			if (opts>=0)
 			{
-				fcntl(filno,F_SETFL, opts & (!O_NONBLOCK));
+				fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
 				nonblocking = false;
 			}
 		}
@@ -1127,8 +1127,8 @@ string *file::read (size_t sz, int timeout_ms)
 		if (! nonblocking)
 		{
 			int opts;
-			opts = fcntl(filno,F_GETFL);
-			fcntl(filno,F_SETFL, opts | O_NONBLOCK);
+			opts = fcntl (filno,F_GETFL);
+			fcntl (filno,F_SETFL, opts | O_NONBLOCK);
 			nonblocking = true;
 		}
 
