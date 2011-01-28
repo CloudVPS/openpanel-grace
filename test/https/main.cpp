@@ -2,6 +2,7 @@
 #include <grace/http.h>
 #include <grace/sslsocket.h>
 #include <grace/httpd.h>
+#include <grace/strutil.h>
 
 extern "C" void grace_init (void) { __THREADED = true; }
 
@@ -17,6 +18,27 @@ public:
 			 }
 
 	int		 main (void);
+};
+
+class BigBlob : public httpdobject
+{
+public:
+	BigBlob (httpd &s) : httpdobject (s, "*/bigblob")
+	{
+		for (int i=0; i<8192; ++i) blob.strcat (strutil::uuid());
+	}
+	~BigBlob (void) {}
+	
+	int run (string &uri, string &postbody, value &inhdr, string &out,
+			 value &outhdr, value &env, tcpsocket &s)
+	{
+		::printf ("blobbin\n");
+		//outhdr["Content-type"] = "text/x-pile-of-uuids";
+		out = blob;
+		return 200;
+	}
+	
+	string blob;
 };
 
 APPOBJECT(httpsApp);
@@ -40,10 +62,10 @@ int httpsApp::main (void)
 					srv.systempath ("docroot");
 	httpdvhost		srv_vhost (srv, hostdata);
 	httpdbasicauth	srv_auth (srv, "*/restricted.dat", "realm", pwdb);
+	BigBlob			srv_blob (srv);
 	httpdfileshare	srv_fshare (srv, "*", "docroot");
 	
 	srv.loadkeyfile("cert.pem");
-	
 	srv.start ();
 	
 	httpssocket hs;
@@ -54,6 +76,7 @@ int httpsApp::main (void)
 	string public_default;
 	string restr_local;
 	string restr_default;
+	string bigblob;
 
 	debug_out( "get https://localhost:4269/public.dat\n");
 
@@ -115,6 +138,19 @@ int httpsApp::main (void)
 	}
 	
 	debug_out( "Done...\n" );
+	
+	hs.sock().close();
+	hs.keepalive (false);
+	
+	bigblob = hs.get ("https://localhost:4269/bigblob");
+	if (bigblob != srv_blob.blob)
+	{
+		fs.save ("bigblob.out", bigblob);
+		fs.save ("srv_blob.out", srv_blob.blob);
+		ferr.printf ("FAIL blob st=%i\n", hs.status);
+		srv.shutdown();
+		return 6;
+	}
 	
 	hs.sock().close();
 	
