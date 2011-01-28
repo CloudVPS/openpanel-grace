@@ -412,13 +412,15 @@ bool file::puts (const char *str, size_t sz)
 	if (codec)
 	{
 		size_t inszleft = sz;
+		sizt_t inszdone = 0;
 		while (inszleft > 0)
 		{
 			//::printf ("codec called\n");
-			if (codec->addoutput (str, (inszleft > 4096 ? 4096 : inszleft)))
+			if (codec->addoutput (str+inszdone, (inszleft > 4096 ? 4096 : inszleft)))
 			{
 				szdone = 0;
 				int sz;
+				inszdone += (inszleft > 4096 ? 4096 : inszleft);
 				inszleft -= (inszleft > 4096 ? 4096 : inszleft);
 				
 				string dat;
