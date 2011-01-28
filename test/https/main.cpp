@@ -137,7 +137,7 @@ int httpsApp::main (void)
 		}
 	}
 	
-	debug_out( "Done...\n" );
+	debug_out("get https://localhost:4269/bigblob\n");
 	
 	hs.sock().close();
 	hs.keepalive (false);
@@ -151,6 +151,8 @@ int httpsApp::main (void)
 		srv.shutdown();
 		return 6;
 	}
+	
+	debug_out( "Done...\n" );
 	
 	hs.sock().close();
 	
