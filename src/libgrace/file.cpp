@@ -417,6 +417,7 @@ bool file::puts (const char *str, size_t sz)
 			//::printf ("codec called\n");
 			if (codec->addoutput (str, (inszleft > 4096 ? 4096 : inszleft)))
 			{
+				szdone = 0;
 				int sz;
 				inszleft -= (inszleft > 4096 ? 4096 : inszleft);
 				
