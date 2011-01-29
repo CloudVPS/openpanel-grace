@@ -1,0 +1,110 @@
+Style guide for Grace projects
+
+1. Indenting
+
+Basic indenting rules follow the Allman style. Tabsize is 4 characters.
+Lines should not normally exceed 72 and never exceed 82 characters. If a
+statement needs more room, it should be continued on the next line, lined
+out to make sense in the context of the statement:
+
+    ferr.printf ("An error occured during processing of your <%s> "
+                 "request to <%s>" %format (requesttype, resuesthost));
+
+Class and struct definitions should line out the variable and/or method
+names at the same horizontal level, adapted to the width of any type
+declarations. Asterisks and ampersands should hug the variable or method
+name. The tilde for the destructor, although strictly speaking part of
+its name, should be treated the same.
+
+	class foo : public bar
+	{
+	public:
+						 foo (void);
+						~foo (void);
+						
+		string			*cromulance (void);
+		void			 emfobbify (void);
+	};
+	
+2. Parentheses
+
+Object names, macro's, definitions or function names that are followed by a
+parameter list in parentheses should put a space between the preceding text
+and the parentheses, unless:
+
+	1. If the parameter list is empty
+	2. If it is a macro call
+	3. If it's used to access an attribute inside a value object.
+
+The inner statement or parameter list between parens should not have white-
+space following the opening parenthesis or preceeding the closing
+parenthesis. If there are multiple elements, a space should follow the
+separation character:
+
+	foo();
+	STORPELFY("wind",42);
+	log::write (log::info, "main", "Bombs away");
+	if (v("size") == 42 && v["location"] == "office")
+
+3. Braces
+
+As a rule, then/else clauses connected to if-statements should always
+be a bracketed block. Use of brackets may only be omitted if the
+then-clause fits on the _same_ line. But not if other parts of the
+same if/then/else block already carry bracket segments:
+
+	// Can be on the same line
+	if (refreshneeded) refresh();
+	
+	// This is wrong:
+	if (refreshneeded) refresh();
+	else
+	{
+		...
+	}
+	
+	// Should be rewritten as:
+	if (refreshneeded)
+	{
+		refresh();
+	}
+	else
+	{
+		...
+	}
+
+4. Capitalization
+
+4.1 Inside library code
+
+Classes belonging to the grace library family should have all-lowercase
+unixy/libc-esque names. Method names and public member variables should
+follow the same rule. Protected variables that have public accessors
+should follow the same name, prefixed with a single underscore as
+needed.
+
+If a class name cannot be expressed in a single word, an underscore may
+be used to separate two words.
+
+4.2 Inside application code
+
+Class names should use UpperCamelCase, public methods should use
+lowerCamelCase. Member variables and local variables should be
+lowercase.
+
+This gives a proper distinction between library classes and application
+classes, as well as between methods and variables:
+
+	class WibbleApp : public application
+	{
+	public:
+					 WibbleApp (void);
+					~WibbleApp (void);
+					
+		int			 main (void);
+		value		*getWibbleList (const statstring &id);
+		void		 makeItWibble (void);
+		
+	protected:
+		value		 wibblelist;
+	};

@@ -8,17 +8,25 @@
              
            * Added SSL server support to libgrace-ssl.
            
-           * Fixed file::gets() for allowing the last line in a file
-             without a newline.
+           * Fixed file::gets() for allowing the last line in a file to
+             exist without a newline.
              
            * In httpd_fileshare, if the client accepts gzip-encoding and
              a file is requested that also exists with a .gz extension,
              the gzipped version will be served.
 
-           * Added decoding support for msgpack to value.
+           * Added decoding support for the msgpack serialization format
+             to the value class.
            
            * Improved the robustness of the storage for shared references
              to immutable strings used by statstring.
+
+           * Fixed issues related to building on the armel architecture.
+
+           * Now builds a properly versioned ELF shared library under Linux.
+           
+           * Now builds both a static and a dynamic library file for all
+             grace libraries.
 
 0.9.38     Thu Nov 25 2010                           <grace@openpanel.com>
 
