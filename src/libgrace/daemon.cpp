@@ -532,15 +532,16 @@ bool daemon::settargetgroups (const value &list)
 // ========================================================================
 // METHOD ::sendevent
 // ========================================================================
-void daemon::sendevent (const string &type)
+void daemon::sendevent (const string &type, eventq::priority p)
 {
 	statstring tp = type;
-	events.send (tp);
+	events.send (tp, p);
 }
 
-void daemon::sendevent (const statstring &type, const value &data)
+void daemon::sendevent (const statstring &type, const value &data,
+						eventq::priority p)
 {
-	events.send (type, data);
+	events.send (type, data, p);
 }
 
 // ========================================================================

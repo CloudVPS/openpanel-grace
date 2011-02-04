@@ -12,6 +12,7 @@
 #include <grace/thread.h>
 #include <grace/lock.h>
 #include <grace/system.h>
+#include <grace/eventq.h>
 
 /// Background log message dispatcher.
 /// A thread object that is part of the daemon class, routing log messages
@@ -254,12 +255,14 @@ public:
 					 /// Send an empty event to the main thread, with
 					 /// only the type() set.
 					 /// \param type The event type.
-	void			 sendevent (const string &type);
+	void			 sendevent (const string &type,
+								eventq::priority p = eventq::normal);
 	
 					 /// Send an event to the main thread.
 					 /// \param type The event type.
 					 /// \param v Event parameter data.
-	void			 sendevent (const statstring &type, const value &v);
+	void			 sendevent (const statstring &type, const value &v,
+								eventq::priority p = eventq::normal);
 	
 					 /// Indefinitely wait for a new event.
 					 /// \return A new event object.

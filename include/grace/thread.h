@@ -94,9 +94,10 @@ public:
 					 /// commands or other events. The receiving thread
 					 /// will get this value with a type() of "event".
 					 /// \param v The event data.
-	void			 sendevent (const value &v)
+	void			 sendevent (const value &v,
+								eventq::priority p = eventq::normal)
 					 {
-					 	events.send (v);
+					 	events.send (v, p);
 					 }
 					 
 					 /// Send an event without data to the thread.
@@ -104,9 +105,10 @@ public:
 					 /// with a a type() set to your liking and a
 					 /// boolean value of 'true'.
 					 /// \param type The event-type.
-	void			 sendevent (const statstring &type)
+	void			 sendevent (const statstring &type,
+								eventq::priority p = eventq::normal)
 					 {
-					 	events.send (type);
+					 	events.send (type, p);
 					 }
 					 
 					 /// Send an event without data to the thread.
@@ -114,10 +116,11 @@ public:
 					 /// with a a type() set to your liking and a
 					 /// boolean value of 'true'.
 					 /// \param type The event-type.
-	void			 sendevent (const string &type)
+	void			 sendevent (const string &type,
+								eventq::priority p = eventq::normal)
 					 {
 					 	statstring tp = type;
-					 	events.send (tp);
+					 	events.send (tp, p);
 					 }
 					 
 					 /// Send an event without data to the thread.
@@ -126,12 +129,14 @@ public:
 					 /// data from the value you supply.
 					 /// \param type The event-type.
 					 /// \param data The event data.
-	void			 sendevent (const statstring &type, const value &data)
+	void			 sendevent (const statstring &type, const value &data,
+								eventq::priority p = eventq::normal)
 					 {
-					 	events.send (type, data);
+					 	events.send (type, data, p);
 					 }
 					 
-	void			 sendevent (const char *type)
+	void			 sendevent (const char *type,
+								eventq::priority p = eventq::normal)
 					 {
 					 	statstring tp = type;
 					 	events.send (tp);
