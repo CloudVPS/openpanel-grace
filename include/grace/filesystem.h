@@ -17,6 +17,13 @@
 
 $exception (fileLoadException, "Could not load file");
 
+namespace filetype
+{
+	enum filetype { unknown, data, directory,
+					chardevice, blockdevice, fifo,
+					softlink, socket, bundle };
+}
+
 /// Easy access class to the filesystem.
 /// Programs can use a global instance of this class called 'fs'.
 /// Automatically resolves alias paths.
@@ -27,9 +34,6 @@ public:
 					~filesystem (void);
 					
 	enum loadoptions { mustexist, optional };
-	enum filetype { unknown, data, directory,
-					chardevice, blockdevice, fifo,
-					softlink, socket, bundle };
 			
 					 /// Check if a filesystem object exists.
 					 /// \param path Relative or absolute path to the file.

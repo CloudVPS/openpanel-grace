@@ -22,28 +22,33 @@ public:
 			 
 			 // Destructor.
 			~eventq (void);
+			
+			 typedef enum { normal, urgent } priority;
 
 			 /// Return number of pending events.			
 	int		 count (void);
 	
 			 /// Send an event. Will be received with a type() of "event".
 			 /// \param v The event-data.
-	void	 send (const value &v);
+	void	 send (const value &v, priority p=normal);
 	
 			 /// Send an event with a specified type.
 			 /// \param tp The type() of the event.
 			 /// \param dt The event-data.
-	void	 send (const statstring &tp, const value &dt);
+	void	 send (const statstring &tp, const value &dt, priority p=normal);
 	
 			 /// Send an empty event with only a type. Will be received
 			 /// as a boolean 'true' and the tprovided type().
 			 /// \param tp The type() of the event.
-	void	 send (const statstring &tp);
+	void	 send (const statstring &tp, priority p = normal);
 	
 			 /// Send an empty event with only a type. Will be received
 			 /// as a boolean 'true' and the tprovided type().
 			 /// \param tp The type() of the event.
-	void	 send (const char *tp) { send ((statstring) tp); }
+	void	 send (const char *tp, priority p=normal)
+			 {
+			 	send ((statstring) tp, p);
+			 }
 	
 			 /// Get the next event, if there is any. Will return an
 			 /// empty value-object if no events are waiting.

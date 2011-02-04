@@ -40,32 +40,56 @@ int eventq::count (void)
 // ========================================================================
 // METHOD ::send
 // ========================================================================
-void eventq::send (const value &ev)
+void eventq::send (const value &ev, priority p)
 {
 	exclusivesection (ipc)
 	{
-		ipc.newval() = ev;
-		ipc[-1].type ("event");
+		if (p == urgent)
+		{
+			ipc.insertval() = ev;
+			ipc[0].type ("event");
+		}
+		else
+		{
+			ipc.newval() = ev;
+			ipc[-1].type ("event");
+		}
 	}
 	event.signal ();
 }
 
-void eventq::send (const statstring &tp, const value &ev)
+void eventq::send (const statstring &tp, const value &ev, priority p)
 {
 	exclusivesection (ipc)
 	{
-		ipc.newval() = ev;
-		ipc[-1].type (tp);
+		if (p == urgent)
+		{
+			ipc.insertval() = ev;
+			ipc[0].type (tp);
+		}
+		else
+		{
+			ipc.newval() = ev;
+			ipc[-1].type (tp);
+		}
 	}
 	event.signal ();
 }
 
-void eventq::send (const statstring &tp)
+void eventq::send (const statstring &tp, priority p)
 {
 	exclusivesection (ipc)
 	{
-		ipc.newval() = true;
-		ipc[-1].type (tp);
+		if (p == urgent)
+		{
+			ipc.insertval() = true;
+			ipc[0].type (tp);
+		}
+		else
+		{
+			ipc.newval() = true;
+			ipc[-1].type (tp);
+		}
 	}
 	event.signal();
 }

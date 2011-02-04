@@ -333,9 +333,9 @@ value *filesystem::getinfo (const string &_path)
 		switch (st.st_mode & S_IFMT)
 		{
 			case S_IFSOCK:
-				result["type"] = socket; break;
+				result["type"] = filetype::socket; break;
 			case S_IFLNK:
-				result["type"] = softlink;
+				result["type"] = filetype::softlink;
 				if (( t = ::readlink (p.str(), linkbuf, 511))>=0)
 				{
 					linkbuf[t] = 0;
@@ -343,16 +343,16 @@ value *filesystem::getinfo (const string &_path)
 				}
 				break;
 			case S_IFREG:
-				result["type"] = data; break;
+				result["type"] = filetype::data; break;
 			case S_IFBLK:
-				result["type"] = blockdevice; break;
+				result["type"] = filetype::blockdevice; break;
 			case S_IFCHR:
-				result["type"] = chardevice; break;
+				result["type"] = filetype::chardevice; break;
 			case S_IFDIR:
-				result["type"] = directory;
+				result["type"] = filetype::directory;
 				break;
 			default:
-				result["type"] = unknown; break;
+				result["type"] = filetype::unknown; break;
 		}
 		result["mode"] = (unsigned int) st.st_mode & 07777;
 		result["uid"] = (unsigned int) st.st_uid;
@@ -396,7 +396,7 @@ value *filesystem::getinfo (const string &_path)
 			result["mime"] = linkbuf;
 			if ((st.st_mode & S_IFMT) == S_IFDIR)
 			{
-				result["type"] = bundle;
+				result["type"] = filetype::bundle;
 			}
 		}
 	}
@@ -968,9 +968,9 @@ value *filesystem::ls (const string &_path, bool longformat, bool showhidden)
 						switch (st.st_mode & S_IFMT)
 						{
 							case S_IFSOCK:
-								resref["type"] = socket; break;
+								resref["type"] = filetype::socket; break;
 							case S_IFLNK:
-								resref["type"] = softlink;
+								resref["type"] = filetype::softlink;
 								if (( t = ::readlink (pad.str(), linkbuf, 511))>=0)
 								{
 									linkbuf[t] = 0;
@@ -978,16 +978,16 @@ value *filesystem::ls (const string &_path, bool longformat, bool showhidden)
 								}
 								break;
 							case S_IFREG:
-								resref["type"] = data; break;
+								resref["type"] = filetype::data; break;
 							case S_IFBLK:
-								resref["type"] = blockdevice; break;
+								resref["type"] = filetype::blockdevice; break;
 							case S_IFCHR:
-								resref["type"] = chardevice; break;
+								resref["type"] = filetype::chardevice; break;
 							case S_IFDIR:
-								resref["type"] = directory;
+								resref["type"] = filetype::directory;
 								break;
 							default:
-								resref["type"] = unknown; break;
+								resref["type"] = filetype::unknown; break;
 						}
 						resref["mode"] = (unsigned int) st.st_mode & 07777;
 						resref["fuid"] = (unsigned int) st.st_uid;
@@ -1007,7 +1007,7 @@ value *filesystem::ls (const string &_path, bool longformat, bool showhidden)
 							
 							if ((st.st_mode & S_IFMT) == S_IFDIR)
 							{
-								resref["type"] = bundle;
+								resref["type"] = filetype::bundle;
 							}
 						}
 					}
