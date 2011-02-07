@@ -82,7 +82,7 @@ puts() {
 # ===========================================================================
 getarch() {
   UN_OS=`uname -o 2>/dev/null || uname`
-  UN_PROC=`( uname -i 2>/dev/null || uname -p 2>/dev/null || uname -m ) | cut -f1 -d,`
+  UN_PROC=`( uname -m 2>/dev/null || uname -p ) | cut -f1 -d,`
   
   if [ "$UN_OS" = "GNU/Linux" ]; then
 	UN_OS="Linux"
