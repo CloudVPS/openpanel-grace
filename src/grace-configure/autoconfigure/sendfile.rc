@@ -15,7 +15,7 @@ int main (int argc, char *argv[])
 	sendfile (1, 1, &offs, 1);
 }
 EOF
-if $CXX $CXXFLAGS -o conftest conftest.cpp >> configure.log 2>&1; then
+if $CXX $CXXFLAGS -Wl,--fatal-warnings -o conftest conftest.cpp >> configure.log 2>&1; then
   HAVE_SENDFILE="#define HAVE_SENDFILE 1"
   saypass "yes"
 else
