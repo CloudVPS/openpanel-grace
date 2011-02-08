@@ -1,4 +1,4 @@
-include ../../src/libgrace-pcre/makeinclude
+include makeinclude
 
 OBJ	= main.o
 

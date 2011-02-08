@@ -3,10 +3,14 @@ testname=`echo "querido                        " | cut -c 1-24`
 $(which echo) -n "${testname}: "
 rm -f *.o out.xml row.xml out.sql db.sqlite >/dev/null 2>&1
 sqlite3 db.sqlite < db.sqlite.in
+./configure > test.log 2>&1 || {
+  echo "   failed (CONFIGURE)"
+  exit 1
+}
 $(which echo) -n "."
 make clean >/dev/null 2>&1 || $(which echo) -n ""
 $(which echo) -n "."
-make > test.log 2>&1 || {
+make >> test.log 2>&1 || {
   echo "   failed (BUILD)"
   exit 1
 }
