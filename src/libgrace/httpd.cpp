@@ -441,18 +441,24 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 			// Positive non-zero reply?
 			if (res > 0)
 			{
+				string hdrblob;
 				// Send the http response, headers and body
-				s.printf ("HTTP/1.1 %i %s\r\n", res, httpstatusstr (res));
+				hdrblob = "HTTP/1.1 %i %s\r\n" %format(res, httpstatusstr (res));
+				s.puts (hdrblob);
+				hdrblob.crop();
 				outhdr["Content-length"] = outbody.strlen();
 				keepalive = env["keepalive"].bval();
 				if (! outhdr.exists ("Connection"))
 					outhdr["Connection"] = keepalive ? "keepalive" : "close";
-				
+
 				foreach (hdr, outhdr)
 				{
-					s.puts ("%s: %s\r\n" %format (hdr.id(), hdr));
+					//if (hdrblob) { s.puts (hdrblob); hdrblob.crop(); }
+					hdrblob.strcat ("%s: %s\r\n" %format (hdr.id(), hdr));
 				}
-				s.puts ("\r\n");
+				hdrblob.strcat ("\r\n");
+				s.puts (hdrblob);
+				//s.puts ("\r\n");
 				s.puts (outbody);
 				
 				

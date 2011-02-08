@@ -416,12 +416,12 @@ bool file::puts (const char *str, size_t sz)
 		while (inszleft > 0)
 		{
 			//::printf ("codec called\n");
-			if (codec->addoutput (str+inszdone, (inszleft > 4096 ? 4096 : inszleft)))
+			if (codec->addoutput (str+inszdone, (inszleft > 1024 ? 1024 : inszleft)))
 			{
 				szdone = 0;
 				int sz;
-				inszdone += (inszleft > 4096 ? 4096 : inszleft);
-				inszleft -= (inszleft > 4096 ? 4096 : inszleft);
+				inszdone += (inszleft > 1024 ? 1024 : inszleft);
+				inszleft -= (inszleft > 1024 ? 1024 : inszleft);
 				
 				string dat;
 				codec->peekoutput (dat);
