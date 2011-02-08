@@ -1,4 +1,4 @@
-include ../../src/libquerido/makeinclude
+include makeinclude
 
 OBJ	= main.o
 
