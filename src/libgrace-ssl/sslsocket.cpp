@@ -284,10 +284,12 @@ again:
 			if (server && !handshakedone && matrixSslHandshakeIsComplete(ssl) != 0) 
 				handshakedone=true;
 			
-			if (inbuf.start == inbuf.end) return true;
+			if (inbuf.start == inbuf.end)
+			{
+				if (into.backlog()) return false;
+				return true;
+			}
 			
-			//::printf ("%08x start=%08x end=%08x size=%i\n", this, inbuf.start, inbuf.end, inbuf.end-inbuf.start);
-
 		case SSL_PROCESS_DATA:
 			//::printf ("%08x fetchinput SSL_PROCESS_DATA\n", this);
 			/*room = into.room();
@@ -378,7 +380,7 @@ again:
 			//::printf ("full\n");
 			throw (EX_SSL_BUFFER_SNAFU);
 	}
-	::printf ("wtf omg bbq: rc=%i\n", rc);
+	//::printf ("wtf omg bbq: rc=%i\n", rc);
 	return false;
 }
 
