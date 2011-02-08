@@ -444,8 +444,6 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 				string hdrblob;
 				// Send the http response, headers and body
 				hdrblob = "HTTP/1.1 %i %s\r\n" %format(res, httpstatusstr (res));
-				s.puts (hdrblob);
-				hdrblob.crop();
 				outhdr["Content-length"] = outbody.strlen();
 				keepalive = env["keepalive"].bval();
 				if (! outhdr.exists ("Connection"))
@@ -453,12 +451,10 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 
 				foreach (hdr, outhdr)
 				{
-					//if (hdrblob) { s.puts (hdrblob); hdrblob.crop(); }
 					hdrblob.strcat ("%s: %s\r\n" %format (hdr.id(), hdr));
 				}
 				hdrblob.strcat ("\r\n");
 				s.puts (hdrblob);
-				//s.puts ("\r\n");
 				s.puts (outbody);
 				
 				
