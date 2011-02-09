@@ -82,12 +82,13 @@ int httpsApp::main (void)
 	string restr_default;
 	string bigblob;
 
+	value headers;
 
 	debug_out( "get http://localhost:4269/\n");
-	ht.get ("http://127.0.0.1:4269/");
-	if ( ht.status != 301 )
+	ht.get ("http://localhost:4269/",&headers);
+	if ( ht.status != 301 || headers["Location"] != "https://localhost:4269/")
 	{
-		ferr.printf ("FAIL http redirect %i\n", ht.status);
+		ferr.printf ("FAIL http redirect %i -> %s\n", ht.status,headers["Location"].str());
 		return 1;
 	}
 
