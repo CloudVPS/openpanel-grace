@@ -138,15 +138,15 @@ sslcodec::sslcodec (bool server, sslKeys_t* keys)
 	, keys( keys )
 	, server (server)
 {
-	inbuf.buf = new unsigned char[16384];
+	inbuf.buf = (unsigned char *) malloc ((size_t) 16384);
 	inbuf.start = inbuf.end = inbuf.buf;
 	inbuf.size = 16384;
 	
-	insock.buf = new unsigned char[32768];
+	insock.buf = (unsigned char *) malloc ((size_t) 16384);
 	insock.start = insock.end = insock.buf;
-	insock.size = 32768;
+	insock.size = 16384;
 	
-	outsock.buf = new unsigned char[16384];
+	outsock.buf = (unsigned char *) malloc ((size_t) 16384);
 	outsock.start = outsock.end = outsock.buf;
 	outsock.size = 16384;
 	
@@ -169,9 +169,9 @@ sslcodec::sslcodec (bool server, sslKeys_t* keys)
 // =================================================================
 sslcodec::~sslcodec (void)
 {
-	delete[] inbuf.buf;
-	delete[] insock.buf;
-	delete[] outsock.buf;
+	free (inbuf.buf);
+	free (insock.buf);
+	free (outsock.buf);
 }
 
 // =================================================================
@@ -191,6 +191,7 @@ bool sslcodec::setup (void)
 		{
 			//::printf ("ssl session creation failed\n");
 			err = "MatrixSSL Session Error";
+			//::printf ("EX_INIT\n");
 			throw (EX_SSL_INIT);
 		}
 		
@@ -205,6 +206,7 @@ bool sslcodec::setup (void)
 			if (rc < 0)
 			{
 				err = "MatrixSSL Handshake Error";
+				//::printf ("Handshake Error\n");
 				return false;
 			}
 			//::printf ("%08x setup3\n", this);
@@ -260,8 +262,15 @@ bool sslcodec::addinput (const char *data, size_t sz)
         // try again
         if ( insock.end + sz > insock.buf + insock.size )
         {
-            // it still doesn't fit
-            return false;
+        	if (insock.size < 262144)
+        	{
+        		int endoffs = insock.end - insock.buf;
+        		insock.buf = (unsigned char *) realloc (insock.buf, (size_t) insock.size*2);
+        		insock.size = insock.size * 2;
+        		insock.start = insock.buf;
+        		insock.end = insock.buf + endoffs;
+        	}
+        	else return false;
         }
     }
 
@@ -317,13 +326,14 @@ again:
 			
 		case SSL_PROCESS_DATA:
 			//::printf ("%08x fetchinput SSL_PROCESS_DATA\n", this);
-			/*room = into.room();
+			room = into.room();
 			if (room< (inbuf.end-inbuf.start))
 			{
 				into.add ((const char *) inbuf.start, room);
-				inbuf.start += room;
-				return true;
-			} */
+				memmove (inbuf.buf, inbuf.start+room, inbuf.end-(inbuf.start+room));
+				inbuf.start = inbuf.buf;
+				return false;
+			}
 			
 			if (server && !handshakedone && matrixSslHandshakeIsComplete(ssl) != 0) 
 				handshakedone=true;
@@ -346,6 +356,7 @@ again:
 			    (inbuf.end - inbuf.start))
 			{
 				err = "buffer snafu #18472";
+				//::printf ("buffer snafu #18472\n");
 				throw (EX_SSL_BUFFER_SNAFU);
 			}
 
@@ -410,6 +421,7 @@ again:
 					err = "Unknown MatrixSSL error"; break;
 			}
 			inbuf.start = inbuf.end = inbuf.buf;
+			//::printf ("EX_SSL_PROTOCOL_ERROR\n");
 			throw (EX_SSL_PROTOCOL_ERROR);
 			
 		case SSL_ALERT:
@@ -420,10 +432,22 @@ again:
 			err.crop();
 			err.printf ("MatrixSSL Client Alert: %d/%d",
 						alertLevel, alertDescription);
+			//::printf ("%s\n", err.str());
 			throw (EX_SSL_CLIENT_ALERT);
 		
 		case SSL_FULL:
-			//::printf ("full\n");
+			if (inbuf.size < 262144)
+			{
+				int startoffs = inbuf.start - inbuf.buf;
+				int endoffs = inbuf.end - inbuf.buf;
+				inbuf.buf = (unsigned char *) realloc (inbuf.buf, (size_t) inbuf.size*2);
+				inbuf.size = inbuf.size *2;
+				inbuf.start = inbuf.buf + startoffs;
+				inbuf.end = inbuf.buf + endoffs;
+				//::printf ("resize %i\n", inbuf.size);
+				goto again;
+			}
+			//::printf ("full %i\n", inbuf.end-inbuf.start);
 			throw (EX_SSL_BUFFER_SNAFU);
 	}
 	//::printf ("wtf omg bbq: rc=%i\n", rc);
@@ -477,15 +501,19 @@ bool sslcodec::addoutput (const char *dat, size_t sz)
 		{
 			case SSL_ERROR:
 				err = "MatrixSSL Encoding Error";
+				//::printf ("encoding error\n");
 				return false;
 			
 			case SSL_FULL:
 				err = "MatrixSSL Buffer Error";
+				//::printf ("buffer snafu #867123\n");
 				throw (EX_SSL_BUFFER_SNAFU);
 				
 			default:
 				if (rc < 0)
-					::printf ("wtf omg steengrill: rc=%i\n", rc);
+				{
+					//::printf ("wtf omg steengrill: rc=%i\n", rc);
+				}
 				break;
 		}
 	}
@@ -494,6 +522,7 @@ bool sslcodec::addoutput (const char *dat, size_t sz)
         if( (outsock.end + sz) > (outsock.buf+outsock.size) )
         {
 				err = "MatrixSSL Buffer Error";
+				//::printf ("buffer snafu #626139\n");
 				throw (EX_SSL_BUFFER_SNAFU);
         }
         else
@@ -535,7 +564,10 @@ void sslcodec::peekoutput (string &into)
 void sslcodec::doneoutput (unsigned int sz)
 {
 	if ((outsock.start + sz) > outsock.end)
+	{
+		//::printf ("buffer snafu #27619\n");
 		throw (EX_SSL_BUFFER_SNAFU);
+	}
 	
 	outsock.start += sz;
 	if (outsock.start == outsock.end)
