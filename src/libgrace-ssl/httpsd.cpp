@@ -12,9 +12,21 @@ public:
 	{
 		if (s.codec == NULL)
 		{
-			string safe_uri = s.peer_port == 443 ?
-				"https://%s%s" %format(inhdr["Host"],uri) :
-				"https://%s:%i%s" %format(inhdr["Host"],s.peer_port,uri) ;
+			string host = inhdr["Host"];
+			int port = s.local_port;
+			
+			if (host.strchr(':') >= 0)
+			{
+				string portstr=host;
+				portstr.cropafter(':');
+				port = portstr.toint();
+				
+				host.cropat(':');
+			}
+			
+			string safe_uri = port == 443 ?
+				"https://%s%s" %format(host,uri) :
+				"https://%s:%i%s" %format(host,port,uri) ;
 
 			outhdr["Connection"] = "close";
 			
