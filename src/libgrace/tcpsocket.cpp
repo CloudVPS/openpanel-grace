@@ -112,6 +112,7 @@ tcpsocket::tcpsocket (void)
 	peer_gid = 65534;
 	peer_addr = ipaddress();
 	peer_port = 0;
+	local_port = 0;
 	ti_established = core.time.now();
 	
 	localbindaddr = "";
@@ -237,6 +238,26 @@ bool tcpsocket::connect (ipaddress addr, int port)
 			err.printf (errortext::sock::connfail, strerror (errno));
 			return false;
 		}
+		else
+		{
+			union
+			{
+				struct sockaddr_in6 v6;
+				struct sockaddr_in  v4;
+				struct sockaddr     sock;
+			} local_socket;
+				
+			socklen_t len = sizeof(local_socket);
+			if (getsockname(filno,&local_socket.sock,&len)==0)
+			{
+				switch (local_socket.sock.sa_family)
+				{
+				case AF_INET6: 	local_port = ntohs(local_socket.v6.sin6_port); break;
+				case AF_INET: 	local_port = ntohs(local_socket.v4.sin_port);  break;
+				default:		local_port = -1;
+				}
+			}
+		}	
 	}
 	else
 	{
@@ -578,6 +599,8 @@ void tcpsocket::derive (tcpsocket *s)
 	peer_addr = s->peer_addr;
 	peer_name = s->peer_name;
 	peer_port = s->peer_port;
+	local_port = s->local_port;
+	
 	err = s->err;
 	errcode = s->errcode;
 	ti_established = s->ti_established;
@@ -601,6 +624,8 @@ void tcpsocket::derive (tcpsocket &s)
 	peer_addr = s.peer_addr;
 	peer_name = s.peer_name;
 	peer_port = s.peer_port;
+	local_port = s.local_port;
+	
 	err = s.err;
 	errcode = s.errcode;
 	ti_established = s.ti_established;
@@ -798,6 +823,7 @@ void tcplistener::listento (const string &path)
 		realpath = fs.transw (path);
 		
 		tcpdomain = false;
+		tcpdomainport = -1;
 		unixdomainpath = path;
 		
 		struct sockaddr_un remote;
@@ -877,6 +903,7 @@ tcpsocket *tcplistener::accept (void)
 	{
 		(*myfil).peer_addr = ipaddress(peer.sin6_addr);
 		(*myfil).peer_port = ntohs (peer.sin6_port);
+		(*myfil).local_port = tcpdomainport;
 		(*myfil).peer_name = ipaddress::ip2str ((*myfil).peer_addr);
 	}
 	(*myfil).ti_established = core.time.now();
@@ -960,6 +987,7 @@ tcpsocket *tcplistener::tryaccept (double timeout)
 		myfil->peer_port = ntohs (peer_in6->sin6_port);
 	}
 	
+	myfil->local_port = tcpdomainport;
 	(*myfil).peer_name = ipaddress::ip2str ((*myfil).peer_addr);
 	(*myfil).ti_established = core.time.now();
 	return myfil;

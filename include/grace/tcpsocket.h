@@ -115,6 +115,7 @@ public:
 	ipaddress	 peer_addr; ///< IPv4 address of peer.
 	string		 peer_name; ///< String-annotated address of peer.
 	int			 peer_port; ///< TCP port for peer.
+	int			 local_port; ///< Local TCP port
 	time_t		 ti_established; ///< Connection time.
 	ipaddress 	 localbindaddr;		  ///< Address to bind.
 
