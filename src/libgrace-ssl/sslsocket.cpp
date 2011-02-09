@@ -23,6 +23,7 @@ void __sslsocket_breakme (void) {}
 /// Used by sslsocket as the iocodec of choice.
 class sslcodec : public iocodec
 {
+friend class ssllistener;
 public:
 					 sslcodec ( bool server, sslKeys_t* keys=0 );
 					~sslcodec (void);
@@ -70,6 +71,8 @@ protected:
 	sslSessionId_t	 session;
 	bool			 disablecerts;
 	bool 			 server;
+	bool			 allowpassthrough;
+	bool			 passthrough;
 	
 };
 
@@ -121,7 +124,7 @@ void setupMatrixSSL (void)
 		//::printf ("calling matrixsslopen\n");
 		if (matrixSslOpen() == 0) initialized = true;
 		else
-		{
+    		{
 			//::printf ("init failure\n");
 		}
 	}
@@ -149,6 +152,9 @@ sslcodec::sslcodec (bool server, sslKeys_t* keys)
 	
 	handshakedone = false;
 	disablecerts = false;
+	
+	allowpassthrough = true;
+	passthrough = false;
 	
 	setupMatrixSSL();
 	
@@ -193,6 +199,7 @@ bool sslcodec::setup (void)
 			
 		if (!server)
 		{
+
 			//::printf ("%08x setup2\n", this);
 			rc = matrixSslEncodeClientHello (ssl, &outsock, 0);
 			if (rc < 0)
@@ -234,7 +241,30 @@ void sslcodec::reset (void)
 // =================================================================
 bool sslcodec::addinput (const char *data, size_t sz)
 {
-	if ((insock.size - (insock.end - insock.buf)) < sz) return false;
+    if ( insock.end + sz > insock.buf + insock.size )
+    {
+		// once we've shifted out any cyphertext, we can't pass it through anymore
+		allowpassthrough = false;
+
+        if (insock.start == insock.end)
+		{
+			insock.start = insock.end = insock.buf;
+		}
+		else
+		{
+			memmove (insock.buf, insock.start, insock.end-insock.start);
+			insock.end -= (insock.start - insock.buf);
+			insock.start = insock.buf;
+		}
+
+        // try again
+        if ( insock.end + sz > insock.buf + insock.size )
+        {
+            // it still doesn't fit
+            return false;
+        }
+    }
+
 	memcpy (insock.end, data, sz);
 	insock.end += sz;
 	return true;
@@ -249,24 +279,17 @@ bool sslcodec::fetchinput (ringbuffer &into)
 	unsigned int room = 0;
 	unsigned char myerror, alertLevel, alertDescription;
 	
+	if (passthrough)
+	{
+		into.add ((const char *) insock.start, insock.end - insock.start );
+		insock.start = insock.end = insock.buf;
+		return false;
+	}
+	
 	myerror = 0;
 	alertLevel = 0;
 	alertDescription = 0;
 	
-	if (insock.buf < insock.start)
-	{
-		if (insock.start == insock.end)
-		{
-			insock.start = insock.end = insock.buf;
-		}
-		else
-		{
-			memmove (insock.buf, insock.start, insock.end-insock.start);
-			insock.end -= (insock.start - insock.buf);
-			insock.start = insock.buf;
-		}
-	}
-
 	//::printf ("%08x fetchinput() insock.size=%i\n", this, insock.end-insock.start);
 
 again:
@@ -281,6 +304,8 @@ again:
 			return false;
 		
 		case SSL_PARTIAL:
+
+
 			if (server && !handshakedone && matrixSslHandshakeIsComplete(ssl) != 0) 
 				handshakedone=true;
 			
@@ -303,8 +328,15 @@ again:
 			if (server && !handshakedone && matrixSslHandshakeIsComplete(ssl) != 0) 
 				handshakedone=true;
 			
-			into.add ((const char *) inbuf.start, inbuf.end-inbuf.start);
-			inbuf.start = inbuf.end = inbuf.buf;
+			if (inbuf.end>inbuf.start)
+			{
+				into.add ((const char *) inbuf.start, inbuf.end-inbuf.start);
+    			inbuf.start = inbuf.end = inbuf.buf;
+				// once we've decrypted anything, we can't go back to plaintext
+				// passtrough
+				allowpassthrough = false;
+			}
+			
 			if (insock.end - insock.start) goto again;
 			return false;
 			
@@ -318,8 +350,13 @@ again:
 			}
 
 			if (server && !handshakedone && matrixSslHandshakeIsComplete(ssl) != 0) 
+            {       
 				handshakedone=true;
-			
+            }
+
+            // once we've sent a response, we can't go back to plaintext			
+			allowpassthrough=false;
+
 			memmove (outsock.start+(inbuf.end-inbuf.start), outsock.start, outsock.end-outsock.start);
 			memcpy (outsock.start, inbuf.start, inbuf.end-inbuf.start);
 			outsock.end += (inbuf.end - inbuf.start);
@@ -327,6 +364,15 @@ again:
 			return true;
 			
 		case SSL_ERROR:
+			if (allowpassthrough && !handshakedone)
+			{
+				// add everything we've received so far to the buffer.
+				
+				into.add ( (const char *) insock.buf, insock.end - insock.buf );
+				insock.start = insock.end = insock.buf;
+				passthrough = true;
+				return false;
+			}
 		
 			switch (myerror)
 			{
@@ -389,7 +435,7 @@ again:
 // =================================================================
 void sslcodec::addclose (void)
 {
-	if (handshakedone)
+	if (handshakedone && !passthrough)
 	{
 		handshakedone = false;
 		matrixSslDeleteSession (ssl);
@@ -403,6 +449,8 @@ void sslcodec::addclose (void)
 bool sslcodec::addoutput (const char *dat, size_t sz)
 {
 	int rc;
+
+    // try to clean up the outsocket
 	if (outsock.buf < outsock.start)
 	{
 		if (outsock.start == outsock.end)
@@ -417,22 +465,43 @@ bool sslcodec::addoutput (const char *dat, size_t sz)
 		}
 	}
 	
-	if (! handshakedone)
+	if (!passthrough)
 	{
-		throw (EX_SSL_NO_HANDSHAKE);
-	}
+		if (! handshakedone)
+		{
+			throw (EX_SSL_NO_HANDSHAKE);
+		}
 	
-	rc = matrixSslEncode (ssl, (unsigned char*)dat, sz, &outsock);
-	switch (rc)
-	{
-		case SSL_ERROR:
-			err = "MatrixSSL Encoding Error";
-			return false;
+		rc = matrixSslEncode (ssl, (unsigned char*)dat, sz, &outsock);
+		switch (rc)
+		{
+			case SSL_ERROR:
+				err = "MatrixSSL Encoding Error";
+				return false;
 			
-		case SSL_FULL:
-			err = "MatrixSSL Buffer Error";
-			throw (EX_SSL_BUFFER_SNAFU);
+			case SSL_FULL:
+				err = "MatrixSSL Buffer Error";
+				throw (EX_SSL_BUFFER_SNAFU);
+				
+			default:
+				if (rc < 0)
+					::printf ("wtf omg steengrill: rc=%i\n", rc);
+				break;
+		}
 	}
+    else
+    {
+        if( (outsock.end + sz) > (outsock.buf+outsock.size) )
+        {
+				err = "MatrixSSL Buffer Error";
+				throw (EX_SSL_BUFFER_SNAFU);
+        }
+        else
+        {
+            memcpy( outsock.end, dat, sz );
+            outsock.end += sz;
+        }
+    }
 	return true;
 }
 
@@ -554,11 +623,12 @@ tcpsocket *ssllistener::accept (void)
 			sslcodec* codec = new sslcodec( true, (sslKeys_t*)keys );
 			result->codec = codec;
 			codec->refcnt=1;
+			codec->allowpassthrough = allowpassthrough;
 			codec->setup();
 			
 			int numrounds = 0;
 			
-			while (!codec->handshakedone )
+			while (!codec->handshakedone && !codec->passthrough)
 			{
 				numrounds++;
 				if (numrounds > 16)
@@ -570,6 +640,14 @@ tcpsocket *ssllistener::accept (void)
 				try
 				{
 					result->readbuffer( 128, 500 );
+
+				    // if the codec went to passthrough mode, remove it
+                    if (codec->passthrough)
+                    {
+                    	delete codec;
+                    	result->codec = NULL;
+                    }
+
 					if (result->eof())
 					{
 						result->close();
@@ -603,11 +681,12 @@ tcpsocket *ssllistener::tryaccept(double timeout)
 		sslcodec* codec = new sslcodec( true, (sslKeys_t*)keys );
 		result->codec = codec;
 		codec->refcnt=1;
+		codec->allowpassthrough = allowpassthrough;
 		codec->setup();
 		
 		int numrounds = 0;
-		
-		while (!codec->handshakedone )
+
+		while (!codec->handshakedone && !codec->passthrough )
 		{
 			numrounds++;
 			if (numrounds > 8)
@@ -619,6 +698,15 @@ tcpsocket *ssllistener::tryaccept(double timeout)
 			try
 			{
 				result->readbuffer( 128, 100 );
+
+				// if the codec went to passthrough mode, remove it
+                if (codec->passthrough)
+                {
+                	delete codec;
+                	result->codec = NULL;
+                }
+
+
 				if (result->eof())
 				{
 					result->close();

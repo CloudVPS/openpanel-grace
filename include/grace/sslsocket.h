@@ -57,10 +57,13 @@ public:
 class ssllistener : public tcplistener
 {
 public:
-				 ssllistener() : keys(0) {}
+				 ssllistener() : keys(0), allowpassthrough(false) {}
 
 	void		 loadkeyfile( const string& cert, const string& priv = "" );
 	void		 loadkeystring( const string& cert, const string& priv = "" );
+	
+	void		 setallowpassthrough( bool newvalue ) {allowpassthrough=newvalue;}
+	bool		 getallowpassthrough() const { return allowpassthrough;}
 
 				 /// Wait for a new connection.
 				 /// \return Pointer to a new tcpsocket bound to the connection.
@@ -74,6 +77,7 @@ public:
 	virtual tcpsocket *tryaccept (double timeout);
 private:
 	void      	*keys;
+	bool		allowpassthrough;
 };
 
 
