@@ -812,6 +812,9 @@ public:
 					 /// For situations where you want to define the
 					 /// listenport later.
 					 httpsd (void);
+
+					 /// destructor
+					 ~httpsd (void);
 					 
 	void		 	 loadkeyfile( const string& cert, const string& priv = "" );
 	void		 	 loadkeystring( const string& cert, const string& priv = "" );
@@ -820,6 +823,7 @@ protected:
 	virtual void createlistener();
 	string cert_data;
 	string priv_data;
+	httpdobject* nonsslredirecthandler;
 };
 
 // ------------------------------------------------------------------------
