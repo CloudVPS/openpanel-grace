@@ -30,6 +30,13 @@
              
            * Fixed issue with the SSL client codec when dealing with
              multiple SSL packets inside a single TCP packet.
+             
+           * Integrated MatrixSSL 1.8.8, which fixes a security issue.
+           
+           * Fixed SSL client issue with large SSL packets.
+           
+           * Added support for automatic redirects when an HTTPS service
+             gets a connection with regular HTTP.
 
 0.9.38     Thu Nov 25 2010                           <grace@openpanel.com>
 
