@@ -25,7 +25,11 @@ class BigBlob : public httpdobject
 public:
 	BigBlob (httpd &s) : httpdobject (s, "*/bigblob")
 	{
-		for (int i=0; i<8192; ++i) blob.strcat (strutil::uuid());
+		for (int i=0; i<8192; ++i)
+		{ 
+			blob.strcat (strutil::uuid());
+			blob.strcat("\r\n");
+		}
 	}
 	~BigBlob (void) {}
 	
@@ -67,7 +71,7 @@ int httpsApp::main (void)
 	
 	srv.loadkeyfile("cert.pem");
 	srv.start ();
-	
+	httpsocket ht;
 	httpssocket hs;
 	hs.nocertcheck();
 	hs.keepalive(true);
@@ -78,6 +82,15 @@ int httpsApp::main (void)
 	string restr_default;
 	string bigblob;
 
+
+	debug_out( "get http://localhost:4269/\n");
+	ht.get ("http://127.0.0.1:4269/");
+	if ( ht.status != 301 )
+	{
+		ferr.printf ("FAIL http redirect %i\n", ht.status);
+		return 1;
+	}
+
 	debug_out( "get https://localhost:4269/public.dat\n");
 
 	public_local = hs.get ("https://localhost:4269/public.dat");
@@ -86,7 +99,7 @@ int httpsApp::main (void)
 		ferr.printf ("FAIL public local\n");
 		ferr.printf ( hs.error );
 		ferr.printf ( ".\n" );
-		return 1;
+		return 2;
 	}
 
 	debug_out( "get https://127.0.0.1:4269/public.dat\n");
@@ -94,7 +107,7 @@ int httpsApp::main (void)
 	if (! public_default.strlen ())
 	{
 		ferr.printf ("FAIL public default\n");
-		return 2;
+		return 3;
 	}
 
 	debug_out( "get https://localhost:4269/restricted.dat\n");
@@ -102,13 +115,13 @@ int httpsApp::main (void)
 	if (hs.status == 200)
 	{
 		ferr.printf ("FAIL restricted local auth\n");
-		return 3;
+		return 4;
 	}
 
 	hs.authentication ("me","password");
 	hs.keepalive (true);
 	
-	for (int i=0; i<10; ++i)
+	for (int i=0; i<3; ++i)
 	{
 		debug_out( "With passwd: %d\n", i );
 		
@@ -121,19 +134,19 @@ int httpsApp::main (void)
 			{
 				ferr.printf ("FAIL restricted local: %i\n", hs.status);
 				__breakme ();
-				return 4;
+				return 5;
 			}
 			else
 			{
 				ferr.printf ("FAIL: restricted local once\n");
-				return 9;
+				return 6;
 			}
 		}
 		restr_default = hs.get ("https://127.0.0.1:4269/restricted.dat");
 		if (! restr_default.strlen ())
 		{
 			ferr.printf ("FAIL restricted default\n");
-			return 5;
+			return 7;
 		}
 	}
 	
@@ -149,7 +162,7 @@ int httpsApp::main (void)
 		fs.save ("srv_blob.out", srv_blob.blob);
 		ferr.printf ("FAIL blob st=%i\n", hs.status);
 		srv.shutdown();
-		return 6;
+		return 8;
 	}
 	
 	debug_out( "Done...\n" );
