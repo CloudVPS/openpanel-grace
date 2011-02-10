@@ -334,6 +334,7 @@ public:
 						/// Equality operator.
 	inline bool			operator== (const statstring &str) const
 						{
+							if (&str == this) return true;
 						 	if (ref) assert (ref->refcnt > 0);
 							if (key() != str.key()) return false;
 							if (id() != str.id()) return false;
@@ -378,6 +379,7 @@ public:
 						
     inline bool         operator!= (const statstring &str) const
                         {
+							if (&str == this) return false;
 						 	if (ref) assert (ref->refcnt > 0);
                             if ((key() == str.key()) && (id() == str.id()))
                             {
