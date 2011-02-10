@@ -30,36 +30,54 @@ xmlschema::xmlschema (const string &name)
 	schema.loadxml (name,xmlschema::root());
 }
 
+// ==========================================================================
+// METHOD xmlschema::root
+// ==========================================================================
 xmlschema &xmlschema::root (void)
 {
 	static xmlschema x (XMLRootSchemaType);
 	return x;
 }
 
+// ==========================================================================
+// METHOD xmlschema::base
+// ==========================================================================
 xmlschema &xmlschema::base (void)
 {
 	static xmlschema x (XMLBaseSchemaType);
 	return x;
 }
 
+// ==========================================================================
+// METHOD xmlschema::netdb
+// ==========================================================================
 xmlschema &xmlschema::netdb (void)
 {
 	static xmlschema x (XMLNetDBSchemaType);
 	return x;
 }
 
+// ==========================================================================
+// METHOD xmlschema::runopt
+// ==========================================================================
 xmlschema &xmlschema::runopt (void)
 {
 	static xmlschema x (XMLRunOptionsSchemaType);
 	return x;
 }
 
+// ==========================================================================
+// METHOD xmlschema::validator
+// ==========================================================================
 xmlschema &xmlschema::validator (void)
 {
 	static xmlschema x (XMLValidatorSchemaType);
 	return x;
 }
 
+// ==========================================================================
+// METHOD xmlschema::plist
+// ==========================================================================
 xmlschema &xmlschema::plist (void)
 {
 	static xmlschema x (XMLPlistSchemaType);

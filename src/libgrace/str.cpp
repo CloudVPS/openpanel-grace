@@ -1005,6 +1005,14 @@ void string::strcat (char s)
 	}
 }
 
+// ==========================================================================
+// METHOD string::strcat
+// ==========================================================================
+void string::strcat (const statstring &s)
+{
+	strcat (s.sval());
+}
+
 // ========================================================================
 // METHOD ::insert
 // ---------------
@@ -1047,11 +1055,6 @@ void string::insert (const string &s)
 	{
 		strcpy (s);
 	}		
-}
-
-void string::strcat (const statstring &s)
-{
-	strcat (s.sval());
 }
 
 // ========================================================================
@@ -1103,6 +1106,9 @@ void string::strcat (string *s)
 	delete s;
 }
 
+// ==========================================================================
+// METHOD string::strcat
+// ==========================================================================
 void string::strcat (const value &v)
 {
 	strcat (v.sval());
@@ -3179,8 +3185,5 @@ const string &charmatch::replacement (void)
 	if (replace) return *replace;
 	return emptystring;
 }
-
-// ========================================================================
-// ========================================================================
 
 string emptystring;

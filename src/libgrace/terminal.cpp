@@ -527,8 +527,6 @@ void termbuffer::setpos (int cpos, int npos)
 	}
 }
 
-void __tbdraw_breakme (void ) {}
-
 // ==========================================================================
 // METHOD termbuffer::draw
 // ==========================================================================
@@ -545,8 +543,6 @@ void termbuffer::draw (void)
 
 	for (xc=0; xc<(wsize-1); ++xc)
 	{
-		__tbdraw_breakme();
-		
 		if ((rxc+wcrsr) >= len)
 		{
 			if (curview[xc] != ' ')
@@ -573,8 +569,6 @@ void termbuffer::draw (void)
 		}
 		else do { rxc++; } while ((buffer[rxc+wcrsr] & 0xc0) == 0x80);
 	}
-	
-	__tbdraw_breakme();
 	
 	setpos (cpos, rcrsr - rwcrsr);
 

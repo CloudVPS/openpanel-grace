@@ -15,6 +15,9 @@ systemclass &kernel (core);
 const char *SALTSRC = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 					  "0123456789./";
 
+// ========================================================================
+// FUNCTION __grace_internal_crypt
+// ========================================================================
 string *__grace_internal_crypt (const char *key, const char *salt)
 {
 	returnclass (string) res retain;

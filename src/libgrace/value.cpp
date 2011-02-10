@@ -2512,6 +2512,9 @@ void value::setcurrency (long long cnew)
 	if (_type == t_unset || isbuiltin (_type)) _type = t_currency;
 }
 
+// ==========================================================================
+// METHOD value::getcurrency
+// ==========================================================================
 long long value::getcurrency (void) const
 {
 	switch (_itype)

@@ -207,6 +207,9 @@ void valueindex::indexproperty (value &v, const statstring &prop)
 	}
 }
 
+// ==========================================================================
+// METHOD valueindex::indexvalues
+// ==========================================================================
 void valueindex::indexvalues (value &v)
 {
 	if (root)

@@ -463,6 +463,9 @@ long long parsecurrency (const string &from)
 	return (1000LL * base) + fract;
 }
 
+// ==========================================================================
+// METHOD currency::init
+// ==========================================================================
 void currency::init (bool first)
 {
 	val = 0;

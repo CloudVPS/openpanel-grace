@@ -14,6 +14,9 @@
 #include <arpa/inet.h>
 #include <string.h>
 
+// ==========================================================================
+// METHOD ipaddress::str2ip
+// ==========================================================================
 bool ipaddress::str2ip (const char* ipstr, unsigned char* out_result)
 {
 	if (strchr( ipstr, ':') == NULL )
@@ -44,9 +47,9 @@ bool ipaddress::str2ip (const char* ipstr, unsigned char* out_result)
 	return false;
 }
 
-// ========================================================================
-// FUNCTION ip2str
-// ========================================================================
+// ==========================================================================
+// METHOD ipaddress::ip2str
+// ==========================================================================
 bool ipaddress::ip2str (const unsigned char* c, string& into)
 {
 	ipaddress* ipaddr = (ipaddress*)(void*)c;
@@ -73,13 +76,13 @@ bool ipaddress::ip2str (const unsigned char* c, string& into)
 }
 
 
-/// Constructor from a value.
-/// Just calls ipval().
+// ==========================================================================
+// CONSTRUCTOR ipaddress
+// ==========================================================================
 ipaddress::ipaddress (const value &o)
 {
 	*this = o.ipval ();
 }
-
 
 /// Constructor from a value.
 /// Just calls ipval().
@@ -112,6 +115,9 @@ ipaddress::ipaddress (const struct in6_addr& address)
 }
 
 
+// ==========================================================================
+// METHOD ipaddress::operator=
+// ==========================================================================
 ipaddress& ipaddress::operator= (const struct in_addr& address)
 {
     memset(addr,0,10);
@@ -133,21 +139,6 @@ ipaddress& ipaddress::operator= (const struct in6_addr& address)
 {
 	memcpy( addr, address.s6_addr, 16 );
 	return *this;
-}
-
-
-ipaddress::operator const struct in_addr (void) const
-{
-	in_addr result;
-	memcpy( &result, addr+12, sizeof(result) );
-	return result;
-}
-
-ipaddress::operator const struct in6_addr (void) const
-{
-	in6_addr result;
-	memcpy( &result, addr, sizeof(result) );
-	return result;
 }
 
 ipaddress &ipaddress::operator= (const string &s)
@@ -176,12 +167,39 @@ ipaddress& ipaddress::operator= (const value &v)
     return *this;
 }
 
+// ==========================================================================
+// METHOD ipaddress::operator const struct in_addr
+// ==========================================================================
+ipaddress::operator const struct in_addr (void) const
+{
+	in_addr result;
+	memcpy( &result, addr+12, sizeof(result) );
+	return result;
+}
+
+// ==========================================================================
+// METHOD ipaddress::operator const struct in6_addr
+// ==========================================================================
+ipaddress::operator const struct in6_addr (void) const
+{
+	in6_addr result;
+	memcpy( &result, addr, sizeof(result) );
+	return result;
+}
+
+
+// ==========================================================================
+// METHOD ipaddress::operator==
+// ==========================================================================
 bool ipaddress::operator== (const value &o) const
 {
     return o.ipval() == *this;
 }
 
 
+// ==========================================================================
+// METHOD ipaddress::operator&=
+// ==========================================================================
 ipaddress& ipaddress::operator&=(const ipaddress& other)
 {
     for( size_t i=0; i<sizeof(addr); i+= sizeof(unsigned int) )
@@ -194,6 +212,9 @@ ipaddress& ipaddress::operator&=(const ipaddress& other)
     return *this;
 }
 
+// ==========================================================================
+// METHOD ipaddress::operator!=
+// ==========================================================================
 ipaddress& ipaddress::operator|=(const ipaddress& other)
 {
     for( size_t i=0; i<sizeof(addr); i+= sizeof(unsigned int) )
@@ -206,6 +227,9 @@ ipaddress& ipaddress::operator|=(const ipaddress& other)
 }
 
 
+// ==========================================================================
+// METHOD ipaddress::toblob
+// ==========================================================================
 string *ipaddress::toblob (void) const
 {
 	returnclass (string) res retain;
@@ -220,6 +244,9 @@ string *ipaddress::toblob (void) const
 	return &res;
 }
 
+// ==========================================================================
+// METHOD ipaddress::fromblob
+// ==========================================================================
 void ipaddress::fromblob (const string &blob)
 {
 	if (blob.strlen() == 4)

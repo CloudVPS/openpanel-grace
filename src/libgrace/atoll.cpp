@@ -9,6 +9,9 @@
 
 // ascii to unsigned long long
 
+// ==========================================================================
+// FUNCTION atoull
+// ==========================================================================
 extern "C" unsigned long long atoull(char *str)
 {
 	long long result = 0;
@@ -21,6 +24,9 @@ extern "C" unsigned long long atoull(char *str)
 
 // ascii to long long
 
+// ==========================================================================
+// FUNCTION atoll
+// ==========================================================================
 extern "C" long long atoll(char *str)
 {
 	long long result = 0;
@@ -45,5 +51,3 @@ extern "C" long long atoll(char *str)
 }
 
 #endif
-
-

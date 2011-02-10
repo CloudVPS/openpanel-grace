@@ -532,6 +532,9 @@ bool statstring::operator== (const value &v) const
 	return ( (*this) == v.sval() );
 }
 
+// ========================================================================
+// METHOD ::operator!=
+// ========================================================================
 bool statstring::operator!= (const value &v) const
 {
 	return ( (*this) != v.sval() );

@@ -23,7 +23,6 @@
 // This constructor initializes a cmdtoken object, optionally tied to
 // a parent cmdtoken object.
 // ========================================================================
-
 cmdtoken::cmdtoken (tokentype t, cmdtoken *p)
 {
 	type = t;
@@ -51,7 +50,6 @@ cmdtoken::cmdtoken (tokentype t, cmdtoken *p)
 // ------------
 // Base run method. Calls run on all child nodes.
 // ========================================================================
-
 void cmdtoken::run (value &v, string &buf)
 {
 	cmdtoken *c = child;
@@ -68,7 +66,6 @@ void cmdtoken::run (value &v, string &buf)
 // The run cycle of a data token. Outputs the data, expanding nested
 // template references and variables.
 // ========================================================================
-
 void cmdtoken_data::run (value &v, string &buf)
 {
 	string dat;
@@ -130,7 +127,6 @@ void cmdtoken_data::run (value &v, string &buf)
 // Executes a loop token, running every child for every row found in the
 // loopvar.
 // ========================================================================
-
 void cmdtoken_loop::run (value &v, string &buf)
 {
 	value loopdata;
@@ -186,7 +182,6 @@ void cmdtoken_loop::run (value &v, string &buf)
 // ----------------------------
 // Execute the labelled "main" object
 // ========================================================================
-
 void scriptparser::run (value &v, string &buf)
 {
 	run (v, buf, "main");
@@ -216,7 +211,6 @@ bool scriptparser::sectionexists (const string &label)
 // --------------
 // Parses a string containing a laoded script template into a parser tree.
 // ========================================================================
-
 void scriptparser::build (const string &src)
 {
 	int crsr = 0;
@@ -399,7 +393,6 @@ void cmdtoken_case::run (value &v, string &buf)
 // -----------------------
 // Implementation of the @if command
 // ========================================================================
-
 void cmdtoken_if::run (value &v, string &buf)
 {
 	value vleft, vright;
@@ -447,7 +440,6 @@ void cmdtoken_if::run (value &v, string &buf)
 // ---------------------------
 // Parses the data-stream, replacing variables where needed
 // ========================================================================
-
 string *cmdtoken_parsedata (value &env, value &str)
 {
 	returnclass (string) res retain;
@@ -481,7 +473,6 @@ string *cmdtoken_parsedata (value &env, value &str)
 // --------------------------
 // Parses an inline variable inside a data-stream
 // ========================================================================
-
 string *cmdtoken_parseval (value &env, const string &_expr)
 {
 	returnclass (string) res retain;
@@ -575,7 +566,6 @@ string *cmdtoken_parseval (value &env, const string &_expr)
 // Utility function for just using the data-stream parsing part of the
 // scriptparser engine.
 // ========================================================================
-
 string *cmdtoken_parsestring (value &v, const string &s)
 {
 	value splt;

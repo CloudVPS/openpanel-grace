@@ -226,6 +226,9 @@ void httpd::run (void)
 	shutdowndone.broadcast ();
 }
 
+// ==========================================================================
+// METHOD httpd::shutdown
+// ==========================================================================
 void httpd::shutdown (void)
 {
 	sendevent ("die");
@@ -376,6 +379,9 @@ void httpd::eventhandle (const value &ev)
 	}
 }
 
+// ==========================================================================
+// METHOD httpd::sendfile
+// ==========================================================================
 unsigned int httpd::sendfile (tcpsocket &s, const string &fn)
 {
 	if (! fs.exists (fn)) return 0;
@@ -541,6 +547,9 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 	keepalive = false;
 }
 
+// ==========================================================================
+// METHOD httpd::createlistener
+// ==========================================================================
 void httpd::createlistener()
 {
 	if (listener) delete listener;

@@ -1281,6 +1281,9 @@ const string &iocodec::error (void)
 	return err;
 }
 
+// ==========================================================================
+// METHOD iocodec::nocertcheck
+// ==========================================================================
 void iocodec::nocertcheck (void)
 {
 }

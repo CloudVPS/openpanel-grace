@@ -185,6 +185,9 @@ string *ringbuffer::peek (unsigned int sz)
 	return &res;
 }
 
+// ==========================================================================
+// METHOD ringbuffer::advance
+// ==========================================================================
 void ringbuffer::advance (unsigned int sz)
 {
 	unsigned int rsz = sz;

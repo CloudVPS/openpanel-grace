@@ -23,6 +23,9 @@ poolsocket::~poolsocket (void)
 	sock = NULL;
 }
 
+// ==========================================================================
+// METHOD poolsocket::operator=
+// ==========================================================================
 poolsocket &poolsocket::operator= (const poolsocket &s)
 {
 	sock = s.sock;
@@ -35,6 +38,9 @@ poolsocket &poolsocket::operator= (const poolsocket &s)
 	return *this;
 }
 
+// ==========================================================================
+// METHOD poolsocket::s
+// ==========================================================================
 tcpsocket &poolsocket::s (void)
 {
 	static tcpsocket nosock;
@@ -211,19 +217,31 @@ void socketpool::done (poolsocket &s)
 	lck.unlock();
 }
 
+// ==========================================================================
+// DESTRUCTOR socketpoolhandler
+// ==========================================================================
 socketpoolhandler::~socketpoolhandler (void)
 {
 }
 
+// ==========================================================================
+// METHOD socketpoolhandler::isvalid
+// ==========================================================================
 bool socketpoolhandler::isvalid (tcpsocket &s, time_t last)
 {
 	return false;
 }
 
+// ==========================================================================
+// METHOD socketpoolhandler::close
+// ==========================================================================
 void socketpoolhandler::close (tcpsocket &s)
 {
 }
 
+// ==========================================================================
+// METHOD socketpoolhandler::open
+// ==========================================================================
 bool socketpoolhandler::open (tcpsocket &s)
 {
 	return false;

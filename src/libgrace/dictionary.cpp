@@ -16,7 +16,6 @@
 // -----------
 // Creates a dictionaryEntry object with a provided key
 // ========================================================================
-
 dictionaryEntry::dictionaryEntry (const statstring &iid)
 {
 	ent = NULL;
@@ -30,7 +29,6 @@ dictionaryEntry::dictionaryEntry (const statstring &iid)
 // ----------
 // No work to bedone right now.
 // ========================================================================
-
 dictionaryEntry::~dictionaryEntry (void)
 {
 }
