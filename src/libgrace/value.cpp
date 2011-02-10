@@ -1977,36 +1977,55 @@ void value::assign (currency *c)
 	if (_type == t_unset || isbuiltin (_type)) _type = t_currency;
 }
 
+#define CHECK_BUILTIN(x) assert(x.strlen() == type.strlen() ); if( type == x ) return true; 
+
 // ========================================================================
 // METHOD ::isbuiltin
 // ========================================================================
 bool value::isbuiltin (const statstring &type)
 {
-	switch (type.key())
+	switch (type.strlen())
 	{
-		case 0xc152b73e : return true; // void
-		case 0x29b7dde5 : return true; // char
-		case 0xbe425861 : return true; // uchar
-		case 0x459b78d5 : return true; // short
-		case 0xbe56e20e : return true; // ushort
-		case 0x04cfb5e3 : return true; // integer
-		case 0x474c360c : return true; // unsigned
-		case 0x592fa6fd : return true; // bool
-		case 0xed127a3f : return true; // bool.true
-		case 0x41518d33 : return true; // bool.false
-		case 0xa4be84a6 : return true; // double
-		case 0x508c2a15 : return true; // string
-		case 0x54ac07f6 : return true; // ipaddress
-		case 0x1ea82c86 : return true; // long
-		case 0xcd512b15 : return true; // ulong
-		case 0x2c1989bf : return true; // array
-		case 0xd5e0335b : return true; // dict
-		case 0x8fa9ef61 : return true; // date
-		case 0x7ae329de : return true; // currency
-		case 0xf5ef3d04 : return true; // float
+	case 4:
+		CHECK_BUILTIN(t_unset); // void
+		CHECK_BUILTIN(t_char);
+		CHECK_BUILTIN(t_bool);
+		CHECK_BUILTIN(t_long);
+		CHECK_BUILTIN(t_dict);
+		CHECK_BUILTIN(t_date);
+		return false;
+	case 5:
+		CHECK_BUILTIN(t_uchar);
+		CHECK_BUILTIN(t_double); // float
+		CHECK_BUILTIN(t_short);
+		CHECK_BUILTIN(t_array);
+		CHECK_BUILTIN(t_ulong);
+		return false;
+	case 6:
+		CHECK_BUILTIN(t_ushort);
+		CHECK_BUILTIN(t_string);
+		// CHECK_BUILTIN(t_double); ????
+		return false;
+	case 7:
+		CHECK_BUILTIN(t_int); // integer
+		return false;
+	case 8:
+		CHECK_BUILTIN(t_currency);
+		CHECK_BUILTIN(t_unsigned);
+		return false;
+	case 9:
+		CHECK_BUILTIN(t_ipaddr); //ipaddress
+		CHECK_BUILTIN(t_bool_true);
+		return false;
+	case 10:
+		CHECK_BUILTIN(t_bool_false);
+		return false;
 	}
+
 	return false;
 }
+
+#undef CHECK_BUILTIN
 
 // ========================================================================
 // METHOD ::init
