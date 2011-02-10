@@ -46,7 +46,6 @@ OBJ			= 	application.o \
 				terminal.o \
 				tcpsocket.o \
 				thread.o \
-				timeofday.o \
 				timestamp.o \
 				tolower.o \
 				udpsocket.o \
