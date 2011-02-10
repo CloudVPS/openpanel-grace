@@ -128,14 +128,19 @@ public:
                             return result; 
                         }
                         
-    unsigned char&      operator[]( int a) { return addr[a&0x0F]; }       
-    const unsigned char operator[]( int a) const { return addr[a&0x0F]; }       
+    unsigned char&      operator[] (int a) { return addr[a&0x0F]; }       
+    const unsigned char operator[] (int a) const { return addr[a&0x0F]; }       
 					 
-	
+						 /// Convert to a binary blob.
 	string				*toblob (void) const;
+	
+						 /// Convert from a binary blob.
 	void				 fromblob (const string &s);
 						 
-	bool				 isv4() const
+						 /// Determine whether the address currently
+						 /// stored is an IPv4 address.
+						 /// \return true if address is v4.
+	bool				 isv4 (void) const
 						 {
 						 	return 
 						 		addr[ 0] == 0x00 && addr[ 1] == 0x00 && 

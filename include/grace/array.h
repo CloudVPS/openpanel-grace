@@ -261,6 +261,8 @@ public:
 					 /// Returns the number of entries in the array.
 	int				 count (void) const { return _count; }
 	
+					 /// Implementation of the visitor protocol's
+					 /// access by numbered index.
 	kind			*visitchild (int pos)
 					 {
 					 	if (pos<0) return NULL;
@@ -268,6 +270,8 @@ public:
 					 	return (_array[pos].obj);
 					 }
 					 
+					 /// Implementation of the visitor protocol's
+					 /// access by numbered index (const version).
 	const kind		*visitchild (int pos) const
 					 {
 					 	if (pos<0) return NULL;

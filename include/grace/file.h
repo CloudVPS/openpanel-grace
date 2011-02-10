@@ -123,6 +123,7 @@ public:
 					else openread (inpath);
 				 }
 				 
+				 /// Destructor.
 	virtual		~file (void);
 				
 				

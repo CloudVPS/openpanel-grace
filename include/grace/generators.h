@@ -8,6 +8,9 @@
 #ifndef _GENERATORS_H
 #define _GENERATORS_H 1
 
+/// Generator that implements the visitor protocol to allow iterating
+/// over a range of integers. Use the $range macro to use this class,
+/// like: foreach (i, $range(1:10)), for counting from 1 to 10 inclusive.
 class rangegen
 {
 public:

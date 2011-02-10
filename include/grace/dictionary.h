@@ -41,16 +41,21 @@ template<class kind>
 class dictionary
 {
 public:
+					 /// Constructor
 					 dictionary (void)
 					 {
 					 	_array = NULL;
 					 	_count = _arraysz = 0;
 					 }
+					 
+					 /// Destructor
 					~dictionary (void)
 					 {
 					 	clear ();
 					 }
 
+					 /// Remove all entries. If the entries were 
+					 /// dynamically allocated, delete them.
 	void			 clear (void)
 					 {
 						for (int i=0; i<_count; ++i)
@@ -214,6 +219,7 @@ dictionaryEntry 	*newentry (const statstring &id, bool alloc=true)
 						}
 						return _array[_count-1];
 					 }
+					 
 					 /// Look up an entry in the dictionary.
 					 /// \param s The object's key.
 					 /// \param alloc If \e false, no new objects will be
@@ -253,6 +259,8 @@ dictionaryEntry 	*demand (const statstring &s, bool alloc=true)
 						return NULL;
 					 }
 					 
+					 /// Remove a specific node from the dictionary.
+					 /// \param s The node's key.
 void				 remove (const statstring &s)
 					 {
 					 	if (_count == 0) return;

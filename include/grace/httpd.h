@@ -791,6 +791,7 @@ protected:
 	virtual void createlistener();
 };
 
+/// SSL implementation of the httpd class.
 class httpsd : public httpd
 {
 public:
@@ -816,14 +817,21 @@ public:
 					 /// destructor
 					 ~httpsd (void);
 					 
-	void		 	 loadkeyfile( const string& cert, const string& priv = "" );
-	void		 	 loadkeystring( const string& cert, const string& priv = "" );
+					 /// Load certificate and private key from one or two
+					 /// PEM files.
+	void		 	 loadkeyfile (const string& cert,
+								  const string& priv = "" );
+								  
+					 /// Load certificate and private key from a PEM-
+					 ///formatted string.
+	void		 	 loadkeystring (const string& cert,
+								    const string& priv = "" );
 
 protected:
-	virtual void createlistener();
-	string cert_data;
-	string priv_data;
-	httpdobject* nonsslredirecthandler;
+	virtual void	 createlistener (void);
+	string			 cert_data;
+	string			 priv_data;
+	httpdobject		*nonsslredirecthandler;
 };
 
 // ------------------------------------------------------------------------
