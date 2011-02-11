@@ -8,5 +8,7 @@ libcrypt
 gmtoff
 sendfile
 passcred
+so_peercred
+local_peercred
 gethostbyname
 

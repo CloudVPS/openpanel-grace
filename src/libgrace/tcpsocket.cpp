@@ -29,6 +29,13 @@
   #include <linux/socket.h>
   #include <sys/uio.h>
 #endif
+#ifdef HAVE_SO_PEERCRED
+  #include <linux/socket.h>
+  #include <sys/uio.h>
+#endif
+#ifdef HAVE_LOCAL_PEERCRED
+  #include <sys/ucred.h>
+#endif
 #ifdef HAVE_SENDFILE
   #include <sys/sendfile.h>
 #endif
@@ -434,7 +441,7 @@ bool tcpsocket::uconnect (const string &path)
 // ========================================================================
 void tcpsocket::getcredentials (void)
 {
-#ifdef HAVE_PASSCRED
+#ifdef HAVE_SO_PEERCRED
 	struct ucred credp;
 	socklen_t len = sizeof (credp);
 	
@@ -450,7 +457,26 @@ void tcpsocket::getcredentials (void)
 		peer_uid = 65534;
 		peer_gid = 65534;
 	}
+#else 
+#ifdef HAVE_LOCAL_PEERCRED
+	struct xucred credp;
+	socklen_t len = sizeof (credp);
+	
+	if (getsockopt (filno, 0, LOCAL_PEERCRED, &credp, &len) == 0)
+	{		
+		peer_pid = 0;
+		peer_uid = credp.cr_uid;
+		peer_gid = credp.cr_gid;
+	}
+	else
+	{
+		peer_pid = 0;
+		peer_uid = 65534;
+		peer_gid = 65534;
+	}
 #endif
+#endif
+
 }
 
 // ========================================================================
