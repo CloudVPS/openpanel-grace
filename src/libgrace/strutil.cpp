@@ -1188,16 +1188,17 @@ string *strutil::uuid (void)
 	static bool seeded (false);
 	if (! seeded)
 	{
-		srand (core.time.now());
+		timeval t = core.time.unow();
+		srandom (t.tv_sec ^ t.tv_usec);
 		seeded = true;
 	}
 	
-	unsigned int rnda = rand();
-	unsigned int rndb = rand() & 0xffff;
-	unsigned int rndc = rand() & 0xffff;
-	unsigned int rnde = rand() & 0xffff;
-	unsigned int rndf = rand() & 0xffff;
-	unsigned int rndg = rand();
+	unsigned int rnda = random();
+	unsigned int rndb = random() & 0xffff;
+	unsigned int rndc = random() & 0xffff;
+	unsigned int rnde = random() & 0xffff;
+	unsigned int rndf = random() & 0xffff;
+	unsigned int rndg = random();
 	
 	rndc = 0x4000 | (rndc & 0x0fff);
 	// rnde = ... ;TODO: Set the two most significant bits (bits 6 and 7) of the clock_seq_hi_and_reserved to zero and one, respectively. RFC4122 4.4
