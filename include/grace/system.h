@@ -25,19 +25,6 @@
 
 //#include <linux/unistd.h>
 
-#ifdef __SUPPORT_JAIL
-#ifndef __NR_jail
-#define __NR_jail	254
-#endif
-
-_syscall2(long,jail,int,value,int,data);
-
-#define JAIL_CPU	1
-#define JAIL_IPV4	2
-#define JAIL_VM		3
-
-#endif
-
 extern const char *SALTSRC;
 	
 string *__grace_internal_crypt (const char *, const char *);
