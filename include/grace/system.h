@@ -323,23 +323,6 @@ public:
 			if (::chroot (pat.str())) return false;
 			return true;
 		}
-#ifdef __SUPPORT_JAIL
-		bool cpu (int perc)
-		{
-			if (::jail (JAIL_CPU, perc)) return false;
-			return true;
-		}
-		bool vm (int mb)
-		{
-			if (::jail (JAIL_VM, mb * (1024 * 1024))) return false;
-			return true;
-		}
-		bool ipv4 (const string &addr)
-		{
-			if (::jail (JAIL_IPV4, inet_addr (addr.str()))) return false;
-			return true;
-		}
-#endif
 	} limits;
 
 	class timeFunctions
