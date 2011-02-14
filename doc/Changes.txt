@@ -37,6 +37,8 @@
            
            * Added support for automatic redirects when an HTTPS service
              gets a connection with regular HTTP.
+             
+           * Added more randomness to uuid generation.
 
 0.9.38     Thu Nov 25 2010                           <grace@openpanel.com>
 
