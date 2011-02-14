@@ -260,7 +260,7 @@ public:
 			
 			for (i=0;i<8;++i)
 			{
-				mysalt[i+3] = SALTSRC[rand() & 63];
+				mysalt[i+3] = SALTSRC[random() & 63];
 			}
 			mysalt[i+3] = 0;
 			
@@ -280,7 +280,7 @@ public:
 			
 			for (i=0;i<2;++i)
 			{
-				mysalt[i] = SALTSRC[rand() & 63];
+				mysalt[i] = SALTSRC[random() & 63];
 			}
 			mysalt[i] = 0;
 			
@@ -305,7 +305,9 @@ public:
 		{
 			if (! randseeded)
 			{
-				srand (::time(NULL) ^ ::getpid());
+				timeval t;
+				::gettimeofday (&t, NULL);
+				srandom (t.tv_sec & t.tv_usec ^ ::getpid());
 				randseeded = true;
 			}
 		}
