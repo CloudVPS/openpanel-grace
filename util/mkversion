@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 # This file is part of the Grace library (libgrace).
 # The Grace library is free software: you can redistribute it and/or modify it
