@@ -15,8 +15,8 @@
              a file is requested that also exists with a .gz extension,
              the gzipped version will be served.
 
-           * Added decoding support for the msgpack serialization format
-             to the value class.
+           * Added support for the msgpack serialization format to the
+             value class.
            
            * Improved the robustness of the storage for shared references
              to immutable strings used by statstring.
