@@ -18,6 +18,17 @@ int main (void)
 */
 	vv.frommsgpack ( fs.load("in.msgpack") );
 	vv.savexml ("out.xml");
+	
+	value v = $("test", $("one",1)->
+						$("two",2)->
+						$("three",true)->
+						$("four",false)->
+						$("five",$("one")->$("two")->$("three")));
+	string s = v.tomsgpack();
+	fs.save ("out.msgpack", s);
+	
+	vv.frommsgpack (fs.load ("out.msgpack"));
+	vv.savexml ("readback.xml");
 
 	return 0;
 }

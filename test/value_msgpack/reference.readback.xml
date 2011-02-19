@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dict>
+	<dict id="test">
+		<integer id="one">1</integer>
+		<integer id="two">2</integer>
+		<bool id="three">true</bool>
+		<bool id="four">false</bool>
+		<array id="five">
+			<string>one</string>
+			<string>two</string>
+			<string>three</string>
+		</array>
+	</dict>
+</dict>

@@ -1,7 +1,7 @@
 #!/bin/sh
 testname=`echo "value_msgpack                    " | cut -c 1-24`
 $(which echo) -n "${testname}: "
-rm -f *.o out.xml out.msgpack >/dev/null 2>&1
+rm -f *.o out.xml out.msgpack readback.xml >/dev/null 2>&1
 $(which echo) -n "."
 make clean >/dev/null 2>&1 || $(which echo) -n ""
 $(which echo) -n "."
@@ -21,9 +21,18 @@ diff out.xml reference.xml >> test.log 2>&1 || {
   echo " failed (DIFF)"
   exit 1
 }
+diff out.msgpack reference.msgpack >> test.log 2>&1 || {
+  echo " failed (DIFF)"
+  exit 1
+}
+diff readback.xml reference.readback.xml >> test.log 2>&1 || {
+  echo " failed (DIFF)"
+  exit 1
+}
 #diff out.msgpack reference.msgpack >> test.log 2>&1 || {
 #  echo " failed (DIFF)"
 #  exit 1
 #}
-rm -f test.log out.xml out.msgpack
+rm -f test.log out.xml out.msgpack readback.xml
+
 echo " passed"

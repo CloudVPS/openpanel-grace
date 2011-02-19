@@ -176,6 +176,158 @@ string *value::tomsgpack (void) const
 
 void value::tomsgpack (string& out) const
 {
-	// TODO: implement write support
+	if (count())
+	{
+		if (count() == ucount) // array
+		{
+			if (count() < 16) // fix array
+			{
+				out.binput8u (out.strlen(), 0x90 + count());
+			}
+			else if (count() < 65536) // array 16
+			{
+				out.binput8u (out.strlen(), 0xdc);
+				out.binput16u (out.strlen(), count());
+			}
+			else // array 32
+			{
+				out.binput8u (out.strlen(), 0xdd);
+				out.binput32u (out.strlen(), count());
+			}
+			
+			// store individual array nodes
+			for (int i=0; i<count(); ++i)
+			{
+				(*this)[i].tomsgpack (out);
+			}
+		}
+		else if (count()) // map
+		{
+			if (count() < 16) // fix map
+			{
+				out.binput8u (out.strlen(), 0x80 + count());
+			}
+			else if (count() < 65536) // map 16
+			{
+				out.binput8u (out.strlen(), 0xde);
+				out.binput16u (out.strlen(), count());
+			}
+			else
+			{
+				out.binput8u (out.strlen(), 0xdf);
+				out.binput32u (out.strlen(), count());
+			}
+			
+			foreach (v, (*this))
+			{
+				string id = v.id();
+				int l = id.strlen();
+				if (l < 32)
+				{
+					out.binput8u (out.strlen(), 0xa0 + l);
+				}
+				else if (l < 65536)
+				{
+					out.binput8u (out.strlen(), 0xda);
+					out.binput16u (out.strlen(), l);
+				}
+				else
+				{
+					out.binput8u (out.strlen(), 0xdb);
+					out.binput32u (out.strlen(), l);
+				}
+				
+				out.strcat (id);
+				v.tomsgpack (out);
+			}
+		}
+	}
+	else
+	{
+		switch (_itype)
+		{
+			case i_unset:
+				out.binput8u (out.strlen(), 0xc0);
+				break;
+			
+			case i_int:
+				if ((ival() >= 0) && (ival() < 128))
+				{
+					out.binput8u (out.strlen(), ival());
+				}
+				else if ((ival() < 0) && (ival() >= -32))
+				{
+					out.binput8u (out.strlen(), 0xe0 - ival());
+				}
+				else out.binput32 (out.strlen(), ival());
+				break;
+			
+			case i_unsigned:
+				if (uval() < 128)
+				{
+					out.binput8u (out.strlen(), uval());
+				}
+				else if (uval() < 256) // uint 8
+				{
+					out.binput8u (out.strlen(), 0xcc);
+					out.binput8u (out.strlen(), uval());
+				}
+				else if (uval() < 65536) // uint 16
+				{
+					out.binput8u (out.strlen(), 0xcd);
+					out.binput16u (out.strlen(), uval());
+				}
+				else
+				{
+					out.binput8u (out.strlen(), 0xce);
+					out.binput32u (out.strlen(), uval());
+				}
+				break;
+			
+			case i_double:
+				// Always double
+				out.binput8u (out.strlen(), 0xcb);
+				out.binputieee (out.strlen(), dval());
+				break;
+				
+			case i_bool:
+				out.binput8u (out.strlen(), bval() ? 0xc3 : 0xc2);
+				break;
+			
+			case i_long:
+				out.binput8u (out.strlen(), 0xd3);
+				out.binput64 (out.strlen(), lval());
+				break;
+			
+			case i_ulong:
+				out.binput8u (out.strlen(), 0xcf);
+				out.binput64u (out.strlen(), ulval());
+				break;
+			
+			case i_ipaddr:
+			case i_date:
+			case i_currency:
+			case i_string:
+				if (sval().strlen() < 32)
+				{
+					out.binput8u (out.strlen(), 0xa0 + sval().strlen());
+				}
+				else if (sval().strlen() < 65536)
+				{
+					out.binput8u (out.strlen(), 0xda);
+					out.binput16u (out.strlen(), sval().strlen());
+				}
+				else
+				{
+					out.binput8u (out.strlen(), 0xdb);
+					out.binput32u (out.strlen(), sval().strlen());
+				}
+				out.strcat (sval());
+				break;
+			
+			default:
+				out.binput8u (out.strlen(), 0xc0);
+		}
+	}
 }
 
