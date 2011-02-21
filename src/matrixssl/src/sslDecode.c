@@ -782,6 +782,7 @@ hsStateDetermined:
 				return SSL_ERROR;
 			}
 			c += extLen;
+			
 		} else {
 /*
 			Parse a SSLv2 ClientHello message.  The same information is 
@@ -867,6 +868,25 @@ hsStateDetermined:
 				c, challengeLen);
 			c += challengeLen;
 		}
+		
+		
+			
+/*
+		Skip over the extensions, which were introduced in TLS (SSL301)
+		Caution! This is a libgrace modification!
+*/
+		if (ssl->rec.majVer == SSL3_MAJ_VER && ssl->rec.minVer >= 1) {
+			if (end - c >= 1) {
+				extLen = (c[0] << 8) + c[1]; 
+								
+				if( c + 2 + extLen <= end )
+				{
+					c += 2;
+					c += extLen;
+				}
+			}
+		}
+		
 /*
 		ClientHello should be the only one in the record.
 */
