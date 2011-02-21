@@ -24,11 +24,11 @@ curl -k3 -m1 -ossl3.txt https://localhost:14265/test.txt 2>/dev/null || {
     wait
     exit 1
 }
-curl -k2 -m1 -ossl2.txt https://localhost:14265/test.txt 2>/dev/null || {
-    echo " failed (RUN)"
-    wait
-    exit 1
-}
+#curl -k2 -m1 -ossl2.txt https://localhost:14265/test.txt 2>/dev/null || {
+#    echo " failed (RUN)"
+#    wait
+#    exit 1
+#}
 wait
 
 $(which echo) -n "."
