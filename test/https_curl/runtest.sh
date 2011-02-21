@@ -12,27 +12,32 @@ $(which echo) -n "."
 echo "--- start run" >> test.log
 ./https >> test.log 2>&1 &
 
-curl -k1 -m1 -otls1.txt https://localhost:14265/test.txt 2>/dev/null || {
-    echo " failed (RUN)"
-    exit 1
-}
+# DISABLE TLS, as it isn't supported by the GPL version of MatrixSSL
+#curl -k1 -m1 -otls1.txt https://localhost:14265/test.txt || {
+#    echo " failed (RUN1)"
+#    wait
+#    exit 1
+#}
+
 curl -k3 -m1 -ossl3.txt https://localhost:14265/test.txt 2>/dev/null || {
     echo " failed (RUN)"
+    wait
     exit 1
 }
 curl -k2 -m1 -ossl2.txt https://localhost:14265/test.txt 2>/dev/null || {
     echo " failed (RUN)"
+    wait
     exit 1
 }
 wait
 
 $(which echo) -n "."
 echo "--- start diff" >> test.log
-for file in ssl3.txt ssl2.txt tls1.txt; do
+for file in ssl3.txt ssl2.txt; do
   diff $file docroot/test.txt >> test.log 2>&1 || {
     echo " failed (DIFF)"
     exit 1
   }
 done
-rm -rf ssl3.txt ssl2.txt tls1.txt http.app http
+rm -rf ssl3.txt ssl2.txt http
 echo " passed"
