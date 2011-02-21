@@ -416,6 +416,9 @@ again:
 				
 				case SSL_ALERT_CERTIFICATE_UNKNOWN:
 					err = "Unknown certificate"; break;
+					
+				case SSL_ALERT_ILLEGAL_PARAMETER:
+					err = "Illegal parameters"; break;
 				
 				default:
 					err = "Unknown MatrixSSL error"; break;
