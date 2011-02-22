@@ -33,11 +33,13 @@ wait
 
 $(which echo) -n "."
 echo "--- start diff" >> test.log
-for file in ssl3.txt ssl2.txt; do
-  diff $file docroot/test.txt >> test.log 2>&1 || {
-    echo " failed (DIFF)"
-    exit 1
-  }
+for file in ssl3.txt ssl2.txt tls1.txt; do
+  if [ -f "$file" ]; then
+    diff $file docroot/test.txt >> test.log 2>&1 || {
+      echo " failed (DIFF)"
+      exit 1
+    }
+  fi
 done
 rm -rf ssl3.txt ssl2.txt http
 echo " passed"
