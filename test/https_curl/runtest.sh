@@ -1,5 +1,6 @@
 #!/bin/sh
-testname=`echo "https                       " | cut -c 1-24`; $(which echo) -n "${testname}: "
+testname=`echo "https_curl                             " | cut -c 1-24`; 
+$(which echo) -n "${testname}: "
 rm -f *.o default.* localhost.* >/dev/null 2>&1
 $(which echo) -n "."
 make clean >/dev/null 2>&1 || $(which echo) -n ""
@@ -41,5 +42,5 @@ for file in ssl3.txt ssl2.txt tls1.txt; do
     }
   fi
 done
-rm -rf ssl3.txt ssl2.txt http
+rm -rf ssl3.txt ssl2.txt http test.log
 echo " passed"
