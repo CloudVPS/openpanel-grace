@@ -169,6 +169,12 @@ sslcodec::sslcodec (bool server, sslKeys_t* keys)
 // ==========================================================================
 sslcodec::~sslcodec (void)
 {
+	if (ssl)
+	{
+		matrixSslDeleteSession (ssl);
+		ssl = NULL;
+	}
+
 	free (inbuf.buf);
 	free (insock.buf);
 	free (outsock.buf);
@@ -592,8 +598,8 @@ sslsocket::sslsocket (void)
 // ==========================================================================
 sslsocket::~sslsocket (void)
 {
-	if (codec) delete codec;
-	codec = NULL;
+//	if (codec) delete codec;
+//	codec = NULL;
 }
 
 // ==========================================================================
