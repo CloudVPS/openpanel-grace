@@ -615,9 +615,16 @@ tcpsocket &tcpsocket::operator= (tcpsocket *s)
 // ========================================================================
 void tcpsocket::derive (tcpsocket *s)
 {
+	if (codec)
+	{
+		codec->refcnt--;
+		if (!codec->refcnt) delete codec;
+	}	
+	
 	buffer.flush();
 	filno = s->filno;
 	feof = s->feof;
+	
 	codec = s->codec;
 	peer_pid = s->peer_pid;
 	peer_uid = s->peer_uid;
@@ -640,6 +647,12 @@ void tcpsocket::derive (tcpsocket *s)
 
 void tcpsocket::derive (tcpsocket &s)
 {
+	if (codec)
+	{
+		codec->refcnt--;
+		if (!codec->refcnt) delete codec;
+	}	
+	
 	buffer.flush();
 	filno = s.filno;
 	feof = s.feof;
