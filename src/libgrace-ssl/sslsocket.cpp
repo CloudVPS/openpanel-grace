@@ -68,7 +68,6 @@ protected:
 	sslBuf_t		 inbuf;
 	sslBuf_t		 insock;
 	sslBuf_t		 outsock;
-	sslSessionId_t	 session;
 	bool			 disablecerts;
 	bool 			 server;
 	bool			 allowpassthrough;
