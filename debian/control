@@ -29,7 +29,7 @@ Package: libgrace-dev
 Section: libdevel
 Architecture: any
 Conflicts: libgrace (<< 1.0)
-Depends: libgrace1.0, ${misc:Depends}
+Depends: libgrace1.0 (= ${source:Version}), ${misc:Depends}
 Description: The grace library (development files)
  C++ has gotten a bad rep and attracted a lot of haters. Still, the language is 
  far from dead and not very likely to die any time soon. Lots of effort has been
@@ -41,7 +41,7 @@ Description: The grace library (development files)
 
 Package: libgrace-dbfile1.0
 Architecture: any
-Depends: libgrace1.0, libdb4.6, ${shlibs:Depends}, ${misc:Depends}
+Depends: libgrace1.0 (= ${source:Version}), libdb4.6, ${shlibs:Depends}, ${misc:Depends}
 Provides: libgrace-dbfile
 Description: The grace library - dbm and db support
  This package adds support for dbm and db4.6 to the grace library 
@@ -50,13 +50,21 @@ Package: libgrace-dbfile-dev
 Section: libdevel
 Conflicts: libgrace-dbfile (<< 1.0)
 Architecture: any
-Depends: libgrace-dev, libgrace-dbfile1.0, libdb4.6-dev, libgdbm-dev, ${misc:Depends}
+Depends: 
+ libgrace-dev       (= ${source:Version}), 
+ libgrace-dbfile1.0 (= ${source:Version}), 
+ libdb4.6-dev, 
+ libgdbm-dev, 
+ ${misc:Depends}
 Description: The grace library - dbm and db support (Development files)
  This package adds support for dbm and db4.6 to the grace library 
 
 Package: libgrace-pcre1.0
 Architecture: any
-Depends: libpcre3, libgrace1.0, ${shlibs:Depends}, ${misc:Depends}
+Depends: 
+ libpcre3, 
+ libgrace1.0 (= ${source:Version}), 
+ ${shlibs:Depends}, ${misc:Depends}
 Provides: libgrace-pcre
 Description: The grace library - advanced regular expession support
  This package adds support for advanced regluar expessions to the grace library 
@@ -66,14 +74,19 @@ Package: libgrace-pcre-dev
 Section: libdevel
 Conflicts: libgrace-pcre (<< 1.0)
 Architecture: any
-Depends: libgrace-dev, libgrace-pcre1.0, libpcre3-dev, ${misc:Depends}
+Depends: 
+ libgrace-dev (= ${source:Version}), 
+ libgrace-pcre1.0 (= ${source:Version}), 
+ libpcre3-dev, ${misc:Depends}
 Description: The grace library - advanced regular expession support (Development files)
  This package adds support for advanced regluar expessions to the grace library 
  through PCRE.
 
 Package: libgrace-querido1.0
 Architecture: any
-Depends: libgrace1.0, ${shlibs:Depends}, ${misc:Depends}
+Depends: 
+ libgrace1.0 (= ${source:Version}), 
+ ${shlibs:Depends}, ${misc:Depends}
 Provides: libgrace-querido
 Description: The grace library - database support
  This package adds support for databases to the grace library.
@@ -82,14 +95,17 @@ Package: libgrace-querido-dev
 Section: libdevel
 Conflicts: libgrace-querido (<< 1.0)
 Architecture: any
-Depends: libgrace-querido1.0, libgrace-dev, libsqlite3-dev, ${misc:Depends}
+Depends: 
+ libgrace-querido1.0 (= ${source:Version}), 
+ libgrace-dev (= ${source:Version}), 
+ libsqlite3-dev, ${misc:Depends}
 Description: The grace library - database support (development files)
  This package adds support for databases to the grace library.
 
 Package: libgrace-ssl1.0
 Architecture: any
 Provides: libgrace-ssl
-Depends: libgrace1.0, ${shlibs:Depends}, ${misc:Depends}
+Depends: libgrace1.0 (= ${source:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: The grace library - SSL support
  This package adds support for SSL to the grace library.
 
@@ -97,7 +113,7 @@ Package: libgrace-ssl-dev
 Section: libdevel
 Architecture: any
 Conflicts: libgrace-ssl (<< 1.0)
-Depends: libgrace-ssl1.0, libgrace-dev, ${misc:Depends}
+Depends: libgrace-ssl1.0 (= ${source:Version}), libgrace-dev (= ${source:Version}), ${misc:Depends}
 Description: The grace library - SSL support (development files)
  This package adds support for SSL to the grace library.
 
