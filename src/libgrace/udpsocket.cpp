@@ -39,6 +39,8 @@ bool udpsocket::bind (int port)
 {
 	struct sockaddr_in6 local_addr;
 
+	memset(&local_addr, 0, sizeof(local_addr));
+
 	local_addr.sin6_addr = in6addr_any;
 	local_addr.sin6_port = htons (port);
 	local_addr.sin6_family = AF_INET6;
@@ -84,6 +86,8 @@ bool udpsocket::bind (int port)
 bool udpsocket::bind (ipaddress addr, int port)
 {
 	struct sockaddr_in6 local_addr;
+
+	memset(&local_addr, 0, sizeof(local_addr));
 
 	local_addr.sin6_family = AF_INET6;
 	local_addr.sin6_addr = addr;
@@ -142,6 +146,9 @@ void udpsocket::setbroadcast (bool to)
 bool udpsocket::sendto (ipaddress addr, int port, const string &data)
 {
 	struct sockaddr_in6 remote_addr;
+
+	memset(&remote_addr, 0, sizeof(remote_addr));	
+
 	remote_addr.sin6_addr = addr;
 	remote_addr.sin6_port = htons (port);
 	remote_addr.sin6_family = AF_INET6;
@@ -187,6 +194,7 @@ string *udpsocket::receive (ipaddress &addr, int timeout_ms)
 {
 	returnclass (string) res retain;
 	struct sockaddr_storage remote_addr;
+	
 	char buf[2048];
 	int sz;
 	socklen_t addrsz = sizeof (remote_addr);

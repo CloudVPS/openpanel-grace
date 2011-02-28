@@ -391,6 +391,8 @@ bool tcpsocket::uconnect (const string &path)
 	
 	realpath = fs.transr (path);
 	
+	memset(&remote, 0, sizeof(remote));
+
 	remote.sun_family = AF_UNIX;
 	::strncpy (remote.sun_path, realpath.str(), 107);
 	remote.sun_path[107] = 0;
