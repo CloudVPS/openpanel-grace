@@ -32,6 +32,8 @@
              multiple SSL packets inside a single TCP packet.
              
            * Integrated MatrixSSL 1.8.8, which fixes a security issue.
+             Patched this release internally to properly deal with
+             TLS301 clients (matrixssl proper is broken in this regard).
            
            * Fixed SSL client issue with large SSL packets.
            

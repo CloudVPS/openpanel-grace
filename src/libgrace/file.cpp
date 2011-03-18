@@ -230,7 +230,6 @@ off_t file::pos (void)
 // Binds an operating system filedescriptor for writing. Used for the fout
 // and ferr objects.
 // ========================================================================
-
 bool file::openwrite (int fid)
 {
 	buffer.flush();

@@ -290,9 +290,13 @@ public:
 				 /// Iterator for foreach.
 	string		*visitchild (int index)
 				 {
+				 	string *s;
 				 	if (index<0) return NULL;
 				 	if (eof()) return NULL;
-				 	return gets();
+				 	s = gets();
+				 	if (! s) return NULL;
+				 	iter = s;
+				 	return &iter;
 				 }
 
 	ringbuffer	 buffer; ///< The internal ringbuffer.
@@ -305,6 +309,7 @@ protected:
 	bool		 nonblocking; ///< True if the fd is in non-blocking mode.
 	unsigned int errcode; ///< Last generated error code/
 	string 		 err; ///< Last generated error text.
+	string		 iter; ///< Buffer for iteration
 };
 
 #endif
