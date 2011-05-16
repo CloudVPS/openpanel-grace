@@ -1,11 +1,11 @@
-Name: 		grace
-Version: 	0.9.38
+Name: 		libgrace
+Version: 	1.0.0
 Release: 	1%{?dist}
 Summary:  	The grace library
 License: 	GPLv3
 Packager:	Igmar Palsenberg <igmar@palsenberg.com>
 Group: 		System Environment/Libraries
-Source: 	%{name}-%{version}.tar.bz2
+Source: 	%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Provides:	%{name} = %{version}-%{release}
@@ -22,7 +22,7 @@ to perform a lot of computing tasks in C++.
 %package devel
 Summary:	Libraries and include files to develop with the grace library
 Group:		Development/Libraries
-Requires:	grace = %{version}
+Requires:	libgrace = %{version}
 
 %description devel
 The grace-devel package contains the libraries and include files to develop
@@ -31,7 +31,7 @@ applications using the grace library
 %package dbfile
 Summary: 	Add support for dbm and db4 to the grace library
 Group:		System Environment/Libraries
-Requires:	grace = %{version}
+Requires:	libgrace = %{version}
 Requires: 	gdbm >= 1.8, db4 => 4.3.29
 BuildRequires: 	gdbm-devel >= 1.8, db4-devel => 4.3.29
 
@@ -41,7 +41,7 @@ This package adds support for dbm and db4.6 to the grace library
 %package dbfile-devel
 Summary: 	Add support for dbm and db4 to the grace library
 Group: 		System Environment/Libraries
-Requires: 	grace-devel = %{version}
+Requires: 	libgrace-devel = %{version}
 Requires: 	gdbm >= 1.8, db4 => 4.3.29
 BuildRequires:	gdbm-devel >= 1.8, db4-devel => 4.3.29
 
@@ -51,7 +51,7 @@ Libraries and include files for the dbfile development with the grace library
 %package querido
 Summary: 	Add support for dbm and db4 to the grace library
 Group:		System Environment/Libraries
-Requires: 	grace = %{version}
+Requires: 	libgrace = %{version}
 Requires:	sqlite >= 3.3.6
 
 %description querido
@@ -60,7 +60,7 @@ This package adds support for databases to the grace library.
 %package querido-devel
 Summary: 	Add support for dbm and db4 to the grace library
 Group:		Development/Libraries
-Requires: 	grace-devel = %{version}
+Requires: 	libgrace-devel = %{version}
 BuildRequires:	sqlite-devel >= 3.3.6
 
 %description querido-devel
@@ -69,7 +69,7 @@ Libraries and include files for querido development with the grace library
 %package ssl
 Summary: 	Add support for SSL to the grace library
 Group:		System Environment/Libraries
-Requires: 	grace = %{version}
+Requires: 	libgrace = %{version}
 Requires: 	openssl >= 0.9.8
 
 %description ssl
@@ -78,7 +78,7 @@ This package adds support for SSL to the grace library.
 %package ssl-devel
 Summary: 	Add support for dbm and db4 to the grace library
 Group:		Development/Libraries
-Requires: 	grace-devel = %{version}
+Requires: 	libgrace-devel = %{version}
 BuildRequires: 	openssl-devel >= 0.9.8
 
 %description ssl-devel
@@ -87,7 +87,7 @@ Libraries and include files for SSL development with the grace library
 %package pcre
 Summary: 	Add support for PCRE to the grace library
 Group:		System Environment/Libraries
-Requires: 	grace = %{version}
+Requires: 	libgrace = %{version}
 Requires: 	pcre >= 6.6
 
 %description pcre
@@ -97,14 +97,14 @@ through PCRE.
 %package pcre-devel
 Summary: 	Add support for pcre to the grace library
 Group:		Development/Libraries
-Requires: 	grace-devel = %{version}
+Requires: 	libgrace-devel = %{version}
 BuildRequires: 	pcre-devel >= 6.6
 
 %description pcre-devel
 Libraries and include files for PCRE development with the grace library
 
 %prep
-%setup -q -n %{name}
+%setup -q -n %{name}-%{version}
 ./configure --prefix=%{_prefix} --exec-prefix=%{_bindir} \
             --lib-prefix=%{_libdir} --conf-prefix=%{_sysconfdir} \
 	    --include-prefix=%{_includedir}
@@ -117,6 +117,7 @@ rm -rf %{buildroot}
 %makeinstall DESTDIR=%{buildroot}
 # Wipe file that shouldn't be packaged
 rm -f %{buildroot}/%{_libdir}/libmatrixsslstatic.a
+rm -f %{buildroot}/usr/lib/libmatrixsslstatic.*
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
