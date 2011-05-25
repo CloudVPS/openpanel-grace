@@ -37,7 +37,7 @@ ipaddress value::ipval (void) const
 	{
 		return ipaddress (*(const in6_addr*)t.ipval );
     }
-    else if (_type == t_string )
+    else
 	{
 		ipaddress result;
 		const string& ip_str = sval ();
