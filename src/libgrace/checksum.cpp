@@ -11,24 +11,46 @@
 
 // =============================================================================
 // FUNCTION checksum
-// taken after 'DJBHash' http://www.partow.net/programming/hashfunctions/#DJBHashFunction
-// An algorithm produced by Professor Daniel J. Bernstein and shown first to the 
-// world on the usenet newsgroup comp.lang.c. It is one of the most efficient 
-// hash functions ever published. 
-// A test with an english dictionary (58K words) produced no collisions.
 // =============================================================================
 unsigned int checksum (const char *str)
 {
     unsigned int hash = 5381;
     unsigned int i    = 0;
+    unsigned int s    = 0;
     
     const unsigned char* ustr = (const unsigned char*)str;
 
+    // 1st pass
+    // taken after 'DJBHash' http://www.partow.net/programming/hashfunctions/#DJBHashFunction
+    // An algorithm produced by Professor Daniel J. Bernstein and shown first to the 
+    // world on the usenet newsgroup comp.lang.c. It is one of the most efficient 
+    // hash functions ever published. 
+    // A test with an english dictionary (58K words) produced no collisions.
     for(i = 0; ustr[i]; i++)
     {
         hash = ((hash << 5) + hash) + (ustr[i] & 0xDF);
     }
 
+    // 2nd pass
+    // DJBHash doesn't snowball very well; the last string byte can only affect
+    // the last few bits of the hash.
+    // to improve the snowballing effect, we perform a multiplications. This
+    // allows small differences on the last few bits to affect the entire hash.
+
+    s = hash;
+    
+    switch( i ) // note: fallthrough for each case
+    {
+        default:
+        case 6: hash += (s % 5779) * (ustr[6] & 0xDF);
+        case 5: hash += (s % 4643) * (ustr[5] & 0xDF); hash ^= hash << 7;
+        case 4: hash += (s %  271) * (ustr[4] & 0xDF);
+        case 3: hash += (s % 1607) * (ustr[3] & 0xDF); hash ^= hash << 15;
+        case 2: hash += (s % 7649) * (ustr[2] & 0xDF);
+        case 1: hash += (s % 6101) * (ustr[1] & 0xDF); hash ^= hash << 25;
+        case 0: hash += (s % 1217) * (ustr[0] & 0xDF);
+    }
+    
     return hash;
 }
 
