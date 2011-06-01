@@ -41,6 +41,10 @@ int value_jsontestApp::main (void)
 	vv.fromjson (out);
 	vv.savexml ("out.xml");
 	
+	value vvv;
+	vvv.fromjson ("[1,2,3,4]");
+	if (vvv.count() != 4) FAIL("int array");
+	
 	return 0;
 }
 
