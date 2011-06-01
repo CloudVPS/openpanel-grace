@@ -95,6 +95,7 @@ const char *value::readjsonnumber (const char *crsr, string &into)
 	
 	if (*c == ',') return c;
 	if (*c == '}') return c;
+	if (*c == ']') return c;
 	if (isspace (*c)) return c;
 	if (*c != '.') return NULL;
 	
