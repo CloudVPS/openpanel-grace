@@ -2431,6 +2431,7 @@ bool value::operator> (const value &other)
 // ========================================================================
 bool value::operator== (const value &other) const
 {
+	if (count() && other.count()) return treecmp (other);
 	switch (other._itype)
 	{
 		case i_string:
@@ -2453,6 +2454,7 @@ bool value::operator== (const value &other) const
 
 bool value::operator== (const value &other)
 {
+	if (count() && other.count()) return treecmp (other);
 	switch (other._itype)
 	{
 		case i_string:
@@ -2478,6 +2480,7 @@ bool value::operator== (const value &other)
 // ========================================================================
 bool value::operator!= (const value &other) const
 {
+	if (count() && other.count()) return (!treecmp (other));
 	switch (other._itype)
 	{
 		case i_string:
@@ -2500,6 +2503,7 @@ bool value::operator!= (const value &other) const
 
 bool value::operator!= (const value &other)
 {
+	if (count() && other.count()) return (!treecmp (other));
 	switch (other._itype)
 	{
 		case i_string:
