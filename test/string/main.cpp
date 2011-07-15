@@ -100,6 +100,17 @@ int stringtestApp::main (void)
 	tstr.unescape();
 	if (tstr != XMLSTR) FAIL("escape-unescape: '%s'" %format (tstr));
 	
+	#define TESTBASE64(a,b) \
+	    tstr = a; tstr = tstr.encode64(); if (tstr != b) FAIL("base64-encode"); \
+	    tstr = b; tstr = tstr.decode64(); if (tstr != a) FAIL("base64-decode"); 
+	    
+	// example strings from http://en.wikipedia.org/wiki/Base64
+	TESTBASE64( "pleasure.","cGxlYXN1cmUu"); 
+	TESTBASE64(  "leasure.","bGVhc3VyZS4="); 
+	TESTBASE64(   "easure.","ZWFzdXJlLg=="); 
+	TESTBASE64(    "asure.","YXN1cmUu");
+	TESTBASE64(     "sure.","c3VyZS4=");
+	
 	string result;
 
 	#define TESTCUT(teststr,operation,arg,lresult,rresult,error) \
