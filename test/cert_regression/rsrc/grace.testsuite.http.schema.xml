@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xml.schema>
+  <xml.class name="grace.testsuite.http.conf">
+    <xml.type>dict</xml.type>
+  </xml.class>
+</xml.schema>
