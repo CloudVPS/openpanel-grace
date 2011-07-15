@@ -14,7 +14,7 @@
 #include <matrixssl/matrixSsl.h>
 
 $exception(noKeysAvailableException,"No certificate or private key is available.")
-$exception(certificateInvalidException, "Invalid certificate."
+$exception(certificateInvalidException, "Invalid certificate.");
 
 extern void setupMatrixSSL (void);
 
@@ -632,7 +632,12 @@ void ssllistener::loadkeystring (const string& cert, const string& priv)
 	string cert_base64 = cert;
 	cert_base64.cropafter ("-----BEGIN CERTIFICATE-----");
 	cert_base64.cropat ("-----END CERTIFICATE-----");
+
 	string cert_data = cert_base64.decode64();
+
+    ::printf( "--- %s --- \n" , cert_base64.str());
+    ::printf( "--- %s --- \n" , cert_data.encode64()->str());
+
 	
 	string priv_base64 = priv ? priv : cert;
 	priv_base64.cropafter ("-----BEGIN RSA PRIVATE KEY-----");
@@ -644,11 +649,14 @@ void ssllistener::loadkeystring (const string& cert, const string& priv)
 		matrixSslFreeKeys ((sslKeys_t*)keys);
 	}
 
+
+
 	if (matrixSslReadKeysMem( (sslKeys_t**)&keys,
 		  (unsigned char*)cert_data.str(), cert_data.strlen(),
 		  (unsigned char*)priv_data.str(), priv_data.strlen(),
 		  0,0) < 0)
 	{
+	
 		throw (certificateInvalidException());
 	}
 }
