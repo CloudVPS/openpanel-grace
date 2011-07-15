@@ -1,4 +1,12 @@
-0.9.39                                               <grace@openpanel.com>
+1.0.2      Fri Jul 15 2011                           <grace@openpanel.com>
+
+           * Fix build failure (blame Pim).
+           
+1.0.1      Fri Jul 15 2011                           <grace@openpanel.com>
+
+           * Fix bug in base64 decoding.
+
+1.0        Thu Jun  2 2011                           <grace@openpanel.com>
 
            * Added IPv6 support to ipaddress and all necessary classes that
              use this (tcpsocket, netdb, etc).
