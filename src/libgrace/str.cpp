@@ -2306,7 +2306,7 @@ string *string::decode64 (void) const
 	char outbuf[4];
 	bool dataleft = true;
 	
-	while (dataleft)
+	while (dataleft && ( srcpos < size ))
 	{
 		bool ignore = false;
 		bool ending = false;
