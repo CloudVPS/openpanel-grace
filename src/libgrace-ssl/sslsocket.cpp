@@ -13,7 +13,8 @@
 
 #include <matrixssl/matrixSsl.h>
 
-$exception( noKeysAvailableException, "No certificate or private key is available." )
+$exception(noKeysAvailableException,"No certificate or private key is available.")
+$exception(certificateInvalidException, "Invalid certificate."
 
 extern void setupMatrixSSL (void);
 
@@ -123,7 +124,7 @@ void setupMatrixSSL (void)
 		//::printf ("calling matrixsslopen\n");
 		if (matrixSslOpen() == 0) initialized = true;
 		else
-    		{
+    	{
 			//::printf ("init failure\n");
 		}
 	}
@@ -615,40 +616,41 @@ sslsocket &sslsocket::operator= (sslsocket *orig)
 // ==========================================================================
 // METHOD ssllistener::loadkeyfile
 // ==========================================================================
-void ssllistener::loadkeyfile( const string& cert, const string& priv )
+void ssllistener::loadkeyfile (const string& cert, const string& priv)
 {
-	string cert_data = fs.load(cert);
-	string priv_data = fs.load(priv ? priv : cert );
+	string cert_data = fs.load (cert);
+	string priv_data = fs.load (priv ? priv : cert );
 	
-	loadkeystring( cert_data, priv_data );
+	loadkeystring (cert_data, priv_data);
 }
 
 // ==========================================================================
 // METHOD ssllistener::loadkeystring
 // ==========================================================================
-void ssllistener::loadkeystring( const string& cert, const string& priv )
+void ssllistener::loadkeystring (const string& cert, const string& priv)
 {
-
 	string cert_base64 = cert;
-	cert_base64.cropafter("-----BEGIN CERTIFICATE-----");
-	cert_base64.cropat("-----END CERTIFICATE-----");
+	cert_base64.cropafter ("-----BEGIN CERTIFICATE-----");
+	cert_base64.cropat ("-----END CERTIFICATE-----");
 	string cert_data = cert_base64.decode64();
 	
 	string priv_base64 = priv ? priv : cert;
-	priv_base64.cropafter("-----BEGIN RSA PRIVATE KEY-----");
-	priv_base64.cropat("-----END RSA PRIVATE KEY-----");
+	priv_base64.cropafter ("-----BEGIN RSA PRIVATE KEY-----");
+	priv_base64.cropat ("-----END RSA PRIVATE KEY-----");
 	string priv_data = priv_base64.decode64();
 	
 	if (keys)
 	{
-		matrixSslFreeKeys( (sslKeys_t*)keys );
+		matrixSslFreeKeys ((sslKeys_t*)keys);
 	}
 
-	matrixSslReadKeysMem( (sslKeys_t**)&keys,
-		(unsigned char*)cert_data.str(), cert_data.strlen(),
-		(unsigned char*)priv_data.str(), priv_data.strlen(),
-		0,0
-	 );
+	if (matrixSslReadKeysMem( (sslKeys_t**)&keys,
+		  (unsigned char*)cert_data.str(), cert_data.strlen(),
+		  (unsigned char*)priv_data.str(), priv_data.strlen(),
+		  0,0) < 0)
+	{
+		throw (certificateInvalidException());
+	}
 }
 
 // ==========================================================================
