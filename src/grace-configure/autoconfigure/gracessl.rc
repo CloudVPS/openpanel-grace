@@ -3,7 +3,7 @@
 # ---------------------------------------------------------------------------
 
 saypending "looking for grace-ssl library"
-for loc in /sw/lib /usr/lib32 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
+for loc in /sw/lib /usr/lib32 /usr/lib64 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
   if [ -f "$loc/libgrace-ssl.$DYNEXT" ]; then
     LIBGRACESSL="-lgrace-ssl"
   fi
