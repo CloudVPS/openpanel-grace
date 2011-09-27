@@ -1,3 +1,7 @@
+1.0.3      Tue Sep 27 2011                           <grace@openpanel.com>
+
+           * Fix memory allocation bug in string handling.
+
 1.0.2      Fri Jul 15 2011                           <grace@openpanel.com>
 
            * Fix build failure (blame Pim).
