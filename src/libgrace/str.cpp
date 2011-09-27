@@ -1039,7 +1039,7 @@ void string::insert (const string &s)
 		
 		if ((size+1+sizeof (refblock)) >= alloc)
 		{
-			alloc = GROW(size+1+sizeof (refblock));
+			alloc = GROW(offs+size+1+sizeof (refblock));
 			data = (refblock *) realloc (data, alloc);
 		}
 		
@@ -1082,7 +1082,7 @@ void string::strcat (const string &s)
 		
 		if ((size+1+sizeof (refblock)) >= alloc)
 		{
-			alloc = GROW(size+1+sizeof (refblock));
+			alloc = GROW(offs+size+1+sizeof (refblock));
 			data = (refblock *) realloc (data, alloc);
 		}
 		
@@ -1196,7 +1196,7 @@ void string::strcat (const char *s, size_t sz)
 	
 	if ((size+1+sizeof (refblock)) >= alloc)
 	{
-		alloc = GROW(size+1+sizeof (refblock));
+		alloc = GROW(offs+size+1+sizeof (refblock));
 		if (oldsize) data = (refblock *) realloc (data, alloc);
 		else
 		{
@@ -1245,7 +1245,7 @@ void string::strcat (const char *s)
 		if ((size+1+sizeof (refblock)) >= alloc)
 		{
 			testThree = true;
-			alloc =  GROW(size+1+sizeof (refblock));
+			alloc =  GROW(offs+size+1+sizeof (refblock));
 			data = (refblock *) realloc (data, alloc);
 		}
 		memmove (data->v + offs + oldsize, s, size-oldsize);
@@ -1282,7 +1282,7 @@ void string::strcpy (const char *s)
 	offs = 0;
 	if ((size+1+sizeof (refblock)) >= alloc)
 	{
-		alloc = GROW(size+1+sizeof (refblock));
+		alloc = GROW(offs+size+1+sizeof (refblock));
 		if (data)
 		{
 			data = (refblock *) realloc (data, alloc);
@@ -1400,7 +1400,7 @@ void string::strcpy (const char *src, size_t sz)
 	offs = 0;
 	if ((size+1+sizeof (refblock)) >= alloc)
 	{
-		alloc = GROW(size+1+sizeof (refblock));
+		alloc = GROW(offs+size+1+sizeof (refblock));
 		if (data)
 		{
 			data = (refblock *) realloc (data, alloc);
@@ -1612,7 +1612,7 @@ bool string::regcmp (const string &s) const
 }
 
 // ========================================================================
-// METHOD ::crop
+// METHOD ©
 // -------------
 // Reset the string size to 0 bytes.
 // ========================================================================
@@ -1705,6 +1705,8 @@ void string::crop (int sz)
 		return;
 	}
 	
+	if (! data) return;
+	
 	if (size > _sz)
 	{
 		if ((size - _sz) < (unsigned int) tune::str::cropcopylimit)
@@ -1730,9 +1732,9 @@ void string::crop (int sz)
 		}
 		size = _sz;
 		data->v[offs+size] = '\0';
-		if (GROW(size+1+sizeof (refblock)) < alloc)
+		if (GROW(offs+size+1+sizeof (refblock)) < alloc)
 		{
-			alloc = GROW(size+1+sizeof (refblock));
+			alloc = GROW(offs+size+1+sizeof (refblock));
 			data = (refblock *) realloc (data, alloc * sizeof (char *));
 		}
 	}
@@ -1761,7 +1763,7 @@ void string::pad (int psz, char p)
 	
 	if ((sz+sizeof(refblock)) >= alloc)
 	{
-		alloc = GROW(sz + sizeof (refblock) +1);
+		alloc = GROW(offs + sz + sizeof (refblock) +1);
 		data = (refblock *) realloc (data, alloc * sizeof(char *));
 	}
 	if (p)
