@@ -9,7 +9,7 @@ Source: libgrace
 Section: libs
 Priority: optional
 Maintainer: OpenPanel packager <packages@openpanel.com>
-Build-Depends: debhelper (>= 7), libpcre3-dev, libgdbm-dev, libdb4.6-dev, libsqlite3-dev
+Build-Depends: debhelper (>= 7), libpcre3-dev, libgdbm-dev, libdb-dev, libsqlite3-dev
 Standards-Version: 3.9.1
 
 Package: libgrace1.0
@@ -41,10 +41,10 @@ Description: The grace library (development files)
 
 Package: libgrace-dbfile1.0
 Architecture: any
-Depends: libgrace1.0 (= ${source:Version}), libdb4.6, ${shlibs:Depends}, ${misc:Depends}
+Depends: libgrace1.0 (= ${source:Version}), ${shlibs:Depends}, ${misc:Depends}
 Provides: libgrace-dbfile
 Description: The grace library - dbm and db support
- This package adds support for dbm and db4.6 to the grace library 
+ This package adds support for dbm and db to the grace library 
 
 Package: libgrace-dbfile-dev
 Section: libdevel
@@ -53,11 +53,11 @@ Architecture: any
 Depends: 
  libgrace-dev       (= ${source:Version}), 
  libgrace-dbfile1.0 (= ${source:Version}), 
- libdb4.6-dev, 
+ libdb-dev, 
  libgdbm-dev, 
  ${misc:Depends}
 Description: The grace library - dbm and db support (Development files)
- This package adds support for dbm and db4.6 to the grace library 
+ This package adds support for dbm and db to the grace library 
 
 Package: libgrace-pcre1.0
 Architecture: any
