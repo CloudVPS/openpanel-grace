@@ -14,22 +14,30 @@ if [ -z "$DB4INC" ]; then
 else
   saypass "$DB4INC"
   saypending "looking for db4 shared library"
-  for loc in /sw/lib /usr/lib32 /usr/lib /usr/lib64 /usr/local/lib $(ls -d /opt/local/lib/db4* 2>/dev/null | tail -1) /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
-    if [ -f "$loc/libdb.$DYNEXT" ]; then
-      saypass "$loc"
-      LIBDB4="-L$loc -ldb"
-    else
-      if [ -f "$loc/libdb4.$DYNEXT" ]; then
+  
+  echo 'int main(){}' > conftest.cpp
+  $CXX -o conftest.bin conftest.cpp -ldb >/dev/null 2>&1 && LIBDB4="-ldb"
+  rm -f conftest.bin conftest.cpp 
+
+
+  if [ -z "$LIBDB4" ]; then
+    for loc in /sw/lib /usr/lib32 /usr/lib /usr/lib64 /usr/local/lib $(ls -d /opt/local/lib/db4* 2>/dev/null | tail -1) /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
+      if [ -f "$loc/libdb.$DYNEXT" ]; then
         saypass "$loc"
-        LIBDB4="-L$loc -ldb4"
-	  else
-		if [ -f "$loc/libdb-4.*.$DYNEXT" ]; then
-		  saypass "$loc"
-		  LIBDB4="-L$loc -ldb"
-		fi
-	  fi
-    fi
-  done
+        LIBDB4="-L$loc -ldb"
+      else
+        if [ -f "$loc/libdb4.$DYNEXT" ]; then
+          saypass "$loc"
+          LIBDB4="-L$loc -ldb4"
+  	  else
+  		if [ -f "$loc/libdb-4.*.$DYNEXT" ]; then
+  		  saypass "$loc"
+  		  LIBDB4="-L$loc -ldb"
+  		fi
+  	  fi
+      fi
+    done
+  fi
   if [ -z "$LIBDB4" ]; then
     sayfail "failed"
     exit 1

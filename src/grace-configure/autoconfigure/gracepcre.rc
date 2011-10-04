@@ -2,12 +2,18 @@
 # Figure out path to Grace SSL library
 # ---------------------------------------------------------------------------
 
-saypending "looking for grace-pcre library"
-for loc in /sw/lib /usr/lib32 /usr/lib /usr/local/lib /usr/freeware/lib /lib64 /usr/lib64 /usr/local/lib64 $HOME/lib $HOME/.lib ../../lib; do
-  if [ -f "$loc/libgrace-pcre.$DYNEXT" ]; then
-    LIBGRACEPCRE="-lgrace-pcre"
-  fi
-done
+echo 'int main(){}' > conftest.cpp
+$CXX -o conftest.bin conftest.cpp -lgrace-pcre >/dev/null 2>&1 && LIBGRACEPCRE="-lgrace-pcre"
+rm -f conftest.bin conftest.cpp 
+
+if [ -z "$LIBGRACEPCRE" ]; then
+    saypending "looking for grace-pcre library"
+    for loc in /sw/lib /usr/lib32 /usr/lib /usr/local/lib /usr/freeware/lib /lib64 /usr/lib64 /usr/local/lib64 $HOME/lib $HOME/.lib ../../lib; do
+      if [ -f "$loc/libgrace-pcre.$DYNEXT" ]; then
+        LIBGRACEPCRE="-lgrace-pcre"
+      fi
+    done
+fi
 if [ -z "$LIBGRACEPCRE" ]; then
   sayfail "failed"
   exit 1

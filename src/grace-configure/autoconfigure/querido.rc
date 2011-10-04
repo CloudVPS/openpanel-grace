@@ -19,11 +19,17 @@ saypass "$QUERIDOINC"
 # ---------------------------------------------------------------------------
 
 saypending "looking for querido library"
-for loc in /sw/lib /usr/lib32 /usr/lib64 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
-  if [ -f "$loc/libquerido.$DYNEXT" ]; then
-    LIBQUERIDO="-lquerido"
-  fi
-done
+echo 'int main(){}' > conftest.cpp
+$CXX -o conftest.bin conftest.cpp -lquerido >/dev/null 2>&1 && LIBQUERIDO="-lquerido"
+rm -f conftest.bin conftest.cpp 
+
+if [ -z "$LIBQUERIDO" ]; then
+  for loc in /sw/lib /usr/lib32 /usr/lib64 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
+    if [ -f "$loc/libquerido.$DYNEXT" ]; then
+      LIBQUERIDO="-lquerido"
+    fi
+  done
+fi
 if [ -z "$LIBQUERIDO" ]; then
   sayfail "failed"
   exit 1

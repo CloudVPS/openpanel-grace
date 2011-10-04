@@ -19,11 +19,17 @@ saypass "$DBFILEINC"
 # ---------------------------------------------------------------------------
 
 saypending "looking for dbfile library"
-for loc in /sw/lib /usr/lib32 /usr/lib64 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
-  if [ -f "$loc/libdbfile.$DYNEXT" ]; then
-    LIBDBFILE="-ldbfile"
-  fi
-done
+echo 'int main(){}' > conftest.cpp
+$CXX -o conftest.bin conftest.cpp -ldbfile >/dev/null 2>&1 && LIBDBFILE="-ldbfile"
+rm -f conftest.bin conftest.cpp 
+
+if [ -z "$LIBDBFILE" ]; then
+  for loc in /sw/lib /usr/lib32 /usr/lib64 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
+    if [ -f "$loc/libdbfile.$DYNEXT" ]; then
+      LIBDBFILE="-ldbfile"
+    fi
+  done
+fi
 if [ -z "$LIBDBFILE" ]; then
   sayfail "failed"
   exit 1

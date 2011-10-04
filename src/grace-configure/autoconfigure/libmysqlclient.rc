@@ -20,15 +20,21 @@ fi
 # ---------------------------------------------------------------------------
 
 saypending "looking for mysql library"
-for loc in /usr/lib/mysql /usr/lib /usr/lib64 /usr/lib64/mysql /usr/local/lib /usr/local/lib/mysql /opt/mysql /usr/local/mysql/lib /usr/mysql/lib /opt/mysql/lib /usr/freeware/lib /usr/freeware/mysql/lib /usr/freeware/lib/mysql /usr/freeware/lib32 /usr/freeware/lib32/mysql; do
-  if [ -f "$loc/libmysqlclient.a" ]; then
-    LIBMYSQL="$loc/libmysqlclient.a"
-  else
-    if [ -f "$loc/libmysqlclient.so" ]; then
-      LIBMYSQL="-L$loc -lmysqlclient"
+echo 'int main(){}' > conftest.cpp
+$CXX -o conftest.bin conftest.cpp -lmysqlclient >/dev/null 2>&1 && LIBMYSQL="-lmysqlclient"
+rm -f conftest.bin conftest.cpp 
+
+if [ -z "$LIBMYSQL" ]; then
+  for loc in /usr/lib/mysql /usr/lib /usr/lib64 /usr/lib64/mysql /usr/local/lib /usr/local/lib/mysql /opt/mysql /usr/local/mysql/lib /usr/mysql/lib /opt/mysql/lib /usr/freeware/lib /usr/freeware/mysql/lib /usr/freeware/lib/mysql /usr/freeware/lib32 /usr/freeware/lib32/mysql; do
+    if [ -f "$loc/libmysqlclient.a" ]; then
+      LIBMYSQL="$loc/libmysqlclient.a"
+    else
+      if [ -f "$loc/libmysqlclient.so" ]; then
+        LIBMYSQL="-L$loc -lmysqlclient"
+      fi
     fi
-  fi
-done
+  done
+fi
 if [ -z "$LIBMYSQL" ]; then
   sayfailsoft "failed"
 else

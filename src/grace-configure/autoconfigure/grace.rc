@@ -19,11 +19,18 @@ saypass "$GRACEINC"
 # ---------------------------------------------------------------------------
 
 saypending "looking for grace library"
-for loc in /sw/lib /usr/lib32 /usr/lib64 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
-  if [ -f "$loc/libgrace.$DYNEXT" ]; then
-    LIBGRACE="-L$loc -lgrace"
-  fi
-done
+echo 'int main(){}' > conftest.cpp
+$CXX -o conftest.bin conftest.cpp -lgrace >/dev/null 2>&1 && LIBGRACE="-lgrace"
+rm -f conftest.bin conftest.cpp 
+
+if [ -z "$LIBGRACE" ]; then
+  for loc in /sw/lib /usr/lib32 /usr/lib64 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
+    if [ -f "$loc/libgrace.$DYNEXT" ]; then
+      LIBGRACE="-L$loc -lgrace"
+    fi
+  done
+fi
+
 if [ -z "$LIBGRACE" ]; then
   sayfail "failed"
   exit 1

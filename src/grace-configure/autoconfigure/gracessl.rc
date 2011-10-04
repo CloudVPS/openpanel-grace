@@ -3,11 +3,18 @@
 # ---------------------------------------------------------------------------
 
 saypending "looking for grace-ssl library"
-for loc in /sw/lib /usr/lib32 /usr/lib64 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
-  if [ -f "$loc/libgrace-ssl.$DYNEXT" ]; then
-    LIBGRACESSL="-lgrace-ssl"
-  fi
-done
+
+echo 'int main(){}' > conftest.cpp
+$CXX -o conftest.bin conftest.cpp -ldbfile >/dev/null 2>&1 && LIBGRACESSL="-lgrace-ssl"
+rm -f conftest.bin conftest.cpp 
+
+if [ -z "$LIBGRACESSL" ]; then
+    for loc in /sw/lib /usr/lib32 /usr/lib64 /usr/lib /usr/local/lib /usr/freeware/lib $HOME/lib $HOME/.lib ../../lib; do
+      if [ -f "$loc/libgrace-ssl.$DYNEXT" ]; then
+        LIBGRACESSL="-L$loc -lgrace-ssl"
+      fi
+    done
+fi
 if [ -z "$LIBGRACESSL" ]; then
   sayfail "failed"
   exit 1
