@@ -798,6 +798,70 @@ else
   saypass "no"
 fi
 rm -f conftest.cpp conftest.o >/dev/null 2>&1
+
+
+# ---------------------------------------------------------------------------
+# Figure out if the system supports linux-style SO_PEERCRED voudon
+# ---------------------------------------------------------------------------
+
+
+saypending "checking for SO_PEERCRED support"
+cat > conftest.cpp << EOF
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <sys/un.h>
+#include <sys/socket.h>
+#include <sys/uio.h>
+
+int main (void)
+{
+    socklen_t foo;
+    getsockopt (1, SOL_SOCKET, SO_PEERCRED, (char *) &foo, &foo);
+}
+
+EOF
+
+if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >> configure.log 2>&1; then
+  HAVE_SO_PEERCRED="#define HAVE_SO_PEERCRED 1"
+  saypass "yes"
+else
+  saypass "no"
+fi
+rm -f conftest.cpp conftest.o >/dev/null 2>&1
+
+
+# ---------------------------------------------------------------------------
+# Figure out if the system supports BSD-style LOCAL_PEERCRED voudon
+# ---------------------------------------------------------------------------
+
+
+saypending "checking for LOCAL_PEERCRED support"
+cat > conftest.cpp << EOF
+#include <netinet/in.h>
+#include <sys/param.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/ucred.h>
+#include <sys/uio.h>
+#include <sys/un.h>
+
+int main (void)
+{
+    socklen_t foo;
+    getsockopt (1, 0, LOCAL_PEERCRED, (char *) &foo, &foo);
+}
+
+EOF
+
+if $CXX $CXXFLAGS -o conftest.o -c conftest.cpp >> configure.log 2>&1; then
+  HAVE_LOCAL_PEERCRED="#define HAVE_LOCAL_PEERCRED 1"
+  saypass "yes"
+else
+  saypass "no"
+fi
+rm -f conftest.cpp conftest.o >/dev/null 2>&1
+
+
 # ---------------------------------------------------------------------------
 # Figure out whether we need gethostbyname_r
 # ---------------------------------------------------------------------------
@@ -891,6 +955,8 @@ $CRYPTDEFINE
 $HAVE_GMTOFF
 $HAVE_SENDFILE
 $HAVE_PASSCRED
+$HAVE_SO_PEERCRED
+$HAVE_LOCAL_PEERCRED
 $GETHOSTBYNAMEDEF
 #endif
 EOF
