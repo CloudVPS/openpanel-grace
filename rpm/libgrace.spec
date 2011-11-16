@@ -5,7 +5,7 @@ Summary:  	The grace library
 License: 	GPLv3
 Packager:	Igmar Palsenberg <igmar@palsenberg.com>
 Group: 		System Environment/Libraries
-Source: 	%{name}-%{version}.tar.gz
+Source: 	%{name}-%{version}.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Provides:	%{name} = %{version}-%{release}
