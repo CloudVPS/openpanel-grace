@@ -28,9 +28,12 @@ void __breakme (void) {}
 
 int httpsApp::main (void)
 {
+	value hostdata = $("*","default")->$("localhost","localhost");
 	value public_local;
 	httpsd 			srv (4269);
 					srv.systempath ("docroot");
+	httpdvhost		srv_vhost (srv, hostdata);
+	httpdfileshare	srv_fshare (srv, "*", "docroot");
 
 	srv.loadkeyfile("brokencert.pem");
 	srv.start ();
