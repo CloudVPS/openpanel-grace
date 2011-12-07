@@ -103,7 +103,7 @@ pcregexp &pcregexp::setoptions (int o)
 	options = o;
 }
 
-#define MAXBACKREF 16
+#define MAXBACKREF 256
 
 // ========================================================================
 // METHOD pcregexp::match
