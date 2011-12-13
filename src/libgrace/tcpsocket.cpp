@@ -1048,9 +1048,18 @@ void tcpsocket::sendfile (const string &path, unsigned int amount)
 		file fi;
 		off_t off = 0;
 	
-		fi.openread (path);
-		::sendfile (filno, fi.filno, &off, amount);
-		fi.close();
+		if (fi.openread (path))
+		{
+			while (amount > 0)
+			{
+				unsigned int ssz = 0;
+				ssz = ::sendfile (filno, fi.filno, &off, amount);
+				amount -= ssz;
+				off += ssz;
+			}
+			fi.close();
+		}
+		return;
 	}
 #endif
 	
