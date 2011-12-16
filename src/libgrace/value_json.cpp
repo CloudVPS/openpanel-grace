@@ -209,6 +209,11 @@ const char *value::decodejson (const char *objpos)
 				(*this)[nam] = false;
 				crsr += 5;
 			}
+			else if (::strncmp (crsr, "null", 4) == 0)
+			{
+				(*this)[nam];
+				crsr += 4;
+			}
 			else
 			{
 				return NULL;
@@ -266,6 +271,11 @@ const char *value::decodejson (const char *objpos)
 			{
 				(*this).newval() = false;
 				crsr += 5;
+			}
+			else if (::strncmp (crsr, "null", 4) == 0)
+			{
+				(*this).newval();
+				crsr += 4;
 			}
 			else
 			{
