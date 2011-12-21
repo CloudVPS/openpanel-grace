@@ -1,3 +1,11 @@
+1.0.7      Wed Dec 21 2011                           <grace@openpanel.com>
+
+           * Fix a bug in tcpsocket::sendfile.
+           
+           * Increase maximum number of backreferences allowed in pcre.
+           
+           * Properly parse json null-values.
+           
 1.0.3      Tue Sep 27 2011                           <grace@openpanel.com>
 
            * Fix memory allocation bug in string handling.
