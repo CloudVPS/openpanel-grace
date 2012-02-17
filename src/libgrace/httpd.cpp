@@ -693,7 +693,7 @@ void httpdworker::run (void)
 					line = s.gets();
 					
 					// Empty line, our turn
-					if (gotCommand && (! line.strlen())) break;
+					if (gotCommand && (! line.strlen())) continue;
 					
 					// Ok, but did we get anything useful?
 					if (line.strlen())
@@ -717,8 +717,8 @@ void httpdworker::run (void)
 				
 				// If we got nothing useful, totally drop out of
 				// the session.
-				if (! gotCommand) throw httpdWorkerException();
-				if (s.eof()) throw httpdWorkerException();
+				if (! gotCommand) throw httpdWorkerException("No command");
+				if (s.eof()) throw httpdWorkerException("End of file");
 				
 				// Now we'll start interpreting the http comand
 				string cmd;
@@ -844,8 +844,9 @@ void httpdworker::run (void)
 				}
 			}
 		}
-		catch (...)
+		catch (exception e)
 		{
+			//::printf (">>> exception caught: %s\n", e.description);
 		}
 		
 		s.close();

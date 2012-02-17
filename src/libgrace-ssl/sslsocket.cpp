@@ -744,7 +744,7 @@ tcpsocket *ssllistener::tryaccept(double timeout)
 		while (!codec->handshakedone && !codec->passthrough )
 		{
 			numrounds++;
-			if (numrounds > 8)
+			if (numrounds > 16)
 			{
 				result->close();
 				delete result;
@@ -752,7 +752,7 @@ tcpsocket *ssllistener::tryaccept(double timeout)
 			}
 			try
 			{
-				result->readbuffer( 128, 100 );
+				result->readbuffer( 128, 500 );
 
 				// if the codec went to passthrough mode, remove it
                 if (codec->passthrough)
