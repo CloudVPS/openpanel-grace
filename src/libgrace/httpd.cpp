@@ -693,7 +693,7 @@ void httpdworker::run (void)
 					line = s.gets();
 					
 					// Empty line, our turn
-					if (gotCommand && (! line.strlen())) continue;
+					if (gotCommand && (! line.strlen())) break;
 					
 					// Ok, but did we get anything useful?
 					if (line.strlen())
