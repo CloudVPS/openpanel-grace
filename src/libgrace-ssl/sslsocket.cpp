@@ -752,7 +752,7 @@ tcpsocket *ssllistener::tryaccept(double timeout)
 			}
 			try
 			{
-				result->readbuffer( 128, 500 );
+				result->readbuffer( 256, 500 );
 
 				// if the codec went to passthrough mode, remove it
                 if (codec->passthrough)

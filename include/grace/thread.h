@@ -148,6 +148,12 @@ public:
 					 {
 					 	return events.count();
 					 }
+					 
+	void			 shutdown (void)
+					 {
+					 	sendevent ("shutdown");
+					 	hasfinished.wait();
+					 }
 
 					 /// Find out thread's unique id.
 					 /// \return The unique id number.
@@ -199,7 +205,7 @@ protected:
 	bool			 spawned; ///< True if thread was spawned.
 	eventq			 events; ///< Event queue.
 	lock<bool>		 isrunning; ///< True if thread runs.
-	
+	conditional		 hasfinished; ///< Will trigger if thread exits.
 };
 
 /// Array group of threads.

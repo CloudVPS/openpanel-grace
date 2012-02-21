@@ -71,6 +71,7 @@ void *thread::dorun (void *param)
 	(*me).isrunning.o = false;
 	(*me).isrunning.unlock();
 	(*me).finished = true;
+	(*me).hasfinished.broadcast();
 	
 	exclusivesection (THREADLIST)
 	{

@@ -40,6 +40,7 @@ int httpApp::main (void)
 	httpdfileshare	srv_fshare (srv, "*", "docroot");
 	
 	srv.start ();
+	sleep (360);
 	
 	httpsocket hs;
 	
