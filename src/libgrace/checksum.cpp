@@ -8,17 +8,33 @@
 #include <string.h>
 #include <sys/types.h>
 #include <grace/tolower.h>
-
-unsigned int GRACE_HASH_SEED;
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
 
 // =============================================================================
 // FUNCTION checksum
 // =============================================================================
 unsigned int checksum (const char *str)
 {
-    unsigned int hash = GRACE_HASH_SEED;
+    static unsigned int ihash (0);
+    unsigned int hash = 0;
     unsigned int i    = 0;
     unsigned int s    = 0;
+    int sdf;
+    
+    if (! ihash)
+    {
+		sdf = open ("/dev/random", O_RDONLY);
+		if (sdf)
+		{
+			read (sdf, &ihash, sizeof(ihash));
+			close (sdf);
+		}
+		else ihash = 5138;
+    }
+    
+    hash = ihash;
     
     const unsigned char* ustr = (const unsigned char*)str;
 

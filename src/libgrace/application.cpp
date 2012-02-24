@@ -16,10 +16,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
 
 extern char **environ;
-extern unsigned int GRACE_HASH_SEED;
 
 file fin;
 file fout;
@@ -447,14 +445,6 @@ int main (int argc, char *argv[])
 	initfuncptr inithook = NULL;
 	void *dlh = NULL;
 	int sdf;
-	
-	GRACE_HASH_SEED = 5138;
-	sdf = open ("/dev/random", O_RDONLY);
-	if (sdf)
-	{
-		read (sdf, &GRACE_HASH_SEED, sizeof(GRACE_HASH_SEED));
-		close (sdf);
-	}
 	
 	dlh = dlopen (NULL, RTLD_LAZY);
 	if (dlh)
