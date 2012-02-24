@@ -444,6 +444,15 @@ int main (int argc, char *argv[])
 	int returnv;
 	initfuncptr inithook = NULL;
 	void *dlh = NULL;
+	int sdf;
+	
+	GRACE_HASH_SEED = 5138;
+	sdf = open ("/dev/random", O_RDONLY);
+	if (sdf)
+	{
+		read (sdf, &GRACE_HASH_SEED, sizeof(GRACE_HASH_SEED));
+		close (sdf);
+	}
 	
 	dlh = dlopen (NULL, RTLD_LAZY);
 	if (dlh)

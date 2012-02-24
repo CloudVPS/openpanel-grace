@@ -9,12 +9,14 @@
 #include <sys/types.h>
 #include <grace/tolower.h>
 
+unsigned int GRACE_HASH_SEED;
+
 // =============================================================================
 // FUNCTION checksum
 // =============================================================================
 unsigned int checksum (const char *str)
 {
-    unsigned int hash = 5381;
+    unsigned int hash = GRACE_HASH_SEED;
     unsigned int i    = 0;
     unsigned int s    = 0;
     
