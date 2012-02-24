@@ -16,8 +16,10 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 
 extern char **environ;
+extern unsigned int GRACE_HASH_SEED;
 
 file fin;
 file fout;
