@@ -25,7 +25,8 @@ unsigned int checksum (const char *str)
     
     if (! ihash)
     {
-		sdf = open ("/dev/random", O_RDONLY);
+    	sdf = open ("/dev/urandom", O_RDONLY);
+		if (! sdf) sdf = open ("/dev/random", O_RDONLY);
 		if (sdf)
 		{
 			read (sdf, &ihash, sizeof(ihash));
