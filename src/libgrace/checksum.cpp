@@ -25,14 +25,14 @@ unsigned int checksum (const char *str)
     
     if (! ihash)
     {
-    	sdf = open ("/dev/urandom", O_RDONLY);
-		if (! sdf) sdf = open ("/dev/random", O_RDONLY);
-		if (sdf)
-		{
-			read (sdf, &ihash, sizeof(ihash));
-			close (sdf);
-		}
-		else ihash = 5138;
+        sdf = open ("/dev/urandom", O_RDONLY);
+        if (! sdf) sdf = open ("/dev/random", O_RDONLY);
+        if (sdf)
+        {
+            read (sdf, &ihash, sizeof(ihash));
+            close (sdf);
+        }
+        else ihash = 5138;
     }
     
     hash = ihash;
@@ -75,36 +75,36 @@ unsigned int checksum (const char *str)
 
 
 char _TRANS_TABLE[128] =
-	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63,
-	 0,0,0,0,0,0,0,0,0,0,0,0,62,0,0,0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0,
-	 0,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
-	 31,32,33,34,35,0,0,0,0,0,0,36,37,38,39,40,41,42,43,44,45,46,47,48,
-	 49,50,51,52,53,54,55,56,57,58,59,60,61,0,0,0,0,0};
-	 
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63,
+     0,0,0,0,0,0,0,0,0,0,0,0,62,0,0,0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0,
+     0,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
+     31,32,33,34,35,0,0,0,0,0,0,36,37,38,39,40,41,42,43,44,45,46,47,48,
+     49,50,51,52,53,54,55,56,57,58,59,60,61,0,0,0,0,0};
+     
 // ========================================================================
 // FUNCTION resid
 // ========================================================================
 unsigned int resid (const char *str)
 {
-	char out[4] = {0,0,0,0};
-	
-	if (*str)
-	{
-		out[0] = _TRANS_TABLE[str[0]&127];
-		if (str[1])
-		{
-			out[1] = _TRANS_TABLE[str[1]&127];
-			if (str[2])
-			{
-				out[2] = _TRANS_TABLE[str[2]&127];
-				if (str[3])
-				{
-					out[3] = _TRANS_TABLE[str[3]&127];
-				}
-			}
-		}
-	}
-	return ((out[0]<<18)|(out[1]<<12)|(out[2]<<6)|out[3]);
+    char out[4] = {0,0,0,0};
+    
+    if (*str)
+    {
+        out[0] = _TRANS_TABLE[str[0]&127];
+        if (str[1])
+        {
+            out[1] = _TRANS_TABLE[str[1]&127];
+            if (str[2])
+            {
+                out[2] = _TRANS_TABLE[str[2]&127];
+                if (str[3])
+                {
+                    out[3] = _TRANS_TABLE[str[3]&127];
+                }
+            }
+        }
+    }
+    return ((out[0]<<18)|(out[1]<<12)|(out[2]<<6)|out[3]);
 }
 
 // ========================================================================
@@ -112,9 +112,9 @@ unsigned int resid (const char *str)
 // ========================================================================
 char restochar (int val)
 {
-	if (val<10) return ('0'+val);
-	if (val<36) return ('A'+(val-10));
-	if (val<62) return ('a'+(val-36));
-	if (val==63) return (' ');
-	return ('-');
+    if (val<10) return ('0'+val);
+    if (val<36) return ('A'+(val-10));
+    if (val<62) return ('a'+(val-36));
+    if (val==63) return (' ');
+    return ('-');
 }
