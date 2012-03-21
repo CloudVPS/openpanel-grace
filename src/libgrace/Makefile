@@ -75,7 +75,7 @@ OBJ			= 	application.o \
 
 AR = ar cr
 LIBNAME = libgrace
-LIBVERSION = 1.0
+LIBVERSION = 1.1
 
 all: ../../include/grace/platform.h $(OBJ)
 	mkdir -p ../../lib

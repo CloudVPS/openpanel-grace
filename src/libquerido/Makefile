@@ -11,7 +11,7 @@ OBJ			= 	engine.o query.o row.o table.o sqlite.o
 
 AR = ar cr
 LIBNAME = libquerido
-LIBVERSION = 1.0
+LIBVERSION = 1.1
 
 all: $(OBJ)
 	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ)

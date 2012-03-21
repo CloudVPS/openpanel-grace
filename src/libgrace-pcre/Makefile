@@ -11,7 +11,7 @@ OBJ			= 	pcre.o
 
 AR = ar cr
 LIBNAME = libgrace-pcre
-LIBVERSION = 1.0
+LIBVERSION = 1.1
 
 all: $(OBJ)
 	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ)

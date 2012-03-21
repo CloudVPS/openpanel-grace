@@ -11,7 +11,7 @@ OBJ			= 	sslsocket.o httpsd.o mozillacerts.o
 
 AR = ar cr
 LIBNAME = libgrace-ssl
-LIBVERSION = 1.0
+LIBVERSION = 1.1
 
 all: $(OBJ)
 	./getmatrixobj.sh

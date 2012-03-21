@@ -42,10 +42,9 @@ fi
 if [ -e ../../lib/libquerido.dylib ]; then
   cp ../../lib/libquerido.dylib $path_lib/
 else
-  cp ../../lib/libquerido.so "$path_lib/libquerido.so.1.0"
+  cp ../../lib/libquerido.so "$path_lib/libquerido.so.1.1"
   cp ../../lib/libquerido.a "$path_lib/libquerido.a"
-  ln -s "./libquerido.so.1.0" "$path_lib/libquerido.so.1"
-  ln -s "./libquerido.so.1" "$path_lib/libquerido.so"
+  ln -s "./libquerido.so.1.1" "$path_lib/libquerido.so"
 fi
 
 echo "Installing headers in $path_include"

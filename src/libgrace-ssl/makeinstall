@@ -42,10 +42,9 @@ fi
 if [ -e ../../lib/libgrace-ssl.dylib ]; then
   cp ../../lib/libgrace-ssl.dylib $path_lib/
 else
-  cp ../../lib/libgrace-ssl.so "$path_lib/libgrace-ssl.so.1.0"
+  cp ../../lib/libgrace-ssl.so "$path_lib/libgrace-ssl.so.1.1"
   cp ../../lib/libgrace-ssl.a "$path_lib/libgrace-ssl.a"
-  ln -s "./libgrace-ssl.so.1.0" "$path_lib/libgrace-ssl.so.1"
-  ln -s "./libgrace-ssl.so.1" "$path_lib/libgrace-ssl.so"
+  ln -s "./libgrace-ssl.so.1.1" "$path_lib/libgrace-ssl.so"
 fi
 
 cp ../../lib/libgrace-ssl.* "$path_lib/"
