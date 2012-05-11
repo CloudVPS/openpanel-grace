@@ -24,7 +24,7 @@
 
 #include <time.h>
 
-lock<value> THREADLIST;
+lock<globalthreadlist> THREADLIST;
 logthread *LOGTHREAD = NULL;
 logtarget *LOGTARGETS = NULL;
 class daemon *MAINDAEMON = NULL;

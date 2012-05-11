@@ -12,16 +12,17 @@
 #include <grace/value.h>
 #include <grace/lock.h>
 #include <grace/eventq.h>
+#include <grace/dictionary.h>
 
 #include <pthread.h>
 #include <signal.h>
 
+typedef dictionary<class thread> globalthreadlist;
+extern lock<globalthreadlist> THREADLIST;
 extern volatile bool __THREADED;
 
 $exception (threadCreateException, "Could not create thread");
 $exception (threadGroupIndexException, "Invalid group index");
-
-extern lock<value> THREADLIST;
 
 /// Base class for threads.
 /// Derived classes can use this class to spawn into a background thread.
@@ -193,7 +194,12 @@ public:
 					 	returnclass (value) res retain;
 					 	sharedsection (THREADLIST)
 					 	{
-					 		res = THREADLIST;
+					 		foreach (t, THREADLIST)
+					 		{
+					 			statstring i;
+					 			i = "%08x" %format ((unsigned long long)&t);
+					 			res[i] = t.threadname;
+					 		}
 					 	}
 					 	return &res;
 					 }

@@ -51,12 +51,11 @@ void *thread::dorun (void *param)
 	(*me).isrunning.o = true;
 	(*me).isrunning.unlock();
 
-	string mtid;
-	mtid.printf ("%08x", me);
+	statstring mtid = "%08x" %format ((unsigned long long) me);
 
 	exclusivesection (THREADLIST)
 	{
-		THREADLIST[mtid] = me->threadname;
+		THREADLIST.set (mtid, *me);
 	}
 
 	try
@@ -75,7 +74,7 @@ void *thread::dorun (void *param)
 	
 	exclusivesection (THREADLIST)
 	{
-		THREADLIST.rmindex (mtid);
+		THREADLIST.rmval (mtid);
 	}
 	
 	return NULL;
