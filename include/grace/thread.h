@@ -184,6 +184,11 @@ public:
 					 	schedparam.sched_priority = prio;
 					 	pthread_setschedparam (tid, SCHED_OTHER, &schedparam);
 					 }
+					 
+	void			 kill (void)
+					 {
+					 	pthread_kill (tid, SIGKILL);
+					 }
 	
 	bool			 finished; ///< True if the run method has finished.
 	string			 threadname; ///< Name of the thread.
@@ -202,6 +207,31 @@ public:
 					 		}
 					 	}
 					 	return &res;
+					 }
+					 
+	static void		 shutdownall (int timeout_s=0)
+					 {
+					 	exclusivesection (THREADLIST)
+					 	{
+					 		foreach (t, THREADLIST)
+					 		{
+					 			t.sendevent ("shutdown");
+					 		}
+					 	}
+					 	
+					 	for (int i=0; (timeout_s == 0) || (i<timeout_s); ++i)
+					 	{
+					 		sharedsection (THREADLIST)
+					 		{
+					 			if (! THREADLIST.count()) return;
+					 		}
+					 		sleep (1);
+					 	}
+					 	
+					 	exclusivesection (THREADLIST)
+					 	{
+					 		foreach (t, THREADLIST) t.kill();
+					 	}
 					 }
 
 protected:
