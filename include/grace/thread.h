@@ -185,6 +185,7 @@ public:
 					 	pthread_setschedparam (tid, SCHED_OTHER, &schedparam);
 					 }
 					 
+					 /// Kill this thread dead.
 	void			 kill (void)
 					 {
 					 	pthread_kill (tid, SIGKILL);
@@ -209,6 +210,10 @@ public:
 					 	return &res;
 					 }
 					 
+					 /// Shutdown all threads.
+					 /// \param timeout_s Timeout in seconds before
+					 ///                  all threads are killed, 0 for
+					 ///                  infinite timeout.
 	static void		 shutdownall (int timeout_s=0)
 					 {
 					 	exclusivesection (THREADLIST)
