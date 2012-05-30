@@ -62,7 +62,7 @@ endif
 #	Override variables for compilation on x86-64 (AMD64, Nacona, etc)
 #
 ifeq ($(shell uname -m),x86_64)
-DFLAGS  += -march=k8 -fPIC -DFP_64BIT -DTFM_X86_64 -DRDTSC
+DFLAGS  += -march=k8 -fPIC -DFP_64BIT -DTFM_X86_64 
 endif
 
 #

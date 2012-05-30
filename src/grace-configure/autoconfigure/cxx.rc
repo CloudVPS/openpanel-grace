@@ -6,7 +6,7 @@ saypending "looking for c++ compiler"
 CXX=`which CC 2>/dev/null`
 
 if [ -f "$CXX" ]; then
-  actually_gcc=`$CXX -v 2>&1 | grep gcc | sed -e "s/^gcc/Y/"`
+  actually_gcc=`$CXX -v 2>&1 | egrep "gcc|clang" | sed -e "s/^(gcc|clang)/Y/"`
 
   cat >conftest.cpp <<_eof_
 #include <stdio.h>

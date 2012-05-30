@@ -12,7 +12,7 @@ if [ -z "$CC" ]; then
 fi
 
 if [ -f "$CC" ]; then
-  actually_gcc=`$CC -v 2>&1 | grep gcc | sed -e "s/^gcc/Y/"`
+  actually_gcc=`$CC -v 2>&1 | egrep "gcc|clang" | sed -e "s/^(gcc|clang)/Y/"`
 
   cat >conftest.c <<_eof_
 #include <stdio.h>
