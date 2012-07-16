@@ -1,3 +1,17 @@
+1.1.1      Mon Jul 16 2012                           <grace@openpanel.com>
+
+           * Build support for Mac OS X Lion
+           
+           * Add shutdown semantics to thread class
+           
+           * Add connection timeout to tcpsocket
+
+1.1.0      Wed Mar 21 2012                           <grace@openpanel.com>
+
+           * Randomize initial hashing vector
+           
+           * Increase initial SSL handshake timeout
+           
 1.0.7      Wed Dec 21 2011                           <grace@openpanel.com>
 
            * Fix a bug in tcpsocket::sendfile.
