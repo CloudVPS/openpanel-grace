@@ -57,6 +57,14 @@ namespace defaults
 		}
 	}
 	
+	/// TCP settings
+	namespace tcp
+	{
+		/// \var int defaults::tcp::connecttimeout
+		/// Number of seconds to wait for a tcp connection to establish [5].
+		parameter int connecttimeout defaultvalue (5);
+	}
+	
 	/// External data limits
 	namespace lim
 	{

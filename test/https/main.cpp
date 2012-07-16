@@ -25,7 +25,7 @@ class BigBlob : public httpdobject
 public:
 	BigBlob (httpd &s) : httpdobject (s, "*/bigblob")
 	{
-		for (int i=0; i<8192; ++i)
+		for (int i=0; i<65536; ++i)
 		{ 
 			blob.strcat (strutil::uuid());
 			blob.strcat("\r\n");

@@ -18,6 +18,7 @@
 #include <grace/defaults.h>
 #include <grace/filesystem.h>
 #include <grace/netdb.h>
+#include <fcntl.h>
 #include "platform.h"
 
 #include <sys/types.h>
@@ -132,6 +133,40 @@ tcpsocket::~tcpsocket (void)
 {
 }
 
+int tcpsocket::libcconnect (int sock, const struct sockaddr *a, socklen_t l)
+{
+	int res = 1;
+	fd_set fdset;
+	struct timeval tv;
+	int opts = fcntl (sock, F_GETFL);
+	
+	if (! nonblocking)
+	{
+		fcntl (sock, F_SETFL, opts | O_NONBLOCK);
+		nonblocking = true;
+	}
+	
+	if (::connect (sock, a, l))
+	{
+		tv.tv_sec = defaults::tcp::connecttimeout;
+		tv.tv_usec = 0;
+		FD_ZERO(&fdset);
+		FD_SET(sock, &fdset);
+		if (select (sock+1, NULL, &fdset, NULL, &tv) == 1)
+		{
+			res = 0;
+		}
+	}
+	else
+	{
+		res = 0;
+	}
+	
+	fcntl (sock, F_SETFL, opts);
+	nonblocking = false;
+	return res;
+}
+
 // ========================================================================
 // METHOD ::connect
 // ----------------
@@ -229,11 +264,11 @@ bool tcpsocket::connect (ipaddress addr, int port)
 		
 		if (usev4)
 		{
-			r = ::connect (filno, (const sockaddr *) &remotev4, sizeof(remotev4));
+			r = libcconnect (filno, (const sockaddr *) &remotev4, sizeof(remotev4));
 		}
 		else
 		{
-			r = ::connect (filno, (const sockaddr *) &remotev6, sizeof(remotev6));
+			r = libcconnect (filno, (const sockaddr *) &remotev6, sizeof(remotev6));
 		}
 			
 		if (r != 0)
@@ -399,7 +434,7 @@ bool tcpsocket::uconnect (const string &path)
 	
 	buffer.flush ();
 	
-	if (::connect (filno, (const sockaddr *) &remote,
+	if (libcconnect (filno, (const sockaddr *) &remote,
 				   sizeof (struct sockaddr_un)) != 0)
 	{
 		::close (filno);

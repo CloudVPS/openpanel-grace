@@ -133,6 +133,8 @@ protected:
 				 /// buffer contents. 
 				 /// \param s Reference to the original object.
 	void		 derive (tcpsocket &s);
+	
+	int			 libcconnect (int, const struct sockaddr *, socklen_t);
 };
 
 /// Base class for tcplistener implementations.
