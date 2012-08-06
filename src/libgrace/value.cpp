@@ -2434,6 +2434,9 @@ bool value::operator== (const value &other) const
 	if (count() && other.count()) return treecmp (other);
 	switch (other._itype)
 	{
+		case i_unset:
+			if (_itype == i_unset) return true;
+			return false;
 		case i_string:
 			return (::strcmp (cval(), other.cval()) ==0);
 		case i_int:
@@ -2457,6 +2460,9 @@ bool value::operator== (const value &other)
 	if (count() && other.count()) return treecmp (other);
 	switch (other._itype)
 	{
+		case i_unset:
+			if (_itype == i_unset) return true;
+			return false;
 		case i_string:
 			return (::strcmp (cval(), other.cval()) ==0);
 		case i_int:
@@ -2483,6 +2489,9 @@ bool value::operator!= (const value &other) const
 	if (count() && other.count()) return (!treecmp (other));
 	switch (other._itype)
 	{
+		case i_unset:
+			if (_itype == i_unset) return false;
+			return true;
 		case i_string:
 			return (::strcmp (cval(), other.cval()) !=0);
 		case i_int:
@@ -2506,6 +2515,9 @@ bool value::operator!= (const value &other)
 	if (count() && other.count()) return (!treecmp (other));
 	switch (other._itype)
 	{
+		case i_unset:
+			if (_itype == i_unset) return false;
+			return true;
 		case i_string:
 			return (::strcmp (cval(), other.cval()) !=0);
 		case i_int:
