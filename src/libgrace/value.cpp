@@ -2436,6 +2436,7 @@ bool value::operator== (const value &other) const
 	{
 		case i_unset:
 			if (_itype == i_unset) return true;
+			if ((_itype == i_string) && (! s.strlen())) return true;
 			return false;
 		case i_string:
 			return (::strcmp (cval(), other.cval()) ==0);
@@ -2462,6 +2463,7 @@ bool value::operator== (const value &other)
 	{
 		case i_unset:
 			if (_itype == i_unset) return true;
+			if ((_itype == i_string) && (! s.strlen())) return true;
 			return false;
 		case i_string:
 			return (::strcmp (cval(), other.cval()) ==0);
@@ -2491,6 +2493,7 @@ bool value::operator!= (const value &other) const
 	{
 		case i_unset:
 			if (_itype == i_unset) return false;
+			if ((_itype == i_string) && (! s.strlen())) return false;
 			return true;
 		case i_string:
 			return (::strcmp (cval(), other.cval()) !=0);
@@ -2517,6 +2520,7 @@ bool value::operator!= (const value &other)
 	{
 		case i_unset:
 			if (_itype == i_unset) return false;
+			if ((_itype == i_string) && (! s.strlen())) return false;
 			return true;
 		case i_string:
 			return (::strcmp (cval(), other.cval()) !=0);
