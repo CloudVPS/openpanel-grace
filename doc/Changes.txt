@@ -1,3 +1,9 @@
+1.1.2      Wed Aug  8 2012                           <grace@openpanel.com>
+
+           * Fix comparison between values if one is unset
+           
+           * Fix potential memory issue with string::pad
+
 1.1.1      Mon Jul 16 2012                           <grace@openpanel.com>
 
            * Build support for Mac OS X Lion
