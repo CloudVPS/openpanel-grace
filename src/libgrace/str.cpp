@@ -1761,7 +1761,7 @@ void string::pad (int psz, char p)
 	
 	docopyonwrite();
 	
-	if ((sz+sizeof(refblock)) >= alloc)
+	if ((offs+sz+sizeof(refblock)) >= alloc)
 	{
 		alloc = GROW(offs + sz + sizeof (refblock) +1);
 		data = (refblock *) realloc (data, alloc * sizeof(char *));
