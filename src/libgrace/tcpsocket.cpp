@@ -146,7 +146,7 @@ int tcpsocket::libcconnect (int sock, const struct sockaddr *a, socklen_t l)
 		nonblocking = true;
 	}
 	
-	if (::connect (sock, a, l))
+	if (::connect (sock, a, l) && (errno == EINPROGRESS))
 	{
 		tv.tv_sec = defaults::tcp::connecttimeout;
 		tv.tv_usec = 0;
