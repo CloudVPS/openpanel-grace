@@ -1,3 +1,7 @@
+1.1.3      Tue Aug 28 2012                           <grace@openpanel.com>
+
+           * Fix issue with tcpsocket::connect
+
 1.1.2      Wed Aug  8 2012                           <grace@openpanel.com>
 
            * Fix comparison between values if one is unset
