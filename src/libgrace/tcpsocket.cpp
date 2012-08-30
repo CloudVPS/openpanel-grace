@@ -136,11 +136,11 @@ tcpsocket::~tcpsocket (void)
 int tcpsocket::libcconnect (int sock, const struct sockaddr *a, socklen_t l)
 {
 	int res = 1;
-	int i, valopt;
+	int i, valopt=0;
 	fd_set fdset;
 	struct timeval tv;
 	int opts = fcntl (sock, F_GETFL);
-	socklen_t lon;
+	socklen_t lon = (socklen_t) sizeof(int);
 	
 	if (! nonblocking)
 	{
