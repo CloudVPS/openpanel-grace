@@ -257,7 +257,7 @@ public:
 	inline unsigned int	 strlen (void) const
 						 {
 						 	if (! ref) return 0;
-						 	assert (ref->refcnt > 0);
+						 	//assert (ref->refcnt > 0);
 						 	return ref->str.strlen();
 						 }
 	
@@ -265,7 +265,7 @@ public:
 	inline unsigned int	 key (void) const
 						 {
 						 	if (! ref) return 0;
-						 	assert (ref->refcnt > 0);
+						 	//assert (ref->refcnt > 0);
 						 	return ref->key;
 						 }
 						 
@@ -273,7 +273,7 @@ public:
 	unsigned int		 id (void) const
 						 {
 						 	if (! ref) return 0;
-						 	assert (ref->refcnt > 0);
+						 	//assert (ref->refcnt > 0);
 						 	return ref->id;
 						 }
 						 
@@ -291,41 +291,41 @@ public:
 	inline statstring	&operator= (const statstring &str)
 						{
 							assign (str);
-						 	if (ref) assert (ref->refcnt > 0);
+						 	//if (ref) assert (ref->refcnt > 0);
 							return *this;
 						}
 	inline statstring	&operator= (statstring *str)
 						 {
 						 	assign (str);
-						 	if (ref) assert (ref->refcnt > 0);
+						 	//if (ref) assert (ref->refcnt > 0);
 						 	return *this;
 						 }
 			
 	inline statstring	&operator= (const char *str)
 						{
 							assign (str);
-						 	if (ref) assert (ref->refcnt > 0);
+						 	//if (ref) assert (ref->refcnt > 0);
 							return *this;
 						}
 						
 	inline statstring 	&operator= (const unsigned char *str)
 					 	{
 					 		assign ((const char *) str);
-						 	if (ref) assert (ref->refcnt > 0);
+						 	//if (ref) assert (ref->refcnt > 0);
 					 		return *this;
 					 	}
 						
 	inline statstring	&operator= (const string &str)
 						{
 							assign (str);
-						 	if (ref) assert (ref->refcnt > 0);
+						 	//if (ref) assert (ref->refcnt > 0);
 							return *this;
 						}
 						
 	inline statstring	&operator= (string *str)
 						{
 							assign (str);
-						 	if (ref) assert (ref->refcnt > 0);
+						 	//if (ref) assert (ref->refcnt > 0);
 							return *this;
 						}
 						//@}
@@ -335,7 +335,7 @@ public:
 	inline bool			operator== (const statstring &str) const
 						{
 							if (&str == this) return true;
-						 	if (ref) assert (ref->refcnt > 0);
+						 	//if (ref) assert (ref->refcnt > 0);
 							if (key() != str.key()) return false;
 							if (id() != str.id()) return false;
 							return true;
@@ -343,7 +343,7 @@ public:
 						
 	inline bool			operator== (const string &str) const
 						{
-						 	if (ref) assert (ref->refcnt > 0);
+						 	//if (ref) assert (ref->refcnt > 0);
 							statstring sstr = str;
 							if (key() != sstr.key()) return false;
 							if (id() != sstr.id()) return false;
@@ -356,7 +356,7 @@ public:
 						}
 	inline bool			operator== (const char *str) const
 						{
-						 	if (ref) assert (ref->refcnt > 0);
+						 	//if (ref) assert (ref->refcnt > 0);
 							size_t slen = ::strlen (str);
 							if (slen != sval().strlen()) return false;
 							return (::strncmp (str, cval(), slen) == 0);
@@ -370,7 +370,7 @@ public:
 								if ((*str).strlen()) return false;
 								return true;
 							}
-							assert (ref->refcnt > 0);
+							//assert (ref->refcnt > 0);
 							return ((*str) == ref->str);
 						}
 						
@@ -380,7 +380,7 @@ public:
     inline bool         operator!= (const statstring &str) const
                         {
 							if (&str == this) return false;
-						 	if (ref) assert (ref->refcnt > 0);
+						 	//if (ref) assert (ref->refcnt > 0);
                             if ((key() == str.key()) && (id() == str.id()))
                             {
                             	return false;
@@ -390,7 +390,7 @@ public:
 						
 	inline bool			operator!= (const string &str) const
 						{
-						 	if (ref) assert (ref->refcnt > 0);
+						 	//if (ref) assert (ref->refcnt > 0);
 							statstring sstr = str;
 							if (key() == sstr.key()) return false;
 							if (id() == sstr.id()) return false;
@@ -404,7 +404,7 @@ public:
 						
 	inline bool			operator!= (const char *str) const
 						{
-						 	if (ref) assert (ref->refcnt > 0);
+						 	//if (ref) assert (ref->refcnt > 0);
 							size_t slen = ::strlen (str);
 							if (slen != sval().strlen()) return true;
 							return (::strncmp (str, cval(), slen) != 0);
@@ -417,7 +417,7 @@ public:
 								if (str->strlen()) return true;
 								return false;
 							}
-							assert (ref->refcnt > 0);
+							//assert (ref->refcnt > 0);
 							return !((*str) == ref->str);
 						}
 						//@}
@@ -427,7 +427,7 @@ public:
 	inline				operator bool (void) const
 						{
 							if (! ref) return false;
-							assert (ref->refcnt > 0);
+							//assert (ref->refcnt > 0);
 							return (ref->str.strlen());
 						}
 						
@@ -435,7 +435,7 @@ public:
 	inline const char	*str (void) const
 						{
 							if (!ref) return "";
-							assert (ref->refcnt > 0);
+							//assert (ref->refcnt > 0);
 							return ref->str.str();
 						}
 
@@ -443,7 +443,7 @@ public:
 	inline const char	*cval (void) const
 						{
 							if (!ref) return "";
-							assert (ref->refcnt > 0);
+							//assert (ref->refcnt > 0);
 							return ref->str.str();
 						}
 												
@@ -451,7 +451,7 @@ public:
 	const string		&sval (void) const
 						{
 							if (! ref) return emptystring;
-							assert (ref->refcnt > 0);
+							//assert (ref->refcnt > 0);
 							return ref->str;
 						}
 

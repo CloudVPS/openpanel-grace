@@ -83,8 +83,8 @@ void removeref (void *refAddress)
 // ========================================================================
 threadref_t getref (void)
 {
-	if (! __THREADED)
-		return 0;
+	//if (! __THREADED)
+	//	return 0;
 		
 	static bool createdKey = false;
 	static pthread_key_t pkey;
