@@ -276,7 +276,7 @@ void				 remove (const statstring &s)
 					 			--_count;
 					 			if (i<_count)
 					 			{
-					 				memmove (_array+i, _array+i+1, _count*sizeof (dictionaryEntry *));
+					 				memmove (_array+i, _array+i+1, (_count - i) *sizeof (dictionaryEntry *));
 					 			}
 					 			
 					 			if (! _count)
