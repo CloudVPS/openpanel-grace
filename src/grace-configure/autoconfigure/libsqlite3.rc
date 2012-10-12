@@ -20,7 +20,7 @@ fi
 # ---------------------------------------------------------------------------
 
 saypending "looking for sqlite3 library"
-for loc in /opt/local/lib /usr/local/lib /usr/lib64 /usr/lib ; do
+for loc in /opt/local/lib /usr/local/lib /usr/lib64 /usr/lib $(find /usr/lib -type d); do
   if [ -f "$loc/libsqlite3.a" ]; then
     SQLITE3LIB="$loc/libsqlite3.a"
   else
