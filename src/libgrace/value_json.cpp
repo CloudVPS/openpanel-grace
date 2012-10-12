@@ -59,6 +59,11 @@ const char *value::readjsonstring (const char *pos, string &into)
 					into.strcat ('\t');
 					atpos++;
 					break;
+
+				case '0' :
+					into.strcat ('\0');
+					atpos++;
+					break;
 			}
 		}
 		else
@@ -316,6 +321,7 @@ void value::encodejsonstring (string &into) const
 		else if (cc == '\"') into.strcat ("\\\"");
 		else if (cc == '\r') into.strcat ("\\r");
 		else if (cc == '\\') into.strcat ("\\\\");
+		else if (cc == '\0') into.strcat ("\\0");
 		else into.strcat (cc);
 	}
 }
@@ -336,6 +342,7 @@ void value::encodejsonid (string &into) const
 		else if (cc == '\"') into.strcat ("\\\"");
 		else if (cc == '\r') into.strcat ("\\r");
 		else if (cc == '\\') into.strcat ("\\\\");
+		else if (cc == '\0') into.strcat ("\\0");
 		else into.strcat (cc);
 	}
 }
