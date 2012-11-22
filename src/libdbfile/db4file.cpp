@@ -194,7 +194,7 @@ bool db4file::nextloop (void)
 	key.flags =	rec.flags = DB_DBT_MALLOC;
 	
 	int ret;
-	ret = dbcursor->c_get (dbcursor, &key, &rec, DB_NEXT);
+	ret = dbcursor->c_get (dbcursor, &key, &rec, DB_NEXT_NODUP);
 	if (0 != ret)
 	{
 		dbcursor->c_close(dbcursor);
