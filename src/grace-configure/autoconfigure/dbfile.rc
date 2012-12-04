@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------
-# Figure out path to GRACE include
+# Figure out path to DBFILE include
 # ---------------------------------------------------------------------------
 
 saypending "looking for dbfile include"
@@ -15,7 +15,7 @@ fi
 saypass "$DBFILEINC"
 
 # ---------------------------------------------------------------------------
-# Figure out path to GRACE static library
+# Figure out path to DBFILE static library
 # ---------------------------------------------------------------------------
 
 saypending "looking for dbfile library"
