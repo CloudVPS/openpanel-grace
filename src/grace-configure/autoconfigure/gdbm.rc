@@ -3,15 +3,22 @@
 # ---------------------------------------------------------------------------
 
 saypending "looking for gdbm include"
+
 for loc in /usr/include /usr/local/include /opt/include /sw/include /opt/local/include $HOME/include; do
   if [ -f "$loc/gdbm.h" ]; then
     GDBMINC="$loc"
   fi
 done
+
+echo 'int main(){}' > conftest.cpp
+$CXX -o conftest.bin conftest.cpp -lgdbm > /dev/null 2>&1 && LIBGDBM="-lgdbm"
+rm -f conftest.bin conftest.cpp 
+
 if [ -z "$GDBMINC" ]; then
+  sayfailsoft "failed"
+elif [ -z "$LIBGDBM" ]; then
   sayfailsoft "failed"
 else
   saypass "$GDBMINC"
-  LIBGDBM="-L${GDBMINC}/../lib -lgdbm"
   HAVEGDBM="-DHAVE_GDBM"
 fi
