@@ -20,8 +20,10 @@ echo "--- start run" >> test.log
 #    exit 1
 #}
 
-curl -k3 -m1 -ossl3.txt https://localhost:14265/test.txt 2>/dev/null || {
-    echo " failed (RUN)"
+sleep 1
+
+curl -k3 -m1 -ossl3.txt https://localhost:14265/test.txt >>test.log 2>&1 || {
+    echo " failed (CURL)"
     wait
     exit 1
 }

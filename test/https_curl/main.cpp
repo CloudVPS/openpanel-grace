@@ -36,7 +36,9 @@ int httpsCurlApp::main (void)
 	
 	srv.start ();
 
-	sleep(3);
+	ferr.writeln ("Service started");
+
+	sleep(5);
 
 	ferr.printf ("Shutting down...\n");	
 	srv.shutdown();
