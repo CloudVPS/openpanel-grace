@@ -846,7 +846,13 @@ void httpdworker::run (void)
 		}
 		catch (exception e)
 		{
-			//::printf (">>> exception caught: %s\n", e.description);
+			parent->eventhandle (
+				$attr("class","info") ->
+				$("type","exception")->
+				$("thread", threadid)->
+				$("load", nload)->
+				$("ip", s.peer_name)->
+				$("exception", e.description));
 		}
 		
 		s.close();
