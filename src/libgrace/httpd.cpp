@@ -847,12 +847,10 @@ void httpdworker::run (void)
 		catch (exception e)
 		{
 			parent->eventhandle (
-				$attr("class","info") ->
-				$("type","exception")->
+				$attr("class","errpr") ->
 				$("thread", threadid)->
-				$("load", nload)->
 				$("ip", s.peer_name)->
-				$("exception", e.description));
+				$("text", "socket exception: %s" %format (e.description)));
 		}
 		
 		s.close();
