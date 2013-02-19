@@ -453,7 +453,7 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 				outhdr["Content-length"] = outbody.strlen();
 				keepalive = env["keepalive"].bval();
 				if (! outhdr.exists ("Connection"))
-					outhdr["Connection"] = keepalive ? "keepalive" : "close";
+					outhdr["Connection"] = keepalive ? "keep-alive" : "close";
 
 				foreach (hdr, outhdr)
 				{
@@ -463,6 +463,7 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 				s.puts (hdrblob);
 				s.puts (outbody);
 				
+				s.flush();
 				
 				// Create a log-event if needed
 				if (eventmask & HTTPD_ACCESS)
@@ -485,6 +486,8 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 			}
 			if (res < 0) // Non-zero negative reply
 			{
+				s.flush();
+			
 				// Create a log-event if needed
 				if (eventmask & HTTPD_ACCESS)
 				{
@@ -543,6 +546,8 @@ void httpd::handle (string &uri, string &postbody, value &inhdr,
 					 $("bytes", fbytes)
 					);
 	}
+	
+	s.flush();
 	
 	keepalive = false;
 }
@@ -691,7 +696,6 @@ void httpdworker::run (void)
 				while (! s.eof())
 				{
 					line = s.gets();
-					
 					// Empty line, our turn
 					if (gotCommand && (! line.strlen())) break;
 					
@@ -814,7 +818,7 @@ void httpdworker::run (void)
 				// for a differnet scheme using the Connection header
 				if (httpHeaders["Connection"] == "close")
 					keepalive = false;
-				else if (httpHeaders["Connection"] == "keepalive")
+				else if (httpHeaders["Connection"] == "keep-alive")
 					keepalive = true;
 				
 				// As of now, we only recognize get and post requests
@@ -844,6 +848,7 @@ void httpdworker::run (void)
 				}
 			}
 		}
+		
 		catch (exception e)
 		{
 			parent->eventhandle (
@@ -852,7 +857,7 @@ void httpdworker::run (void)
 				$("ip", s.peer_name)->
 				$("text", "socket exception: %s" %format (e.description)));
 		}
-		
+
 		s.close();
 		
 		// Downgrade to DEFCON foo-1
