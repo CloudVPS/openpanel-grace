@@ -1,3 +1,19 @@
+1.1.6      Tue Feb 19 2013                           <grace@openpanel.com>
+
+           * Fix long living error in HTTP/1.1 keep-alive handling
+           
+           * Fix to output buffering in https.
+
+1.1.5      Mon Dec 24 2012                           <grace@openpanel.com>
+
+           * Fixes to build environment
+           
+           * Fix improper null escape in JSON encoder
+           
+           * Fix regression when using fork()
+           
+           * Fix db4 duplicate key handling in libdbfile
+
 1.1.4      Fri Sep  7 2012                           <grace@openpanel.com>
 
            * Fix heap corruption issue in the dictionary class
