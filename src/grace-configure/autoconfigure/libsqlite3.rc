@@ -20,24 +20,20 @@ fi
 # ---------------------------------------------------------------------------
 
 saypending "looking for sqlite3 library"
-for loc in /opt/local/lib /usr/local/lib /usr/lib64 /usr/lib $(find /usr/lib -type d); do
-  if [ -f "$loc/libsqlite3.a" ]; then
-    SQLITE3LIB="$loc/libsqlite3.a"
-  else
-    if [ -f "$loc/libsqlite3.so" ]; then
-      SQLITE3LIB="-L$loc -lsqlite3"
-    else
-      if [ -f "$loc/libsqlite3.dylib" ]; then
-        SQLITE3LIB="-L$loc -lsqlite3"
-      fi
-    fi
-  fi
-done
+echo 'int main(){}' > conftest.cpp
+$CXX -o conftest.bin conftest.cpp -lsqlite3 >/dev/null 2>&1 && SQLITE3LIB="-lsqlite3"
+rm -f conftest.bin conftest.cpp
 
 if [ -z "$SQLITE3LIB" ]; then
-  echo 'int main(){}' > conftest.cpp
-  $CXX -o conftest.bin conftest.cpp -lsqlite3 >/dev/null 2>&1 && SQLITE3LIB="-lsqlite3"
-  rm -f conftest.bin conftest.cpp 
+  for loc in /opt/local/lib /usr/local/lib /usr/lib64 /usr/lib $(find /usr/lib -type d); do
+    if [ -f "$loc/libsqlite3.a" ]; then
+      SQLITE3LIB="$loc/libsqlite3.a"
+    elif [ -f "$loc/libsqlite3.so" ]; then
+      SQLITE3LIB="-L$loc -lsqlite3"
+    elif [ -f "$loc/libsqlite3.dylib" ]; then
+      SQLITE3LIB="-L$loc -lsqlite3"
+    fi
+  done
 fi
 
 if [ -z "$SQLITE3LIB" ]; then
