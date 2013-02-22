@@ -14,9 +14,9 @@ LIBNAME = libquerido
 LIBVERSION = 1.1
 
 all: $(OBJ)
-	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ)
+	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ) $(LIBS)
 	cp platform.h ../../include/querido/platform.h
-	$(AR) ../../lib/libquerido.a $(OBJ) $(LIBS)
+	$(AR) ../../lib/libquerido.a $(OBJ)
 
 
 
