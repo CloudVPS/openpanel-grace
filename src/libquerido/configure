@@ -47,7 +47,7 @@ parseopt() {
 # Part two of the "--foo bar" eq "--foo=bar" trick: Use sed to strip the
 # --foo= off the second variation. In either case we'll end up with "bar".
 parsearg() {
-	# we need to replace ${prefix} with ${CONFIG_INSTALLROOT} because 
+	# we need to replace ${prefix} with ${CONFIG_INSTALLROOT} because
 	# dpkg-buidpackage relies on some autoconf internals there
 	echo "$2" | sed -e "s/--${1}=//" | sed -e 's/\${prefix}/\${CONFIG_INSTALLROOT}/'
 }
@@ -140,7 +140,7 @@ while [ ! -z "$MOREOPTS" ]; do
 		   else
 			 INOPT_INSTALLROOT="$HOME/"
 		   fi
-		   ;;		
+		   ;;
 		--)
 			MOREOPTS=""
 			;;
@@ -392,24 +392,26 @@ fi
 # ---------------------------------------------------------------------------
 
 saypending "looking for sqlite3 library"
-for loc in /opt/local/lib /usr/local/lib /usr/lib64 /usr/lib ; do
-  if [ -f "$loc/libsqlite3.a" ]; then
-    SQLITE3LIB="$loc/libsqlite3.a"
-  else
-    if [ -f "$loc/libsqlite3.so" ]; then
-      SQLITE3LIB="-L$loc -lsqlite3"
-    else
-      if [ -f "$loc/libsqlite3.dylib" ]; then
-        SQLITE3LIB="-L$loc -lsqlite3"
-      fi
-    fi
-  fi
-done
+echo 'int main(){}' > conftest.cpp
+$CXX -o conftest.bin conftest.cpp -lsqlite3 >/dev/null 2>&1 && SQLITE3LIB="-lsqlite3"
+rm -f conftest.bin conftest.cpp
 
 if [ -z "$SQLITE3LIB" ]; then
-  echo 'int main(){}' > conftest.cpp
-  $CXX -o conftest.bin conftest.cpp -lsqlite3 >/dev/null 2>&1 && SQLITE3LIB="-lsqlite3"
-  rm -f conftest.bin conftest.cpp 
+  for loc in /opt/local/lib /usr/local/lib /usr/lib64 /usr/lib $(find /usr/lib -type d); do
+    if [ -f "$loc/libsqlite3.so" ]; then
+      SQLITE3LIB="-L$loc -lsqlite3"
+    elif [ -f "$loc/libsqlite3.dylib" ]; then
+      SQLITE3LIB="-L$loc -lsqlite3"
+    fi
+  done
+fi
+
+if [ -z "$SQLITE3LIB" ]; then
+  for loc in /opt/local/lib /usr/local/lib /usr/lib64 /usr/lib $(find /usr/lib -type d); do
+    if [ -f "$loc/libsqlite3.a" ]; then
+      SQLITE3LIB="$loc/libsqlite3.a"
+    fi
+  done
 fi
 
 if [ -z "$SQLITE3LIB" ]; then
