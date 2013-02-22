@@ -79,7 +79,7 @@ LIBVERSION = 1.1
 
 all: ../../include/grace/platform.h $(OBJ)
 	mkdir -p ../../lib
-	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ)
+	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ) $(LIBS)
 	$(AR) ../../lib/libgrace.a $(OBJ)
 
 version.cpp:

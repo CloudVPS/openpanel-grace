@@ -14,7 +14,7 @@ LIBNAME = libgrace-pcre
 LIBVERSION = 1.1
 
 all: $(OBJ)
-	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ)
+	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ) $(LIBS)
 	$(AR) ../../lib/libgrace-pcre.a $(OBJ)
 
 depend:

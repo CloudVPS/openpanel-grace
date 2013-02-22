@@ -14,7 +14,7 @@ LIBNAME = libdbfile
 LIBVERSION = 1.1
 
 all: $(OBJ)
-	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ)
+	$(LDSHARED) $(LIBS) -o ../../lib/$(LIBFILENAME) $(OBJ) $(LIBS)
 	$(AR) ../../lib/libdbfile.a $(OBJ)
 
 depend:
