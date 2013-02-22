@@ -26,12 +26,18 @@ rm -f conftest.bin conftest.cpp
 
 if [ -z "$SQLITE3LIB" ]; then
   for loc in /opt/local/lib /usr/local/lib /usr/lib64 /usr/lib $(find /usr/lib -type d); do
-    if [ -f "$loc/libsqlite3.a" ]; then
-      SQLITE3LIB="$loc/libsqlite3.a"
-    elif [ -f "$loc/libsqlite3.so" ]; then
+    if [ -f "$loc/libsqlite3.so" ]; then
       SQLITE3LIB="-L$loc -lsqlite3"
     elif [ -f "$loc/libsqlite3.dylib" ]; then
       SQLITE3LIB="-L$loc -lsqlite3"
+    fi
+  done
+fi
+
+if [ -z "$SQLITE3LIB" ]; then
+  for loc in /opt/local/lib /usr/local/lib /usr/lib64 /usr/lib $(find /usr/lib -type d); do
+    if [ -f "$loc/libsqlite3.a" ]; then
+      SQLITE3LIB="$loc/libsqlite3.a"
     fi
   done
 fi
