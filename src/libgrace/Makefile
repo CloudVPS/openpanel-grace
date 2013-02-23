@@ -103,3 +103,4 @@ clean:
 	$(CXX) $(SHARED) $(CXXFLAGS) $(INCLUDES) -I../../include -c -g $<
 
 include Makefile.depend
+# DO NOT DELETE

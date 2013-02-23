@@ -1,3 +1,7 @@
+1.1.7      Sat Feb 23 2013                           <grace@openpanel.com>
+
+           * Fix build system for Ubuntu Precise.
+
 1.1.6      Tue Feb 19 2013                           <grace@openpanel.com>
 
            * Fix long living error in HTTP/1.1 keep-alive handling
