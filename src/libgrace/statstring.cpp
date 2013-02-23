@@ -295,10 +295,6 @@ stringref *stringrefdb::getref (const char *str, unsigned int key)
 			else crsr = crsr->lower;
 		}
 		
-		// The oldcrsr points to what will be our parent object,
-		// by increasing the refcnt we make sure it will not
-		// disappear from under our feet.
-		
 		crsr = newref ();
 		crsr->str = str;
 		crsr->refcnt = 1;
