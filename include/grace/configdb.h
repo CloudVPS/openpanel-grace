@@ -49,6 +49,8 @@ public:
 						 ///            as measured from the end.
 	const statstring	&operator[] (int pos) const;
 	
+	keypath				&operator= (const keypath &);
+	
 						 /// Get element count.
 	int					 count (void) const;
 	
@@ -380,7 +382,7 @@ public:
 						 /// Constructor.
 						 /// \param kp The matching path.
 						 /// \param m The method to call.
-						 configaction (keypath &kp, pmethod m)
+						 configaction (const keypath &kp, pmethod m)
 						 {
 						 	path = kp;
 							_method = m;

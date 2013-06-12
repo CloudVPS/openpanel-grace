@@ -78,7 +78,14 @@ keypath::~keypath (void)
 		}
 		acount = 0;
 		::free (array);
+		array = NULL;
 	}
+}
+
+keypath& keypath::operator= (const keypath &orig)
+{
+	clear();
+	for (int i=0; i<orig.count(); ++i) add (orig[i]);
 }
 
 // ========================================================================
@@ -189,6 +196,7 @@ void keypath::up (void)
 // ========================================================================
 bool keypath::existsin (value &val) const
 {
+	if (! array) return false;
 	visitor<value> probe (val);
 	unsigned int x;
 		
