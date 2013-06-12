@@ -142,6 +142,7 @@ bool socketpool::setsize (unsigned int ncount)
 		else
 		{
 			s->next = s->prev = NULL;
+			last = s;
 		}
 		count++;
 	}

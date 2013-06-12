@@ -26,7 +26,9 @@ public:
 				{
 					crsr = 0;
 					closed = eof = errorcond = false;
+					haschildren = hasdata = false;
 					line = 0;
+					errorcond = false;
 				}
 
 	int			getline (const string *xml)

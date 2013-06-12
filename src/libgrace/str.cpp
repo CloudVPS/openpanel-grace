@@ -1735,7 +1735,7 @@ void string::crop (int sz)
 		if (GROW(offs+size+1+sizeof (refblock)) < alloc)
 		{
 			alloc = GROW(offs+size+1+sizeof (refblock));
-			data = (refblock *) realloc (data, alloc * sizeof (char *));
+			data = (refblock *) realloc (data, alloc);
 		}
 	}
 }
@@ -1764,7 +1764,7 @@ void string::pad (int psz, char p)
 	if ((offs+sz+sizeof(refblock)) >= alloc)
 	{
 		alloc = GROW(offs + sz + sizeof (refblock) +1);
-		data = (refblock *) realloc (data, alloc * sizeof(char *));
+		data = (refblock *) realloc (data, alloc);
 	}
 	if (p)
 	{

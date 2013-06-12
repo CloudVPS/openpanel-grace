@@ -192,24 +192,7 @@ const char *value::phpdeserialize (const char *phpdata, bool recursed)
 				crsr += itmp;
 				if (*crsr != '\"')
 				{
-					::printf ("Expected quote, got '%c'\n", *crsr);
-					{
-						printf ("size provided was %i, real size was %i\n",
-								itmp, strstr (oldcrsr, "\";") - oldcrsr);
-						
 						return NULL;
-					}
-					/*if (*(crsr+1) == '\"')
-					{
-						::printf ("off-by-one, fixing\n");
-						crsr++;
-					}
-					else
-					{*/
-						::printf ("fubar'ed\n");
-						::printf ("text from cursor position:\n%s\n", crsr);
-						return NULL;
-					//}
 				}
 				SKIPEXPECTED('\"');
 				SKIPEXPECTED(';');

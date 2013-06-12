@@ -27,6 +27,8 @@ httpsocket::httpsocket (void)
 	errorcode = 0;
 	_timeout = 0;
 	_useproxy = false;
+	_port = 80;
+	_proxyport = 0;
 }
 
 // ========================================================================

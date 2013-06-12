@@ -24,6 +24,7 @@ public:
 					 	when = 0;
 					 	inuse = false;
 					 	sock = new tcpsocket;
+					 	serial = 0;
 					 }
 					 poolsocket (const poolsocket &s)
 					 {

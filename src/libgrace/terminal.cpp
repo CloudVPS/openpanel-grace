@@ -32,12 +32,14 @@ termbuffer::termbuffer (file &in, file &out, int _size, int _wsize)
 	len = 0;
 	engaged = false;
 	utf8expect = 0;
+	memset (&oldterm, 0, sizeof(oldterm));
+	memset (&newterm, 0, sizeof(newterm));
 	
 	size = _size;
 	
 	// Using malloc here because we'll want to realloc eventually.
-	buffer = (char *) malloc (size * sizeof (char *));
-	curview = (char *) malloc (size * sizeof (char *));
+	buffer = (char *) malloc (size * sizeof (char));
+	curview = (char *) malloc (size * sizeof (char));
 
 	// Copy viewport size if explicitely defined.
 	wsize = _wsize;

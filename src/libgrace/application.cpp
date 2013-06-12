@@ -125,7 +125,15 @@ void application::init (int Argc, char *Argv[])
 			{
 				int t;
 				t = readlink (appath.str(), linkbuffer, 511);
-				linkbuffer[t] = linkbuffer[511] = 0;
+				
+				if (t>0)
+				{
+					linkbuffer[t] = linkbuffer[511] = 0;
+				}
+				else
+				{
+					linkbuffer[0] = 0;
+				}
 				
 				if (linkbuffer[0] == '/')
 				{
@@ -454,7 +462,14 @@ int main (int argc, char *argv[])
 	}
 	
 	application *a = app();
-	a->init (argc, argv);
+	try
+	{
+		a->init (argc, argv);
+	}
+	catch (exception e)
+	{
+		return -1;
+	}
 	returnv = a->main ();
 	delete a;
 	if (__retain_ptr) __retain_ptr->exit ();

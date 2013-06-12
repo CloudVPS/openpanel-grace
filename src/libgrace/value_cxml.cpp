@@ -256,23 +256,35 @@ size_t value::parsecompressed (size_t offs, string &from, xmlschema &schema)
 				switch (cxmltype(schema.xmltype (copcode)))
 				{
 					case T_CXML_CHAR:
-						if (csz) tval = from[crsr];
-						aval.printf ("%i", tval);
+						if (csz) 
+						{
+							tval = from[crsr];
+							aval.printf ("%i", tval);
+						}
 						break;
 					
 					case T_CXML_SHORT:
-						if (csz>1) sval = CV16(from,crsr);
-						aval.printf ("%i", sval);
+						if (csz>1)
+						{
+							sval = CV16(from,crsr);
+							aval.printf ("%i", sval);
+						}
 						break;
 						
 					case T_CXML_LONG:
-						if (csz>3) tval = CV32(from,crsr);
-						aval.printf ("%i", tval);
+						if (csz>3)
+						{
+							tval = CV32(from,crsr);
+							aval.printf ("%i", tval);
+						}
 						break;
 						
 					case T_CXML_LONG_LONG:
-						if (csz>7) llval = CV64(from,crsr);
-						aval.printf ("%L", llval);
+						if (csz>7)
+						{
+							llval = CV64(from,crsr);
+							aval.printf ("%L", llval);
+						}
 						break;
 						
 					case T_CXML_STRING:
@@ -283,28 +295,43 @@ size_t value::parsecompressed (size_t offs, string &from, xmlschema &schema)
 						break;
 					
 					case T_CXML_UCHAR:
-						if (csz) utval = from[crsr];
-						aval.printf ("%u", utval);
+						if (csz)
+						{
+							utval = from[crsr];
+							aval.printf ("%u", utval);
+						}
 						break;
 					
 					case T_CXML_USHORT:
-						if (csz>1) usval = CVU16(from,crsr);
-						aval.printf ("%u", usval);
+						if (csz>1)
+						{
+							usval = CVU16(from,crsr);
+							aval.printf ("%u", usval);
+						}
 						break;
 						
 					case T_CXML_ULONG:
-						if (csz>3) utval = CVU32(from,crsr);
-						aval.printf ("%u", utval);
+						if (csz>3)
+						{
+							utval = CVU32(from,crsr);
+							aval.printf ("%u", utval);
+						}
 						break;
 					
 					case T_CXML_ULONG_LONG:
-						if (csz>7) ullval = CVU64(from,crsr);
-						aval.printf ("%U", ullval);
+						if (csz>7)
+						{
+							ullval = CVU64(from,crsr);
+							aval.printf ("%U", ullval);
+						}
 						break;
 					
 					case T_CXML_CURRENCY:
-						if (csz>7) llval = CV64(from,crsr);
-						printcurrency (aval, llval);
+						if (csz>7)
+						{
+							llval = CV64(from,crsr);
+							printcurrency (aval, llval);
+						}
 						break;
 						
 					default:

@@ -22,6 +22,7 @@ thread::thread (void)
 	__THREADED = true;
 	unprotected (isrunning) { isrunning = false; }
 	pthread_attr_init (&attr);
+	tid = NULL;
 }
 
 thread::thread (const string &nm)
@@ -32,6 +33,7 @@ thread::thread (const string &nm)
 	__THREADED = true;
 	unprotected (isrunning) { isrunning = false; }
 	pthread_attr_init (&attr);
+	tid = NULL;
 }
 
 // ========================================================================

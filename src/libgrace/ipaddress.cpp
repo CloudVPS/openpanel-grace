@@ -81,6 +81,7 @@ bool ipaddress::ip2str (const unsigned char* c, string& into)
 // ==========================================================================
 ipaddress::ipaddress (const value &o)
 {
+	memset( addr, 0, sizeof(addr) );
 	*this = o.ipval ();
 }
 
@@ -105,12 +106,13 @@ ipaddress::ipaddress (const char* s)
 /// Constructor from system structs
 ipaddress::ipaddress (const struct in_addr& address)
 {
+	memset( addr, 0, sizeof(addr) );
     *this=address;
-	
 }
 
 ipaddress::ipaddress (const struct in6_addr& address)
 {
+	memset( addr, 0, sizeof(addr) );
     *this=address;
 }
 

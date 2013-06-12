@@ -22,6 +22,7 @@ dictionaryEntry::dictionaryEntry (const statstring &iid)
 	lower = NULL;
 	higher = NULL;
 	id = iid;
+	dynamic = false;
 }
 
 // ========================================================================

@@ -26,6 +26,7 @@
 currency::currency (void)
 {
 	val = 0;
+	presentation[0] = 0;
 }
 
 // ========================================================================
@@ -34,6 +35,7 @@ currency::currency (void)
 currency::currency (double orig)
 {
 	val = 10LL * ((long long) ((orig + 0.005) * 100.0));
+	presentation[0] = 0;
 }
 
 // ========================================================================
@@ -42,6 +44,7 @@ currency::currency (double orig)
 currency::currency (const currency &orig)
 {
 	val = orig.val;
+	presentation[0] = 0;
 }
 
 // ========================================================================
@@ -50,6 +53,7 @@ currency::currency (const currency &orig)
 currency::currency (currency *orig) : retainable ()
 {
 	retainvalue (orig);
+	presentation[0] = 0;
 }
 
 // ========================================================================
@@ -58,6 +62,7 @@ currency::currency (currency *orig) : retainable ()
 currency::currency (long long orig)
 {
 	val = orig;
+	presentation[0] = 0;
 }
 
 // ========================================================================
@@ -66,6 +71,7 @@ currency::currency (long long orig)
 currency::currency (const class value &orig)
 {
 	val = orig.getcurrency();
+	presentation[0] = 0;
 }
 
 // ========================================================================
@@ -75,6 +81,7 @@ currency::currency (class value *orig)
 {
 	val = orig->getcurrency();
 	destroyvalue (orig);
+	presentation[0] = 0;
 }
 
 // ========================================================================

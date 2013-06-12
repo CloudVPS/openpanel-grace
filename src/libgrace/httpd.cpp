@@ -1070,8 +1070,10 @@ httpdlogger::httpdlogger (httpd &parent, const string &accesslog,
 	faccess.o.openappend (accesslog);
 	if (errorlog)
 	{
+		haserrorlog = true;
 		ferror.o.openappend (errorlog);
 	}
+	else haserrorlog = false;
 }
 
 // ========================================================================
