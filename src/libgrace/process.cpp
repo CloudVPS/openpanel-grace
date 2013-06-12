@@ -35,10 +35,10 @@ void process::init (const string &name, bool withStdErr)
 		::close (2);
 		__THREADED = false;
 		
-		dup2 (outpipe[0], 0);
-		dup2 (inpipe[1], 1);
-		if (! withStdErr) open ("/dev/null",O_WRONLY);
-		else dup2 (inpipe[1], 2);
+		(void) dup2 (outpipe[0], 0);
+		(void) dup2 (inpipe[1], 1);
+		if (! withStdErr) (void) open ("/dev/null",O_WRONLY);
+		else (void) dup2 (inpipe[1], 2);
 		
 		fin.openread (0);
 		fout.openwrite (1);
