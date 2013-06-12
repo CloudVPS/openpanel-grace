@@ -82,6 +82,7 @@ socketpool::socketpool (const string &hostname, int port, int timeout)
 	first = last = NULL;
 	nativehandler = true;
 	count = 0;
+	serial = 0;
 }
 
 // ========================================================================
@@ -93,6 +94,7 @@ socketpool::socketpool (socketpoolhandler &hdl)
 	first = last = NULL;
 	nativehandler = false;
 	count = 0;
+	serial = 0;
 }
 
 // ========================================================================

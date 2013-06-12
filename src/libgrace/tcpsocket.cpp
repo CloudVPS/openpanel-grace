@@ -144,7 +144,7 @@ int tcpsocket::libcconnect (int sock, const struct sockaddr *a, socklen_t l)
 	
 	if (! nonblocking)
 	{
-		fcntl (sock, F_SETFL, opts | O_NONBLOCK);
+		(void) fcntl (sock, F_SETFL, opts | O_NONBLOCK);
 		nonblocking = true;
 	}
 	
@@ -173,7 +173,7 @@ int tcpsocket::libcconnect (int sock, const struct sockaddr *a, socklen_t l)
 		res = 0;
 	}
 	
-	fcntl (sock, F_SETFL, opts);
+	(void) fcntl (sock, F_SETFL, opts);
 	nonblocking = false;
 	return res;
 }
@@ -246,8 +246,8 @@ bool tcpsocket::connect (ipaddress addr, int port)
 	
 	if (filno >= 0)
 	{
-		setsockopt (filno, SOL_SOCKET, SO_KEEPALIVE,
-					(char *) &pram, sizeof (int));
+		(void) setsockopt (filno, SOL_SOCKET, SO_KEEPALIVE,
+						   (char *) &pram, sizeof (int));
 		
 		peer_addr = addr;
 		peer_port = port;
@@ -260,14 +260,22 @@ bool tcpsocket::connect (ipaddress addr, int port)
 				localv4.sin_family = AF_INET;
 				localv4.sin_port = 0;
 				localv4.sin_addr = localbindaddr;
-				::bind (filno, (struct sockaddr *)&localv4, sizeof(localv4));
+				if (::bind (filno, (struct sockaddr *)&localv4, sizeof(localv4)))
+				{
+					::close (filno);
+					return false;
+				}
 			}
 			else
 			{
 				localv6.sin6_family = AF_INET6;
 				localv6.sin6_port = 0;
 				localv6.sin6_addr = localbindaddr;
-				::bind (filno, (struct sockaddr *)&localv6, sizeof(localv6));
+				if (::bind (filno, (struct sockaddr *)&localv6, sizeof(localv6)))
+				{
+					::close (filno);
+					return false;
+				}
 			}
 		}
 
@@ -459,8 +467,8 @@ bool tcpsocket::uconnect (const string &path)
 	peer_port = 0;
 
 	#ifdef HAVE_PASSCRED	
-		setsockopt (filno, SOL_SOCKET, SO_PASSCRED, (char *) &pram,
-					sizeof (int));
+		(void) setsockopt (filno, SOL_SOCKET, SO_PASSCRED, (char *) &pram,
+						   sizeof (int));
 	#endif
 	ti_established = core.time.now ();
 	if (codec)
@@ -844,12 +852,12 @@ void tcplistener::listento (ipaddress addr, int port)
 			throw socketCreateException();
 		}
 		
-		setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, (char *) &pram,
-					sizeof (int));
+		(void) setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, (char *) &pram,
+						   sizeof (int));
 					
 	#ifdef SO_REUSEPORT
-		setsockopt (sock, SOL_SOCKET, SO_REUSEPORT, (char *) &pram,
-					sizeof (int));
+		(void) setsockopt (sock, SOL_SOCKET, SO_REUSEPORT, (char *) &pram,
+						   sizeof (int));
 	#endif
 	
 		
@@ -978,11 +986,11 @@ tcpsocket *tcplistener::accept (void)
 	if (tcpdomain)
 	{
 		anint = sizeof (peer);
-		getpeername (s, (struct sockaddr *) &peer, &anint);
+		(void) getpeername (s, (struct sockaddr *) &peer, &anint);
 	}
 
-	setsockopt (s, SOL_SOCKET, SO_KEEPALIVE, (char *) &pram,
-				sizeof (int));	
+	(void) setsockopt (s, SOL_SOCKET, SO_KEEPALIVE, (char *) &pram,
+					   sizeof (int));	
 	
 	tcpsocket *myfil = new tcpsocket;
 	(*myfil).openread (s);
@@ -1056,7 +1064,8 @@ tcpsocket *tcplistener::tryaccept (double timeout)
 	socklen_t anint = sizeof (peer);
 	getpeername (s, (struct sockaddr *) &peer, &anint);
 
-	setsockopt (s, SOL_SOCKET, SO_KEEPALIVE, (char *) &pram, sizeof (int));
+	(void) setsockopt (s, SOL_SOCKET, SO_KEEPALIVE,
+					   (char *) &pram, sizeof (int));
 	
 	tcpsocket *myfil = new tcpsocket;
 	myfil->openread (s);

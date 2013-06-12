@@ -1062,7 +1062,7 @@ string *file::read (size_t sz, int timeout_ms)
 	{
 		int opts;
 		opts = fcntl (filno,F_GETFL);
-		fcntl (filno,F_SETFL, opts | O_NONBLOCK);
+		(void) fcntl (filno,F_SETFL, opts | O_NONBLOCK);
 		nonblocking = true;
 	}
 	
@@ -1110,7 +1110,7 @@ string *file::read (size_t sz, int timeout_ms)
 			opts = fcntl (filno,F_GETFL);
 			if (opts>=0)
 			{
-				fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
+				(void) fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
 				nonblocking = false;
 			}
 		}
