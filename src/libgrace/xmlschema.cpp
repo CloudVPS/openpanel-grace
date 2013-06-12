@@ -475,8 +475,10 @@ void xmlschema::resolveclass (const statstring &id,
 			probe.root ();
 			if (probe.enter (superclass))
 			{
-				if (probe.obj()[key::xml_type] != key::container);
-				contained = false;
+				if (probe.obj()[key::xml_type] != key::container)
+				{
+					contained = false;
+				}
 				probe.root();
 			}
 		}

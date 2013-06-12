@@ -52,6 +52,7 @@ currency::currency (const currency &orig)
 // ========================================================================
 currency::currency (currency *orig) : retainable ()
 {
+	val = 0;
 	retainvalue (orig);
 	presentation[0] = 0;
 }

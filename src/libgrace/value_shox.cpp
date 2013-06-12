@@ -327,7 +327,7 @@ void value::printshox (string &outstr, stringdict &sdict) const
 	}
 	
 	// If set, encode the attributes
-	if (xtype & SHOX_HAS_ATTRIB)
+	if ((xtype & SHOX_HAS_ATTRIB) && attrib)
 	{
 		outstr.binputvint (outstr.strlen(), attrib->count());
 		

@@ -50,9 +50,12 @@ filesystem::filesystem (void)
 	string nam;
 	
 	_groupcnt = getgroups (0, NULL);
-	_groups = new gid_t[_groupcnt+1];
-	_groupcnt = getgroups (_groupcnt, _groups);
-	_groups[_groupcnt++] = getgid();
+	if (_groupcnt > 0)
+	{
+		_groups = new gid_t[_groupcnt+1];
+		_groupcnt = getgroups (_groupcnt, _groups);
+		_groups[_groupcnt++] = getgid();
+	}
 	
 	while (environ[c])
 	{
