@@ -38,6 +38,9 @@ public:
 						 /// path string with elements separated by
 						 /// a forward-slash.
 						 keypath (const char *);
+						 
+						 /// Destructor.
+						~keypath (void);
 	
 						 /// Access operator.
 						 /// Returns the key at a given position, or

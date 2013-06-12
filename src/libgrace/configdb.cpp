@@ -77,7 +77,7 @@ keypath::~keypath (void)
 			array[i] = NULL;
 		}
 		acount = 0;
-		free (array);
+		::free (array);
 	}
 }
 
