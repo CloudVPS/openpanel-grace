@@ -1133,7 +1133,7 @@ string *file::read (size_t sz, int timeout_ms)
 
 		ssz = ::read (filno, buf, am);
 		
-		if (ssz <= 0)
+		if (codec && (ssz <= 0))
 		{
 			try
 			{
