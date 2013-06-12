@@ -225,7 +225,7 @@ bool naturalSort (value *l, value *r, const string &opt)
 				}
 			}
 		}
-		else if ((rightChar =='a')&&(lpos<rightLength))
+		else if ((rightChar =='a')&&(rpos<rightLength))
 		{
 			if (((rpos+1) == rightLength) || 
 			   (isspace (rightString[rpos+1])))
