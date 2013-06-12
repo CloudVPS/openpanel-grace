@@ -1130,7 +1130,7 @@ public:
 					 	if (index<0) return NULL;
 					 	if (!arraysz) return NULL;
 					 	if (index >= (int) arraysz) return NULL;
-					 	return array[(index<0) ? arraysz-index : index];
+					 	return array[index];
 					 }
 
 protected:
