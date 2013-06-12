@@ -294,7 +294,7 @@ public:
 						 }
 						 else if (operand == "%=")
 						 {
-							 if (atoi (rright) > 0)
+							 if (rright.toint() > 0)
 								 env[lleft] = env[left].ival() % rright.toint();
 						 }
 						 else if (operand == "~=")

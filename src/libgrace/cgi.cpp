@@ -456,6 +456,7 @@ string *cgitemplate::parse (const string &section, value &env)
 		{
 			res += e.sval();
 		}
+		j++;
 	}
 	
 	return &res;
