@@ -403,7 +403,7 @@ bool file::puts (const char *str, size_t sz)
 		opts = fcntl (filno,F_GETFL);
 		if (opts>=0)
 		{
-			(void) fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
+			(void) fcntl (filno,F_SETFL, opts & (~O_NONBLOCK));
 			nonblocking = false;
 		}
 	}
@@ -644,7 +644,7 @@ string *file::gets (int maxlinesize)
 		opts = fcntl (filno,F_GETFL);
 		if (opts & O_NONBLOCK)
 		{
-			(void) fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
+			(void) fcntl (filno,F_SETFL, opts & (~O_NONBLOCK));
 			nonblocking = false;
 		}
 		
@@ -998,7 +998,7 @@ string *file::read (size_t psz)
 		opts = fcntl (filno,F_GETFL);
 		if (opts>=0)
 		{
-			(void) fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
+			(void) fcntl (filno,F_SETFL, opts & (~O_NONBLOCK));
 			nonblocking = false;
 		}
 	}
@@ -1110,7 +1110,7 @@ string *file::read (size_t sz, int timeout_ms)
 			opts = fcntl (filno,F_GETFL);
 			if (opts>=0)
 			{
-				(void) fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
+				(void) fcntl (filno,F_SETFL, opts & (~O_NONBLOCK));
 				nonblocking = false;
 			}
 		}
