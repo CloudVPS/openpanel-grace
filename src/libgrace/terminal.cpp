@@ -590,7 +590,7 @@ void termbuffer::tprintf (const char *fmt, ...)
 	data.printf_va (fmt, &ap);
 	va_end (ap);
 	
-	write (fout.filno, data.str(), data.strlen());
+	(void) write (fout.filno, data.str(), data.strlen());
 }
 
 // ==========================================================================
@@ -598,7 +598,7 @@ void termbuffer::tprintf (const char *fmt, ...)
 // ==========================================================================
 void termbuffer::tputs (const string &str)
 {
-	write (fout.filno, str.str(), str.strlen());
+	(void) write (fout.filno, str.str(), str.strlen());
 }
 
 // ==========================================================================
@@ -606,7 +606,7 @@ void termbuffer::tputs (const string &str)
 // ==========================================================================
 void termbuffer::tputc (char c)
 {
-	write (fout.filno, &c, sizeof (char));	
+	(void) write (fout.filno, &c, sizeof (char));	
 }
 
 // ==========================================================================

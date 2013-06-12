@@ -137,7 +137,8 @@ bool udpsocket::bind (ipaddress addr, int port)
 void udpsocket::setbroadcast (bool to)
 {
 	int pram = 1;
-	setsockopt (sock, SOL_SOCKET, SO_BROADCAST, (char *) &pram, sizeof (int));
+	(void) setsockopt (sock, SOL_SOCKET,
+					   SO_BROADCAST, (char *) &pram, sizeof (int));
 }
 
 // ==========================================================================
