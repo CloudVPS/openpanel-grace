@@ -177,7 +177,7 @@ public:
 						return false;
 					 }
 					 
-	bool			 rmval (const statstring &s) { remove (s); }
+	bool			 rmval (const statstring &s) { remove (s); return true; }
 					 
 					 /// Get item count.
 					 /// \return Number of objects in the dictionary.
