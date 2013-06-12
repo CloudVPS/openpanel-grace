@@ -39,6 +39,7 @@ void md5checksum::init (void)
 	abcd[1] = 0xefcdab89;
 	abcd[2] = 0x98badcfe;
 	abcd[3] = 0x10325476;
+	buf[0] = 0;
 	finalized = false;
 }
 

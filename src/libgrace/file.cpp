@@ -331,7 +331,7 @@ int file::tryputs (const char *str, size_t sz, unsigned int timeout_ms)
 	{
 		int opts;
 		opts = fcntl (filno,F_GETFL);
-		fcntl (filno,F_SETFL, opts | (O_NONBLOCK));
+		(void) fcntl (filno,F_SETFL, opts | (O_NONBLOCK));
 		nonblocking = true;
 	}
 
@@ -403,7 +403,7 @@ bool file::puts (const char *str, size_t sz)
 		opts = fcntl (filno,F_GETFL);
 		if (opts>=0)
 		{
-			fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
+			(void) fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
 			nonblocking = false;
 		}
 	}
@@ -644,7 +644,7 @@ string *file::gets (int maxlinesize)
 		opts = fcntl (filno,F_GETFL);
 		if (opts & O_NONBLOCK)
 		{
-			fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
+			(void) fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
 			nonblocking = false;
 		}
 		
@@ -752,7 +752,7 @@ bool file::waitforline (string &into, int timeout_ms, int maxlinesize)
 		{
 			int opts;
 			opts = fcntl (filno,F_GETFL);
-			fcntl (filno,F_SETFL, opts | (O_NONBLOCK));
+			(void) fcntl (filno,F_SETFL, opts | (O_NONBLOCK));
 			nonblocking = true;
 		}
 		
@@ -909,7 +909,7 @@ int file::readbuffer (size_t sz, unsigned int timeout_ms)
 	{
 		int opts;
 		opts = fcntl (filno,F_GETFL);
-		fcntl(filno,F_SETFL, opts | (O_NONBLOCK));
+		(void) fcntl(filno,F_SETFL, opts | (O_NONBLOCK));
 		nonblocking = true;
 	}
 	
@@ -998,7 +998,7 @@ string *file::read (size_t psz)
 		opts = fcntl (filno,F_GETFL);
 		if (opts>=0)
 		{
-			fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
+			(void) fcntl (filno,F_SETFL, opts & (!O_NONBLOCK));
 			nonblocking = false;
 		}
 	}
@@ -1127,7 +1127,7 @@ string *file::read (size_t sz, int timeout_ms)
 		{
 			int opts;
 			opts = fcntl (filno,F_GETFL);
-			fcntl (filno,F_SETFL, opts | O_NONBLOCK);
+			(void) fcntl (filno,F_SETFL, opts | O_NONBLOCK);
 			nonblocking = true;
 		}
 

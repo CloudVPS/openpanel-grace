@@ -120,7 +120,7 @@ void application::init (int Argc, char *Argv[])
 		
 		while (maybelink)
 		{
-			lstat (appath.str(), &mst);
+			if (lstat (appath.str(), &mst) <0) break;
 			if ( (mst.st_mode & S_IFMT) == S_IFLNK)
 			{
 				int t;

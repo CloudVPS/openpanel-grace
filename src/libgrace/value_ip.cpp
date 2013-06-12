@@ -37,15 +37,11 @@ ipaddress value::ipval (void) const
 	{
 		return ipaddress (*(const in6_addr*)t.ipval );
     }
-    else
-	{
-		ipaddress result;
-		const string& ip_str = sval ();
-		ipaddress::str2ip (ip_str, result );
-		return result;
-	}	
-	
-	return ipaddress ();
+
+	ipaddress result;
+	const string& ip_str = sval ();
+	ipaddress::str2ip (ip_str, result );
+	return result;
 }
 
 value &value::operator= (const ipaddress &o)

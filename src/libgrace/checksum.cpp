@@ -29,7 +29,7 @@ unsigned int checksum (const char *str)
         if (sdf<0) sdf = open ("/dev/random", O_RDONLY);
         if (sdf>=0)
         {
-            read (sdf, &ihash, sizeof(ihash));
+            (void) read (sdf, &ihash, sizeof(ihash));
             close (sdf);
         }
         else ihash = 5138;

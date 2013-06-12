@@ -20,6 +20,7 @@ thread::thread (void)
 	spawned = false;
 	finished = false;
 	__THREADED = true;
+	memset (&schedparam, 0, sizeof(schedparam));
 	unprotected (isrunning) { isrunning = false; }
 	pthread_attr_init (&attr);
 	tid = NULL;
