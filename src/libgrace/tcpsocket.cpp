@@ -918,8 +918,8 @@ void tcplistener::listento (const string &path)
 		
 		bzero ((char *) &remote, sizeof (remote));
 		remote.sun_family = AF_UNIX;
-		strncpy (remote.sun_path, realpath.str(), 107);
-		remote.sun_path[107] = 0;
+		strncpy (remote.sun_path, realpath.str(), sizeof(*remote.sun_path)-1);
+		remote.sun_path[sizeof(*remote.sun_path)-1] = 0;
 		
 		sock = socket (PF_UNIX, SOCK_STREAM, 0);
 		if (sock < 0)

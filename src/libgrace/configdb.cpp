@@ -67,6 +67,20 @@ keypath::keypath (const char *v)
 	foreach (e, splt) add (e);
 }
 
+keypath::~keypath (void)
+{
+	if (array)
+	{
+		for (unsigned i=0; i<acount; ++i)
+		{
+			delete array[i];
+			array[i] = NULL;
+		}
+		acount = 0;
+		free (array);
+	}
+}
+
 // ========================================================================
 // ARRAY OPERATOR keypath
 // ========================================================================
