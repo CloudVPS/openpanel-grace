@@ -129,18 +129,18 @@ void daemon::daemonize (bool delayedexit)
 			if (delayedexit)
 			{
 				// Attach the comms pipe to stdout.
-				open ("/dev/null", O_RDONLY);
-				dup2 (backpipe[1], 1);
-				open ("/dev/null", O_WRONLY);
+				(void) open ("/dev/null", O_RDONLY);
+				(void) dup2 (backpipe[1], 1);
+				(void) open ("/dev/null", O_WRONLY);
 				//for (i=3;i<16;++i) ::close (i);
 				fout.openread (1);
 			}
 			else
 			{
 				// Just attach to /dev/null.
-				open ("/dev/null", O_RDONLY);
-				open ("/dev/null", O_WRONLY);
-				open ("/dev/null", O_WRONLY);
+				(void) open ("/dev/null", O_RDONLY);
+				(void) open ("/dev/null", O_WRONLY);
+				(void) open ("/dev/null", O_WRONLY);
 			}
 			
 			// Extra fork round, to detach from parent.
