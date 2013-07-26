@@ -84,11 +84,11 @@ int _wild_match (u_char * mask, u_char * string)
 		case 0:
 			if (!*n || just)
 				return RETURN_TRUE;
-			break;
-			
+			// intended fallthrough			
 		case '\\':
 			if ((*m == '\\') && (m[1] == '*') || (m[1] == '?'))
 				m++;
+			// intended fallthrough
 		default:
 			just = 0;
 			if (tolower (*m) != tolower (*n))

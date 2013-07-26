@@ -86,6 +86,7 @@ keypath& keypath::operator= (const keypath &orig)
 {
 	clear();
 	for (int i=0; i<orig.count(); ++i) add (orig[i]);
+	return *this;
 }
 
 // ========================================================================
