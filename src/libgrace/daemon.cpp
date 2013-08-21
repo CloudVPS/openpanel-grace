@@ -624,7 +624,26 @@ void logthread::run (void)
 						syslogopen = true;
 					}
 					
-					syslog (ev[logproperty::priority].ival(), "%s: %s",
+					int prio = ev[logproperty::priority].ival();
+					int syslogprio = LOG_DEBUG;
+					
+					#define MPRIO(pname,sys) \
+						else if (prio & log::pname) \
+							syslogprio = sys
+					
+					if (false) {}
+					MPRIO (emergency, LOG_EMERG);
+					MPRIO (alert, LOG_ALERT);
+					MPRIO (critical, LOG_CRIT);
+					MPRIO (error, LOG_ERR);
+					MPRIO (warning, LOG_WARNING);
+					MPRIO (info, LOG_INFO);
+					MPRIO (application, LOG_NOTICE);
+					MPRIO (debug, LOG_DEBUG);
+					
+					#undef MPRIO
+					
+					syslog (syslogprio, "%s: %s",
 							ev[logproperty::module].cval(),
 							ev[logproperty::text].cval());
 				}
