@@ -273,7 +273,7 @@ void application::init (int Argc, char *Argv[])
 		arg = Argv[crsr];
 		
 		// short option (-f -o -o)
-		if ((arg[0] == '-') && (arg[1] != '-'))
+		if ((arg.strlen()>2) && (arg[0] == '-') && (arg[1] != '-'))
 		{
 			value &optarg = opt[arg];
 			statstring longname = optarg["long"].sval();
@@ -311,7 +311,7 @@ void application::init (int Argc, char *Argv[])
 		}
 		
 		// ok perhaps a long option?
-		else if ((arg[0] == '-') && (arg[1] == '-'))
+		else if ((arg.strlen()>2) && (arg[0] == '-') && (arg[1] == '-'))
 		{
 			// adapt if it has the form --foo="bar"
 			if ((arg.strchr ('=')) >= 0)
