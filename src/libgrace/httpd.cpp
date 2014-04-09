@@ -1472,7 +1472,7 @@ void pwfileauth::loadfile (void)
 	{
 		while (! f.eof())
 		{
-			line = f.gets();
+			line = f.gets(4096);
 			if (! line) continue;
 			splt = strutil::split (line, ':');
 			username = splt[0];
