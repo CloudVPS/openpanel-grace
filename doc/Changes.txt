@@ -1,3 +1,19 @@
+1.1.10     Tue Sep 10 2013                           <grace@openpanel.com>
+
+           * Fix argument parsing segfaults on empty string command line
+             arguments.
+             
+           * When using the syslog backend for daemon logging, fix the
+             mapping from grace priorities to syslog priorities.
+
+1.1.9      Wed Jul 03 2013                           <grace@openpanel.com>
+
+           * Fix some breaking bugs introduced in 1.1.8.
+
+1.1.8      Wed Jul 03 2013                           <grace@openpanel.com>
+
+           * Coverage cleanups and fixes.
+
 1.1.7      Sat Feb 23 2013                           <grace@openpanel.com>
 
            * Fix build system for Ubuntu Precise.
